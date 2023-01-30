@@ -217,7 +217,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               display="flex"
               alignItems="center"
               mt={xs ? 0 : 1}
-              mb={3}
+              mb={1}
               py={2}
             >
               <Box
@@ -300,7 +300,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               </Box>
             </Box>
             <Box
-              mb={2}
+              mb={1}
               sx={{
                 backgroundColor: "transparent",
               }}
