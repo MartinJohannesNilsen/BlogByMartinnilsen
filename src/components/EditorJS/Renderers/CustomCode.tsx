@@ -82,7 +82,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
           display="flex"
           alignItems="center"
         >
-          <Box ml={1.5}>
+          <Box ml={1.75}>
             <Typography
               fontFamily={theme.typography.fontFamily}
               variant="body2"
@@ -94,7 +94,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
             </Typography>
           </Box>
           <Box flexGrow={100} />
-          <Box mr={1.5}>
+          <Box mr={1}>
             <Button
               disabled={copyMessageShown}
               sx={{
