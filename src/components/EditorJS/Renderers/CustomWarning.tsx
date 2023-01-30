@@ -8,6 +8,7 @@ import {
 import { EditorjsRendererProps } from "../../../types";
 import { useTheme } from "../../../ThemeProvider";
 import DOMPurify from "dompurify";
+import speechBalloon from "../../../assets/img/speech-balloon.png";
 
 const CustomWarning = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
@@ -23,10 +24,7 @@ const CustomWarning = (props: EditorjsRendererProps) => {
         }}
       >
         <IconButton disabled={true} sx={{ margin: "0 10px 0 0px" }}>
-          <img
-            src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/129/speech-balloon_1f4ac.png"
-            width="30px"
-          />
+          <img src={speechBalloon} width="30px" />
         </IconButton>
         <Box display="flex" flexDirection="column">
           <Typography

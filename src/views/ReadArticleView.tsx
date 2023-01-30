@@ -30,6 +30,8 @@ import { IosShare } from "@mui/icons-material";
 import { RWebShare } from "react-web-share";
 import { Helmet } from "react-helmet";
 import DOMPurify from "dompurify";
+import ClappingHands from "../assets/img/clapping-hands.png";
+import AvatarMJN from "../assets/img/ProfileCutoutSquare.png";
 
 // Components
 import CustomDelimiter from "../components/EditorJS/Renderers/CustomDelimiter";
@@ -186,7 +188,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               <Avatar
                 alt="Author profile image"
                 sx={{ width: "28px", height: "28px", margin: "0 16px 0 16px" }}
-                src="https://firebasestorage.googleapis.com/v0/b/portfoliobymartinnilsen.appspot.com/o/Images%2FProfileCutoutSquare.png?alt=media&token=8c07a465-4bd7-4057-b4a5-bf55d57daafe"
+                src={AvatarMJN}
               />
               <Typography
                 variant="body1"
@@ -348,10 +350,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   }, 4000);
                 }}
               >
-                <img
-                  src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/118/clapping-hands-sign_1f44f.png"
-                  width="30px"
-                />
+                <img src={ClappingHands} width="30px" />
               </IconButton>
             </Box>
           </Stack>
