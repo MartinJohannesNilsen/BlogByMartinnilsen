@@ -1,4 +1,4 @@
-import { Box, Checkbox, Typography, useMediaQuery } from "@mui/material";
+import { Box, Checkbox, Typography } from "@mui/material";
 import { EditorjsRendererProps } from "../../../types";
 import { useTheme } from "../../../ThemeProvider";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -7,8 +7,6 @@ import DOMPurify from "dompurify";
 
 const CustomChecklist = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
-  const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const sm = useMediaQuery(theme.breakpoints.only("sm"));
 
   return (
     <Box my={1} display="flex" flexDirection="column">

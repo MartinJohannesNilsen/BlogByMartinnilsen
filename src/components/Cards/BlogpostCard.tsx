@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
 import { useTheme } from "../../ThemeProvider";
 import { BlogpostCardProps } from "../../types";

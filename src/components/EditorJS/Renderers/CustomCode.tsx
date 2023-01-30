@@ -60,8 +60,6 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
   };
   const [copyMessageShown, setCopyMessageShown] = useState(false);
   const EDITORTHEME = atomOneDark;
-  // const EDITORTHEME = atomOneDarkReasonable;
-  // const EDITORTHEME = irBlack;
 
   return (
     <Box sx={{ position: "relative", borderRadius: "50px" }} my={1}>
@@ -135,7 +133,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
           {props.data.code!}
         </SyntaxHighlighter>
       </Box>
-      {props.data.caption !== "" ? (
+      {/* {props.data.caption !== "" ? (
         <Box my={2} textAlign="center">
           <Typography
             fontFamily={theme.typography.fontFamily}
@@ -148,7 +146,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
         </Box>
       ) : (
         <></>
-      )}
+      )} */}
     </Box>
   );
 };

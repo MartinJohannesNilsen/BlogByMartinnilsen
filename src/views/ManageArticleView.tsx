@@ -51,7 +51,7 @@ const StyledTextField = withStyles((theme) => ({
   },
 }))(TextField);
 
-function isvalidHTTPUrl(string: string) {
+export function isvalidHTTPUrl(string: string) {
   let url;
   try {
     url = new URL(string);
@@ -227,7 +227,7 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
           sx={{ minWidth: "100vw", minHeight: "100vh" }}
         >
           <form onSubmit={handleSubmit}>
-            <Box my={2}>
+            <Box my={1}>
               <Box
                 display="flex"
                 alignItems="center"

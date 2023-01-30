@@ -11,8 +11,6 @@ import DOMPurify from "dompurify";
 
 const CustomWarning = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
-  const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const sm = useMediaQuery(theme.breakpoints.only("sm"));
 
   return (
     <Box my={1}>

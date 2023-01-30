@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { Reveal, ScrollTrigger } from "react-gsap";
-import {} from "react-gsap";
 import {
   FadeInFromLeft,
   FadeInFromRight,
@@ -11,7 +10,6 @@ import {
 import { RevealProps } from "../../types";
 
 // Original Reveal Components
-
 export const RevealFromLeft: FC<RevealProps> = (props: RevealProps) => {
   return (
     <Reveal repeat={props.repeat || false} trigger={<div />}>
@@ -43,7 +41,6 @@ export const RevealFromUp: FC<RevealProps> = (props: RevealProps) => {
 };
 
 // Empty scrolltrigger which makes it not change on theme change/language
-
 export const RevealFromLeftOnEnter: React.FC<RevealProps> = (props) => {
   return (
     <ScrollTrigger

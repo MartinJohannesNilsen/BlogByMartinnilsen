@@ -1,9 +1,8 @@
-import { Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box } from "@mui/material";
 import { EditorjsRendererProps } from "../../../types";
 import { useTheme } from "../../../ThemeProvider";
 import "katex/dist/katex.min.css";
-import { InlineMath, BlockMath } from "react-katex";
+import { BlockMath } from "react-katex";
 
 const CustomMath = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();

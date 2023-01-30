@@ -22,7 +22,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
 
   return (
     <Box
-      my={1}
+      my={2}
       display="flex"
       width="100%"
       flexDirection="column"

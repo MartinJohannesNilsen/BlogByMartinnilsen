@@ -1,4 +1,4 @@
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { EditorjsRendererProps } from "../../../types";
 import { useTheme } from "../../../ThemeProvider";
 import DOMPurify from "dompurify";

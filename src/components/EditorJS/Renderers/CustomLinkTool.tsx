@@ -2,7 +2,6 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardContent,
   Typography,
   useMediaQuery,
 } from "@mui/material";

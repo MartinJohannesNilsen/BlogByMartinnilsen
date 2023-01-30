@@ -10,6 +10,7 @@ import Delimiter from '@editorjs/delimiter'
 import InlineCode from '@editorjs/inline-code'
 import SimpleImage from '@editorjs/simple-image'
 import InlineImage from 'editorjs-inline-image';
+import InlineVideo from "./BlockTools/InlineVideo/tool"
 import Embed from '@editorjs/embed'
 // Code highlight editors
 import CodeBlock from 'editorjs-code-highlight' // Nice try, but textarea and marker is off
@@ -29,46 +30,47 @@ export const EDITOR_JS_TOOLS = {
       preserveBlank: true,
     }
   },
-  h1: {
-    class: Header,
-    toolbox: {
-      icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-      title: 'H1',
-      data: {
-        level: 1
-      }
-    }
-  },
-  h2: {
-    class: Header,
-    toolbox: {
-      icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-      title: 'H2',
-      data: {
-        level: 2
-      }
-    }
-  },
-  h3: {
-    class: Header,
-    toolbox: {
-      icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-      title: 'H3',
-      data: {
-        level: 3
-      }
-    }
-  },
-  h4: {
-    class: Header,
-    toolbox: {
-      icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-      title: 'H4',
-      data: {
-        level: 4
-      }
-    }
-  },
+  header: Header,
+  // h1: {
+  //   class: Header,
+  //   toolbox: {
+  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
+  //     title: 'H1',
+  //     data: {
+  //       level: 1
+  //     }
+  //   }
+  // },
+  // h2: {
+  //   class: Header,
+  //   toolbox: {
+  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
+  //     title: 'H2',
+  //     data: {
+  //       level: 2
+  //     }
+  //   }
+  // },
+  // h3: {
+  //   class: Header,
+  //   toolbox: {
+  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
+  //     title: 'H3',
+  //     data: {
+  //       level: 3
+  //     }
+  //   }
+  // },
+  // h4: {
+  //   class: Header,
+  //   toolbox: {
+  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
+  //     title: 'H4',
+  //     data: {
+  //       level: 4
+  //     }
+  //   }
+  // },
   list: List,
   warning: {
     class: Warning,
@@ -85,27 +87,6 @@ export const EDITOR_JS_TOOLS = {
   code: {
     // Codeflask
     class: editorjsCodeflask,
-
-    // // CodeBox
-    // class: CodeBox,
-    // config: {
-    //   // themeURL: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/ir-black.min.css', // Optional
-    //   // themeName: 'ir-black', // Optional
-    //   useDefaultTheme: 'light' // Optional. This also determines the background color of the language select drop-down
-    // },
-
-    // CodeBlock
-    // class: CodeBlock,
-    // config: {
-    //   allowValidation: true, // ignores code block that has empty code when saving
-    //   // supportedLanguages: [
-    //   //   {
-    //   //     label: 'Py', // custom name here. Then select box will show 'py' for python instead of 'Python'
-    //   //     value: 'python', // make sure it's the same alias as highlightjs common language alias
-    //   //   },
-    //   // ],
-    //   defaultLanguage: 'plaintext' // 'plaintext' wil be the default when EditorJS first initialized
-    // },
     toolbox: {
       icon: '<svg fill="#000000" width="800px" height="800px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"> <rect id="Icons" x="-768" y="0" width="1280" height="800" style="fill:none;"/> <g id="Icons1" serif:id="Icons"> <g id="Strike"> </g> <g id="H1"> </g> <g id="H2"> </g> <g id="H3"> </g> <g id="list-ul"> </g> <g id="hamburger-1"> </g> <g id="hamburger-2"> </g> <g id="list-ol"> </g> <g id="list-task"> </g> <g id="trash"> </g> <g id="vertical-menu"> </g> <g id="horizontal-menu"> </g> <g id="sidebar-2"> </g> <g id="Pen"> </g> <g id="Pen1" serif:id="Pen"> </g> <g id="clock"> </g> <g id="external-link"> </g> <g id="hr"> </g> <g id="info"> </g> <g id="warning"> </g> <g id="plus-circle"> </g> <g id="minus-circle"> </g> <g id="vue"> </g> <g id="cog"> </g> <g id="logo"> </g> <path id="code" d="M25.027,49.084l-16.97,-16.971l16.97,-16.97l2.829,2.828l-14.143,14.142c4.714,4.714 9.429,9.428 14.143,14.142l-2.829,2.829Zm30.986,-16.971l-16.97,16.971l-2.829,-2.829l14.142,-14.142l-14.142,-14.142l2.829,-2.828l16.97,16.97Z"/> <g id="radio-check"> </g> <g id="eye-slash"> </g> <g id="eye"> </g> <g id="toggle-off"> </g> <g id="shredder"> </g> <g id="spinner--loading--dots-" serif:id="spinner [loading, dots]"> </g> <g id="react"> </g> <g id="check-selected"> </g> <g id="turn-off"> </g> <g id="code-block"> </g> <g id="user"> </g> <g id="coffee-bean"> </g> <g id="coffee-beans"> <g id="coffee-bean1" serif:id="coffee-bean"> </g> </g> <g id="coffee-bean-filled"> </g> <g id="coffee-beans-filled"> <g id="coffee-bean2" serif:id="coffee-bean"> </g> </g> <g id="clipboard"> </g> <g id="clipboard-paste"> </g> <g id="clipboard-copy"> </g> <g id="Layer1"> </g> </g> </svg>',
       title: 'Code'
@@ -130,21 +111,8 @@ export const EDITOR_JS_TOOLS = {
       title: 'Image'
     }
   },
-  embed: {
-    class: Embed,
-    inlineToolbar: true,
-    config: {
-      // services: { // Service-specific settings
-      //   twitter: {
-      //     regex: /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+?.*)?$/,
-      //     embedUrl: 'https://twitframe.com/show?url=https://twitter.com/<%= remote_id %>',
-      //     html: '<iframe width="600" height="600" style="margin: 0 auto;" frameborder="0" scrolling="no" allowtransparency="true"></iframe>',
-      //     maxHeight: "600px",
-      //     id: ids => ids.join('/status/'),
-      //   },
-      // }
-    }
-  },
+  video: InlineVideo,
+  embed: Embed,
   math: {
     class: EJLaTeX,
     shortcut: 'CMD+SHIFT+M',
@@ -158,9 +126,6 @@ export const EDITOR_JS_TOOLS = {
     config: {
       endpoint: 'http://localhost:3001/fetchLinkPreview', // Your backend endpoint for url data fetching,
     }
-  },
-  header: {
-    class: Header,
   },
   // table: Table,
   

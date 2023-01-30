@@ -4,3 +4,8 @@
 .editorjs-codeFlask_Wrapper .editorjs-codeFlask_LangDisplay{
     height: auto !important;
 }
+
+.editorjs-codeFlask_Wrapper {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
