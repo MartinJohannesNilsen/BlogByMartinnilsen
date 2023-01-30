@@ -32,7 +32,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
         style={{ width: "100%", borderRadius: "0px" }}
         src={props.data.url}
       />
-      {props.data.caption ? (
+      {props.data.caption && props.data.caption !== "<br>" ? (
         <Box my={2}>
           <Typography
             fontFamily={theme.typography.fontFamily}
