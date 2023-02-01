@@ -358,7 +358,7 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 gap="10px"
-                sx={{ position: "fixed", left: 25, bottom: 25 }}
+                sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 100 }}
               >
                 <Button
                   type="submit"
@@ -368,6 +368,10 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                       ? "2px solid green"
                       : "2px solid " + theme.palette.text.primary,
                     zIndex: 2,
+                    backgroundColor: theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
                   }}
                 >
                   <Typography
@@ -396,6 +400,10 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                     sx={{
                       border: "2px solid " + theme.palette.text.primary,
                       zIndex: 2,
+                      backgroundColor: theme.palette.primary.main,
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
                     }}
                   >
                     <Typography
@@ -414,7 +422,7 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 gap="10px"
-                sx={{ position: "fixed", right: 25, bottom: 25 }}
+                sx={{ position: "fixed", right: 25, bottom: 25, zIndex: 100 }}
               >
                 {props.fetch ? (
                   <>
@@ -422,6 +430,10 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                       onClick={handleDeleteDialogOpen}
                       sx={{
                         border: "2px solid red",
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
                       }}
                     >
                       <Typography

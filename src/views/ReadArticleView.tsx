@@ -50,6 +50,7 @@ import CustomVideo from "../components/EditorJS/Renderers/CustomVideo";
 import CustomChecklist from "../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../components/EditorJS/Renderers/CustomCode";
 import CustomMath from "../components/EditorJS/Renderers/CustomMath";
+import { isMobile } from "react-device-detect";
 
 // function extractContent(html: any) {
 //   return new DOMParser().parseFromString(html, "text/html").documentElement
@@ -150,6 +151,97 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           <Helmet>
             <title>{post.title}</title>
           </Helmet>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            justifyItems="center"
+            width="100%"
+            pt={isMobile ? 10 : 2}
+            pb={isMobile ? 0.5 : 2}
+            position={isMobile ? "fixed" : "relative"}
+            sx={{
+              top: 0,
+              left: 0,
+              backgroundColor: theme.palette.primary.main,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              zIndex: 10000,
+              marginTop: isMobile ? "-75px" : "0",
+              paddingX: isMobile ? "5%" : "0",
+            }}
+          >
+            <Link
+              fontFamily={theme.typography.fontFamily}
+              variant="body1"
+              fontWeight="900"
+              mr={0.5}
+              sx={{
+                fontSize: isMobile ? "25px" : theme.typography.body1.fontSize,
+                textDecoration: "none",
+                color: theme.palette.secondary.main,
+                "&:hover": {
+                  cursor: "pointer",
+                  color: colorLumincance(theme.palette.secondary.main, 0.33),
+                },
+              }}
+              href={"/"}
+            >
+              {isMobile ? "←" : "← Home"}
+            </Link>
+            <Box flexGrow={100} />
+            {isMobile ? (
+              <Typography
+                variant="body1"
+                fontWeight="800"
+                textAlign="center"
+                sx={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {post.title}
+              </Typography>
+            ) : (
+              <Box ml={-5} display="flex">
+                <Avatar
+                  alt="Author profile image"
+                  sx={{
+                    width: "28px",
+                    height: "28px",
+                    margin: "0 16px 0 16px",
+                  }}
+                  src={AvatarMJN}
+                />
+                <Typography
+                  variant="body1"
+                  fontWeight="800"
+                  textAlign="center"
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {post.author}
+                </Typography>
+              </Box>
+            )}
+            <Box flexGrow={100} />
+            <RWebShare
+              data={{
+                text: 'Check out this blog post: "' + post.title + '"!',
+                url: window.location.href,
+                title: "Link to blogpost",
+              }}
+            >
+              <IconButton sx={{ color: "text.primary" }}>
+                <IosShare color="inherit" sx={{ fontSize: "25px" }} />
+              </IconButton>
+            </RWebShare>
+          </Box>
           <Stack
             p={2}
             sx={{
@@ -161,66 +253,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             <Box
               display="flex"
               alignItems="center"
-              py={2}
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              <Link
-                fontFamily={theme.typography.fontFamily}
-                variant="body1"
-                fontWeight="900"
-                sx={{
-                  textDecoration: "none",
-                  color: theme.palette.secondary.main,
-                  "&:hover": {
-                    cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.33),
-                  },
-                }}
-                href={"/"}
-              >
-                ← Home
-              </Link>
-              <Box flexGrow={100} />
-              <Avatar
-                alt="Author profile image"
-                sx={{ width: "28px", height: "28px", margin: "0 16px 0 16px" }}
-                src={AvatarMJN}
-              />
-              <Typography
-                variant="body1"
-                fontWeight="800"
-                textAlign="center"
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {post.author}
-              </Typography>
-              <Box flexGrow={100} />
-              <RWebShare
-                data={{
-                  text: 'Check out this blog post: "' + post.title + '"!',
-                  url: window.location.href,
-                  title: "Link to blogpost",
-                }}
-              >
-                <IconButton sx={{ color: "text.primary" }}>
-                  <IosShare color="inherit" />
-                </IconButton>
-              </RWebShare>
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              mt={xs ? 0 : 1}
+              mt={0}
               mb={1}
-              py={2}
+              pt={isMobile ? 6 : 0}
+              pb={2}
             >
               <Box
                 display="flex"

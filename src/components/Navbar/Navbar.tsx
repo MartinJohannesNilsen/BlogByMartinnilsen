@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import {
   Box,
   Typography,
@@ -8,6 +8,8 @@ import {
   useMediaQuery,
   Tooltip,
   Button,
+  SvgIcon,
+  Avatar,
 } from "@mui/material";
 import { ThemeEnum } from "../../themes/themeMap";
 import { useTheme } from "../../ThemeProvider";
@@ -16,6 +18,8 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import $ from "jquery";
 import SettingsModal from "../SettingsModal/SettingsModal";
 import { useNavigate } from "react-router-dom";
+import { isMobile } from "react-device-detect";
+import logo from "../../assets/img/terminal.png";
 
 export const handleScroll = (name: string) => {
   $("html, body").animate(
@@ -52,17 +56,18 @@ export const Navbar: FC = (props) => {
   return (
     <AppBar
       elevation={0}
-      position="static"
+      position={isMobile ? "fixed" : "static"}
       sx={{
         zIndex: 2,
-        height: "80px",
+        marginTop: isMobile ? "-5px" : "0px",
+        maxHeight: isMobile ? "30px" : "80px",
         backgroundColor: "primary.main",
       }}
     >
       <Toolbar
         sx={{
           zIndex: 2,
-          height: "80px",
+          maxHeight: isMobile ? "30px" : "80px",
           backgroundColor: "primary.main",
         }}
       >
@@ -70,23 +75,24 @@ export const Navbar: FC = (props) => {
           display="flex"
           alignItems="center"
           justifyContent="center"
-          sx={{ width: "90%", marginX: "5%" }}
+          sx={{
+            width: isMobile ? "96%" : "90%",
+            marginX: isMobile ? "2%" : "5%",
+          }}
         >
-          <Button onClick={() => handleNavigate("/")}>
-            <Typography
-              fontFamily={theme.typography.fontFamily}
-              variant="h4"
-              fontWeight="800"
+          <ButtonBase onClick={() => handleNavigate("/")}>
+            <Avatar
               sx={{
-                color: "secondary.main",
+                height: "32px",
+                width: "32px",
+                borderRadius: "0",
               }}
-            >
-              Blog
-            </Typography>
-          </Button>
+              src={logo}
+            />
+          </ButtonBase>
           <Box flexGrow={1} />
           {process.env.REACT_APP_MANAGE_POSTS_AVAILABLE === "true" ? (
-            <Box mx={2} mb={0.2}>
+            <Box mx={2} mt={isMobile ? 0.25 : -0.2}>
               <Tooltip enterDelay={2000} title={"Upload new post"}>
                 <ButtonBase
                   onClick={() => {
@@ -109,7 +115,7 @@ export const Navbar: FC = (props) => {
           ) : (
             <></>
           )}
-          <Box>
+          <Box mt={isMobile ? 0.37 : 0}>
             <Tooltip enterDelay={2000} title={"Open settings"}>
               <ButtonBase
                 onClick={() => {

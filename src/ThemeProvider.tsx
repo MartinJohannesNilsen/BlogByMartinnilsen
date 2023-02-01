@@ -10,6 +10,7 @@ import { themeCreator } from "./themes/themeMap";
 import { ThemeEnum } from "./themes/themeMap";
 import useDidUpdate from "./utils/useDidUpdate";
 import { defaultAccentColor, defaultFontFamily } from "./themes/themeDefaults";
+import { Helmet } from "react-helmet";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting
@@ -119,6 +120,9 @@ const CustomThemeProvider: React.FC = (props) => {
       }}
     >
       <StyledEngineProvider injectFirst>
+        <Helmet>
+          <meta name="theme-color" content={theme.palette.primary.main} />
+        </Helmet>
         <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
       </StyledEngineProvider>
     </ThemeContext.Provider>
