@@ -121,7 +121,10 @@ const CustomThemeProvider: React.FC = (props) => {
     >
       <StyledEngineProvider injectFirst>
         <Helmet>
-          <meta name="theme-color" content={theme.palette.primary.main} />
+          <meta
+            name="theme-color"
+            content={theme.palette.primary.contrastText}
+          />
         </Helmet>
         <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
       </StyledEngineProvider>

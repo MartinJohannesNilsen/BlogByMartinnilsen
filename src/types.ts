@@ -71,6 +71,8 @@ export type BlogpostCardProps = {
   timestamp: number;
   summary: string;
   image: string;
+  type: string;
+  tags: string[];
   id: string;
 };
 
@@ -106,10 +108,7 @@ export type NavbarSection = {
 };
 
 export type NavbarProps = {
-  data: {
-    title: string;
-    sections: NavbarSection[];
-  };
+  backgroundColor: string;
 };
 
 // Component types

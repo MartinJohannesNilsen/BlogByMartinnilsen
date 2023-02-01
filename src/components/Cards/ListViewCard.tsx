@@ -3,7 +3,7 @@ import { Box, Card, CardActionArea, Typography } from "@mui/material";
 import { useTheme } from "../../ThemeProvider";
 import { BlogpostCardProps } from "../../types";
 
-export const BlogpostCard: FC<BlogpostCardProps> = (props) => {
+export const ListViewCard: FC<BlogpostCardProps> = (props) => {
   const { theme } = useTheme();
 
   return (
@@ -48,4 +48,4 @@ export const BlogpostCard: FC<BlogpostCardProps> = (props) => {
     </Card>
   );
 };
-export default BlogpostCard;
+export default ListViewCard;

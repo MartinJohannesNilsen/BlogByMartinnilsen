@@ -1,14 +1,11 @@
 import { FC, useCallback, useState } from "react";
 import {
   Box,
-  Typography,
   AppBar,
   Toolbar,
   ButtonBase,
   useMediaQuery,
   Tooltip,
-  Button,
-  SvgIcon,
   Avatar,
 } from "@mui/material";
 import { ThemeEnum } from "../../themes/themeMap";
@@ -20,6 +17,7 @@ import SettingsModal from "../SettingsModal/SettingsModal";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import logo from "../../assets/img/terminal.png";
+import { NavbarProps } from "../../types";
 
 export const handleScroll = (name: string) => {
   $("html, body").animate(
@@ -30,7 +28,7 @@ export const handleScroll = (name: string) => {
   );
 };
 
-export const Navbar: FC = (props) => {
+export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -61,14 +59,14 @@ export const Navbar: FC = (props) => {
         zIndex: 2,
         marginTop: isMobile ? "-5px" : "0px",
         maxHeight: isMobile ? "30px" : "80px",
-        backgroundColor: "primary.main",
+        backgroundColor: props.backgroundColor,
       }}
     >
       <Toolbar
         sx={{
           zIndex: 2,
           maxHeight: isMobile ? "30px" : "80px",
-          backgroundColor: "primary.main",
+          backgroundColor: props.backgroundColor,
         }}
       >
         <Box
@@ -101,7 +99,7 @@ export const Navbar: FC = (props) => {
                 >
                   <PostAddIcon
                     sx={{
-                      color: theme.palette.text.primary,
+                      color: theme.palette.text.secondary,
                       height: "30px",
                       width: "30px",
                       "&:hover": {
@@ -124,7 +122,7 @@ export const Navbar: FC = (props) => {
               >
                 <TuneIcon
                   sx={{
-                    color: theme.palette.text.primary,
+                    color: theme.palette.text.secondary,
                     height: "30px",
                     width: "30px",
                     "&:hover": {

@@ -32,15 +32,16 @@ import { Helmet } from "react-helmet";
 import DOMPurify from "dompurify";
 import ClappingHands from "../assets/img/clapping-hands.png";
 import AvatarMJN from "../assets/img/ProfileCutoutSquare.png";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import ConfettiExplosion from "react-confetti-explosion";
+import useWindowSize from "react-use/lib/useWindowSize";
+import { isMobile } from "react-device-detect";
 
 // Components
 import CustomDelimiter from "../components/EditorJS/Renderers/CustomDelimiter";
 import CustomImage from "../components/EditorJS/Renderers/CustomImage";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CustomLinkTool from "../components/EditorJS/Renderers/CustomLinkTool";
-import ConfettiExplosion from "react-confetti-explosion";
-import useWindowSize from "react-use/lib/useWindowSize";
 import CustomQuote from "../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../components/EditorJS/Renderers/CustomTable";
 import CustomPersonality from "../components/EditorJS/Renderers/CustomPersonality";
@@ -50,12 +51,6 @@ import CustomVideo from "../components/EditorJS/Renderers/CustomVideo";
 import CustomChecklist from "../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../components/EditorJS/Renderers/CustomCode";
 import CustomMath from "../components/EditorJS/Renderers/CustomMath";
-import { isMobile } from "react-device-detect";
-
-// function extractContent(html: any) {
-//   return new DOMParser().parseFromString(html, "text/html").documentElement
-//     .textContent;
-// }
 
 function extractContent(html: string) {
   return html.replace(/<[^>]+>/g, " ");
@@ -137,7 +132,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   return (
     <Grid
       container
-      width="100vw"
+      width="100%"
       justifyContent="center"
       sx={{ backgroundColor: theme.palette.primary.main }}
     >
@@ -148,20 +143,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
       ) : (
         <Grid item>
           <Helmet>
-            {/* Title and description */}
             <title>{post.title}</title>
-
-            {/* Meta tags */}
-            <meta property="og:image" content={post.image} />
-            <meta property="og:title" content={post.title} />
-            <meta property="og:description" content={post.summary} />
-
-            {/* <meta name="twitter:card" content="summary_large_image" /> */}
-            <meta name="twitter:card" content="summary" />
-            <meta name="twitter:creator" content="@MartinJNilsen" />
-            <meta name="twitter:image" content={post.image} />
-            <meta name="twitter:title" content={post.title} />
-            <meta name="twitter:description" content={post.summary} />
+            <meta name="theme-color" content={theme.palette.primary.main} />
           </Helmet>
           <Box
             display="flex"
@@ -217,29 +200,30 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 {post.title}
               </Typography>
             ) : (
-              <Box ml={-5} display="flex">
-                <Avatar
-                  alt="Author profile image"
-                  sx={{
-                    width: "28px",
-                    height: "28px",
-                    margin: "0 16px 0 16px",
-                  }}
-                  src={AvatarMJN}
-                />
-                <Typography
-                  variant="body1"
-                  fontWeight="800"
-                  textAlign="center"
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {post.author}
-                </Typography>
-              </Box>
+              <></>
+              // <Box ml={-5} display="flex">
+              //   <Avatar
+              //     alt="Author profile image"
+              //     sx={{
+              //       width: "28px",
+              //       height: "28px",
+              //       margin: "0 16px 0 16px",
+              //     }}
+              //     src={AvatarMJN}
+              //   />
+              //   <Typography
+              //     variant="body1"
+              //     fontWeight="800"
+              //     textAlign="center"
+              //     sx={{
+              //       whiteSpace: "nowrap",
+              //       overflow: "hidden",
+              //       textOverflow: "ellipsis",
+              //     }}
+              //   >
+              //     {post.author}
+              //   </Typography>
+              // </Box>
             )}
             <Box flexGrow={100} />
             <RWebShare
@@ -257,11 +241,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           <Stack
             p={2}
             sx={{
-              minHeight: "calc(100vh - 120px)",
+              minHeight: isMobile
+                ? "calc(100vh - 73px - 120px)"
+                : "calc(100vh - 73px - 120px)",
               width: xs ? "380px" : sm ? "500px" : "700px",
               position: "relative",
             }}
           >
+            {/* Title box */}
             <Box
               display="flex"
               alignItems="center"
@@ -349,6 +336,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 </Box>
               </Box>
             </Box>
+            {/* EditorJS rendering */}
             <Box
               mb={1}
               sx={{
@@ -357,8 +345,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             >
               {OutputElement}
             </Box>
+            <Box flexGrow={100} />
+            {/* Share and exploding */}
             <Box
-              my={8}
+              mt={6}
+              mb={3}
               py={2}
               sx={{
                 borderTop: "2px solid rgba(100,100,100,0.2)",
@@ -380,11 +371,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   }}
                 >
                   <ConfettiExplosion
-                    force={0.5}
+                    force={isMobile ? 0.8 : 0.5}
                     duration={4000}
-                    particleCount={200}
-                    height={height - 30}
-                    width={width - 30}
+                    particleCount={250}
+                    height={height - 100}
+                    width={width - 100}
                   />
                 </Box>
               )}
@@ -402,6 +393,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               </IconButton>
             </Box>
           </Stack>
+          {/* Buttons for administration */}
           {process.env.REACT_APP_MANAGE_POSTS_AVAILABLE === "true" ? (
             <Box
               onClick={() => {

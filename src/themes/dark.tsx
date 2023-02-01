@@ -10,6 +10,7 @@ export const dark = createTheme({
     },
     // background
     primary: {
+      contrastText: "#e2e2e2",
       main: "#161518",
       dark: "#141315",
     },

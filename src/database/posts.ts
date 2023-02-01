@@ -75,7 +75,6 @@ const getPostCount = async (filterOnKeyValue?: {
         )
       : collection(db, "posts")
   );
-  console.log(countSnapshot.data().count);
   return countSnapshot.data().count;
 };
 
@@ -108,7 +107,6 @@ const getPaginatedCollection = async (
           limit(numberOfPosts)
         );
     const documentSnapshots = await getDocs(first);
-    console.log(documentSnapshots.docs);
     return documentSnapshots.docs;
   }
   if (direction === "prev") {

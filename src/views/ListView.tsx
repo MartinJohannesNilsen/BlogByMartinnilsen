@@ -10,7 +10,7 @@ import { useTheme } from "../ThemeProvider";
 import { ListViewProps } from "../types";
 import { getPaginatedCollection, getPostCount } from "../database/posts";
 import { QueryDocumentSnapshot } from "firebase/firestore";
-import BlogpostCard from "../components/Cards/BlogpostCard";
+import ListViewCard from "../components/Cards/ListViewCard";
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
@@ -102,12 +102,14 @@ const ListView: FC<ListViewProps> = (props) => {
             const id = document.id;
             return (
               <Box py={2} key={index}>
-                <BlogpostCard
+                <ListViewCard
                   id={id}
                   image={data.image}
                   title={data.title}
                   timestamp={data.timestamp}
                   summary={data.summary}
+                  type={data.type}
+                  tags={data.tags}
                 />
               </Box>
             );
