@@ -1,0 +1,11 @@
+.codeflask.codeflask--has-line-numbers:before, .codeflask__lines, .codeflask__flatten{
+    z-index: 0 !important;
+}
+.editorjs-codeFlask_Wrapper .editorjs-codeFlask_LangDisplay{
+    height: auto !important;
+}
+
+.editorjs-codeFlask_Wrapper {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
