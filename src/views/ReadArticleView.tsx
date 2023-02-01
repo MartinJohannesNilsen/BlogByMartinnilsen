@@ -147,9 +147,21 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
         <Navigate to="/" />
       ) : (
         <Grid item>
-          {/* {console.log(post.data)} */}
           <Helmet>
+            {/* Title and description */}
             <title>{post.title}</title>
+
+            {/* Meta tags */}
+            <meta property="og:image" content={post.image} />
+            <meta property="og:title" content={post.title} />
+            <meta property="og:description" content={post.summary} />
+
+            {/* <meta name="twitter:card" content="summary_large_image" /> */}
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:creator" content="@MartinJNilsen" />
+            <meta name="twitter:image" content={post.image} />
+            <meta name="twitter:title" content={post.title} />
+            <meta name="twitter:description" content={post.summary} />
           </Helmet>
           <Box
             display="flex"
@@ -157,19 +169,19 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             justifyContent="center"
             justifyItems="center"
             width="100%"
-            pt={isMobile ? 10 : 2}
+            pt={isMobile ? 5 : 2}
             pb={isMobile ? 0.5 : 2}
             position={isMobile ? "fixed" : "relative"}
             sx={{
               top: 0,
-              left: 0,
               backgroundColor: theme.palette.primary.main,
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
               zIndex: 10000,
-              marginTop: isMobile ? "-75px" : "0",
+              marginTop: isMobile ? "-35px" : "0",
               paddingX: isMobile ? "5%" : "0",
+              WebkitTransform: "translateZ(0)",
             }}
           >
             <Link
