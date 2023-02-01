@@ -66,10 +66,13 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
   const [state, setState] = useState({
     raised: false,
   });
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles({
     root: {
       transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-      boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+      boxShadow:
+        theme.palette.mode === "light"
+          ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+          : "",
       width: "100%",
     },
     cardHovered: {
@@ -80,7 +83,7 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
         : "scale3d(1.05, 1.05, 1)",
       width: "100%",
     },
-  }));
+  });
   const classes = useStyles();
 
   return (
