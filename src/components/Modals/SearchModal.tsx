@@ -122,6 +122,7 @@ export const SearchModal = (props: SearchModalProps) => {
                 }}
                 inputProps={{
                   style: {
+                    fontFamily: theme.typography.fontFamily,
                     fontSize: 30,
                     fontWeight: 400,
                     padding: "4px 12px",
@@ -227,6 +228,7 @@ export const SearchModal = (props: SearchModalProps) => {
                         primary={post.title}
                         primaryTypographyProps={{
                           color: theme.palette.text.primary,
+                          fontFamily: theme.typography.fontFamily,
                           fontWeight: "600",
                           whiteSpace: "nowrap",
                           textOverflow: "ellipsis",
@@ -236,6 +238,7 @@ export const SearchModal = (props: SearchModalProps) => {
                         secondary={post.summary}
                         secondaryTypographyProps={{
                           color: theme.palette.text.primary,
+                          fontFamily: theme.typography.fontFamily,
                           whiteSpace: "nowrap",
                           textOverflow: "ellipsis",
                           overflow: "hidden",
@@ -258,7 +261,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           fontWeight={600}
                         >
                           {/* {activeItem === index ? "↩" : `⌘${index + 1}`} */}
-                          {activeItem === index ? "↩" : " "}
+                          {activeItem === index ? "↩" : ""}
                         </Typography>
                       </ListItemText>
                     </ListItemButton>
