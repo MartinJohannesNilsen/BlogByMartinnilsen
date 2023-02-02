@@ -27,6 +27,11 @@ import { useQuery } from "@tanstack/react-query";
 import { postQuery } from "./ReadArticleView";
 import CreatableSelect from "react-select/creatable";
 import { addTag, getTags } from "../database/tags";
+import {
+  addPostsOverview,
+  deletePostsOverview,
+  updatePostsOverview,
+} from "../database/search";
 
 const StyledTextField = withStyles((theme) => ({
   root: {
@@ -62,9 +67,11 @@ export function isvalidHTTPUrl(string: string) {
 }
 
 const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
+  const params = useParams();
   const { theme, setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(props.fetch);
   const [isPosted, setIsPosted] = useState<boolean>(false);
+  const [postId, setPostId] = useState<string>(params.postId!);
   const [tagOptions, setTagOptions] = useState<
     { value: string; label: string }[]
   >([]);
@@ -93,7 +100,6 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
   );
 
   // Update or delete
-  const params = useParams();
   const initialData = useLoaderData();
   const { data: fetchedPost } = props.fetch
     ? useQuery({
@@ -162,15 +168,36 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
           data: editorJSContent,
         };
         if (props.fetch) {
-          updatePost(params.postId!, newObject).then((val) => {
-            if (val) {
-              setIsPosted(true);
+          updatePost(params.postId!, newObject).then((postWasUpdated) => {
+            if (postWasUpdated) {
+              updatePostsOverview({
+                id: params.postId!,
+                title: newObject.title,
+                summary: newObject.summary,
+                img: newObject.image,
+              }).then((overviewWasUpdated) => {
+                if (overviewWasUpdated) {
+                  setIsPosted(true);
+                }
+              });
             }
           });
         } else {
-          // console.log(newObject);
-          addPost(newObject);
-          setIsPosted(true);
+          addPost(newObject).then((postId) => {
+            if (postId) {
+              addPostsOverview({
+                id: postId,
+                title: newObject.title,
+                summary: newObject.summary,
+                img: newObject.image,
+              }).then((overviewWasAdded) => {
+                if (overviewWasAdded) {
+                  setPostId(postId);
+                  setIsPosted(true);
+                }
+              });
+            }
+          });
         }
       }
     } catch (e) {
@@ -187,10 +214,14 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
   };
 
   const handleDeletePost = () => {
-    deletePost(params.postId!).then((val) => {
-      if (val) {
-        handleDeleteDialogClose();
-        handleNavigate("/");
+    deletePost(params.postId!).then((postWasDeleted) => {
+      if (postWasDeleted) {
+        deletePostsOverview(params.postId!).then((overviewWasUpdated) => {
+          if (overviewWasUpdated) {
+            handleDeleteDialogClose();
+            handleNavigate("/");
+          }
+        });
       }
     });
   };
@@ -392,10 +423,8 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                 {isPosted ? (
                   <Button
                     onClick={() => {
-                      window.location.href = window.location.href.replace(
-                        "create",
-                        "posts"
-                      );
+                      console.log(postId);
+                      // handleNavigate(`/posts/${postId}`);
                     }}
                     sx={{
                       border: "2px solid " + theme.palette.text.primary,

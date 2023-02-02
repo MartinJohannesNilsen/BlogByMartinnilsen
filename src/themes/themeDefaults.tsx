@@ -72,6 +72,24 @@ export const baseTheme = createTheme({
         body: {},
       },
     },
+    // Mui Filled TextField
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "transparent",
+          "&:hover": {
+            backgroundColor: "transparent",
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+          },
+          "&.Mui-focused": {
+            backgroundColor: "transparent",
+          },
+        },
+      },
+    },
     // Radio group and checkboxes
     MuiRadio: {
       styleOverrides: {

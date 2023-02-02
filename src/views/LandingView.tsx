@@ -13,7 +13,6 @@ import { Helmet } from "react-helmet";
 import { QueryDocumentSnapshot } from "firebase/firestore";
 import { getPaginatedCollection, getPostCount } from "../database/posts";
 import LandingViewCard from "../components/Cards/LandingViewCard";
-import ListView from "./ListView";
 import WavingHand from "../assets/img/waving-hand.png";
 import {
   ArrowBackIosNewSharp,

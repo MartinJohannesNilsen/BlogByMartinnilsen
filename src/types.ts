@@ -102,6 +102,13 @@ export type FirestorePost = {
   views: number;
 };
 
+export type SimplifiedPost = {
+  id: string;
+  title: string;
+  summary: string;
+  img: string;
+};
+
 export type NavbarSection = {
   name: string;
   path: string;
@@ -138,6 +145,13 @@ export type SettingsModalProps = {
   handleModalOpen: () => void;
   handleModalClose: () => void;
   handleThemeChange: (event: any) => void;
+};
+
+export type SearchModalProps = {
+  open: boolean;
+  handleModalOpen: () => void;
+  handleModalClose: () => void;
+  postsOverview?: SimplifiedPost[];
 };
 
 // View props types
