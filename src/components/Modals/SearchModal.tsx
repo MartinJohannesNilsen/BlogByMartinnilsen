@@ -70,6 +70,8 @@ export const SearchModal = (props: SearchModalProps) => {
   useHotkeys(
     "Enter",
     () => {
+      props.handleModalClose();
+      setTextFieldValue("");
       window.location.href = `${window.location.href}posts/${
         matchedItems![activeItem].id
       }`;
@@ -145,6 +147,8 @@ export const SearchModal = (props: SearchModalProps) => {
                       Math.min(maxNumberOfItems - 1, activeItem + 1)
                     );
                   } else if (e.key === "Enter") {
+                    props.handleModalClose();
+                    setTextFieldValue("");
                     window.location.href = `${window.location.href}posts/${
                       matchedItems![activeItem].id
                     }`;
@@ -206,6 +210,10 @@ export const SearchModal = (props: SearchModalProps) => {
                       }}
                       component="a"
                       href={`/posts/${post.id}`}
+                      onClick={() => {
+                        props.handleModalClose();
+                        setTextFieldValue("");
+                      }}
                     >
                       <ListItemAvatar>
                         <Avatar
