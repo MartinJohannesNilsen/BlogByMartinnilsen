@@ -72,9 +72,10 @@ export const SearchModal = (props: SearchModalProps) => {
     () => {
       props.handleModalClose();
       setTextFieldValue("");
-      window.location.href = `${window.location.href}posts/${
-        matchedItems![activeItem].id
-      }`;
+      // window.location.href = `${window.location.href}posts/${
+      //   matchedItems![activeItem].id
+      // }`;
+      handleNavigate(`posts/${matchedItems![activeItem].id}`);
     },
     [activeItem]
   );
@@ -109,6 +110,7 @@ export const SearchModal = (props: SearchModalProps) => {
             transform: "translate(-50%, -50%)",
             width: xs ? 380 : 500,
             height: "450px",
+            outline: 0,
           }}
         >
           <Box sx={modalStyle}>
@@ -149,9 +151,10 @@ export const SearchModal = (props: SearchModalProps) => {
                   } else if (e.key === "Enter") {
                     props.handleModalClose();
                     setTextFieldValue("");
-                    window.location.href = `${window.location.href}posts/${
-                      matchedItems![activeItem].id
-                    }`;
+                    // window.location.href = `${window.location.href}posts/${
+                    //   matchedItems![activeItem].id
+                    // }`;
+                    handleNavigate(`posts/${matchedItems![activeItem].id}`);
                   }
                 }}
                 onChange={(e) => {

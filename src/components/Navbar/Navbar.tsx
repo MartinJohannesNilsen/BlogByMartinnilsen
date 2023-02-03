@@ -4,7 +4,6 @@ import {
   AppBar,
   Toolbar,
   ButtonBase,
-  useMediaQuery,
   Tooltip,
   Avatar,
 } from "@mui/material";
