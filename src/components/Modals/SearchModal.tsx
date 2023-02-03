@@ -17,6 +17,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useCallback, useEffect, useState } from "react";
 import { matchSorter } from "match-sorter";
 import { useNavigate } from "react-router-dom";
+import { isMobile } from "react-device-detect";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
@@ -35,7 +36,7 @@ export const SearchModal = (props: SearchModalProps) => {
   const [matchedItems, setMatchedItems] = useState(
     props.postsOverview?.slice(0, maxNumberOfItems)
   );
-  const [activeItem, setActiveItem] = useState(0);
+  const [activeItem, setActiveItem] = useState(isMobile ? -1 : 0);
 
   // Filter/search
   useEffect(() => {
@@ -79,7 +80,6 @@ export const SearchModal = (props: SearchModalProps) => {
   const modalStyle = {
     bgcolor: "background.paper",
     borderRadius: 2,
-    outline: 0,
     display: "flex",
     textAlign: "left",
     flexDirection: "column",
@@ -87,6 +87,7 @@ export const SearchModal = (props: SearchModalProps) => {
     justifyContent: "flex-start",
     boxShadow: 24,
     p: 1,
+    outline: 0,
   };
 
   return (
@@ -96,6 +97,7 @@ export const SearchModal = (props: SearchModalProps) => {
         onClose={props.handleModalClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableAutoFocus
       >
         <Box
           sx={{
