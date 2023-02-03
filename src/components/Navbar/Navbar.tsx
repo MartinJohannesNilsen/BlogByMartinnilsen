@@ -78,7 +78,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       position={isMobile ? "fixed" : "static"}
       sx={{
         zIndex: 2,
-        marginTop: isMobile ? "-5px" : "0px",
         maxHeight: isMobile ? "30px" : "80px",
         backgroundColor: props.backgroundColor,
       }}
@@ -86,6 +85,9 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       <Toolbar
         sx={{
           zIndex: 2,
+          marginTop: isMobile ? "-35px" : "0",
+          paddingTop: isMobile ? "59px" : "0",
+          paddingBottom: isMobile ? "26px" : "0",
           maxHeight: isMobile ? "30px" : "80px",
           backgroundColor: props.backgroundColor,
         }}
