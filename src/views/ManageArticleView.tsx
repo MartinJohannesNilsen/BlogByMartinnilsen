@@ -425,8 +425,8 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                 {isPosted ? (
                   <Button
                     onClick={() => {
-                      console.log(postId);
                       // handleNavigate(`/posts/${postId}`);
+                      window.location.href = `/posts/${postId}`;
                     }}
                     sx={{
                       border: "2px solid " + theme.palette.text.primary,
