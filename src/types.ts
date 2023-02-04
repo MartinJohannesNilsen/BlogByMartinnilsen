@@ -107,6 +107,7 @@ export type SimplifiedPost = {
   title: string;
   summary: string;
   img: string;
+  published: boolean;
 };
 
 export type NavbarSection = {

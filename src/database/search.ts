@@ -45,6 +45,7 @@ const updatePostsOverview = async (
           post.img = simplifiedPost.img;
           post.title = simplifiedPost.title;
           post.summary = simplifiedPost.summary;
+          post.published = simplifiedPost.published;
         }
       });
       await updateDoc(docRef, { values: values }).catch((error) => {

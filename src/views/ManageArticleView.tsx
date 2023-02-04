@@ -175,6 +175,7 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                 title: newObject.title,
                 summary: newObject.summary,
                 img: newObject.image,
+                published: newObject.published,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
                   setIsPosted(true);
@@ -190,6 +191,7 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                 title: newObject.title,
                 summary: newObject.summary,
                 img: newObject.image,
+                published: newObject.published,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
                   setPostId(postId);

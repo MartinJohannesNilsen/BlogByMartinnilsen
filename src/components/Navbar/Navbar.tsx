@@ -48,7 +48,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 
   useEffect(() => {
     getPostsOverview()
-      .then((data) => setSearchModalData(data))
+      .then((data) => {
+        process.env.REACT_APP_MANAGE_POSTS_AVAILABLE === "true"
+          ? setSearchModalData(data)
+          : setSearchModalData(data.filter((post) => post.published));
+      })
       .catch((error) => {
         console.log(error);
       });
