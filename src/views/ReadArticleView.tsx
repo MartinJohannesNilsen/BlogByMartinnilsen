@@ -3,10 +3,12 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonBase,
   Grid,
   IconButton,
   Link,
   Stack,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -26,7 +28,7 @@ import colorLumincance from "../utils/colorLuminance";
 import Footer from "../components/Footer/Footer";
 import { renderToString } from "react-dom/server";
 import { readingTime } from "reading-time-estimator";
-import { IosShare } from "@mui/icons-material";
+import { IosShare, Toc } from "@mui/icons-material";
 import { RWebShare } from "react-web-share";
 import { Helmet } from "react-helmet";
 import DOMPurify from "dompurify";
@@ -51,10 +53,8 @@ import CustomVideo from "../components/EditorJS/Renderers/CustomVideo";
 import CustomChecklist from "../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../components/EditorJS/Renderers/CustomCode";
 import CustomMath from "../components/EditorJS/Renderers/CustomMath";
-
-function extractContent(html: string) {
-  return html.replace(/<[^>]+>/g, " ");
-}
+import CustomHeader from "../components/EditorJS/Renderers/CustomHeader";
+import TOCModal from "../components/Modals/TOCModal";
 
 export const postQuery = (id: string) => ({
   queryKey: ["posts", id],
@@ -78,6 +78,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     ...postQuery(params.postId!),
     initialData,
   });
+  const [openTOCModal, setOpenTOCModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isExploding, setIsExploding] = useState(false);
   const { width, height } = useWindowSize();
@@ -101,6 +102,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   // Pass your custom renderers to Output
   const renderers = {
     paragraph: CustomParagraph,
+    header: CustomHeader,
     code: CustomCode,
     delimiter: CustomDelimiter,
     image: CustomImage,
@@ -124,10 +126,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     );
   }, [post]);
 
-  const ReadingTime = useMemo(() => {
-    const text = extractContent(renderToString(OutputElement));
-    return readingTime(text, 275);
+  const OutputString = useMemo(() => {
+    return renderToString(OutputElement);
   }, [OutputElement]);
+
+  function extractTextContent(html: string) {
+    return html.replace(/<[^>]+>/g, " ");
+  }
+
+  const ReadingTime = useMemo(() => {
+    const text = extractTextContent(OutputString);
+    return readingTime(text, 275);
+  }, [OutputString]);
 
   return (
     <Box width="100%">
@@ -144,6 +154,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           justifyContent="center"
           justifyItems="center"
         >
+          {/* Header row */}
           <Box
             display="flex"
             alignItems="center"
@@ -158,7 +169,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              zIndex: 10000,
+              zIndex: 1000,
               marginTop: isMobile ? "-35px" : "0",
               WebkitTransform: "translateZ(0)",
             }}
@@ -199,6 +210,42 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               <></>
             )}
             <Box flexGrow={100} />
+            {OutputString && (
+              <Tooltip enterDelay={2000} title={"Open table of contents"}>
+                <ButtonBase
+                  onClick={() => setOpenTOCModal(true)}
+                  sx={{
+                    marginRight: theme.spacing(0.5),
+                    height: "30px",
+                    width: "30px",
+                    color: theme.palette.text.primary,
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
+                  }}
+                >
+                  <Toc
+                    color="inherit"
+                    sx={{
+                      border: "2px solid",
+                      borderRadius: "2.5px",
+                      height: "24px",
+                      width: "24px",
+                    }}
+                  />
+                </ButtonBase>
+              </Tooltip>
+            )}
+            {/* TOCModal */}
+            {OutputString && (
+              <TOCModal
+                open={openTOCModal}
+                handleModalOpen={() => setOpenTOCModal(true)}
+                handleModalClose={() => setOpenTOCModal(false)}
+                outputString={OutputString}
+              />
+            )}
+
             <RWebShare
               data={{
                 text: 'Check out this blog post: "' + post.title + '"!',
@@ -206,16 +253,29 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 title: "Link to blogpost",
               }}
             >
-              <IconButton
-                sx={{
-                  color: "text.primary",
-                }}
-                size="medium"
-              >
-                <IosShare color="inherit" />
-              </IconButton>
+              <Tooltip enterDelay={2000} title={"Open settings"}>
+                <ButtonBase
+                  sx={{
+                    height: "30px",
+                    width: "30px",
+                    color: theme.palette.text.primary,
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
+                  }}
+                >
+                  <IosShare
+                    color="inherit"
+                    sx={{
+                      height: "24px",
+                      width: "24px",
+                    }}
+                  />
+                </ButtonBase>
+              </Tooltip>
             </RWebShare>
           </Box>
+          {/* Content */}
           <Grid
             container
             width="100%"
@@ -327,6 +387,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 </Box>
                 {/* EditorJS rendering */}
                 <Box
+                  id="output"
                   mb={1}
                   sx={{
                     backgroundColor: "transparent",
