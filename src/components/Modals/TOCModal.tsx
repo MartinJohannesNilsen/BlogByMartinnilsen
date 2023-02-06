@@ -1,20 +1,19 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { IconButton, Link } from "@mui/material";
+import { ButtonBase, IconButton } from "@mui/material";
 import { useTheme } from "../../ThemeProvider";
 import CloseIcon from "@mui/icons-material/Close";
 import { TOCModalProps } from "../../types";
 import { useMemo } from "react";
 import colorLuminance from "../../utils/colorLuminance";
-import $ from "jquery";
 
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 380,
+  width: 350,
   maxHeight: "60vh",
   bgcolor: "background.paper",
   borderRadius: 2,
@@ -31,7 +30,7 @@ const style = {
 export const TOCModal = (props: TOCModalProps) => {
   const { theme } = useTheme();
 
-  function extractHeaders(html: string) {
+  function extractHeadersIfJustHeader(html: string) {
     const regex = /<h([1-6])(?:.*?id="(.*?)")?>(.*?)<\/h([1-6])>/g;
     const headings = [];
     let match;
@@ -45,26 +44,46 @@ export const TOCModal = (props: TOCModalProps) => {
     return headings;
   }
 
+  function extractHeaders(html: string) {
+    const regex =
+      /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
+    const headings = [];
+    let match;
+    while ((match = regex.exec(html))) {
+      headings.push({
+        type: `h${match[3]}`,
+        id: match[2],
+        text: match[4],
+      });
+    }
+    return headings;
+  }
+
   const TableOfContents = useMemo(() => {
     const headings: { type: string; id: string | null; text: string }[] =
       extractHeaders(props.outputString);
     const elements: JSX.Element[] = [];
     headings.map((heading) =>
       elements.push(
-        <Link
+        <ButtonBase
           onClick={() => {
             props.handleModalClose();
           }}
           href={`#${heading.id}`}
+          sx={{ maxWidth: "100%" }}
         >
           <Typography
             sx={{
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
               color: theme.palette.text.primary,
               textDecoration: "none",
               marginLeft: theme.spacing(
                 parseInt(heading.type.substring(1)) - 1
               ),
               fontWeight: 600,
+              fontSize: 14,
               borderBottom:
                 "2px solid " +
                 colorLuminance(theme.palette.secondary.main, 0.33),
@@ -75,7 +94,7 @@ export const TOCModal = (props: TOCModalProps) => {
           >
             {heading.text}
           </Typography>
-        </Link>
+        </ButtonBase>
       )
     );
     return elements;
@@ -107,6 +126,8 @@ export const TOCModal = (props: TOCModalProps) => {
           <Box
             display="flex"
             flexDirection="column"
+            alignItems="flex-start"
+            justifyContent="flex-start"
             gap="10px"
             sx={{
               overflowY: "scroll",

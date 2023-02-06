@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Avatar,
   Box,
@@ -126,6 +126,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     );
   }, [post]);
 
+  useEffect(() => {
+    if (window.location.hash) {
+      window.location.href = window.location.hash;
+    }
+  }, [OutputElement]);
+
   const OutputString = useMemo(() => {
     return renderToString(OutputElement);
   }, [OutputElement]);
@@ -158,7 +164,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           <Box
             display="flex"
             alignItems="center"
-            width={isMobile ? "90%" : xs ? "380px" : sm ? "500px" : "700px"}
+            width={isMobile ? "95%" : xs ? "380px" : sm ? "500px" : "700px"}
             pt={isMobile ? 5 : 2}
             pb={isMobile ? 0.5 : 2}
             position={isMobile ? "fixed" : "relative"}
@@ -170,7 +176,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               zIndex: 1000,
-              marginTop: isMobile ? "-35px" : "0",
+              marginTop: isMobile ? "-32px" : "0",
               WebkitTransform: "translateZ(0)",
             }}
           >
@@ -178,7 +184,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               fontFamily={theme.typography.fontFamily}
               variant="body1"
               fontWeight="900"
-              mr={0.5}
+              mr={OutputString ? 5 : 0.5}
               sx={{
                 fontSize: isMobile ? "25px" : theme.typography.body1.fontSize,
                 textDecoration: "none",
@@ -215,7 +221,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 <ButtonBase
                   onClick={() => setOpenTOCModal(true)}
                   sx={{
-                    marginRight: theme.spacing(0.5),
                     height: "30px",
                     width: "30px",
                     color: theme.palette.text.primary,
@@ -301,9 +306,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 <Box
                   display="flex"
                   alignItems="center"
-                  mt={0}
+                  mt={isMobile ? 6 : 0}
                   mb={1}
-                  pt={isMobile ? 6 : 0}
                   pb={2}
                 >
                   <Box

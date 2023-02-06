@@ -1,7 +1,10 @@
 import parse from "html-react-parser";
-import type { CSSProperties } from "react";
+import { CSSProperties, useState } from "react";
 import { EditorjsRendererProps } from "../../../types";
 import { isMobile } from "react-device-detect";
+import { Box } from "@mui/material";
+import { useTheme } from "../../../ThemeProvider";
+import { Link } from "@mui/icons-material";
 
 const defaultStyle: CSSProperties = {
   margin: "8px 0",
@@ -39,211 +42,82 @@ const HeaderOutput = ({
     ? style.h6
     : { ...defaultStyle, ...style.h6 };
 
-  switch (data.level) {
-    case 1:
-      return isMobile ? (
-        <div style={{ position: "relative" }}>
-          <a
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-            style={{
-              position: "absolute",
-              zIndex: -1,
-              top: -50,
-              visibility: "hidden",
-            }}
-          ></a>
-          <h1
-            style={h1Style && {}}
-            className={classNames.h1}
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-          >
-            {parse(data.text)}
-          </h1>
-        </div>
-      ) : (
-        <h1
-          style={h1Style && {}}
-          className={classNames.h1}
-          id={parse(data.text).toString().replaceAll(" ", "_")}
-        >
-          {parse(data.text)}
-        </h1>
-      );
-    case 2:
-      return isMobile ? (
-        <div style={{ position: "relative" }}>
-          <a
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-            style={{
-              position: "absolute",
-              zIndex: -1,
-              top: -50,
-              visibility: "hidden",
-            }}
-          ></a>
-          <h2
-            style={h2Style && {}}
-            className={classNames.h2}
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-          >
-            {parse(data.text)}
-          </h2>
-        </div>
-      ) : (
-        <h2
-          style={h2Style && {}}
-          className={classNames.h2}
-          id={parse(data.text).toString().replaceAll(" ", "_")}
-        >
-          {parse(data.text)}
-        </h2>
-      );
-    case 3:
-      return isMobile ? (
-        <div style={{ position: "relative" }}>
-          <a
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-            style={{
-              position: "absolute",
-              zIndex: -1,
-              top: -50,
-              visibility: "hidden",
-            }}
-          ></a>
-          <h3
-            style={h3Style && {}}
-            className={classNames.h3}
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-          >
-            {parse(data.text)}
-          </h3>
-        </div>
-      ) : (
-        <h3
-          style={h3Style && {}}
-          className={classNames.h3}
-          id={parse(data.text).toString().replaceAll(" ", "_")}
-        >
-          {parse(data.text)}
-        </h3>
-      );
-    case 4:
-      return isMobile ? (
-        <div style={{ position: "relative" }}>
-          <a
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-            style={{
-              position: "absolute",
-              zIndex: -1,
-              top: -50,
-              visibility: "hidden",
-            }}
-          ></a>
-          <h4
-            style={h4Style && {}}
-            className={classNames.h4}
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-          >
-            {parse(data.text)}
-          </h4>
-        </div>
-      ) : (
-        <h4
-          style={h4Style && {}}
-          className={classNames.h4}
-          id={parse(data.text).toString().replaceAll(" ", "_")}
-        >
-          {parse(data.text)}
-        </h4>
-      );
-    case 5:
-      return isMobile ? (
-        <div style={{ position: "relative" }}>
-          <a
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-            style={{
-              position: "absolute",
-              zIndex: -1,
-              top: -50,
-              visibility: "hidden",
-            }}
-          ></a>
-          <h5
-            style={h5Style && {}}
-            className={classNames.h5}
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-          >
-            {parse(data.text)}
-          </h5>
-        </div>
-      ) : (
-        <h5
-          style={h5Style && {}}
-          className={classNames.h5}
-          id={parse(data.text).toString().replaceAll(" ", "_")}
-        >
-          {parse(data.text)}
-        </h5>
-      );
-    case 6:
-      return isMobile ? (
-        <div style={{ position: "relative" }}>
-          <a
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-            style={{
-              position: "absolute",
-              zIndex: -1,
-              top: -50,
-              visibility: "hidden",
-            }}
-          ></a>
-          <h6
-            style={h6Style && {}}
-            className={classNames.h6}
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-          >
-            {parse(data.text)}
-          </h6>
-        </div>
-      ) : (
-        <h6
-          style={h6Style && {}}
-          className={classNames.h6}
-          id={parse(data.text).toString().replaceAll(" ", "_")}
-        >
-          {parse(data.text)}
-        </h6>
-      );
-    default:
-      return isMobile ? (
-        <div style={{ position: "relative" }}>
-          <a
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-            style={{
-              position: "absolute",
-              zIndex: -1,
-              top: -50,
-              visibility: "hidden",
-            }}
-          ></a>
-          <h4
-            style={h4Style && {}}
-            className={classNames.h4}
-            id={parse(data.text).toString().replaceAll(" ", "_")}
-          >
-            {parse(data.text)}
-          </h4>
-        </div>
-      ) : (
-        <h4
-          style={h4Style && {}}
-          className={classNames.h4}
-          id={parse(data.text).toString().replaceAll(" ", "_")}
-        >
-          {parse(data.text)}
-        </h4>
-      );
-  }
+  const element =
+    data.level === 1 ? (
+      <h1
+        style={h1Style && {}}
+        className={classNames.h1}
+        // id={parse(data.text).toString().replaceAll(" ", "_")}
+      >
+        {parse(data.text)}
+      </h1>
+    ) : data.level === 2 ? (
+      <h2
+        style={h2Style && {}}
+        className={classNames.h2}
+        // id={parse(data.text).toString().replaceAll(" ", "_")}
+      >
+        {parse(data.text)}
+      </h2>
+    ) : data.level === 3 ? (
+      <h3
+        style={h3Style && {}}
+        className={classNames.h3}
+        // id={parse(data.text).toString().replaceAll(" ", "_")}
+      >
+        {parse(data.text)}
+      </h3>
+    ) : data.level === 4 ? (
+      <h4
+        style={h4Style && {}}
+        className={classNames.h4}
+        // id={parse(data.text).toString().replaceAll(" ", "_")}
+      >
+        {parse(data.text)}
+      </h4>
+    ) : data.level === 5 ? (
+      <h5
+        style={h5Style && {}}
+        className={classNames.h5}
+        // id={parse(data.text).toString().replaceAll(" ", "_")}
+      >
+        {parse(data.text)}
+      </h5>
+    ) : data.level === 6 ? (
+      <h6
+        style={h6Style && {}}
+        className={classNames.h6}
+        // id={parse(data.text).toString().replaceAll(" ", "_")}
+      >
+        {parse(data.text)}
+      </h6>
+    ) : (
+      <h4
+        style={h4Style && {}}
+        className={classNames.h4}
+        // id={parse(data.text).toString().replaceAll(" ", "_")}
+      >
+        {parse(data.text)}
+      </h4>
+    );
+
+  const mobileScrollFix = (
+    <Box position="relative">
+      <a
+        id={parse(data.text).toString().replaceAll(" ", "_")}
+        style={{
+          position: "absolute",
+          zIndex: -1,
+          top: isMobile ? -50 : -10,
+          visibility: "hidden",
+          scrollBehavior: "smooth",
+        }}
+      ></a>
+      {element}
+    </Box>
+  );
+
+  return mobileScrollFix;
 };
 
 export default HeaderOutput;
