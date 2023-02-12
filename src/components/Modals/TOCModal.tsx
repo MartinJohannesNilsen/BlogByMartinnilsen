@@ -62,7 +62,36 @@ export const TOCModal = (props: TOCModalProps) => {
   const TableOfContents = useMemo(() => {
     const headings: { type: string; id: string | null; text: string }[] =
       extractHeaders(props.outputString);
-    const elements: JSX.Element[] = [];
+    const elements: JSX.Element[] = [
+      <ButtonBase
+        onClick={() => {
+          props.handleModalClose();
+          window.scrollTo(0, 0);
+        }}
+        href={"#"}
+        sx={{ maxWidth: "100%" }}
+      >
+        <Typography
+          sx={{
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            color: theme.palette.text.primary,
+            textDecoration: "none",
+            marginLeft: theme.spacing(0),
+            fontWeight: 600,
+            fontSize: 14,
+            borderBottom:
+              "2px solid " + colorLuminance(theme.palette.secondary.main, 0.33),
+            "&:hover": {
+              borderBottom: "2px solid " + theme.palette.secondary.main,
+            },
+          }}
+        >
+          {props.postTitle}
+        </Typography>
+      </ButtonBase>,
+    ];
     headings.map((heading) =>
       elements.push(
         <ButtonBase

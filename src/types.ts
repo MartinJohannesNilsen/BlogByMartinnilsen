@@ -183,6 +183,7 @@ export type TOCModalProps = {
   handleModalOpen: () => void;
   handleModalClose: () => void;
   outputString: string;
+  postTitle: string;
 };
 
 // View props types

@@ -248,6 +248,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 handleModalOpen={() => setOpenTOCModal(true)}
                 handleModalClose={() => setOpenTOCModal(false)}
                 outputString={OutputString}
+                postTitle={post.title}
               />
             )}
 
