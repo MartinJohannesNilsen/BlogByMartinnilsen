@@ -361,7 +361,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         fontFamily={theme.typography.fontFamily}
                         variant="body2"
                         fontWeight="600"
-                        sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+                        sx={{ opacity: 0.6, fontSize: xs ? "12px" : "default" }}
                       >
                         {new Date(post.timestamp).toLocaleDateString("en-GB", {
                           weekday: "long",
@@ -382,7 +382,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         fontFamily={theme.typography.fontFamily}
                         variant="body2"
                         fontWeight="600"
-                        sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+                        sx={{ opacity: 0.6, fontSize: xs ? "12px" : "default" }}
                       >
                         {ReadingTime.text}
                       </Typography>

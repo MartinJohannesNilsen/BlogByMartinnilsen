@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from "react";
 import { matchSorter } from "match-sorter";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
+import { East } from "@mui/icons-material";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
@@ -72,9 +73,6 @@ export const SearchModal = (props: SearchModalProps) => {
     () => {
       props.handleModalClose();
       setTextFieldValue("");
-      // window.location.href = `${window.location.href}posts/${
-      //   matchedItems![activeItem].id
-      // }`;
       handleNavigate(`posts/${matchedItems![activeItem].id}`);
     },
     [activeItem]
@@ -151,9 +149,6 @@ export const SearchModal = (props: SearchModalProps) => {
                   } else if (e.key === "Enter") {
                     props.handleModalClose();
                     setTextFieldValue("");
-                    // window.location.href = `${window.location.href}posts/${
-                    //   matchedItems![activeItem].id
-                    // }`;
                     handleNavigate(`posts/${matchedItems![activeItem].id}`);
                   }
                 }}
@@ -216,6 +211,7 @@ export const SearchModal = (props: SearchModalProps) => {
                       onClick={() => {
                         props.handleModalClose();
                         setTextFieldValue("");
+                        if (isMobile) setActiveItem(-1);
                       }}
                     >
                       <ListItemAvatar>
@@ -247,7 +243,6 @@ export const SearchModal = (props: SearchModalProps) => {
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                         }}
-                        // secondary={`${window.location.href}posts/${post.id}`}
                         secondary={post.summary}
                         secondaryTypographyProps={{
                           color: theme.palette.text.primary,
@@ -263,7 +258,17 @@ export const SearchModal = (props: SearchModalProps) => {
                       />
                       <Box flexGrow={100} />
                       <ListItemText>
-                        <Typography
+                        <East
+                          sx={{
+                            position: "absolute",
+                            top: "55%",
+                            right: "5px",
+                            transform: "translate(-50%, -50%)",
+                            display:
+                              activeItem === index ? "inline-block" : "none",
+                          }}
+                        />
+                        {/* <Typography
                           sx={{
                             position: "absolute",
                             top: "55%",
@@ -273,9 +278,8 @@ export const SearchModal = (props: SearchModalProps) => {
                           fontFamily={theme.typography.fontFamily}
                           fontWeight={600}
                         >
-                          {/* {activeItem === index ? "↩" : `⌘${index + 1}`} */}
                           {activeItem === index ? "↩" : ""}
-                        </Typography>
+                        </Typography> */}
                       </ListItemText>
                     </ListItemButton>
                   </ListItem>
