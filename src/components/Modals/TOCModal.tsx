@@ -67,8 +67,13 @@ export const TOCModal = (props: TOCModalProps) => {
         onClick={() => {
           props.handleModalClose();
           window.scrollTo(0, 0);
+          history.pushState(
+            "",
+            document.title,
+            window.location.pathname + window.location.search
+          );
         }}
-        href={"#"}
+        // href={"#"}
         sx={{ maxWidth: "100%" }}
       >
         <Typography

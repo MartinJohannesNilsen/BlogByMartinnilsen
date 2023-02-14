@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Avatar,
   Box,
   Button,
   ButtonBase,
@@ -28,7 +27,15 @@ import colorLumincance from "../utils/colorLuminance";
 import Footer from "../components/Footer/Footer";
 import { renderToString } from "react-dom/server";
 import { readingTime } from "reading-time-estimator";
-import { IosShare, Toc } from "@mui/icons-material";
+import {
+  IosShare,
+  IosShareOutlined,
+  IosShareRounded,
+  MenuBook,
+  MenuOpen,
+  Toc,
+  Tune,
+} from "@mui/icons-material";
 import { RWebShare } from "react-web-share";
 import { Helmet } from "react-helmet";
 import DOMPurify from "dompurify";
@@ -184,7 +191,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               fontFamily={theme.typography.fontFamily}
               variant="body1"
               fontWeight="900"
-              mr={OutputString ? 5 : 0.5}
+              mr={OutputString ? 7.25 : 1.25}
               sx={{
                 fontSize: isMobile ? "25px" : theme.typography.body1.fontSize,
                 textDecoration: "none",
@@ -216,70 +223,62 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               <></>
             )}
             <Box flexGrow={100} />
-            {OutputString && (
-              <Tooltip enterDelay={2000} title={"Open table of contents"}>
-                <ButtonBase
-                  onClick={() => setOpenTOCModal(true)}
-                  sx={{
-                    height: "30px",
-                    width: "30px",
-                    color: theme.palette.text.primary,
-                    "&:hover": {
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                >
-                  <Toc
-                    color="inherit"
+            <Box display="flex" ml={1}>
+              {OutputString && (
+                <Tooltip enterDelay={2000} title={"Open table of contents"}>
+                  <ButtonBase
+                    onClick={() => setOpenTOCModal(true)}
                     sx={{
-                      border: "2px solid",
-                      borderRadius: "2.5px",
-                      height: "24px",
-                      width: "24px",
+                      marginX: theme.spacing(0.75),
                     }}
-                  />
-                </ButtonBase>
-              </Tooltip>
-            )}
-            {/* TOCModal */}
-            {OutputString && (
-              <TOCModal
-                open={openTOCModal}
-                handleModalOpen={() => setOpenTOCModal(true)}
-                handleModalClose={() => setOpenTOCModal(false)}
-                outputString={OutputString}
-                postTitle={post.title}
-              />
-            )}
+                  >
+                    <MenuBook
+                      sx={{
+                        color: theme.palette.text.primary,
+                        height: "32px",
+                        width: "32px",
+                        "&:hover": {
+                          color: theme.palette.secondary.main,
+                        },
+                      }}
+                    />
+                  </ButtonBase>
+                </Tooltip>
+              )}
+              {/* TOCModal */}
+              {OutputString && (
+                <TOCModal
+                  open={openTOCModal}
+                  handleModalOpen={() => setOpenTOCModal(true)}
+                  handleModalClose={() => setOpenTOCModal(false)}
+                  outputString={OutputString}
+                  postTitle={post.title}
+                />
+              )}
 
-            <RWebShare
-              data={{
-                text: 'Check out this blog post: "' + post.title + '"!',
-                url: window.location.href,
-                title: "Link to blogpost",
-              }}
-            >
-              <Tooltip enterDelay={2000} title={"Open settings"}>
-                <ButtonBase
-                  sx={{
-                    height: "30px",
-                    width: "30px",
-                    color: theme.palette.text.primary,
-                    "&:hover": {
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                >
-                  <IosShare
-                    color="inherit"
-                    sx={{
-                      height: "24px",
-                      width: "24px",
-                    }}
-                  />
-                </ButtonBase>
-              </Tooltip>
-            </RWebShare>
+              <RWebShare
+                data={{
+                  text: 'Check out this blog post: "' + post.title + '"!',
+                  url: window.location.href,
+                  title: "Link to blogpost",
+                }}
+              >
+                <Tooltip enterDelay={2000} title={"Open settings"}>
+                  <ButtonBase>
+                    <IosShareOutlined
+                      sx={{
+                        color: theme.palette.text.primary,
+                        height: "28px",
+                        width: "32px",
+                        "&:hover": {
+                          color: theme.palette.secondary.main,
+                        },
+                      }}
+                    />
+                  </ButtonBase>
+                </Tooltip>
+              </RWebShare>
+            </Box>
           </Box>
           {/* Content */}
           <Grid

@@ -117,7 +117,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           </ButtonBase>
           <Box flexGrow={1} />
           {process.env.REACT_APP_MANAGE_POSTS_AVAILABLE === "true" ? (
-            <Box mt={isMobile ? 0.25 : -0.2}>
+            <Box mt={isMobile ? 0 : -0.2}>
               <Tooltip enterDelay={2000} title={"Upload new post"}>
                 <ButtonBase
                   onClick={() => {
