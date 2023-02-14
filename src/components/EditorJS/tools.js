@@ -6,11 +6,11 @@ import Header from '@editorjs/header'
 import Quote from '@editorjs/quote'
 import Marker from '@editorjs/marker'
 import CheckList from '@editorjs/checklist'
-import Delimiter from '@editorjs/delimiter'
 import InlineCode from '@editorjs/inline-code'
 import SimpleImage from '@editorjs/simple-image'
 import InlineImage from 'editorjs-inline-image';
 import InlineVideo from "./BlockTools/InlineVideo/tool"
+import Divider from "./BlockTools/Divider/tool"
 import Embed from '@editorjs/embed'
 // Code highlight editors
 import CodeBlock from 'editorjs-code-highlight' // Nice try, but textarea and marker is off
@@ -30,47 +30,14 @@ export const EDITOR_JS_TOOLS = {
       preserveBlank: true,
     }
   },
-  header: Header,
-  // h1: {
-  //   class: Header,
-  //   toolbox: {
-  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-  //     title: 'H1',
-  //     data: {
-  //       level: 1
-  //     }
-  //   }
-  // },
-  // h2: {
-  //   class: Header,
-  //   toolbox: {
-  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-  //     title: 'H2',
-  //     data: {
-  //       level: 2
-  //     }
-  //   }
-  // },
-  // h3: {
-  //   class: Header,
-  //   toolbox: {
-  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-  //     title: 'H3',
-  //     data: {
-  //       level: 3
-  //     }
-  //   }
-  // },
-  // h4: {
-  //   class: Header,
-  //   toolbox: {
-  //     icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <style type="text/css"> 	.st0{fill:none;} 	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;} </style> <rect class="st0" width="800" height="800"/> <g> 	<path class="st1" d="M481,183.8v173H319v-173h-81v432.5h81v-173h162v173h81V183.8"/> </g> </svg>',
-  //     title: 'H4',
-  //     data: {
-  //       level: 4
-  //     }
-  //   }
-  // },
+  header: {
+    class: Header,
+    config: {
+      placeholder: 'Enter a header',
+      levels: [1, 2, 3],
+      defaultLevel: 1
+    }
+  },
   list: List,
   warning: {
     class: Warning,
@@ -82,7 +49,6 @@ export const EDITOR_JS_TOOLS = {
   quote: Quote,
   marker: Marker,
   checklist: CheckList,
-  delimiter: Delimiter,
   inlineCode: InlineCode,
   code: {
     // Codeflask
@@ -111,6 +77,7 @@ export const EDITOR_JS_TOOLS = {
       title: 'Image'
     }
   },
+  divider: Divider,
   video: InlineVideo,
   embed: Embed,
   math: {

@@ -48,7 +48,7 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import { isMobile } from "react-device-detect";
 
 // Components
-import CustomDelimiter from "../components/EditorJS/Renderers/CustomDelimiter";
+import CustomDelimiter from "../components/EditorJS/Renderers/CustomDivider";
 import CustomImage from "../components/EditorJS/Renderers/CustomImage";
 import CustomLinkTool from "../components/EditorJS/Renderers/CustomLinkTool";
 import CustomQuote from "../components/EditorJS/Renderers/CustomQuote";
@@ -62,6 +62,7 @@ import CustomCode from "../components/EditorJS/Renderers/CustomCode";
 import CustomMath from "../components/EditorJS/Renderers/CustomMath";
 import CustomHeader from "../components/EditorJS/Renderers/CustomHeader";
 import TOCModal from "../components/Modals/TOCModal";
+import CustomDivider from "../components/EditorJS/Renderers/CustomDivider";
 
 export const postQuery = (id: string) => ({
   queryKey: ["posts", id],
@@ -111,7 +112,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     paragraph: CustomParagraph,
     header: CustomHeader,
     code: CustomCode,
-    delimiter: CustomDelimiter,
+    divider: CustomDivider,
     image: CustomImage,
     simpleimage: CustomImage,
     linktool: CustomLinkTool,

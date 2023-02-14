@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useTheme } from "../../../ThemeProvider";
 
-const CustomDelimiter = () => {
+const CustomDivider = () => {
   const { theme } = useTheme();
 
   return (
@@ -16,4 +16,4 @@ const CustomDelimiter = () => {
     />
   );
 };
-export default CustomDelimiter;
+export default CustomDivider;
