@@ -144,7 +144,9 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             <Tooltip
               enterDelay={2000}
               title={`Search${
-                navigator.userAgent.indexOf("Mac OS X") != -1
+                isMobile
+                  ? ""
+                  : navigator.userAgent.indexOf("Mac OS X") != -1
                   ? " (⌘ + k)"
                   : " (ctrl + k)"
               }`}

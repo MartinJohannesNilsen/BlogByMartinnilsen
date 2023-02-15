@@ -259,12 +259,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 
               <RWebShare
                 data={{
-                  text: 'Check out this blog post: "' + post.title + '"!',
+                  text: 'Check out this post: "' + post.title + '"!',
                   url: window.location.href,
-                  title: "Link to blogpost",
+                  title: "Link to post",
                 }}
               >
-                <Tooltip enterDelay={2000} title={"Open settings"}>
+                <Tooltip enterDelay={2000} title={"Share"}>
                   <ButtonBase>
                     <IosShareOutlined
                       sx={{
