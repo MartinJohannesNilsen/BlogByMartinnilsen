@@ -17,7 +17,7 @@ import CodeBlock from 'editorjs-code-highlight' // Nice try, but textarea and ma
 import CodeBox from '@bomdi/codebox'; // Weird html format out, else good
 import editorjsCodeflask from '@calumk/editorjs-codeflask';
 
-// import Table from '@editorjs/table'
+import Table from '@editorjs/table'
 // import Raw from '@editorjs/raw'
 
 
@@ -94,7 +94,7 @@ export const EDITOR_JS_TOOLS = {
       endpoint: 'http://localhost:3001/fetchLinkPreview', // Your backend endpoint for url data fetching,
     }
   },
-  // table: Table,
+  table: Table,
   
 }
 export default EDITOR_JS_TOOLS;

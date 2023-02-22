@@ -1,5 +1,5 @@
+import { useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import {
   Avatar,
@@ -14,7 +14,6 @@ import {
 import { useTheme } from "../../ThemeProvider";
 import { SearchModalProps, SimplifiedPost } from "../../types";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useCallback, useEffect, useState } from "react";
 import { matchSorter } from "match-sorter";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
@@ -23,15 +22,19 @@ import { East } from "@mui/icons-material";
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  // Navigation
-  const navigate = useNavigate();
-  const handleNavigate = useCallback(
-    (path) => {
-      navigate(path, { replace: true });
-      location.reload();
-    },
-    [navigate]
-  );
+  // Navigation using react router
+  // const navigate = useNavigate();
+  // const handleNavigate = useCallback(
+  //   (path) => {
+  //     navigate(path, { replace: true });
+  //     location.reload();
+  //   },
+  //   [navigate]
+  // );
+  const handleNavigate = (path: string) => {
+    window.location.href = path;
+  };
+
   const [textFieldValue, setTextFieldValue] = useState("");
   const [maxNumberOfItems, setMaxNumberOfItems] = useState(5);
   const [matchedItems, setMatchedItems] = useState(
@@ -73,7 +76,8 @@ export const SearchModal = (props: SearchModalProps) => {
     () => {
       props.handleModalClose();
       setTextFieldValue("");
-      handleNavigate(`posts/${matchedItems![activeItem].id}`);
+      console.log(`/posts/${matchedItems![activeItem].id}`);
+      // handleNavigate(`/posts/${matchedItems![activeItem].id}`);
     },
     [activeItem]
   );
@@ -149,7 +153,7 @@ export const SearchModal = (props: SearchModalProps) => {
                   } else if (e.key === "Enter") {
                     props.handleModalClose();
                     setTextFieldValue("");
-                    handleNavigate(`posts/${matchedItems![activeItem].id}`);
+                    handleNavigate(`/posts/${matchedItems![activeItem].id}`);
                   }
                 }}
                 onChange={(e) => {

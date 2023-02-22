@@ -80,7 +80,9 @@ const Footer: FC<FooterProps> = (props) => {
                 display="inline-block"
                 variant="body1"
                 color="textPrimary"
-                href={"https://martinjohannesnilsen.no"}
+                // href={"https://martinjohannesnilsen.no"}
+                // href={"https://blog.mjntech.dev/posts/yjdttN68e7V3E8SKIupT"}
+                href={"/posts/yjdttN68e7V3E8SKIupT"}
                 sx={{
                   fontWeight: 600,
                   fontSize: lgUp ? "1.1rem" : "0.9rem",

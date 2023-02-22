@@ -376,7 +376,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           opacity: 0.6,
                           marginLeft: "16px",
                           marginRight: "6px",
-                          fontSize: xs ? "13px" : "default",
+                          fontSize: xs ? "12px" : "default",
                         }}
                       />
                       <Typography

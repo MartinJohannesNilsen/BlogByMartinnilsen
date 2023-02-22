@@ -33,8 +33,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const CustomTable = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
-  const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const sm = useMediaQuery(theme.breakpoints.only("sm"));
+  // const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  // const sm = useMediaQuery(theme.breakpoints.only("sm"));
 
   return (
     <Box my={1}>
