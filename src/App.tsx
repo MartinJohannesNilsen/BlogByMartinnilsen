@@ -3,7 +3,6 @@ import ThemeProvider from "./ThemeProvider";
 import showMuiSize from "./utils/showMuiSize";
 
 // Views
-import PostView from "./views/ReadArticleView";
 import AppRouter from "./Router";
 
 const App = () => {

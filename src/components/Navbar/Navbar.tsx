@@ -1,10 +1,9 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import {
   Box,
   AppBar,
   Toolbar,
   ButtonBase,
-  useMediaQuery,
   Tooltip,
   Avatar,
 } from "@mui/material";
@@ -13,11 +12,15 @@ import { useTheme } from "../../ThemeProvider";
 import TuneIcon from "@mui/icons-material/Tune";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import $ from "jquery";
-import SettingsModal from "../SettingsModal/SettingsModal";
+import SettingsModal from "../Modals/SettingsModal";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import logo from "../../assets/img/terminal.png";
-import { NavbarProps } from "../../types";
+import { NavbarProps, SimplifiedPost } from "../../types";
+import { useHotkeys } from "react-hotkeys-hook";
+import SearchModal from "../Modals/SearchModal";
+import { Search } from "@mui/icons-material";
+import { getPostsOverview } from "../../database/search";
 
 export const handleScroll = (name: string) => {
   $("html, body").animate(
@@ -30,9 +33,34 @@ export const handleScroll = (name: string) => {
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
+  // SetingsModal
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);
   const handleSettingsModalClose = () => setOpenSettingsModal(false);
+  // SearchModal
+  const [openSearchModal, setOpenSearchModal] = useState(false);
+  const handleSearchModalOpen = () => setOpenSearchModal(true);
+  const handleSearchModalClose = () => setOpenSearchModal(false);
+  useHotkeys(["Control+k", "Meta+k"], () => {
+    handleSearchModalOpen();
+  });
+  const [searchModalData, setSearchModalData] = useState<SimplifiedPost[]>([]);
+
+  useEffect(() => {
+    getPostsOverview()
+      .then((data) => {
+        process.env.REACT_APP_MANAGE_POSTS_AVAILABLE === "true"
+          ? setSearchModalData(data)
+          : setSearchModalData(data.filter((post) => post.published));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return () => {};
+  }, []);
+
+  // Navigation
   const navigate = useNavigate();
   const handleNavigate = useCallback(
     (path) => {
@@ -48,16 +76,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       : setTheme(ThemeEnum.Dark);
   };
 
-  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-  const smDown = useMediaQuery(theme.breakpoints.down("md"));
-
   return (
     <AppBar
       elevation={0}
       position={isMobile ? "fixed" : "static"}
       sx={{
         zIndex: 2,
-        marginTop: isMobile ? "-5px" : "0px",
         maxHeight: isMobile ? "30px" : "80px",
         backgroundColor: props.backgroundColor,
       }}
@@ -65,6 +89,9 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       <Toolbar
         sx={{
           zIndex: 2,
+          marginTop: isMobile ? "-35px" : "0",
+          paddingTop: isMobile ? "59px" : "0",
+          paddingBottom: isMobile ? "26px" : "0",
           maxHeight: isMobile ? "30px" : "80px",
           backgroundColor: props.backgroundColor,
         }}
@@ -90,7 +117,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           </ButtonBase>
           <Box flexGrow={1} />
           {process.env.REACT_APP_MANAGE_POSTS_AVAILABLE === "true" ? (
-            <Box mx={2} mt={isMobile ? 0.25 : -0.2}>
+            <Box mt={isMobile ? 0 : -0.2}>
               <Tooltip enterDelay={2000} title={"Upload new post"}>
                 <ButtonBase
                   onClick={() => {
@@ -113,6 +140,35 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           ) : (
             <></>
           )}
+          <Box mx={1} mt={isMobile ? 0.25 : 0}>
+            <Tooltip
+              enterDelay={2000}
+              title={`Search${
+                isMobile
+                  ? ""
+                  : navigator.userAgent.indexOf("Mac OS X") != -1
+                  ? " (⌘ + k)"
+                  : " (ctrl + k)"
+              }`}
+            >
+              <ButtonBase
+                onClick={() => {
+                  handleSearchModalOpen();
+                }}
+              >
+                <Search
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    height: "30px",
+                    width: "30px",
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
+                  }}
+                />
+              </ButtonBase>
+            </Tooltip>
+          </Box>
           <Box mt={isMobile ? 0.37 : 0}>
             <Tooltip enterDelay={2000} title={"Open settings"}>
               <ButtonBase
@@ -135,6 +191,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           </Box>
         </Box>
       </Toolbar>
+      <SearchModal
+        open={openSearchModal}
+        handleModalOpen={handleSearchModalOpen}
+        handleModalClose={handleSearchModalClose}
+        postsOverview={searchModalData}
+      />
       <SettingsModal
         open={openSettingsModal}
         handleModalOpen={handleSettingsModalOpen}

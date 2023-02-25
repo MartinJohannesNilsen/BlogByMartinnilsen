@@ -1,3 +1,4 @@
+import { CSSProperties } from "@emotion/serialize";
 import gsap from "gsap";
 import { ReactNode } from "react";
 
@@ -11,6 +12,8 @@ export type EditorJSDocument = {
 export type EditorjsRendererProps = {
   data: {
     text?: string;
+    // header
+    level?: 1 | 2 | 3 | 4 | 5 | 6;
     // Code
     language?: string;
     code?: string;
@@ -61,9 +64,23 @@ export type EditorjsRendererProps = {
     // Math
     math?: string;
   };
-  style: {};
-  classNames: {};
-  config: {};
+  style: {
+    h1?: CSSProperties;
+    h2?: CSSProperties;
+    h3?: CSSProperties;
+    h4?: CSSProperties;
+    h5?: CSSProperties;
+    h6?: CSSProperties;
+  };
+  classNames: {
+    h1?: string;
+    h2?: string;
+    h3?: string;
+    h4?: string;
+    h5?: string;
+    h6?: string;
+  };
+  config: { disableDefaultStyle?: any };
 };
 
 export type BlogpostCardProps = {
@@ -102,6 +119,14 @@ export type FirestorePost = {
   views: number;
 };
 
+export type SimplifiedPost = {
+  id: string;
+  title: string;
+  summary: string;
+  img: string;
+  published: boolean;
+};
+
 export type NavbarSection = {
   name: string;
   path: string;
@@ -138,6 +163,27 @@ export type SettingsModalProps = {
   handleModalOpen: () => void;
   handleModalClose: () => void;
   handleThemeChange: (event: any) => void;
+};
+
+export type SearchModalProps = {
+  open: boolean;
+  handleModalOpen: () => void;
+  handleModalClose: () => void;
+  postsOverview?: SimplifiedPost[];
+};
+
+export type Headings = {
+  type: string;
+  id: string | null;
+  text: string;
+};
+
+export type TOCModalProps = {
+  open: boolean;
+  handleModalOpen: () => void;
+  handleModalClose: () => void;
+  outputString: string;
+  postTitle: string;
 };
 
 // View props types

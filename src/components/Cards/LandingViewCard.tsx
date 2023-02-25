@@ -12,52 +12,6 @@ import { makeStyles } from "@mui/styles";
 import DOMPurify from "dompurify";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
-export const LandingViewCardLarge: FC<BlogpostCardProps> = (props) => {
-  const { theme } = useTheme();
-
-  return (
-    <Card sx={{ boxShadow: "none" }}>
-      <CardActionArea href={`/posts/${props.id}`} sx={{ height: "100px" }}>
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          sx={{ height: "100px" }}
-        >
-          {/* <img
-            style={{ width: "100px", height: "100px", objectFit: "cover" }}
-            src={props.image}
-          /> */}
-          <Box
-            sx={{
-              textAlign: "left",
-              padding: "0px 12px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            <Typography
-              variant="body1"
-              fontWeight={700}
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-            >
-              {props.title}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-            >
-              {props.summary}
-            </Typography>
-          </Box>
-        </Box>
-      </CardActionArea>
-    </Card>
-  );
-};
-
 export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
@@ -66,10 +20,13 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
   const [state, setState] = useState({
     raised: false,
   });
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles({
     root: {
       transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-      boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+      boxShadow:
+        theme.palette.mode === "light"
+          ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+          : "",
       width: "100%",
     },
     cardHovered: {
@@ -80,7 +37,7 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
         : "scale3d(1.05, 1.05, 1)",
       width: "100%",
     },
-  }));
+  });
   const classes = useStyles();
 
   return (
