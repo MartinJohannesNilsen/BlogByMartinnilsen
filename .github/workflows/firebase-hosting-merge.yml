@@ -8,14 +8,14 @@ name: Deploy to Firebase Hosting on merge
       - main
 
 env:
-  REACT_APP_FIREBASE_apiKey: ${{ secrets.REACT_APP_FIREBASE_apiKey }}
-  REACT_APP_FIREBASE_authDomain: ${{ secrets.REACT_APP_FIREBASE_authDomain }}
-  REACT_APP_FIREBASE_databaseURL: ${{ secrets.REACT_APP_FIREBASE_databaseURL }}
-  REACT_APP_FIREBASE_projectId: ${{ secrets.REACT_APP_FIREBASE_projectId }}
-  REACT_APP_FIREBASE_storageBucket: ${{ secrets.REACT_APP_FIREBASE_storageBucket }}
-  REACT_APP_FIREBASE_messagingSenderId: ${{ secrets.REACT_APP_FIREBASE_messagingSenderId }}
-  REACT_APP_FIREBASE_appId: ${{ secrets.REACT_APP_FIREBASE_appId }}
-  REACT_APP_FIREBASE_measurementId: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENTID }}
+  NEXT_PUBLIC_FIREBASE_apiKey: ${{ secrets.NEXT_PUBLIC_FIREBASE_apiKey }}
+  NEXT_PUBLIC_FIREBASE_authDomain: ${{ secrets.NEXT_PUBLIC_FIREBASE_authDomain }}
+  NEXT_PUBLIC_FIREBASE_databaseURL: ${{ secrets.NEXT_PUBLIC_FIREBASE_databaseURL }}
+  NEXT_PUBLIC_FIREBASE_projectId: ${{ secrets.NEXT_PUBLIC_FIREBASE_projectId }}
+  NEXT_PUBLIC_FIREBASE_storageBucket: ${{ secrets.NEXT_PUBLIC_FIREBASE_storageBucket }}
+  NEXT_PUBLIC_FIREBASE_messagingSenderId: ${{ secrets.NEXT_PUBLIC_FIREBASE_messagingSenderId }}
+  NEXT_PUBLIC_FIREBASE_appId: ${{ secrets.NEXT_PUBLIC_FIREBASE_appId }}
+  NEXT_PUBLIC_FIREBASE_measurementId: ${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENTID }}
 
 jobs:
   build_and_deploy:
