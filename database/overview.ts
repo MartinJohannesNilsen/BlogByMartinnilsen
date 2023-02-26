@@ -23,9 +23,19 @@ const getAllPostIds = async (
   }
 };
 
-const getPostsOverview = async (): Promise<SimplifiedPost[]> => {
+const getPostsOverview = async (
+  sorted?: boolean,
+  chunks?: number
+): Promise<SimplifiedPost[]> => {
   const tagsSnapshot = await getDoc(doc(db, "administrative", "search"));
   if (tagsSnapshot.exists()) {
+    if (sorted) {
+      const data = tagsSnapshot.data().values.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+      });
+    }
     return tagsSnapshot.data().values;
   } else {
     return [];
