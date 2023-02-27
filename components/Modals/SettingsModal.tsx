@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { IconButton, Tooltip } from "@mui/material";
-import { useTheme } from "../../ThemeProvider";
+import { getSelectedTheme, useTheme } from "../../ThemeProvider";
 import Switch from "../Switch/Switch";
 import CloseIcon from "@mui/icons-material/Close";
 import { SettingsModalProps } from "../../types";
@@ -32,6 +32,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
   const {
     theme,
     setTheme,
+    setDefaultTheme,
     accentColor,
     setAccentColor,
     fontFamily,
@@ -67,14 +68,28 @@ export const SettingsModal = (props: SettingsModalProps) => {
               variant="body1"
               fontWeight="800"
             >
-              Lights (On/Off):
+              Light Mode:
             </Typography>
             <Box flexGrow="1" />
-            <Box mt={-0.8} mr={-1}>
+            <Box mt={-0.6} mr={-1.8}>
               <Switch
                 checked={theme.palette.mode === "light"}
                 onChange={props.handleThemeChange}
               />
+            </Box>
+            <Box mt={-0.2}>
+              <Tooltip enterDelay={2000} title="Use system settings">
+                <IconButton
+                  disabled={localStorage.getItem("theme") === null}
+                  aria-label="delete"
+                  size="small"
+                  onClick={() => {
+                    setDefaultTheme();
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
           <Box display="flex" mt={0.4} alignItems="baseline">

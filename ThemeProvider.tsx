@@ -33,6 +33,7 @@ export function getSelectedTheme() {
 export type ThemeContextType = {
   theme: Theme;
   setTheme: (Theme: ThemeEnum) => void;
+  setDefaultTheme: () => void;
   accentColor: string;
   setAccentColor: (accent: string) => void;
   fontFamily: string;
@@ -45,6 +46,7 @@ export const ThemeContext = createContext<ThemeContextType>({
       ? themeCreator(ThemeEnum.Dark)
       : themeCreator(ThemeEnum.Light),
   setTheme: (theme) => {},
+  setDefaultTheme: () => {},
   accentColor:
     typeof window !== "undefined"
       ? localStorage.getItem("accent") || defaultAccentColor
@@ -85,6 +87,24 @@ const CustomThemeProvider: React.FC = (props) => {
       )
     );
   }, [OS_STANDARD]);
+
+  const setDefaultTheme = (): void => {
+    localStorage.removeItem("theme");
+    const underlayingTheme = themeCreator(getSelectedTheme());
+    _setTheme(
+      createTheme({
+        ...underlayingTheme,
+        palette: {
+          ...underlayingTheme.palette,
+          secondary: { main: accentColor },
+        },
+        typography: {
+          ...underlayingTheme.typography,
+          fontFamily: fontFamily,
+        },
+      })
+    );
+  };
 
   const setTheme = (themeName: ThemeEnum): void => {
     localStorage.setItem("theme", themeName);
@@ -136,6 +156,7 @@ const CustomThemeProvider: React.FC = (props) => {
       value={{
         theme,
         setTheme,
+        setDefaultTheme,
         accentColor,
         setAccentColor,
         fontFamily,

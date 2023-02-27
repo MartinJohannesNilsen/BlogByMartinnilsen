@@ -75,14 +75,12 @@ const Footer: FC<FooterProps> = (props) => {
               color="textPrimary"
               style={{ fontWeight: 600, fontSize: lgUp ? "1rem" : "0.8rem" }}
             >
-              {"Made by "}
+              {"Made in 🇳🇴 by "}
               <Link
                 fontFamily={theme.typography.fontFamily}
                 display="inline-block"
                 variant="body1"
                 color="textPrimary"
-                // href={"https://martinjohannesnilsen.no"}
-                // href={"https://blog.mjntech.dev/posts/yjdttN68e7V3E8SKIupT"}
                 href={"/posts/yjdttN68e7V3E8SKIupT"}
                 sx={{
                   fontWeight: 600,
@@ -98,7 +96,6 @@ const Footer: FC<FooterProps> = (props) => {
               >
                 Martin
               </Link>
-              {" with 🖤"}
             </Typography>
           </Box>
         </Box>

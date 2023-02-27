@@ -11,6 +11,7 @@ import { BlogpostCardProps } from "../../types";
 import { makeStyles } from "@mui/styles";
 import DOMPurify from "isomorphic-dompurify";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import Image from "next/image";
 
 export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -61,9 +62,13 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
         <Box display="flex" flexDirection="column" sx={{ height: "100%" }}>
           {/* Image and type/tag rows */}
           <Box display="flex" flexDirection="row">
-            <img
-              style={{ width: "80px", height: "80px", objectFit: "cover" }}
+            <Image
               src={props.image}
+              alt=""
+              width={80}
+              height={80}
+              object-fit="cover"
+              // fill={true}
             />
             <Box
               display="flex"

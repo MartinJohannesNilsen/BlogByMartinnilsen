@@ -5,3 +5,4 @@ python-dotenv
 # Link preview
 linkpreview
 lxml
+zappa

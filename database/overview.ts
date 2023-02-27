@@ -1,6 +1,27 @@
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { SimplifiedPost } from "../types";
+
+const _sortListOfSimplifiedPostsOnTimestamp = (
+  data: SimplifiedPost[],
+  asc?: boolean
+) => {
+  if (asc) {
+    return data.sort((prev, next) => prev.timestamp - next.timestamp); //Ascending, oldest (smallest timestamp) first
+  }
+  return data.sort((prev, next) => next.timestamp - prev.timestamp); //Descending, latest (largest timestamp) first
+};
+const _filterListOfSimplifiedPostsOnPublished = (
+  data: SimplifiedPost[],
+  filter: "published" | "unpublished" | "all"
+) => {
+  if (filter === "published") {
+    return data.filter((post) => post.published);
+  } else if (filter === "unpublished") {
+    return data.filter((post) => !post.published);
+  }
+  return data;
+};
 
 //TODO Change name from "search" to "overview"
 
@@ -24,19 +45,19 @@ const getAllPostIds = async (
 };
 
 const getPostsOverview = async (
-  sorted?: boolean,
-  chunks?: number
+  sorted?: "asc" | "desc",
+  filterOnPublished?: boolean
 ): Promise<SimplifiedPost[]> => {
   const tagsSnapshot = await getDoc(doc(db, "administrative", "search"));
   if (tagsSnapshot.exists()) {
+    let data = tagsSnapshot.data().values;
     if (sorted) {
-      const data = tagsSnapshot.data().values.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-      });
+      data = _sortListOfSimplifiedPostsOnTimestamp(data, sorted === "asc");
     }
-    return tagsSnapshot.data().values;
+    if (filterOnPublished) {
+      data = _filterListOfSimplifiedPostsOnPublished(data, "published");
+    }
+    return data;
   } else {
     return [];
   }

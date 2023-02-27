@@ -7,7 +7,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "../ThemeProvider";
-import { LandingViewProps } from "../types";
+import { LandingViewProps, SimplifiedPost } from "../types";
 import Navbar from "../components/Navbar/Navbar";
 import Head from "next/head";
 import { QueryDocumentSnapshot } from "firebase/firestore";
@@ -19,18 +19,46 @@ import {
   ArrowForwardIosSharp,
 } from "@mui/icons-material";
 import Image from "next/image";
-import { getAllPostIds } from "../database/overview";
+import { getPostsOverview } from "../database/overview";
+import { RevealFromDownOnEnter } from "../components/Animations/Reveal";
+import useAuthorized from "../components/AuthorizationHook/useAuthorized";
+
+function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
+  if (chunkSize <= 0) throw "chunkSize must be greater than 0";
+  let result = [];
+  for (var i = 0; i < arr.length; i += chunkSize) {
+    result[i / chunkSize] = arr.slice(i, i + chunkSize);
+  }
+  return result;
+}
 
 // Next.js functions
+// On-demand Revalidation, thus no defined revalidation interval
+// This means we only revalidate (build) when updating/creating/deleting posts
+// https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration
+export const getStaticProps = async (context: any) => {
+  const db_posts = await getPostsOverview(
+    "desc",
+    false // Do not filter on published
+    // process.env.NEXT_PUBLIC_LOCALHOST === "false"
+  );
+  const posts = splitChunks(
+    db_posts,
+    Number(process.env.NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE)
+  );
+
+  return {
+    props: {
+      posts,
+    },
+  };
+};
 
 const LandingView: FC<LandingViewProps> = (props) => {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
-  const [count, setCount] = useState(0);
   const [page, setPage] = useState(1);
-  const [queryDocumentSnapshots, setQueryDocumentSnapshots] = useState<
-    QueryDocumentSnapshot[]
-  >([]);
+  const [posts, setPosts] = useState<SimplifiedPost[]>(props.posts[0]);
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const md = useMediaQuery(theme.breakpoints.only("md"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
@@ -40,50 +68,31 @@ const LandingView: FC<LandingViewProps> = (props) => {
     : mdDown
     ? "27.5%"
     : "35%";
-  const postsPerPage = 4;
-
-  useEffect(() => {
-    // Only show published when not on localhost
-    if (process.env.NEXT_PUBLIC_LOCALHOST === "true") {
-      getPostCount().then((data) => setCount(data));
-      getPaginatedCollection(postsPerPage).then((data) =>
-        setQueryDocumentSnapshots(data)
-      );
-    } else {
-      getPostCount({
-        key: "published",
-        operator: "==",
-        value: true,
-      }).then((data) => setCount(data));
-      getPaginatedCollection(postsPerPage, undefined, undefined, {
-        key: "published",
-        operator: "==",
-        value: true,
-      }).then((data) => setQueryDocumentSnapshots(data));
-    }
-  }, []);
 
   useEffect(() => {
     setIsLoading(false);
-  }, [queryDocumentSnapshots]);
+
+    return () => {};
+  }, []);
 
   const handleNextPage = () => {
-    const endPage = Math.ceil(count / postsPerPage);
+    const endPage = Math.ceil(
+      props.posts.flat().length /
+        Number(process.env.NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE)
+    );
     if (page < endPage) {
-      setPage(Math.min(page + 1, endPage));
-      getPaginatedCollection(postsPerPage, "next", queryDocumentSnapshots).then(
-        (data) => setQueryDocumentSnapshots(data)
-      );
+      const newPage = Math.min(page + 1, endPage);
+      setPage(newPage);
+      setPosts(props.posts[newPage - 1]);
     }
   };
 
   const handlePreviousPage = () => {
     const startPage = 1;
     if (page > startPage) {
-      setPage(Math.max(page - 1, startPage));
-      getPaginatedCollection(postsPerPage, "prev", queryDocumentSnapshots).then(
-        (data) => setQueryDocumentSnapshots(data)
-      );
+      const newPage = Math.max(page - 1, startPage);
+      setPage(newPage);
+      setPosts(props.posts[newPage - 1]);
     }
   };
 
@@ -97,7 +106,10 @@ const LandingView: FC<LandingViewProps> = (props) => {
         <></>
       ) : (
         <>
-          <Navbar backgroundColor={theme.palette.primary.contrastText} />
+          <Navbar
+            backgroundColor={theme.palette.primary.contrastText}
+            posts={props.posts.flat()}
+          />
           <Box
             sx={{
               minHeight: "calc(100vh - 64px)",
@@ -106,6 +118,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
               // backgroundColor: theme.palette.primary.main,
             }}
           >
+            {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
             <Grid
               container
               rowSpacing={mdDown ? 5 : md ? 3 : 6}
@@ -155,9 +168,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                   }}
                 />
               </Grid>
-              {queryDocumentSnapshots.map((document, index) => {
-                const data = document.data();
-                const id = document.id;
+              {posts.map((data, index) => {
                 return (
                   <Grid
                     item
@@ -169,8 +180,8 @@ const LandingView: FC<LandingViewProps> = (props) => {
                     // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
                   >
                     <LandingViewCard
-                      id={id}
-                      image={data.image}
+                      id={data.id}
+                      image={data.img}
                       title={data.title}
                       timestamp={data.timestamp}
                       summary={data.summary}
@@ -193,7 +204,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                     sx={{
                       color: "text.primary",
                     }}
-                    disabled={!(page > 1)}
+                    disabled={page <= 1}
                     onClick={() => handlePreviousPage()}
                   >
                     <ArrowBackIosNewSharp color="inherit" />
@@ -209,7 +220,18 @@ const LandingView: FC<LandingViewProps> = (props) => {
                     sx={{
                       color: "text.primary",
                     }}
-                    disabled={!(page < Math.ceil(count / postsPerPage))}
+                    disabled={
+                      !(
+                        page <
+                        Math.ceil(
+                          props.posts.flat().length /
+                            Number(
+                              process.env
+                                .NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE
+                            )
+                        )
+                      )
+                    }
                     onClick={() => handleNextPage()}
                   >
                     <ArrowForwardIosSharp color="inherit" />
@@ -217,6 +239,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                 </Box>
               </Grid>
             </Grid>
+            {/* </RevealFromDownOnEnter> */}
           </Box>
         </>
       )}

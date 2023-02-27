@@ -24,22 +24,27 @@ export const SearchModal = (props: SearchModalProps) => {
   const handleNavigate = (path: string) => {
     window.location.href = path;
   };
-
   const [textFieldValue, setTextFieldValue] = useState("");
-  const [maxNumberOfItems, setMaxNumberOfItems] = useState(5);
-  const [matchedItems, setMatchedItems] = useState(
-    props.postsOverview?.slice(0, maxNumberOfItems)
-  );
+  const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);
+  const [matchedItems, setMatchedItems] = useState<SimplifiedPost[]>([]);
   const [activeItem, setActiveItem] = useState(isMobile ? -1 : 0);
 
   // Filter/search
   useEffect(() => {
-    const bestMatch = matchSorter(props.postsOverview!, textFieldValue, {
-      keys: ["title", "summary"],
-    });
-    const min = Math.min(bestMatch.length, 5);
-    setMatchedItems(bestMatch.slice(0, min));
-    setMaxNumberOfItems(min);
+    if (textFieldValue === "") {
+      setMatchedItems([]);
+      setMaxNumberOfItems(0);
+    } else {
+      const bestMatch = matchSorter(props.postsOverview!, textFieldValue, {
+        keys: ["title", "summary"],
+      });
+      const min = Math.min(
+        bestMatch.length,
+        Number(process.env.NEXT_PUBLIC_SEARCH_MAX_RESULTS)
+      );
+      setMatchedItems(bestMatch.slice(0, min));
+      setMaxNumberOfItems(min);
+    }
     return () => {};
   }, [textFieldValue]);
 
@@ -66,8 +71,7 @@ export const SearchModal = (props: SearchModalProps) => {
     () => {
       props.handleModalClose();
       setTextFieldValue("");
-      console.log(`/posts/${matchedItems![activeItem].id}`);
-      // handleNavigate(`/posts/${matchedItems![activeItem].id}`);
+      handleNavigate(`/posts/${matchedItems![activeItem].id}`);
     },
     [activeItem]
   );

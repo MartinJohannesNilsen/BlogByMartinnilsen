@@ -1,53 +1,47 @@
-import { db } from "../firebaseConfig";
 import {
-  doc,
   DocumentData,
-  getDoc,
   QueryDocumentSnapshot,
   SnapshotOptions,
-  WithFieldValue,
-  collection,
-  addDoc,
-  getCountFromServer,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  startAfter,
-  endBefore,
-  limitToLast,
-  updateDoc,
-  deleteDoc,
-  where,
   WhereFilterOp,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  endBefore,
+  getCountFromServer,
+  getDoc,
+  getDocs,
+  limit,
+  limitToLast,
+  orderBy,
+  query,
+  startAfter,
+  updateDoc,
+  where,
 } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import { FirestorePost, Post } from "../types";
 
 const postConverter = {
-  toFirestore: (post: WithFieldValue<FirestorePost>): DocumentData => {
-    return { post };
+  toFirestore: (post: Post): FirestorePost => {
+    return {
+      ...post,
+      data: JSON.stringify(post.data),
+    };
   },
   fromFirestore: (
     snapshot: QueryDocumentSnapshot,
     options: SnapshotOptions
-  ): FirestorePost => {
-    const snapshotData = snapshot.data(options)!;
+  ): Post => {
+    const snapshotData = snapshot.data(options)! as FirestorePost;
     return {
-      published: snapshotData.published,
-      type: snapshotData.type,
-      tags: snapshotData.tags,
-      title: snapshotData.title,
-      summary: snapshotData.summary,
-      image: snapshotData.image,
+      ...snapshotData,
       data: JSON.parse(snapshotData.data),
-      author: snapshotData.author,
-      timestamp: snapshotData.timestamp,
-      views: snapshotData.views,
     };
   },
 };
 
-const getPost = async (id: string): Promise<FirestorePost | null> => {
+const getPost = async (id: string): Promise<Post | null> => {
   const postSnapshot = await getDoc(
     doc(db, "posts", id).withConverter(postConverter)
   );
@@ -158,11 +152,10 @@ const getPaginatedCollection = async (
 };
 
 const addPost = async (newDocument: Post): Promise<string> => {
-  const firestorePost: FirestorePost = {
-    ...newDocument,
-    data: JSON.stringify(newDocument.data),
-  };
-  const docRef = await addDoc(collection(db, "posts"), firestorePost);
+  const docRef = await addDoc(
+    collection(db, "posts").withConverter(postConverter),
+    newDocument
+  );
   return docRef.id;
 };
 

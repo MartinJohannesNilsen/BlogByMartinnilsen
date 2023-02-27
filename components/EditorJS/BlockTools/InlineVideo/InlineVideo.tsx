@@ -1,8 +1,8 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Fragment, useRef, useState } from "react";
 import { useTheme } from "../../../../ThemeProvider";
-import { isvalidHTTPUrl } from "../../../../components/PostManagement/createPost";
 import CustomVideo from "../../Renderers/CustomVideo";
+import { isvalidHTTPUrl } from "../../../PostManagement/CreatePost";
 
 export const InlineVideo = (props: {
   data: { url: "" };

@@ -1,12 +1,8 @@
+import { OutputData } from "@editorjs/editorjs";
 import { CSSProperties } from "@emotion/serialize";
 import { ReactNode } from "react";
 
 // Object types
-export type EditorJSDocument = {
-  time?: number;
-  blocks: [];
-  version?: string;
-};
 
 export type EditorjsRendererProps = {
   data: {
@@ -99,10 +95,11 @@ export type Post = {
   title: string;
   summary: string;
   image: string;
-  data: EditorJSDocument;
+  data: OutputData;
   author: string;
   timestamp: number;
   views: number;
+  readTime: string;
 };
 
 export type FirestorePost = {
@@ -116,6 +113,7 @@ export type FirestorePost = {
   author: string;
   timestamp: number;
   views: number;
+  readTime: string;
 };
 
 export type SimplifiedPost = {
@@ -124,6 +122,11 @@ export type SimplifiedPost = {
   summary: string;
   img: string;
   published: boolean;
+  timestamp: number;
+  type: string;
+  tags: string[];
+  author: string;
+  readTime: string;
 };
 
 export type NavbarSection = {
@@ -133,6 +136,7 @@ export type NavbarSection = {
 
 export type NavbarProps = {
   backgroundColor: string;
+  posts: SimplifiedPost[];
 };
 
 // Component types
@@ -144,6 +148,10 @@ export type RevealProps = {
   x?: string;
   y?: string;
   children?: ReactNode;
+  from_opacity?: number;
+  to_opacity?: number;
+  duration?: number;
+  delay?: number;
 };
 
 export type SettingsModalProps = {
@@ -179,6 +187,6 @@ export type ManageArticleViewProps = {
   post?: Post;
 };
 export type ReadArticleViewProps = { post: Post };
-export type LandingViewProps = {};
+export type LandingViewProps = { posts: SimplifiedPost[][] };
 export type ListViewProps = {};
 export type FooterProps = {};

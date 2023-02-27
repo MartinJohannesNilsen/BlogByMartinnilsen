@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -15,23 +15,45 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "../../ThemeProvider";
-import { addPost, deletePost, updatePost } from "../../database/posts";
-import { EditorJSDocument, ManageArticleViewProps, Post } from "../../types";
+import { addPost, deletePost, getPost, updatePost } from "../../database/posts";
+import { ManageArticleViewProps, Post } from "../../types";
 import { withStyles } from "@mui/styles";
-import { createReactEditorJS } from "react-editor-js";
-import { EDITOR_JS_TOOLS } from "../EditorJS/tools";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import colorLumincance from "../../utils/colorLuminance";
-import { useQuery } from "@tanstack/react-query";
 import CreatableSelect from "react-select/creatable";
 import { addTag, getTags } from "../../database/tags";
 import {
   addPostsOverview,
   deletePostsOverview,
-  getAllPostIds,
   updatePostsOverview,
 } from "../../database/overview";
 import { useRouter } from "next/router";
+import { OutputData } from "@editorjs/editorjs";
+import dynamic from "next/dynamic";
+let EditorBlock;
+if (typeof window !== "undefined") {
+  EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
+}
+
+const revalidatePages = async (pages: string[]) => {
+  const res: string[] = [];
+  pages.map((page) => {
+    fetch(
+      "/api/revalidate?secret=" +
+        process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN +
+        "&path=" +
+        page,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    )
+      .then((response) => response.text())
+      .then((text) => res.push(page + ": " + text));
+  });
+  return res;
+};
 
 const StyledTextField = withStyles((theme) => ({
   root: {
@@ -66,19 +88,20 @@ export function isvalidHTTPUrl(string: string) {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
-const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
+const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const { theme, setTheme } = useTheme();
   const [isPosted, setIsPosted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const [postId, setPostId] = useState<string>(
-    props.post ? (router.query.postId as string) : ""
+    props.post ? (router.query.postId[0] as string) : ""
   );
   const [tagOptions, setTagOptions] = useState<
     { value: string; label: string }[]
   >([]);
-  const [editorJSContent, setEditorJSContent] = useState<EditorJSDocument>({
-    blocks: [],
-  });
+  const [editorJSContent, setEditorJSContent] = useState<OutputData>(
+    props.post ? props.post.data : { blocks: [] }
+  );
   const [data, setData] = useState<Post>({
     published: false,
     type: "",
@@ -90,6 +113,7 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
     author: "Martin Johannes Nilsen",
     timestamp: Date.now(),
     views: 0,
+    readTime: "",
   });
   const handleNavigate = (path: string) => {
     window.location.href = path;
@@ -104,26 +128,27 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
           label: item,
         }));
         setTagOptions(array);
-        // console.log(val);
       })
       .catch((error) => {
         console.log(error);
       });
+  }, []);
+
+  useEffect(() => {
     if (props.post) {
       setData(props.post);
       setEditorJSContent(props.post.data);
+      setIsLoading(false);
     }
+    setIsLoading(false);
+    return () => {};
   }, []);
 
-  const editorCore: any = useRef();
-  const handleInitialize = useCallback((instance) => {
-    editorCore.current = instance;
-  }, []);
-  const handleSave = useCallback(async () => {
-    const savedData = await editorCore!.current!.save()!;
-    setEditorJSContent(savedData);
+  useEffect(() => {
     setIsPosted(false);
-  }, []);
+    return () => {};
+  }, [editorJSContent]);
+
   const width = "700px";
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
@@ -152,9 +177,15 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                 summary: newObject.summary,
                 img: newObject.image,
                 published: newObject.published,
+                timestamp: newObject.timestamp,
+                type: newObject.type,
+                tags: newObject.tags,
+                author: newObject.author,
+                readTime: newObject.readTime,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
                   setIsPosted(true);
+                  revalidatePages(["/", "/posts/" + postId]);
                 }
               });
             }
@@ -168,18 +199,24 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                 summary: newObject.summary,
                 img: newObject.image,
                 published: newObject.published,
+                timestamp: newObject.timestamp,
+                type: newObject.type,
+                tags: newObject.tags,
+                author: newObject.author,
+                readTime: newObject.readTime,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
                   setPostId(postId);
                   setIsPosted(true);
+                  revalidatePages(["/", "/posts/" + postId]);
                 }
               });
             }
           });
         }
       }
-    } catch (e) {
-      // console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -197,6 +234,7 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
         deletePostsOverview(postId).then((overviewWasUpdated) => {
           if (overviewWasUpdated) {
             handleDeleteDialogClose();
+            revalidatePages(["/", "/posts/" + postId]);
             handleNavigate("/");
           }
         });
@@ -207,7 +245,6 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
   const handleCreateTagOption = (inputValue: string) => {
     addTag(inputValue)
       .then((val) => {
-        // console.log(val);
         if (val) {
           const newOption = { value: inputValue, label: inputValue };
           setTagOptions((prev) => [...prev, newOption]);
@@ -222,184 +259,166 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
     setData({ ...data, published: event.target.value === "true" });
   };
 
-  const ReactEditorJS = createReactEditorJS();
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        // justifyContent="center"
-        alignItems="center"
-        sx={{ minWidth: "100vw", minHeight: "100vh" }}
-      >
-        <form onSubmit={handleSubmit}>
-          <Box my={1}>
-            <Box
-              display="flex"
-              alignItems="center"
-              width={width}
-              py={2}
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              <Link
-                fontFamily={theme.typography.fontFamily}
-                variant="body1"
-                fontWeight="900"
+      {isLoading ? (
+        <></>
+      ) : (
+        <Box
+          display="flex"
+          flexDirection="column"
+          // justifyContent="center"
+          alignItems="center"
+          sx={{
+            minWidth: "100vw",
+            minHeight: "100vh",
+            backgroundColor: theme.palette.primary.main,
+          }}
+        >
+          <form onSubmit={handleSubmit}>
+            <Box my={1}>
+              <Box
+                display="flex"
+                alignItems="center"
+                width={width}
+                py={2}
                 sx={{
-                  textDecoration: "none",
-                  color: theme.palette.secondary.main,
-                  "&:hover": {
-                    cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.33),
-                  },
-                }}
-                href={"/"}
-              >
-                ← Home
-              </Link>
-            </Box>
-            <Divider />
-            <Typography
-              my={2.5}
-              variant="h4"
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-            >
-              Information
-            </Typography>
-            <Divider />
-          </Box>
-          <Box
-            display="flex"
-            flexDirection="column"
-            sx={{ width: width }}
-            rowGap={3}
-          >
-            <Box sx={{ zIndex: 5 }}>
-              <CreatableSelect
-                isMulti
-                isClearable
-                isSearchable
-                value={data.tags.map((tag) => ({ value: tag, label: tag }))}
-                onChange={(array) => {
-                  setData({ ...data, tags: array.map((item) => item.value) });
-                }}
-                onCreateOption={handleCreateTagOption}
-                options={tagOptions}
-              />
-            </Box>
-            <StyledTextField
-              label="Type"
-              name="type"
-              required
-              fullWidth
-              value={data.type}
-              onChange={handleInputChange}
-            />
-            <StyledTextField
-              label="Title"
-              name="title"
-              required
-              fullWidth
-              value={data.title}
-              onChange={handleInputChange}
-            />
-            <StyledTextField
-              label="Summary"
-              name="summary"
-              fullWidth
-              value={data.summary}
-              onChange={handleInputChange}
-            />
-            <StyledTextField
-              label="Image"
-              name="image"
-              error={!isvalidHTTPUrl(data.image)}
-              helperText={"Incorrect url format (missing http/https)"}
-              required
-              fullWidth
-              value={data.image}
-              onChange={handleInputChange}
-            />
-            <RadioGroup
-              sx={{ marginTop: theme.spacing(-2) }}
-              row
-              value={data.published}
-              name="published-radio-buttons-group"
-              onChange={handlePublishedRadioChange}
-            >
-              <FormControlLabel
-                value={true}
-                control={<Radio />}
-                label="Published"
-              />
-              <FormControlLabel
-                value={false}
-                control={<Radio />}
-                label="Not published"
-              />
-            </RadioGroup>
-            <Divider />
-            <Typography
-              variant="h4"
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-            >
-              Article
-            </Typography>
-            <Divider />
-            <ReactEditorJS
-              defaultValue={editorJSContent}
-              tools={EDITOR_JS_TOOLS}
-              onInitialize={handleInitialize}
-              onChange={handleSave}
-            />
-            <Box
-              display="flex"
-              gap="10px"
-              sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 100 }}
-            >
-              <Button
-                type="submit"
-                disabled={isPosted}
-                sx={{
-                  border: isPosted
-                    ? "2px solid green"
-                    : "2px solid " + theme.palette.text.primary,
-                  zIndex: 2,
-                  backgroundColor: theme.palette.primary.main,
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
-                  },
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                 }}
               >
-                <Typography
-                  variant="button"
+                <Link
+                  fontFamily={theme.typography.fontFamily}
+                  variant="body1"
+                  fontWeight="900"
                   sx={{
-                    color: isPosted ? "green" : theme.palette.text.primary,
+                    textDecoration: "none",
+                    color: theme.palette.secondary.main,
+                    "&:hover": {
+                      cursor: "pointer",
+                      color: colorLumincance(
+                        theme.palette.secondary.main,
+                        0.33
+                      ),
+                    },
                   }}
+                  href={"/"}
                 >
-                  {isPosted
-                    ? props.post
-                      ? "Updated ✓"
-                      : "Posted ✓"
-                    : props.post
-                    ? "Update"
-                    : "Post"}
-                </Typography>
-              </Button>
-              {isPosted ? (
-                <Button
-                  onClick={() => {
-                    // handleNavigate(`/posts/${postId}`);
-                    window.location.href = `/posts/${postId}`;
+                  ← Home
+                </Link>
+              </Box>
+              <Divider />
+              <Typography
+                my={2.5}
+                variant="h4"
+                color="textPrimary"
+                fontFamily={theme.typography.fontFamily}
+              >
+                Information
+              </Typography>
+              <Divider />
+            </Box>
+            <Box
+              display="flex"
+              flexDirection="column"
+              sx={{ width: width }}
+              rowGap={3}
+            >
+              <Box sx={{ zIndex: 5 }}>
+                <CreatableSelect
+                  isMulti
+                  isClearable
+                  isSearchable
+                  value={data.tags.map((tag) => ({ value: tag, label: tag }))}
+                  onChange={(array) => {
+                    setData({ ...data, tags: array.map((item) => item.value) });
                   }}
+                  onCreateOption={handleCreateTagOption}
+                  options={tagOptions}
+                />
+              </Box>
+              <StyledTextField
+                label="Type"
+                name="type"
+                required
+                fullWidth
+                value={data.type}
+                onChange={handleInputChange}
+              />
+              <StyledTextField
+                label="Title"
+                name="title"
+                required
+                fullWidth
+                value={data.title}
+                onChange={handleInputChange}
+              />
+              <StyledTextField
+                label="Summary"
+                name="summary"
+                fullWidth
+                value={data.summary}
+                onChange={handleInputChange}
+              />
+              <StyledTextField
+                label="Image"
+                name="image"
+                error={!isvalidHTTPUrl(data.image)}
+                helperText={"Incorrect url format (missing http/https)"}
+                required
+                fullWidth
+                value={data.image}
+                onChange={handleInputChange}
+              />
+              <RadioGroup
+                sx={{ marginTop: theme.spacing(-2) }}
+                row
+                value={data.published}
+                name="published-radio-buttons-group"
+                onChange={handlePublishedRadioChange}
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Published"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="Not published"
+                />
+              </RadioGroup>
+              <Divider />
+              <Typography
+                variant="h4"
+                color="textPrimary"
+                fontFamily={theme.typography.fontFamily}
+              >
+                Article
+              </Typography>
+              <Divider />
+              {EditorBlock && !isLoading ? (
+                <EditorBlock
+                  data={editorJSContent}
+                  onChange={setEditorJSContent}
+                  holder="editorjs-container"
+                />
+              ) : (
+                <></>
+              )}
+              <Box
+                display="flex"
+                gap="10px"
+                sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 100 }}
+              >
+                <Button
+                  type="submit"
+                  disabled={isPosted}
                   sx={{
-                    border: "2px solid " + theme.palette.text.primary,
+                    border: isPosted
+                      ? "2px solid green"
+                      : "2px solid " + theme.palette.text.primary,
                     zIndex: 2,
                     backgroundColor: theme.palette.primary.main,
                     "&:hover": {
@@ -410,27 +429,28 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                   <Typography
                     variant="button"
                     sx={{
-                      color: theme.palette.text.primary,
+                      color: isPosted ? "green" : theme.palette.text.primary,
                     }}
                   >
-                    View
+                    {isPosted
+                      ? props.post
+                        ? "Updated ✓"
+                        : "Posted ✓"
+                      : props.post
+                      ? "Update"
+                      : "Post"}
                   </Typography>
                 </Button>
-              ) : (
-                <></>
-              )}
-            </Box>
-            <Box
-              display="flex"
-              gap="10px"
-              sx={{ position: "fixed", right: 25, bottom: 25, zIndex: 100 }}
-            >
-              {props.post ? (
-                <>
+
+                {isPosted ? (
                   <Button
-                    onClick={handleDeleteDialogOpen}
+                    onClick={() => {
+                      // handleNavigate(`/posts/${postId}`);
+                      window.location.href = `/posts/${postId}`;
+                    }}
                     sx={{
-                      border: "2px solid red",
+                      border: "2px solid " + theme.palette.text.primary,
+                      zIndex: 2,
                       backgroundColor: theme.palette.primary.main,
                       "&:hover": {
                         backgroundColor: theme.palette.primary.dark,
@@ -440,72 +460,103 @@ const ManageArticleView: FC<ManageArticleViewProps> = (props) => {
                     <Typography
                       variant="button"
                       sx={{
-                        color: "red",
-                        zIndex: 2,
+                        color: theme.palette.text.primary,
                       }}
                     >
-                      Delete
+                      View
                     </Typography>
                   </Button>
-                  <Dialog
-                    open={deleteDialogOpen}
-                    onClose={handleDeleteDialogClose}
-                  >
-                    <DialogTitle>Delete post</DialogTitle>
-                    <DialogContent>
+                ) : (
+                  <></>
+                )}
+              </Box>
+              <Box
+                display="flex"
+                gap="10px"
+                sx={{ position: "fixed", right: 25, bottom: 25, zIndex: 100 }}
+              >
+                {props.post ? (
+                  <>
+                    <Button
+                      onClick={handleDeleteDialogOpen}
+                      sx={{
+                        border: "2px solid red",
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }}
+                    >
                       <Typography
-                        fontFamily={theme.typography.fontFamily}
-                        variant="body1"
-                        color={theme.palette.text.primary}
+                        variant="button"
+                        sx={{
+                          color: "red",
+                          zIndex: 2,
+                        }}
                       >
-                        {`Are you sure you want to delete the post "${data.title}" (id: ${postId})?`}
+                        Delete
                       </Typography>
-                    </DialogContent>
-                    <DialogActions sx={{ marginRight: theme.spacing(2) }}>
-                      <Button
-                        onClick={handleDeleteDialogClose}
-                        sx={
-                          {
-                            // border: "2px solid " + theme.palette.text.primary,
-                          }
-                        }
-                      >
+                    </Button>
+                    <Dialog
+                      open={deleteDialogOpen}
+                      onClose={handleDeleteDialogClose}
+                    >
+                      <DialogTitle>Delete post</DialogTitle>
+                      <DialogContent>
                         <Typography
                           fontFamily={theme.typography.fontFamily}
-                          variant="button"
+                          variant="body1"
                           color={theme.palette.text.primary}
                         >
-                          No
+                          {`Are you sure you want to delete the post "${data.title}" (id: ${postId})?`}
                         </Typography>
-                      </Button>
-                      <Button
-                        onClick={handleDeletePost}
-                        autoFocus
-                        sx={
-                          {
-                            // border: "2px solid red",
+                      </DialogContent>
+                      <DialogActions sx={{ marginRight: theme.spacing(2) }}>
+                        <Button
+                          onClick={handleDeleteDialogClose}
+                          sx={
+                            {
+                              // border: "2px solid " + theme.palette.text.primary,
+                            }
                           }
-                        }
-                      >
-                        <Typography
-                          fontFamily={theme.typography.fontFamily}
-                          variant="button"
-                          color="red"
                         >
-                          Yes
-                        </Typography>
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </>
-              ) : (
-                <></>
-              )}
+                          <Typography
+                            fontFamily={theme.typography.fontFamily}
+                            variant="button"
+                            color={theme.palette.text.primary}
+                          >
+                            No
+                          </Typography>
+                        </Button>
+                        <Button
+                          onClick={handleDeletePost}
+                          autoFocus
+                          sx={
+                            {
+                              // border: "2px solid red",
+                            }
+                          }
+                        >
+                          <Typography
+                            fontFamily={theme.typography.fontFamily}
+                            variant="button"
+                            color="red"
+                          >
+                            Yes
+                          </Typography>
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </Box>
             </Box>
-          </Box>
-        </form>
-      </Box>
+          </form>
+        </Box>
+      )}
     </>
   );
 };
-export default ManageArticleView;
+export default CreatePost;

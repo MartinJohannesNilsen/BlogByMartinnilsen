@@ -18,9 +18,10 @@ import logo from "public/assets/img/terminal.png";
 import { NavbarProps, SimplifiedPost } from "../../types";
 import { useHotkeys } from "react-hotkeys-hook";
 import SearchModal from "../Modals/SearchModal";
-import { Search } from "@mui/icons-material";
+import { AccountBox, Person, Search } from "@mui/icons-material";
 import { getPostsOverview } from "../../database/overview";
 import Image from "next/image";
+import useAuthorized from "../AuthorizationHook/useAuthorized";
 
 export const handleScroll = (name: string) => {
   $("html, body").animate(
@@ -33,6 +34,7 @@ export const handleScroll = (name: string) => {
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
+  const { isAuthorized } = useAuthorized();
   // SetingsModal
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -44,21 +46,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   useHotkeys(["Control+k", "Meta+k"], () => {
     handleSearchModalOpen();
   });
-  const [searchModalData, setSearchModalData] = useState<SimplifiedPost[]>([]);
-
-  useEffect(() => {
-    getPostsOverview()
-      .then((data) => {
-        process.env.NEXT_PUBLIC_LOCALHOST === "true"
-          ? setSearchModalData(data)
-          : setSearchModalData(data.filter((post) => post.published));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    return () => {};
-  }, []);
 
   // Navigation
   const handleNavigate = (path: string) => {
@@ -110,7 +97,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             />
           </ButtonBase>
           <Box flexGrow={1} />
-          {process.env.NEXT_PUBLIC_LOCALHOST === "true" ? (
+          {isAuthorized ? (
             <Box mt={isMobile ? 0 : -0.2}>
               <Tooltip enterDelay={2000} title={"Upload new post"}>
                 <ButtonBase
@@ -140,7 +127,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               title={`Search${
                 isMobile
                   ? ""
-                  : navigator.userAgent.indexOf("Mac OS X") != -1
+                  : typeof navigator !== "undefined" &&
+                    navigator.userAgent.indexOf("Mac OS X") != -1
                   ? " (⌘ + k)"
                   : " (ctrl + k)"
               }`}
@@ -183,13 +171,29 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </ButtonBase>
             </Tooltip>
           </Box>
+          <Box mx={1} mt={isMobile ? 0.25 : 0}>
+            <Tooltip enterDelay={2000} title={"Go to account"}>
+              <ButtonBase href="/account">
+                <Person
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    height: "30px",
+                    width: "30px",
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
+                  }}
+                />
+              </ButtonBase>
+            </Tooltip>
+          </Box>
         </Box>
       </Toolbar>
       <SearchModal
         open={openSearchModal}
         handleModalOpen={handleSearchModalOpen}
         handleModalClose={handleSearchModalClose}
-        postsOverview={searchModalData}
+        postsOverview={props.posts}
       />
       <SettingsModal
         open={openSettingsModal}

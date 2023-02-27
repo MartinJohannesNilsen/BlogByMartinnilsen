@@ -1,21 +1,16 @@
-import type { AppProps } from "next/app";
-import "../styles/globals.scss";
-import "../styles/editorJS.scss";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import ThemeProvider from "../ThemeProvider";
-import showMuiSize from "../utils/showMuiSize";
+import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
+import ThemeProvider from "../ThemeProvider";
+import "../styles/editorJS.scss";
+import "../styles/globals.scss";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient();
-
+function MyApp({ Component, pageProps, session }) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <SessionProvider session={session}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider>
           <CssBaseline />
-          {/* {process.env.NEXT_PUBLIC_SHOW_MUI_SIZE === "true" ? showMuiSize() : ""} */}
           <Head>
             <title>Tech blog | Martin Johannes Nilsen</title>
             <meta
@@ -24,9 +19,12 @@ function MyApp({ Component, pageProps }: AppProps) {
             />
           </Head>
           <Component {...pageProps} />
+          {/* {process.env.NEXT_PUBLIC_SHOW_MUI_SIZE === "true"
+            ? showMuiSize()
+            : ""} */}
         </ThemeProvider>
       </StyledEngineProvider>
-    </QueryClientProvider>
+    </SessionProvider>
   );
 }
 export default MyApp;
