@@ -8,6 +8,6 @@ killall(){
 }
 
 ./run_server.sh &
-npm run start-frontend &
+npm run dev-frontend &
 wait
 
