@@ -5,4 +5,4 @@ python-dotenv
 # Link preview
 linkpreview
 lxml
-zappa
+beautifulsoup4
