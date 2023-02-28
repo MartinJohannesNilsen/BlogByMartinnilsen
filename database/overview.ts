@@ -1,6 +1,7 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { SimplifiedPost } from "../types";
+const db_document = "overview";
 
 const _sortListOfSimplifiedPostsOnTimestamp = (
   data: SimplifiedPost[],
@@ -23,12 +24,10 @@ export const _filterListOfSimplifiedPostsOnPublished = (
   return data;
 };
 
-//TODO Change name from "search" to "overview"
-
 const getAllPostIds = async (
   filterOnVisibility: boolean
 ): Promise<string[]> => {
-  const tagsSnapshot = await getDoc(doc(db, "administrative", "search"));
+  const tagsSnapshot = await getDoc(doc(db, "administrative", db_document));
   if (tagsSnapshot.exists()) {
     const data = tagsSnapshot.data().values;
 
@@ -48,7 +47,7 @@ const getPostsOverview = async (
   sorted?: "asc" | "desc",
   filterOnPublished?: boolean
 ): Promise<SimplifiedPost[]> => {
-  const tagsSnapshot = await getDoc(doc(db, "administrative", "search"));
+  const tagsSnapshot = await getDoc(doc(db, "administrative", db_document));
   if (tagsSnapshot.exists()) {
     let data = tagsSnapshot.data().values;
     if (sorted) {
@@ -66,7 +65,7 @@ const getPostsOverview = async (
 const addPostsOverview = async (
   simplifiedPost: SimplifiedPost
 ): Promise<boolean> => {
-  const docRef = doc(db, "administrative", "search");
+  const docRef = doc(db, "administrative", db_document);
   const tagsSnapshot = await getDoc(docRef);
   if (tagsSnapshot.exists()) {
     let values: SimplifiedPost[] = tagsSnapshot.data().values;
@@ -88,13 +87,13 @@ const addPostsOverview = async (
 const updatePostsOverview = async (
   simplifiedPost: SimplifiedPost
 ): Promise<boolean> => {
-  const docRef = doc(db, "administrative", "search");
+  const docRef = doc(db, "administrative", db_document);
   await getPostsOverview()
     .then(async (data: SimplifiedPost[]) => {
       let values = [...data];
       values.map((post: SimplifiedPost) => {
         if (post.id === simplifiedPost.id) {
-          post.img = simplifiedPost.img;
+          post.image = simplifiedPost.image;
           post.title = simplifiedPost.title;
           post.summary = simplifiedPost.summary;
           post.published = simplifiedPost.published;
@@ -114,7 +113,7 @@ const updatePostsOverview = async (
 };
 
 const deletePostsOverview = async (id: string): Promise<boolean> => {
-  const docRef = doc(db, "administrative", "search");
+  const docRef = doc(db, "administrative", db_document);
   await getPostsOverview()
     .then(async (data: SimplifiedPost[]) => {
       let values = [...data];

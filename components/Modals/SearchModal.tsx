@@ -222,7 +222,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           }}
                         >
                           <img
-                            src={post.img}
+                            src={post.image}
                             style={{
                               minWidth: "50px",
                               minHeight: "50px",

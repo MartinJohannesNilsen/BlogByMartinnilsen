@@ -17,6 +17,7 @@ const HeaderOutput = ({
   classNames,
   config,
 }: EditorjsRendererProps): JSX.Element => {
+  const { theme } = useTheme();
   if (!data || !data.text || typeof data.text != "string") return <></>;
   if (!style || typeof style !== "object") style = {};
   if (!config || typeof config !== "object")
@@ -25,22 +26,22 @@ const HeaderOutput = ({
 
   const h1Style = config.disableDefaultStyle
     ? style.h1
-    : { ...defaultStyle, ...style.h1 };
+    : { ...defaultStyle, ...style.h1, color: theme.palette.text.primary };
   const h2Style = config.disableDefaultStyle
     ? style.h2
-    : { ...defaultStyle, ...style.h2 };
+    : { ...defaultStyle, ...style.h2, color: theme.palette.text.primary };
   const h3Style = config.disableDefaultStyle
     ? style.h3
-    : { ...defaultStyle, ...style.h3 };
+    : { ...defaultStyle, ...style.h3, color: theme.palette.text.primary };
   const h4Style = config.disableDefaultStyle
     ? style.h4
-    : { ...defaultStyle, ...style.h4 };
+    : { ...defaultStyle, ...style.h4, color: theme.palette.text.primary };
   const h5Style = config.disableDefaultStyle
     ? style.h5
-    : { ...defaultStyle, ...style.h5 };
+    : { ...defaultStyle, ...style.h5, color: theme.palette.text.primary };
   const h6Style = config.disableDefaultStyle
     ? style.h6
-    : { ...defaultStyle, ...style.h6 };
+    : { ...defaultStyle, ...style.h6, color: theme.palette.text.primary };
 
   const element =
     data.level === 1 ? (

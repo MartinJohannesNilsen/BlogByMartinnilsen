@@ -26,16 +26,19 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import { RWebShare } from "react-web-share";
 import { readingTime } from "reading-time-estimator";
 import { useTheme } from "../../ThemeProvider";
+import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
+import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
 import Footer from "../../components/Footer/Footer";
+import TOCModal from "../../components/Modals/TOCModal";
+import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ReadArticleViewProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
+import { NextSeo } from "next-seo";
 
-// Components
-import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
-import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
+// EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../../components/EditorJS/Renderers/CustomCode";
 import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
@@ -48,8 +51,6 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import TOCModal from "../../components/Modals/TOCModal";
-import { getAllPostIds } from "../../database/overview";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -199,6 +200,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 variant="body1"
                 fontWeight="800"
                 textAlign="center"
+                color={theme.palette.text.primary}
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -269,190 +271,193 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             </Box>
           </Box>
           {/* Content */}
-          <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}>
-            <Grid
-              container
-              width="100%"
-              justifyContent="center"
-              sx={{ backgroundColor: theme.palette.primary.main }}
-            >
-              <Grid item>
-                <Head>
-                  <title>{post.title}</title>
-                  <meta
-                    name="theme-color"
-                    content={theme.palette.primary.main}
-                  />
-                  <meta name="description" content={post.summary} />
-                  {/* <!-- Open Graph --> */}
-                  <meta property="og:url" content={window.location.href} />
-                  <meta property="og:type" content="website" />
-                  <meta property="og:image" content={post.image} />
-                  <meta property="og:title" content={post.title} />
-                  <meta property="og:description" content={post.summary} />
-                  {/* Twitter */}
-                  <meta name="twitter:card" content="summary" />
-                  <meta name="twitter:creator" content="@MartinJNilsen" />
-                  <meta name="twitter:image" content={post.image} />
-                  <meta name="twitter:title" content={post.title} />
-                  <meta name="twitter:description" content={post.summary} />
-                </Head>
-                <Stack
-                  p={2}
-                  sx={{
-                    minHeight: isMobile
-                      ? "calc(100vh - 73px - 120px)"
-                      : "calc(100vh - 73px - 120px)",
-                    width: xs ? "380px" : sm ? "500px" : "700px",
-                    position: "relative",
-                  }}
+          {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
+          <Grid
+            container
+            width="100%"
+            justifyContent="center"
+            sx={{ backgroundColor: theme.palette.primary.main }}
+          >
+            <Grid item>
+              <NextSeo
+                title={post.title}
+                description={post.summary}
+                canonical={window.location.href}
+                openGraph={{
+                  type: "article",
+                  article: {
+                    publishedTime:
+                      new Date(post.timestamp).getFullYear() +
+                      "-" +
+                      ("0" + (new Date(post.timestamp).getMonth() + 1)).slice(
+                        -2
+                      ) +
+                      "-" +
+                      ("0" + new Date(post.timestamp).getDate()).slice(-2),
+                    tags: post.tags,
+                  },
+                  url: window.location.href,
+                  images: [
+                    {
+                      url: post.image,
+                    },
+                  ],
+                  site_name: "MJNTech.dev",
+                }}
+              />
+              <Stack
+                p={2}
+                sx={{
+                  minHeight: isMobile
+                    ? "calc(100vh - 73px - 120px)"
+                    : "calc(100vh - 73px - 120px)",
+                  width: xs ? "380px" : sm ? "500px" : "700px",
+                  position: "relative",
+                }}
+              >
+                {/* Title box */}
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  mt={isMobile ? 6 : 0}
+                  mb={1}
+                  pb={2}
                 >
-                  {/* Title box */}
                   <Box
                     display="flex"
+                    width="100%"
+                    flexDirection="column"
+                    justifyContent="center"
                     alignItems="center"
-                    mt={isMobile ? 6 : 0}
-                    mb={1}
-                    pb={2}
                   >
+                    <Typography
+                      my={1}
+                      textAlign="center"
+                      fontFamily={theme.typography.fontFamily}
+                      variant="h5"
+                      fontWeight="800"
+                      sx={{ color: theme.palette.secondary.main }}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(
+                          post.type
+                            ? "//&nbsp;&nbsp;&nbsp;&nbsp;" +
+                                post.type +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;//"
+                            : ""
+                        ),
+                      }}
+                    />
+                    <Typography
+                      my={xs ? 0.5 : 1}
+                      textAlign="center"
+                      sx={{ color: theme.palette.text.primary }}
+                      fontFamily={theme.typography.fontFamily}
+                      variant={xs ? "h4" : "h3"}
+                      fontWeight="800"
+                    >
+                      {post.title}
+                    </Typography>
                     <Box
                       display="flex"
-                      width="100%"
-                      flexDirection="column"
+                      mt={2}
+                      mb={xs ? 0 : 1}
                       justifyContent="center"
                       alignItems="center"
                     >
-                      <Typography
-                        my={1}
-                        textAlign="center"
-                        fontFamily={theme.typography.fontFamily}
-                        variant="h5"
-                        fontWeight="800"
-                        sx={{ color: theme.palette.secondary.main }}
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(
-                            post.type
-                              ? "//&nbsp;&nbsp;&nbsp;&nbsp;" +
-                                  post.type +
-                                  "&nbsp;&nbsp;&nbsp;&nbsp;//"
-                              : ""
-                          ),
+                      <CalendarMonthIcon
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          marginRight: "6px",
+                          fontSize: xs ? "12px" : "default",
                         }}
                       />
                       <Typography
-                        my={xs ? 0.5 : 1}
-                        textAlign="center"
-                        sx={{ color: theme.palette.text.primary }}
                         fontFamily={theme.typography.fontFamily}
-                        variant={xs ? "h4" : "h3"}
-                        fontWeight="800"
+                        variant="body2"
+                        fontWeight="600"
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          fontSize: xs ? "12px" : "default",
+                        }}
                       >
-                        {post.title}
+                        {new Date(post.timestamp).toLocaleDateString("en-GB", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </Typography>
-                      <Box
-                        display="flex"
-                        mt={2}
-                        mb={xs ? 0 : 1}
-                        justifyContent="center"
-                        alignItems="center"
+                      <AccessTimeIcon
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          marginLeft: "16px",
+                          marginRight: "6px",
+                          fontSize: xs ? "12px" : "default",
+                        }}
+                      />
+                      <Typography
+                        fontFamily={theme.typography.fontFamily}
+                        variant="body2"
+                        fontWeight="600"
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          fontSize: xs ? "12px" : "default",
+                        }}
                       >
-                        <CalendarMonthIcon
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            marginRight: "6px",
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        />
-                        <Typography
-                          fontFamily={theme.typography.fontFamily}
-                          variant="body2"
-                          fontWeight="600"
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        >
-                          {new Date(post.timestamp).toLocaleDateString(
-                            "en-GB",
-                            {
-                              weekday: "long",
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )}
-                        </Typography>
-                        <AccessTimeIcon
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            marginLeft: "16px",
-                            marginRight: "6px",
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        />
-                        <Typography
-                          fontFamily={theme.typography.fontFamily}
-                          variant="body2"
-                          fontWeight="600"
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        >
-                          {ReadingTime.text}
-                        </Typography>
-                      </Box>
+                        {ReadingTime.text}
+                      </Typography>
                     </Box>
                   </Box>
-                  {/* EditorJS rendering */}
-                  <Box
-                    id="output"
-                    mb={1}
-                    sx={{
-                      backgroundColor: "transparent",
+                </Box>
+                {/* EditorJS rendering */}
+                <Box
+                  id="output"
+                  mb={1}
+                  sx={{
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  {OutputElement}
+                </Box>
+                <Box flexGrow={100} />
+                {/* Share and exploding */}
+                <Box
+                  mt={6}
+                  mb={3}
+                  py={2}
+                  sx={{
+                    borderTop: "2px solid rgba(100,100,100,0.2)",
+                    borderBottom: "2px solid rgba(100,100,100,0.2)",
+                  }}
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <IconButton
+                    disabled={isExploding}
+                    sx={{ "&:disabled": { opacity: "0.5" } }}
+                    onClick={() => {
+                      setIsExploding(true);
+                      setTimeout(() => {
+                        setIsExploding(false);
+                      }, 4000);
                     }}
                   >
-                    {OutputElement}
-                  </Box>
-                  <Box flexGrow={100} />
-                  {/* Share and exploding */}
-                  <Box
-                    mt={6}
-                    mb={3}
-                    py={2}
-                    sx={{
-                      borderTop: "2px solid rgba(100,100,100,0.2)",
-                      borderBottom: "2px solid rgba(100,100,100,0.2)",
-                    }}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <IconButton
-                      disabled={isExploding}
-                      sx={{ "&:disabled": { opacity: "0.5" } }}
-                      onClick={() => {
-                        setIsExploding(true);
-                        setTimeout(() => {
-                          setIsExploding(false);
-                        }, 4000);
-                      }}
-                    >
-                      <Image
-                        src={ClappingHands.src}
-                        width={30}
-                        height={30}
-                        alt="Clapping hands button"
-                      />
-                    </IconButton>
-                  </Box>
-                </Stack>
-              </Grid>
+                    <Image
+                      src={ClappingHands.src}
+                      width={30}
+                      height={30}
+                      alt="Clapping hands button"
+                    />
+                  </IconButton>
+                </Box>
+              </Stack>
             </Grid>
-          </RevealFromDownOnEnter>
+          </Grid>
+          {/* </RevealFromDownOnEnter> */}
           {isExploding && (
             <Box
               sx={{

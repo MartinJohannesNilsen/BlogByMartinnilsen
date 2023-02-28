@@ -120,7 +120,7 @@ export type SimplifiedPost = {
   id: string;
   title: string;
   summary: string;
-  img: string;
+  image: string;
   published: boolean;
   timestamp: number;
   type: string;

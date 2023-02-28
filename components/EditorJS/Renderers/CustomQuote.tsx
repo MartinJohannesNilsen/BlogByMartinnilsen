@@ -18,6 +18,7 @@ const CutsomQuote = (props: EditorjsRendererProps) => {
         <Typography
           variant="h6"
           fontWeight="400"
+          color={theme.palette.text.primary}
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(props.data.text!),
           }}
@@ -31,6 +32,7 @@ const CutsomQuote = (props: EditorjsRendererProps) => {
       >
         <Typography
           variant="body1"
+          color={theme.palette.text.primary}
           sx={{ opacity: 0.8 }}
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(props.data.caption!),
