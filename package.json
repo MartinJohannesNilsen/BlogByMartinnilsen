@@ -8,7 +8,8 @@
 		"dev-server": "./run_server.sh",
 		"build": "next build",
 		"start": "next build && next start",
-		"deploy": "vercel build && vercel deploy --prebuilt"
+		"deploy": "vercel",
+		"deploy-prebuilt": "vercel build && vercel deploy --prebuilt"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.10.5",

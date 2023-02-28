@@ -82,6 +82,7 @@ export const TOCModal = (props: TOCModalProps) => {
             whiteSpace: "nowrap",
             overflow: "hidden",
             color: theme.palette.text.primary,
+            fontFamily: theme.typography.fontFamily,
             textDecoration: "none",
             marginLeft: theme.spacing(0),
             fontWeight: 600,
@@ -112,6 +113,7 @@ export const TOCModal = (props: TOCModalProps) => {
               whiteSpace: "nowrap",
               overflow: "hidden",
               color: theme.palette.text.primary,
+              fontFamily: theme.typography.fontFamily,
               textDecoration: "none",
               marginLeft: theme.spacing(
                 parseInt(heading.type.substring(1)) - 1
@@ -132,7 +134,7 @@ export const TOCModal = (props: TOCModalProps) => {
       )
     );
     return elements;
-  }, [props.outputString]);
+  }, [props.outputString, theme]);
 
   return (
     <Box>
@@ -153,6 +155,7 @@ export const TOCModal = (props: TOCModalProps) => {
             fontFamily={theme.typography.fontFamily}
             variant="h5"
             fontWeight="800"
+            color={theme.palette.text.primary}
             mb={1}
           >
             Table of Contents

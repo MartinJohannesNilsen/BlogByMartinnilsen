@@ -16,6 +16,7 @@ const CutsomQuote = (props: EditorjsRendererProps) => {
         pl={1.5}
       >
         <Typography
+          fontFamily={theme.typography.fontFamily}
           variant="h6"
           fontWeight="400"
           color={theme.palette.text.primary}
@@ -31,6 +32,7 @@ const CutsomQuote = (props: EditorjsRendererProps) => {
         sx={{ borderLeft: "5px solid transparent" }}
       >
         <Typography
+          fontFamily={theme.typography.fontFamily}
           variant="body1"
           color={theme.palette.text.primary}
           sx={{ opacity: 0.8 }}

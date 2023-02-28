@@ -58,6 +58,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
             fontFamily={theme.typography.fontFamily}
             variant="h5"
             fontWeight="800"
+            color={theme.palette.text.primary}
             mb={1}
           >
             Settings
@@ -67,6 +68,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
               fontFamily={theme.typography.fontFamily}
               variant="body1"
               fontWeight="800"
+              color={theme.palette.text.primary}
             >
               Light Mode:
             </Typography>
@@ -97,6 +99,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
               fontFamily={theme.typography.fontFamily}
               variant="body1"
               fontWeight="800"
+              color={theme.palette.text.primary}
             >
               Font Family:
             </Typography>
@@ -127,7 +130,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
                   >
                     <Typography
                       // mt={index === 1 ? "4.2px" : index === 4 ? "2px" : 0}
-                      color="textPrimary"
+                      color={theme.palette.text.primary}
                       sx={{
                         fontFamily: element.font,
                         fontWeight: 600,
@@ -149,6 +152,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
               fontFamily={theme.typography.fontFamily}
               variant="body1"
               fontWeight="800"
+              color={theme.palette.text.primary}
             >
               Accent color:
             </Typography>

@@ -6,26 +6,7 @@ export const style = (theme: Theme) => {
     paragraph: {
       ...theme.typography.body1,
     },
-    header: {
-      h1: {
-        ...theme.typography.h4,
-      },
-      h2: {
-        ...theme.typography.h5,
-      },
-      h3: {
-        ...theme.typography.h6,
-      },
-      h4: {
-        ...theme.typography.h6,
-      },
-      h5: {
-        ...theme.typography.h6,
-      },
-      h6: {
-        ...theme.typography.h6,
-      },
-    },
+    header: {},
     image: {
       // img: {},
       // figure: {},

@@ -235,7 +235,9 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
           if (overviewWasUpdated) {
             handleDeleteDialogClose();
             revalidatePages(["/", "/posts/" + postId]);
-            handleNavigate("/");
+            setTimeout(() => {
+              handleNavigate("/");
+            }, 2000);
           }
         });
       }

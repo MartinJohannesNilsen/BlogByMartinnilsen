@@ -24,29 +24,14 @@ const HeaderOutput = ({
     config = { disableDefaultStyle: false };
   if (!classNames || typeof classNames !== "object") classNames = {};
 
-  const h1Style = config.disableDefaultStyle
-    ? style.h1
-    : { ...defaultStyle, ...style.h1, color: theme.palette.text.primary };
-  const h2Style = config.disableDefaultStyle
-    ? style.h2
-    : { ...defaultStyle, ...style.h2, color: theme.palette.text.primary };
-  const h3Style = config.disableDefaultStyle
-    ? style.h3
-    : { ...defaultStyle, ...style.h3, color: theme.palette.text.primary };
-  const h4Style = config.disableDefaultStyle
-    ? style.h4
-    : { ...defaultStyle, ...style.h4, color: theme.palette.text.primary };
-  const h5Style = config.disableDefaultStyle
-    ? style.h5
-    : { ...defaultStyle, ...style.h5, color: theme.palette.text.primary };
-  const h6Style = config.disableDefaultStyle
-    ? style.h6
-    : { ...defaultStyle, ...style.h6, color: theme.palette.text.primary };
-
   const element =
     data.level === 1 ? (
       <h1
-        style={h1Style && {}}
+        style={{
+          ...defaultStyle,
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        }}
         className={classNames.h1}
         // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
@@ -54,7 +39,11 @@ const HeaderOutput = ({
       </h1>
     ) : data.level === 2 ? (
       <h2
-        style={h2Style && {}}
+        style={{
+          ...defaultStyle,
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        }}
         className={classNames.h2}
         // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
@@ -62,7 +51,11 @@ const HeaderOutput = ({
       </h2>
     ) : data.level === 3 ? (
       <h3
-        style={h3Style && {}}
+        style={{
+          ...defaultStyle,
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        }}
         className={classNames.h3}
         // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
@@ -70,7 +63,11 @@ const HeaderOutput = ({
       </h3>
     ) : data.level === 4 ? (
       <h4
-        style={h4Style && {}}
+        style={{
+          ...defaultStyle,
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        }}
         className={classNames.h4}
         // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
@@ -78,7 +75,11 @@ const HeaderOutput = ({
       </h4>
     ) : data.level === 5 ? (
       <h5
-        style={h5Style && {}}
+        style={{
+          ...defaultStyle,
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        }}
         className={classNames.h5}
         // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
@@ -86,7 +87,11 @@ const HeaderOutput = ({
       </h5>
     ) : data.level === 6 ? (
       <h6
-        style={h6Style && {}}
+        style={{
+          ...defaultStyle,
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        }}
         className={classNames.h6}
         // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
@@ -94,7 +99,11 @@ const HeaderOutput = ({
       </h6>
     ) : (
       <h4
-        style={h4Style && {}}
+        style={{
+          ...defaultStyle,
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        }}
         className={classNames.h4}
         // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
