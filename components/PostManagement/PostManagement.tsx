@@ -220,7 +220,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   });
                   setIsPosted(true);
                 } else {
-                  enqueueSnackbar("An error occured!", {
+                  enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
                   });
@@ -231,7 +231,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         } else {
           addPost(newObject).then((postId) => {
             if (postId) {
-              enqueueSnackbar("Creating post post ...", {
+              enqueueSnackbar("Creating post ...", {
                 variant: "default",
                 preventDuplicate: true,
               });
@@ -248,14 +248,14 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
-                  enqueueSnackbar("The post was created!", {
+                  enqueueSnackbar("Successfully created post!", {
                     variant: "success",
                     preventDuplicate: true,
                   });
                   setPostId(postId);
                   setIsPosted(true);
                 } else {
-                  enqueueSnackbar("An error occured!", {
+                  enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
                   });
@@ -504,13 +504,13 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 {isPosted ? (
                   <Button
                     onClick={() => {
-                      enqueueSnackbar("Revalidating ...", {
+                      enqueueSnackbar("Revalidating pages ...", {
                         variant: "default",
                         preventDuplicate: true,
                       });
                       revalidatePages(["/", "/posts/" + postId]).then((res) => {
                         if (res.status === 200) {
-                          enqueueSnackbar("Revalidated!", {
+                          enqueueSnackbar("Revalidated pages!", {
                             variant: "success",
                             preventDuplicate: true,
                           });
@@ -523,6 +523,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                         }
                       });
                     }}
+                    disabled={isRevalidated}
                     sx={{
                       border: isRevalidated
                         ? "2px solid green"
