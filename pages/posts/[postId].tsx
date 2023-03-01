@@ -158,7 +158,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
       ) : !post ? (
         <></>
       ) : (
-        // (window.location.href = "/")
         <Box
           width="100%"
           display="flex"
@@ -650,17 +649,19 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               gap="10px"
               sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 10 }}
             >
-              <Button
-                sx={{
-                  border: "2px solid " + theme.palette.text.primary,
-                }}
-              >
-                <Edit
+              <Tooltip enterDelay={2000} title="Edit post" placement="top">
+                <Button
                   sx={{
-                    color: theme.palette.text.primary,
+                    border: "2px solid " + theme.palette.text.primary,
                   }}
-                />
-              </Button>
+                >
+                  <Edit
+                    sx={{
+                      color: theme.palette.text.primary,
+                    }}
+                  />
+                </Button>
+              </Tooltip>
             </Box>
           ) : (
             <></>

@@ -12,6 +12,7 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
@@ -480,52 +481,13 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 gap="10px"
                 sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 100 }}
               >
-                <Button
-                  type="submit"
-                  disabled={isPosted}
-                  sx={{
-                    border: isPosted
-                      ? "2px solid green"
-                      : "2px solid " + theme.palette.text.primary,
-                    zIndex: 2,
-                    backgroundColor: theme.palette.primary.main,
-                    "&:hover": {
-                      backgroundColor: theme.palette.primary.dark,
-                    },
-                  }}
-                >
-                  <Save
-                    sx={{
-                      color: isPosted ? "green" : theme.palette.text.primary,
-                    }}
-                  />
-                </Button>
-
-                {isPosted ? (
+                {/* Submit button */}
+                <Tooltip enterDelay={2000} title="Save changes" placement="top">
                   <Button
-                    onClick={() => {
-                      enqueueSnackbar("Revalidating pages ...", {
-                        variant: "default",
-                        preventDuplicate: true,
-                      });
-                      revalidatePages(["/", "/posts/" + postId]).then((res) => {
-                        if (res.status === 200) {
-                          enqueueSnackbar("Revalidated pages!", {
-                            variant: "success",
-                            preventDuplicate: true,
-                          });
-                          setIsRevalidated(true);
-                        } else {
-                          enqueueSnackbar("Error during revalidation!", {
-                            variant: "error",
-                            preventDuplicate: true,
-                          });
-                        }
-                      });
-                    }}
-                    disabled={isRevalidated}
+                    type="submit"
+                    disabled={isPosted}
                     sx={{
-                      border: isRevalidated
+                      border: isPosted
                         ? "2px solid green"
                         : "2px solid " + theme.palette.text.primary,
                       zIndex: 2,
@@ -535,37 +497,90 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                       },
                     }}
                   >
-                    <Update
+                    <Save
                       sx={{
-                        color: isRevalidated
-                          ? "green"
-                          : theme.palette.text.primary,
+                        color: isPosted ? "green" : theme.palette.text.primary,
                       }}
                     />
                   </Button>
+                </Tooltip>
+                {/* Revalidate button */}
+                {isPosted ? (
+                  <Tooltip
+                    enterDelay={2000}
+                    title="Revalidate pages"
+                    placement="top"
+                  >
+                    <Button
+                      onClick={() => {
+                        enqueueSnackbar("Revalidating pages ...", {
+                          variant: "default",
+                          preventDuplicate: true,
+                        });
+                        revalidatePages(["/", "/posts/" + postId]).then(
+                          (res) => {
+                            if (res.status === 200) {
+                              enqueueSnackbar("Revalidated pages!", {
+                                variant: "success",
+                                preventDuplicate: true,
+                              });
+                              setIsRevalidated(true);
+                            } else {
+                              enqueueSnackbar("Error during revalidation!", {
+                                variant: "error",
+                                preventDuplicate: true,
+                              });
+                            }
+                          }
+                        );
+                      }}
+                      disabled={isRevalidated}
+                      sx={{
+                        border: isRevalidated
+                          ? "2px solid green"
+                          : "2px solid " + theme.palette.text.primary,
+                        zIndex: 2,
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }}
+                    >
+                      <Update
+                        sx={{
+                          color: isRevalidated
+                            ? "green"
+                            : theme.palette.text.primary,
+                        }}
+                      />
+                    </Button>
+                  </Tooltip>
                 ) : (
                   <></>
                 )}
+                {/* View button */}
                 {isPosted && isRevalidated ? (
-                  <Button
-                    onClick={() => {
-                      handleNavigate("/");
-                    }}
-                    sx={{
-                      border: "2px solid " + theme.palette.text.primary,
-                      zIndex: 2,
-                      backgroundColor: theme.palette.primary.main,
-                      "&:hover": {
-                        backgroundColor: theme.palette.primary.dark,
-                      },
-                    }}
-                  >
-                    <Launch
-                      sx={{
-                        color: theme.palette.text.primary,
+                  <Tooltip enterDelay={2000} title="View post" placement="top">
+                    <Button
+                      onClick={() => {
+                        handleNavigate("/");
                       }}
-                    />
-                  </Button>
+                      sx={{
+                        border: "2px solid " + theme.palette.text.primary,
+                        zIndex: 2,
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }}
+                    >
+                      <Launch
+                        sx={{
+                          color: theme.palette.text.primary,
+                        }}
+                      />
+                    </Button>
+                  </Tooltip>
                 ) : (
                   <></>
                 )}
@@ -577,23 +592,29 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               >
                 {props.post ? (
                   <>
-                    <Button
-                      onClick={handleDeleteDialogOpen}
-                      sx={{
-                        border: "2px solid red",
-                        index: 2,
-                        backgroundColor: theme.palette.primary.main,
-                        "&:hover": {
-                          backgroundColor: theme.palette.primary.dark,
-                        },
-                      }}
+                    <Tooltip
+                      enterDelay={2000}
+                      title="Delete post"
+                      placement="top"
                     >
-                      <Delete
+                      <Button
+                        onClick={handleDeleteDialogOpen}
                         sx={{
-                          color: "red",
+                          border: "2px solid red",
+                          index: 2,
+                          backgroundColor: theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
                         }}
-                      />
-                    </Button>
+                      >
+                        <Delete
+                          sx={{
+                            color: "red",
+                          }}
+                        />
+                      </Button>
+                    </Tooltip>
                     <Dialog
                       open={deleteDialogOpen}
                       onClose={handleDeleteDialogClose}
