@@ -36,23 +36,39 @@ if (typeof window !== "undefined") {
 }
 
 const revalidatePages = async (pages: string[]) => {
-  const res: string[] = [];
-  await pages.map((page) => {
-    fetch(
-      "/api/revalidate?secret=" +
-        process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN +
-        "&path=" +
-        page,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    )
-      .then((response) => response.text())
-      .then((text) => res.push(page + ": " + text));
-  });
-  return res;
+  try {
+    const responses = await Promise.all(
+      pages.map((page) => {
+        return fetch(
+          "/api/revalidate?secret=" +
+            process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN +
+            "&path=" +
+            page,
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+      })
+    );
+    console.log(responses);
+    const res: {
+      status: number;
+      path: string;
+      revalidated: boolean;
+    }[] = [];
+    responses.map((response) => {
+      res.push({
+        status: response.status,
+        path: new URL(response.url).searchParams.get("path"),
+        revalidated: response.status === 200,
+      });
+    });
+    return responses;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const StyledTextField = withStyles((theme) => ({

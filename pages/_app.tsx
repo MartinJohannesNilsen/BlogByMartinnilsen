@@ -5,6 +5,7 @@ import ThemeProvider from "../ThemeProvider";
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
 import { DefaultSeo } from "next-seo";
+import { Analytics } from "@vercel/analytics/react";
 
 function MyApp({ Component, pageProps, session }) {
   return (
@@ -42,6 +43,7 @@ function MyApp({ Component, pageProps, session }) {
           {/* {process.env.NEXT_PUBLIC_SHOW_MUI_SIZE === "true"
             ? showMuiSize()
             : ""} */}
+          <Analytics />
         </ThemeProvider>
       </StyledEngineProvider>
     </SessionProvider>
