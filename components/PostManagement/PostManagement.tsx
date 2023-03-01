@@ -563,7 +563,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   <Tooltip enterDelay={2000} title="View post" placement="top">
                     <Button
                       onClick={() => {
-                        handleNavigate("/");
+                        handleNavigate(`/posts/${postId}`);
                       }}
                       sx={{
                         border: "2px solid " + theme.palette.text.primary,
