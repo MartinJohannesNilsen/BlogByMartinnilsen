@@ -92,7 +92,7 @@ export const EDITOR_JS_TOOLS = {
   linkTool: {
     class: LinkTool,
     config: {
-      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "fetchLinkPreview", // Your backend endpoint for url data fetching,
+      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/linkPreview", // Your backend endpoint for url data fetching,
     },
   },
   table: Table,

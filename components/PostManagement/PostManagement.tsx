@@ -37,7 +37,7 @@ if (typeof window !== "undefined") {
 
 const revalidatePages = async (pages: string[]) => {
   const res: string[] = [];
-  pages.map((page) => {
+  await pages.map((page) => {
     fetch(
       "/api/revalidate?secret=" +
         process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN +

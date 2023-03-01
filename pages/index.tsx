@@ -77,12 +77,6 @@ const LandingView: FC<LandingViewProps> = (props) => {
     : "35%";
 
   useEffect(() => {
-    setIsLoading(false);
-
-    return () => {};
-  }, []);
-
-  useEffect(() => {
     setChunkedPosts(
       splitChunks(
         isAuthorized
@@ -96,6 +90,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
 
   useEffect(() => {
     setPosts(chunckedPosts[page - 1]);
+    setIsLoading(false);
     return () => {};
   }, [chunckedPosts]);
 
@@ -212,6 +207,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                       summary={data.summary}
                       type={data.type}
                       tags={data.tags}
+                      published={data.published}
                     />
                   </Grid>
                 );

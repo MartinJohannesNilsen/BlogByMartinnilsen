@@ -93,10 +93,15 @@ const updatePostsOverview = async (
       let values = [...data];
       values.map((post: SimplifiedPost) => {
         if (post.id === simplifiedPost.id) {
-          post.image = simplifiedPost.image;
           post.title = simplifiedPost.title;
           post.summary = simplifiedPost.summary;
+          post.image = simplifiedPost.image;
           post.published = simplifiedPost.published;
+          post.timestamp = simplifiedPost.timestamp;
+          post.type = simplifiedPost.type;
+          post.tags = simplifiedPost.tags;
+          post.author = simplifiedPost.author;
+          post.readTime = simplifiedPost.readTime;
         }
       });
       await updateDoc(docRef, { values: values }).catch((error) => {

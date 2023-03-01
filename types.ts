@@ -86,6 +86,7 @@ export type BlogpostCardProps = {
   type: string;
   tags: string[];
   id: string;
+  published: boolean;
 };
 
 export type Post = {

@@ -3,7 +3,8 @@
 	"version": "2.0.0",
 	"private": true,
 	"scripts": {
-		"dev": "./run_all.sh",
+		"dev": "next dev",
+		"dev-all": "./run_all.sh",
 		"dev-frontend": "next dev",
 		"dev-server": "./run_server.sh",
 		"build": "next build",

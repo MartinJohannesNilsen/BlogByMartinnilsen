@@ -7,10 +7,10 @@ from bs4 import BeautifulSoup
 from flask_cors import CORS
 from linkpreview import Link, LinkGrabber, LinkPreview
 
-application = Flask(__name__)
-CORS(application)
+app = Flask(__name__)
+CORS(app)
 
-@application.route("/")
+@app.route("/")
 def index():
     return "Server is running"
 
@@ -18,7 +18,7 @@ def index():
 """
 Simple version
 """
-@application.route("/fetchLinkPreview")
+@app.route("/fetchLinkPreview")
 def link_preview():
     # Get queryparams and create out object
     args = request.args
@@ -86,7 +86,7 @@ def _get_image(html):
     return image
 
 
-@application.route("/advancedFetchLinkPreview")
+@app.route("/advancedFetchLinkPreview")
 def advanced_link_preview():
     # Get url
     args = request.args
@@ -117,4 +117,4 @@ def advanced_link_preview():
 
 
 if __name__ == '__main__':
-    application.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=8000)
