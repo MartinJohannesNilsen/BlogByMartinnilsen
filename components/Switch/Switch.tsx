@@ -1,7 +1,7 @@
-import withStyles from '@mui/styles/withStyles';
+import withStyles from "@mui/styles/withStyles";
 import Switch from "@mui/material/Switch";
 
-export const customSwitch = withStyles((theme) => ({
+export const CustomSwitch = withStyles((theme) => ({
   root: {
     width: 45,
     height: 20,
@@ -25,7 +25,7 @@ export const customSwitch = withStyles((theme) => ({
     boxShadow: "0px 0px 1px 1px rgba(0,0,0,0.75)",
     width: 18,
     height: 18,
-    margin: "0 0 0 1px"
+    margin: "0 0 0 1px",
   },
   track: {
     border: `1px solid grey`,
@@ -35,4 +35,4 @@ export const customSwitch = withStyles((theme) => ({
   },
   checked: {},
 }))(Switch);
-export default customSwitch;
+export default CustomSwitch;
