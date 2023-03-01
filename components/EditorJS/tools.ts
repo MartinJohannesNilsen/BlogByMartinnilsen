@@ -16,6 +16,7 @@ import Embed from "@editorjs/embed";
 // Code highlight editors
 import CodeBlock from "editorjs-code-highlight"; // Nice try, but textarea and marker is off
 import CodeBox from "@bomdi/codebox"; // Weird html format out, else good
+// @ts-ignore
 import editorjsCodeflask from "@calumk/editorjs-codeflask";
 
 import Table from "@editorjs/table";

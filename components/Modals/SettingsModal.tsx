@@ -247,6 +247,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
                     disableFocusListener
                     disableHoverListener
                     disableTouchListener
+                    placement="bottom"
                     title={
                       <BlockPicker
                         triangle="top" // hide or top triangle
