@@ -95,7 +95,10 @@ export const SettingsModal = (props: SettingsModalProps) => {
         <Box sx={style}>
           <IconButton
             style={{ position: "absolute", top: "5px", right: "5px" }}
-            onClick={() => props.handleModalClose()}
+            onClick={() => {
+              props.handleModalClose();
+              setColorPickerOpen(false);
+            }}
           >
             <Close />
           </IconButton>
