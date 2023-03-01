@@ -15,6 +15,7 @@ import { SettingsModalProps } from "../../types";
 import { CustomSwitch as Switch } from "../Switch/Switch";
 import { BlockPicker } from "react-color";
 import { withStyles } from "@mui/styles";
+import { isMobile } from "react-device-detect";
 
 const style = {
   position: "absolute" as "absolute",
@@ -239,18 +240,15 @@ export const SettingsModal = (props: SettingsModalProps) => {
                     PopperProps={{
                       disablePortal: true,
                     }}
-                    style={{
-                      backgroundColor: "transparent",
-                    }}
                     onClose={() => setColorPickerOpen(false)}
                     open={colorPickerOpen}
                     disableFocusListener
                     disableHoverListener
                     disableTouchListener
-                    placement="bottom"
+                    placement={isMobile ? "top" : "bottom"}
                     title={
                       <BlockPicker
-                        triangle="top" // hide or top triangle
+                        triangle={isMobile ? "hide" : "top"}
                         colors={blockPickerColors}
                         color={accentColor}
                         onChange={(color, event) => {

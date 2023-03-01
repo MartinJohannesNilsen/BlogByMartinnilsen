@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { OutputData } from "@editorjs/editorjs";
 import {
   Box,
   Button,
@@ -14,22 +14,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useTheme } from "../../ThemeProvider";
-import { addPost, deletePost, getPost, updatePost } from "../../database/posts";
-import { ManageArticleViewProps, Post } from "../../types";
 import { withStyles } from "@mui/styles";
-import { ThemeEnum } from "../../styles/themes/themeMap";
-import colorLumincance from "../../utils/colorLuminance";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { FC, useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
-import { addTag, getTags } from "../../database/tags";
+import { useTheme } from "../../ThemeProvider";
 import {
   addPostsOverview,
   deletePostsOverview,
   updatePostsOverview,
 } from "../../database/overview";
-import { useRouter } from "next/router";
-import { OutputData } from "@editorjs/editorjs";
-import dynamic from "next/dynamic";
+import { addPost, deletePost, updatePost } from "../../database/posts";
+import { addTag, getTags } from "../../database/tags";
+import { ThemeEnum } from "../../styles/themes/themeMap";
+import { ManageArticleViewProps, Post } from "../../types";
+import colorLumincance from "../../utils/colorLuminance";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -184,8 +184,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
-                  setIsPosted(true);
                   revalidatePages(["/", "/posts/" + postId]);
+                  setIsPosted(true);
                 }
               });
             }
@@ -207,8 +207,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
                   setPostId(postId);
-                  setIsPosted(true);
                   revalidatePages(["/", "/posts/" + postId]);
+                  setIsPosted(true);
                 }
               });
             }
