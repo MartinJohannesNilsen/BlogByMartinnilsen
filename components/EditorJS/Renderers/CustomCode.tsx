@@ -1,18 +1,12 @@
-import SyntaxHighlighter from "react-syntax-highlighter";
+import { ContentCopy } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
-import { EditorjsRendererProps } from "../../../types";
+import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../ThemeProvider";
-import DOMPurify from "isomorphic-dompurify";
+import { EditorjsRendererProps } from "../../../types";
 
 // Themes
-import {
-  atomOneDark,
-  atomOneDarkReasonable,
-  irBlack,
-  nightOwl,
-} from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 function copyToClipboard(str: string) {
   var el = document.createElement("textarea");
@@ -102,7 +96,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
               }}
               onClick={() => handleButtonClick(props.data.code!)}
               startIcon={
-                <ContentCopyIcon
+                <ContentCopy
                   sx={{ color: "white", width: "15px", marginLeft: "5px" }}
                 />
               }

@@ -1,6 +1,11 @@
-import { IosShareOutlined, MenuBook, Tune } from "@mui/icons-material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import {
+  AccessTime,
+  CalendarMonth,
+  Edit,
+  IosShareOutlined,
+  MenuBook,
+  Tune,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -29,13 +34,13 @@ import { useTheme } from "../../ThemeProvider";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
 import Footer from "../../components/Footer/Footer";
+import SettingsModal from "../../components/Modals/SettingsModal";
 import TOCModal from "../../components/Modals/TOCModal";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ReadArticleViewProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
-import SettingsModal from "../../components/Modals/SettingsModal";
 
 // EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
@@ -519,7 +524,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       justifyContent="center"
                       alignItems="center"
                     >
-                      <CalendarMonthIcon
+                      <CalendarMonth
                         sx={{
                           color: theme.palette.text.primary,
                           opacity: 0.6,
@@ -544,7 +549,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           year: "numeric",
                         })}
                       </Typography>
-                      <AccessTimeIcon
+                      <AccessTime
                         sx={{
                           color: theme.palette.text.primary,
                           opacity: 0.6,
@@ -650,9 +655,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   border: "2px solid " + theme.palette.text.primary,
                 }}
               >
-                <Typography variant="button" color={theme.palette.text.primary}>
-                  Update
-                </Typography>
+                <Edit
+                  sx={{
+                    color: theme.palette.text.primary,
+                  }}
+                />
               </Button>
             </Box>
           ) : (

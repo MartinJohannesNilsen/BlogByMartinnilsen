@@ -1,8 +1,7 @@
 import { Box, Checkbox, Typography } from "@mui/material";
 import { EditorjsRendererProps } from "../../../types";
 import { useTheme } from "../../../ThemeProvider";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { CheckCircle, RadioButtonUnchecked } from "@mui/icons-material";
 import DOMPurify from "isomorphic-dompurify";
 
 const CustomChecklist = (props: EditorjsRendererProps) => {
@@ -16,7 +15,7 @@ const CustomChecklist = (props: EditorjsRendererProps) => {
             disabled
             checked={item.checked}
             icon={
-              <RadioButtonUncheckedIcon
+              <RadioButtonUnchecked
                 sx={{
                   color: item.checked
                     ? theme.palette.secondary.main
@@ -25,7 +24,7 @@ const CustomChecklist = (props: EditorjsRendererProps) => {
               />
             }
             checkedIcon={
-              <CheckCircleIcon
+              <CheckCircle
                 sx={{
                   color: item.checked
                     ? theme.palette.secondary.main

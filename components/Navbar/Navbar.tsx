@@ -1,6 +1,4 @@
-import { Person, Search } from "@mui/icons-material";
-import PostAddIcon from "@mui/icons-material/PostAdd";
-import TuneIcon from "@mui/icons-material/Tune";
+import { Person, PostAdd, Search, Tune } from "@mui/icons-material";
 import { AppBar, Box, ButtonBase, Toolbar, Tooltip } from "@mui/material";
 import $ from "jquery";
 import Image from "next/image";
@@ -98,7 +96,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                     handleNavigate("/create");
                   }}
                 >
-                  <PostAddIcon
+                  <PostAdd
                     sx={{
                       color: theme.palette.text.secondary,
                       height: "30px",
@@ -151,7 +149,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                   handleSettingsModalOpen();
                 }}
               >
-                <TuneIcon
+                <Tune
                   sx={{
                     color: theme.palette.text.secondary,
                     height: "30px",

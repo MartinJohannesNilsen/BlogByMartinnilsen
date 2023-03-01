@@ -1,11 +1,11 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
+import { Close } from "@mui/icons-material";
 import { ButtonBase, IconButton } from "@mui/material";
-import { useTheme } from "../../ThemeProvider";
-import CloseIcon from "@mui/icons-material/Close";
-import { TOCModalProps } from "../../types";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import { useMemo } from "react";
+import { useTheme } from "../../ThemeProvider";
+import { TOCModalProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 
 const style = {
@@ -149,7 +149,7 @@ export const TOCModal = (props: TOCModalProps) => {
             style={{ position: "absolute", top: "5px", right: "5px" }}
             onClick={() => props.handleModalClose()}
           >
-            <CloseIcon />
+            <Close />
           </IconButton>
           <Typography
             fontFamily={theme.typography.fontFamily}

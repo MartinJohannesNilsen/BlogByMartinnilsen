@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { CalendarMonth } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -6,12 +6,12 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useTheme } from "../../ThemeProvider";
-import { BlogpostCardProps } from "../../types";
 import { makeStyles } from "@mui/styles";
 import DOMPurify from "isomorphic-dompurify";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Image from "next/image";
+import { FC, useState } from "react";
+import { useTheme } from "../../ThemeProvider";
+import { BlogpostCardProps } from "../../types";
 
 export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -170,7 +170,7 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
           <Box>
             <Box display="flex" flexDirection="row" alignItems="center">
               {/* Timestamp */}
-              <CalendarMonthIcon
+              <CalendarMonth
                 sx={{
                   opacity: 0.6,
                   marginRight: "6px",

@@ -31,6 +31,7 @@ import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ManageArticleViewProps, Post } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
 import { useSnackbar } from "notistack";
+import { Delete, Launch, Save, Update } from "@mui/icons-material";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -113,6 +114,7 @@ export function isvalidHTTPUrl(string: string) {
 const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const { theme, setTheme } = useTheme();
   const [isPosted, setIsPosted] = useState<boolean>(false);
+  const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const [postId, setPostId] = useState<string>(
@@ -169,6 +171,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
   useEffect(() => {
     setIsPosted(false);
+    setIsRevalidated(false);
     return () => {};
   }, [editorJSContent]);
 
@@ -491,20 +494,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                     },
                   }}
                 >
-                  <Typography
-                    variant="button"
+                  <Save
                     sx={{
                       color: isPosted ? "green" : theme.palette.text.primary,
                     }}
-                  >
-                    {isPosted
-                      ? props.post
-                        ? "Saved ✓"
-                        : "Posted ✓"
-                      : props.post
-                      ? "Save"
-                      : "Post"}
-                  </Typography>
+                  />
                 </Button>
 
                 {isPosted ? (
@@ -520,7 +514,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                             variant: "success",
                             preventDuplicate: true,
                           });
-                          handleNavigate(`/posts/${postId}`);
+                          setIsRevalidated(true);
                         } else {
                           enqueueSnackbar("Error during revalidation!", {
                             variant: "error",
@@ -528,6 +522,33 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                           });
                         }
                       });
+                    }}
+                    sx={{
+                      border: isRevalidated
+                        ? "2px solid green"
+                        : "2px solid " + theme.palette.text.primary,
+                      zIndex: 2,
+                      backgroundColor: theme.palette.primary.main,
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                    }}
+                  >
+                    <Update
+                      sx={{
+                        color: isRevalidated
+                          ? "green"
+                          : theme.palette.text.primary,
+                      }}
+                    />
+                  </Button>
+                ) : (
+                  <></>
+                )}
+                {isPosted && isRevalidated ? (
+                  <Button
+                    onClick={() => {
+                      handleNavigate("/");
                     }}
                     sx={{
                       border: "2px solid " + theme.palette.text.primary,
@@ -538,14 +559,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                       },
                     }}
                   >
-                    <Typography
-                      variant="button"
+                    <Launch
                       sx={{
                         color: theme.palette.text.primary,
                       }}
-                    >
-                      View
-                    </Typography>
+                    />
                   </Button>
                 ) : (
                   <></>
@@ -562,21 +580,18 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                       onClick={handleDeleteDialogOpen}
                       sx={{
                         border: "2px solid red",
+                        index: 2,
                         backgroundColor: theme.palette.primary.main,
                         "&:hover": {
                           backgroundColor: theme.palette.primary.dark,
                         },
                       }}
                     >
-                      <Typography
-                        variant="button"
+                      <Delete
                         sx={{
                           color: "red",
-                          zIndex: 2,
                         }}
-                      >
-                        Delete
-                      </Typography>
+                      />
                     </Button>
                     <Dialog
                       open={deleteDialogOpen}
