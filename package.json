@@ -93,6 +93,7 @@
 		"isomorphic-dompurify": "^1.0.0",
 		"jquery": "^3.6.3",
 		"match-sorter": "^6.3.1",
+		"notistack": "^2.0.8",
 		"react-confetti-explosion": "^1.5.1",
 		"react-device-detect": "^2.2.2",
 		"react-hotkeys-hook": "^4.3.4",

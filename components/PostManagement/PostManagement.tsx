@@ -30,6 +30,7 @@ import { addTag, getTags } from "../../database/tags";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ManageArticleViewProps, Post } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
+import { useSnackbar } from "notistack";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -52,20 +53,25 @@ const revalidatePages = async (pages: string[]) => {
         );
       })
     );
-    console.log(responses);
     const res: {
       status: number;
-      path: string;
-      revalidated: boolean;
-    }[] = [];
+      requests: {
+        status: number;
+        path: string;
+        revalidated: boolean;
+      }[];
+    } = { status: 200, requests: [] };
     responses.map((response) => {
-      res.push({
+      if (response.status !== 200) {
+        res.status = response.status;
+      }
+      res.requests.push({
         status: response.status,
         path: new URL(response.url).searchParams.get("path"),
         revalidated: response.status === 200,
       });
     });
-    return responses;
+    return res;
   } catch (error) {
     console.log(error);
   }
@@ -134,6 +140,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const handleNavigate = (path: string) => {
     window.location.href = path;
   };
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     setTheme(ThemeEnum.Light);
@@ -187,6 +194,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         if (props.post) {
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
+              enqueueSnackbar("Saving changes ...", {
+                variant: "default",
+                preventDuplicate: true,
+              });
               updatePostsOverview({
                 id: postId,
                 title: newObject.title,
@@ -200,8 +211,16 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
-                  revalidatePages(["/", "/posts/" + postId]);
+                  enqueueSnackbar("Your changes are saved!", {
+                    variant: "success",
+                    preventDuplicate: true,
+                  });
                   setIsPosted(true);
+                } else {
+                  enqueueSnackbar("An error occured!", {
+                    variant: "error",
+                    preventDuplicate: true,
+                  });
                 }
               });
             }
@@ -209,6 +228,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         } else {
           addPost(newObject).then((postId) => {
             if (postId) {
+              enqueueSnackbar("Creating post post ...", {
+                variant: "default",
+                preventDuplicate: true,
+              });
               addPostsOverview({
                 id: postId,
                 title: newObject.title,
@@ -222,9 +245,17 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
+                  enqueueSnackbar("The post was created!", {
+                    variant: "success",
+                    preventDuplicate: true,
+                  });
                   setPostId(postId);
-                  revalidatePages(["/", "/posts/" + postId]);
                   setIsPosted(true);
+                } else {
+                  enqueueSnackbar("An error occured!", {
+                    variant: "error",
+                    preventDuplicate: true,
+                  });
                 }
               });
             }
@@ -245,16 +276,33 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   };
 
   const handleDeletePost = () => {
+    handleDeleteDialogClose();
+    enqueueSnackbar("Deleting post ...", {
+      variant: "default",
+      preventDuplicate: true,
+    });
     deletePost(postId).then((postWasDeleted) => {
       if (postWasDeleted) {
         deletePostsOverview(postId).then((overviewWasUpdated) => {
           if (overviewWasUpdated) {
-            handleDeleteDialogClose();
-            revalidatePages(["/", "/posts/" + postId]);
-            setTimeout(() => {
+            enqueueSnackbar("Successfully deleted post!", {
+              variant: "success",
+              preventDuplicate: true,
+            });
+            revalidatePages(["/", "/posts/" + postId]).then((res) => {
               handleNavigate("/");
-            }, 2000);
+            });
+          } else {
+            enqueueSnackbar("An error occured ...", {
+              variant: "error",
+              preventDuplicate: true,
+            });
           }
+        });
+      } else {
+        enqueueSnackbar("An error occured ...", {
+          variant: "error",
+          preventDuplicate: true,
         });
       }
     });
@@ -285,7 +333,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         <Box
           display="flex"
           flexDirection="column"
-          // justifyContent="center"
           alignItems="center"
           sx={{
             minWidth: "100vw",
@@ -452,10 +499,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   >
                     {isPosted
                       ? props.post
-                        ? "Updated ✓"
+                        ? "Saved ✓"
                         : "Posted ✓"
                       : props.post
-                      ? "Update"
+                      ? "Save"
                       : "Post"}
                   </Typography>
                 </Button>
@@ -463,8 +510,24 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 {isPosted ? (
                   <Button
                     onClick={() => {
-                      // handleNavigate(`/posts/${postId}`);
-                      window.location.href = `/posts/${postId}`;
+                      enqueueSnackbar("Revalidating ...", {
+                        variant: "default",
+                        preventDuplicate: true,
+                      });
+                      revalidatePages(["/", "/posts/" + postId]).then((res) => {
+                        if (res.status === 200) {
+                          enqueueSnackbar("Revalidated!", {
+                            variant: "success",
+                            preventDuplicate: true,
+                          });
+                          handleNavigate(`/posts/${postId}`);
+                        } else {
+                          enqueueSnackbar("Error during revalidation!", {
+                            variant: "error",
+                            preventDuplicate: true,
+                          });
+                        }
+                      });
                     }}
                     sx={{
                       border: "2px solid " + theme.palette.text.primary,

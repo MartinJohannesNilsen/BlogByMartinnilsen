@@ -49,7 +49,8 @@ export const SearchModal = (props: SearchModalProps) => {
   }, [textFieldValue]);
 
   // Hotkeys
-  useHotkeys(["Control+k", "Meta+k"], () => {
+  useHotkeys(["Control+k", "Meta+k"], (event) => {
+    event.preventDefault();
     props.handleModalClose();
   });
   useHotkeys(

@@ -2,6 +2,7 @@
 import React, { memo, useEffect, useRef } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
 import { EDITOR_JS_TOOLS } from "./tools";
+import { useHotkeys } from "react-hotkeys-hook";
 //props
 type Props = {
   data?: OutputData;
