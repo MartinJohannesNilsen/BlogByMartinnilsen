@@ -1,4 +1,4 @@
-import { IosShareOutlined, MenuBook } from "@mui/icons-material";
+import { IosShareOutlined, MenuBook, Tune } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import Output from "editorjs-react-renderer";
 import DOMPurify from "isomorphic-dompurify";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -26,16 +26,18 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import { RWebShare } from "react-web-share";
 import { readingTime } from "reading-time-estimator";
 import { useTheme } from "../../ThemeProvider";
+import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
 import Footer from "../../components/Footer/Footer";
+import TOCModal from "../../components/Modals/TOCModal";
+import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ReadArticleViewProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
+import SettingsModal from "../../components/Modals/SettingsModal";
 
-// Components
-import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
-import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
+// EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../../components/EditorJS/Renderers/CustomCode";
 import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
@@ -48,8 +50,7 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import TOCModal from "../../components/Modals/TOCModal";
-import { getAllPostIds } from "../../database/overview";
+import { ThemeEnum } from "../../styles/themes/themeMap";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -76,8 +77,9 @@ export const getStaticProps = async (context: any) => {
 };
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [openTOCModal, setOpenTOCModal] = useState(false);
+  const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { width, height } = useWindowSize();
@@ -107,6 +109,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     checklist: CustomChecklist,
     table: CustomTable,
     // math: CustomMath,
+  };
+
+  const handleThemeChange = (event: any) => {
+    event.target.checked === true
+      ? setTheme(ThemeEnum.Light)
+      : setTheme(ThemeEnum.Dark);
   };
 
   const OutputElement = useMemo(() => {
@@ -156,67 +164,49 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           sx={{ backgroundColor: theme.palette.primary.main }}
         >
           {/* Header row */}
-          <Box
-            display="flex"
-            alignItems="center"
-            width={isMobile ? "95%" : xs ? "380px" : sm ? "500px" : "700px"}
-            pt={isMobile ? 5 : 2}
-            pb={isMobile ? 0.5 : 2}
-            position={isMobile ? "fixed" : "relative"}
-            sx={{
-              // width: ,
-              top: 0,
-              backgroundColor: theme.palette.primary.main,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              zIndex: 1000,
-              marginTop: isMobile ? "-32px" : "0",
-              WebkitTransform: "translateZ(0)",
-            }}
-          >
-            <Link
-              fontFamily={theme.typography.fontFamily}
-              variant="body1"
-              fontWeight="900"
-              mr={OutputString ? 7.25 : 1.25}
+          {isMobile ? (
+            // Mobile
+            <Box
+              display="flex"
+              alignItems="center"
+              width={"95%"}
+              pt={5}
+              pb={0.5}
+              position={"fixed"}
               sx={{
-                fontSize: isMobile ? "25px" : theme.typography.body1.fontSize,
-                textDecoration: "none",
-                color: theme.palette.secondary.main,
-                "&:hover": {
-                  cursor: "pointer",
-                  color: colorLumincance(theme.palette.secondary.main, 0.33),
-                },
+                top: 0,
+                backgroundColor: theme.palette.primary.main,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                zIndex: 1000,
+                marginTop: "-32px",
+                WebkitTransform: "translateZ(0)",
               }}
-              href={"/"}
             >
-              {isMobile ? "←" : "← Home"}
-            </Link>
-            <Box flexGrow={100} />
-            {isMobile ? (
-              <Typography
+              <Link
+                fontFamily={theme.typography.fontFamily}
                 variant="body1"
-                fontWeight="800"
-                textAlign="center"
+                fontWeight="900"
                 sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
+                  fontSize: "25px",
+                  textDecoration: "none",
+                  color: theme.palette.secondary.main,
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: colorLumincance(theme.palette.secondary.main, 0.33),
+                  },
                 }}
+                href={"/"}
               >
-                {post.title}
-              </Typography>
-            ) : (
-              <></>
-            )}
-            <Box flexGrow={100} />
-            <Box display="flex" ml={1}>
+                ←
+              </Link>
               {OutputString && (
                 <Tooltip enterDelay={2000} title={"Open table of contents"}>
                   <ButtonBase
                     onClick={() => setOpenTOCModal(true)}
                     sx={{
+                      marginTop: -0.4,
                       marginX: theme.spacing(0.75),
                     }}
                   >
@@ -243,20 +233,35 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   postTitle={post.title}
                 />
               )}
-              <RWebShare
-                data={{
-                  text: 'Check out this post: "' + post.title + '"!',
-                  url:
-                    typeof window !== "undefined" ? window.location.href : "",
-                  title: "Link to post",
+              <Box flexGrow={100} />
+              <Typography
+                fontFamily={theme.typography.fontFamily}
+                variant="body1"
+                fontWeight="800"
+                textAlign="center"
+                color={theme.palette.text.primary}
+                marginX={1}
+                sx={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                 }}
               >
-                <Tooltip enterDelay={2000} title={"Share"}>
-                  <ButtonBase>
-                    <IosShareOutlined
+                {post.title}
+              </Typography>
+              <Box flexGrow={100} />
+              <Box display="flex" ml={1}>
+                <Tooltip enterDelay={2000} title={"Open settings"}>
+                  <ButtonBase
+                    sx={{ marginBottom: 0 }}
+                    onClick={() => {
+                      setOpenSettingsModal(true);
+                    }}
+                  >
+                    <Tune
                       sx={{
                         color: theme.palette.text.primary,
-                        height: "28px",
+                        height: "32px",
                         width: "32px",
                         "&:hover": {
                           color: theme.palette.secondary.main,
@@ -265,194 +270,349 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     />
                   </ButtonBase>
                 </Tooltip>
-              </RWebShare>
-            </Box>
-          </Box>
-          {/* Content */}
-          <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}>
-            <Grid
-              container
-              width="100%"
-              justifyContent="center"
-              sx={{ backgroundColor: theme.palette.primary.main }}
-            >
-              <Grid item>
-                <Head>
-                  <title>{post.title}</title>
-                  <meta
-                    name="theme-color"
-                    content={theme.palette.primary.main}
-                  />
-                  <meta name="description" content={post.summary} />
-                  {/* <!-- Open Graph --> */}
-                  <meta property="og:url" content={window.location.href} />
-                  <meta property="og:type" content="website" />
-                  <meta property="og:image" content={post.image} />
-                  <meta property="og:title" content={post.title} />
-                  <meta property="og:description" content={post.summary} />
-                  {/* Twitter */}
-                  <meta name="twitter:card" content="summary" />
-                  <meta name="twitter:creator" content="@MartinJNilsen" />
-                  <meta name="twitter:image" content={post.image} />
-                  <meta name="twitter:title" content={post.title} />
-                  <meta name="twitter:description" content={post.summary} />
-                </Head>
-                <Stack
-                  p={2}
-                  sx={{
-                    minHeight: isMobile
-                      ? "calc(100vh - 73px - 120px)"
-                      : "calc(100vh - 73px - 120px)",
-                    width: xs ? "380px" : sm ? "500px" : "700px",
-                    position: "relative",
+                <SettingsModal
+                  open={openSettingsModal}
+                  handleModalOpen={() => setOpenSettingsModal(true)}
+                  handleModalClose={() => setOpenSettingsModal(false)}
+                  handleThemeChange={handleThemeChange}
+                />
+                <RWebShare
+                  data={{
+                    text: 'Check out this post: "' + post.title + '"!',
+                    url:
+                      typeof window !== "undefined" ? window.location.href : "",
+                    title: "Link to post",
                   }}
                 >
-                  {/* Title box */}
+                  <Tooltip enterDelay={2000} title={"Share"}>
+                    <ButtonBase>
+                      <IosShareOutlined
+                        sx={{
+                          marginBottom: 0.33,
+                          color: theme.palette.text.primary,
+                          height: "28px",
+                          width: "32px",
+                          "&:hover": {
+                            color: theme.palette.secondary.main,
+                          },
+                        }}
+                      />
+                    </ButtonBase>
+                  </Tooltip>
+                </RWebShare>
+              </Box>
+            </Box>
+          ) : (
+            // Not mobile
+            <Box
+              display="flex"
+              alignItems="center"
+              width={xs ? "380px" : sm ? "500px" : "700px"}
+              pt={2}
+              pb={2}
+              position={"relative"}
+              sx={{
+                top: 0,
+                backgroundColor: theme.palette.primary.main,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                zIndex: 1000,
+                marginTop: "0",
+                WebkitTransform: "translateZ(0)",
+              }}
+            >
+              <Link
+                fontFamily={theme.typography.fontFamily}
+                variant="body1"
+                fontWeight="900"
+                mr={OutputString ? 7.25 : 1.25}
+                sx={{
+                  fontSize: theme.typography.body1.fontSize,
+                  textDecoration: "none",
+                  color: theme.palette.secondary.main,
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: colorLumincance(theme.palette.secondary.main, 0.33),
+                  },
+                }}
+                href={"/"}
+              >
+                {"← Home"}
+              </Link>
+              <Box flexGrow={100} />
+              <Box display="flex" ml={1}>
+                {OutputString && (
+                  <Tooltip enterDelay={2000} title={"Open table of contents"}>
+                    <ButtonBase
+                      onClick={() => setOpenTOCModal(true)}
+                      sx={{
+                        marginX: theme.spacing(0.75),
+                      }}
+                    >
+                      <MenuBook
+                        sx={{
+                          color: theme.palette.text.primary,
+                          height: "32px",
+                          width: "32px",
+                          "&:hover": {
+                            color: theme.palette.secondary.main,
+                          },
+                        }}
+                      />
+                    </ButtonBase>
+                  </Tooltip>
+                )}
+                {/* TOCModal */}
+                {OutputString && (
+                  <TOCModal
+                    open={openTOCModal}
+                    handleModalOpen={() => setOpenTOCModal(true)}
+                    handleModalClose={() => setOpenTOCModal(false)}
+                    outputString={OutputString}
+                    postTitle={post.title}
+                  />
+                )}
+                <Tooltip enterDelay={2000} title={"Open settings"}>
+                  <ButtonBase
+                    sx={{ marginTop: 0.42 }}
+                    onClick={() => {
+                      setOpenSettingsModal(true);
+                    }}
+                  >
+                    <Tune
+                      sx={{
+                        color: theme.palette.text.primary,
+                        height: "32px",
+                        width: "32px",
+                        "&:hover": {
+                          color: theme.palette.secondary.main,
+                        },
+                      }}
+                    />
+                  </ButtonBase>
+                </Tooltip>
+                <SettingsModal
+                  open={openSettingsModal}
+                  handleModalOpen={() => setOpenSettingsModal(true)}
+                  handleModalClose={() => setOpenSettingsModal(false)}
+                  handleThemeChange={handleThemeChange}
+                />
+                <RWebShare
+                  data={{
+                    text: 'Check out this post: "' + post.title + '"!',
+                    url:
+                      typeof window !== "undefined" ? window.location.href : "",
+                    title: "Link to post",
+                  }}
+                >
+                  <Tooltip enterDelay={2000} title={"Share"}>
+                    <ButtonBase>
+                      <IosShareOutlined
+                        sx={{
+                          color: theme.palette.text.primary,
+                          height: "28px",
+                          width: "32px",
+                          "&:hover": {
+                            color: theme.palette.secondary.main,
+                          },
+                        }}
+                      />
+                    </ButtonBase>
+                  </Tooltip>
+                </RWebShare>
+              </Box>
+            </Box>
+          )}
+
+          {/* Content */}
+          {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
+          <Grid
+            container
+            width="100%"
+            justifyContent="center"
+            sx={{ backgroundColor: theme.palette.primary.main }}
+          >
+            <Grid item>
+              <NextSeo
+                title={post.title}
+                description={post.summary}
+                canonical={window.location.href}
+                openGraph={{
+                  type: "article",
+                  article: {
+                    publishedTime:
+                      new Date(post.timestamp).getFullYear() +
+                      "-" +
+                      ("0" + (new Date(post.timestamp).getMonth() + 1)).slice(
+                        -2
+                      ) +
+                      "-" +
+                      ("0" + new Date(post.timestamp).getDate()).slice(-2),
+                    tags: post.tags,
+                  },
+                  url: window.location.href,
+                  images: [
+                    {
+                      url: post.image,
+                    },
+                  ],
+                  site_name: "MJNTech.dev",
+                }}
+              />
+              <Stack
+                p={2}
+                sx={{
+                  minHeight: isMobile
+                    ? "calc(100vh - 73px - 120px)"
+                    : "calc(100vh - 73px - 120px)",
+                  width: xs ? "380px" : sm ? "500px" : "700px",
+                  position: "relative",
+                }}
+              >
+                {/* Title box */}
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  mt={isMobile ? 6 : 0}
+                  mb={1}
+                  pb={2}
+                >
                   <Box
                     display="flex"
+                    width="100%"
+                    flexDirection="column"
+                    justifyContent="center"
                     alignItems="center"
-                    mt={isMobile ? 6 : 0}
-                    mb={1}
-                    pb={2}
                   >
+                    <Typography
+                      my={1}
+                      textAlign="center"
+                      fontFamily={theme.typography.fontFamily}
+                      variant="h5"
+                      fontWeight="800"
+                      sx={{ color: theme.palette.secondary.main }}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(
+                          post.type
+                            ? "//&nbsp;&nbsp;&nbsp;&nbsp;" +
+                                post.type +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;//"
+                            : ""
+                        ),
+                      }}
+                    />
+                    <Typography
+                      my={xs ? 0.5 : 1}
+                      textAlign="center"
+                      sx={{ color: theme.palette.text.primary }}
+                      fontFamily={theme.typography.fontFamily}
+                      variant={xs ? "h4" : "h3"}
+                      fontWeight="800"
+                    >
+                      {post.title}
+                    </Typography>
                     <Box
                       display="flex"
-                      width="100%"
-                      flexDirection="column"
+                      mt={2}
+                      mb={xs ? 0 : 1}
                       justifyContent="center"
                       alignItems="center"
                     >
-                      <Typography
-                        my={1}
-                        textAlign="center"
-                        fontFamily={theme.typography.fontFamily}
-                        variant="h5"
-                        fontWeight="800"
-                        sx={{ color: theme.palette.secondary.main }}
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(
-                            post.type
-                              ? "//&nbsp;&nbsp;&nbsp;&nbsp;" +
-                                  post.type +
-                                  "&nbsp;&nbsp;&nbsp;&nbsp;//"
-                              : ""
-                          ),
+                      <CalendarMonthIcon
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          marginRight: "6px",
+                          fontSize: xs ? "12px" : "default",
                         }}
                       />
                       <Typography
-                        my={xs ? 0.5 : 1}
-                        textAlign="center"
-                        sx={{ color: theme.palette.text.primary }}
                         fontFamily={theme.typography.fontFamily}
-                        variant={xs ? "h4" : "h3"}
-                        fontWeight="800"
+                        variant="body2"
+                        fontWeight="600"
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          fontSize: xs ? "12px" : "default",
+                        }}
                       >
-                        {post.title}
+                        {new Date(post.timestamp).toLocaleDateString("en-GB", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </Typography>
-                      <Box
-                        display="flex"
-                        mt={2}
-                        mb={xs ? 0 : 1}
-                        justifyContent="center"
-                        alignItems="center"
+                      <AccessTimeIcon
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          marginLeft: "16px",
+                          marginRight: "6px",
+                          fontSize: xs ? "12px" : "default",
+                        }}
+                      />
+                      <Typography
+                        fontFamily={theme.typography.fontFamily}
+                        variant="body2"
+                        fontWeight="600"
+                        sx={{
+                          color: theme.palette.text.primary,
+                          opacity: 0.6,
+                          fontSize: xs ? "12px" : "default",
+                        }}
                       >
-                        <CalendarMonthIcon
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            marginRight: "6px",
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        />
-                        <Typography
-                          fontFamily={theme.typography.fontFamily}
-                          variant="body2"
-                          fontWeight="600"
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        >
-                          {new Date(post.timestamp).toLocaleDateString(
-                            "en-GB",
-                            {
-                              weekday: "long",
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )}
-                        </Typography>
-                        <AccessTimeIcon
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            marginLeft: "16px",
-                            marginRight: "6px",
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        />
-                        <Typography
-                          fontFamily={theme.typography.fontFamily}
-                          variant="body2"
-                          fontWeight="600"
-                          sx={{
-                            color: theme.palette.text.primary,
-                            opacity: 0.6,
-                            fontSize: xs ? "12px" : "default",
-                          }}
-                        >
-                          {ReadingTime.text}
-                        </Typography>
-                      </Box>
+                        {ReadingTime.text}
+                      </Typography>
                     </Box>
                   </Box>
-                  {/* EditorJS rendering */}
-                  <Box
-                    id="output"
-                    mb={1}
-                    sx={{
-                      backgroundColor: "transparent",
+                </Box>
+                {/* EditorJS rendering */}
+                <Box
+                  id="output"
+                  mb={1}
+                  sx={{
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  {OutputElement}
+                </Box>
+                <Box flexGrow={100} />
+                {/* Share and exploding */}
+                <Box
+                  mt={6}
+                  mb={3}
+                  py={2}
+                  sx={{
+                    borderTop: "2px solid rgba(100,100,100,0.2)",
+                    borderBottom: "2px solid rgba(100,100,100,0.2)",
+                  }}
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <IconButton
+                    disabled={isExploding}
+                    sx={{ "&:disabled": { opacity: "0.5" } }}
+                    onClick={() => {
+                      setIsExploding(true);
+                      setTimeout(() => {
+                        setIsExploding(false);
+                      }, 4000);
                     }}
                   >
-                    {OutputElement}
-                  </Box>
-                  <Box flexGrow={100} />
-                  {/* Share and exploding */}
-                  <Box
-                    mt={6}
-                    mb={3}
-                    py={2}
-                    sx={{
-                      borderTop: "2px solid rgba(100,100,100,0.2)",
-                      borderBottom: "2px solid rgba(100,100,100,0.2)",
-                    }}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <IconButton
-                      disabled={isExploding}
-                      sx={{ "&:disabled": { opacity: "0.5" } }}
-                      onClick={() => {
-                        setIsExploding(true);
-                        setTimeout(() => {
-                          setIsExploding(false);
-                        }, 4000);
-                      }}
-                    >
-                      <Image
-                        src={ClappingHands.src}
-                        width={30}
-                        height={30}
-                        alt="Clapping hands button"
-                      />
-                    </IconButton>
-                  </Box>
-                </Stack>
-              </Grid>
+                    <Image
+                      src={ClappingHands.src}
+                      width={30}
+                      height={30}
+                      alt="Clapping hands button"
+                    />
+                  </IconButton>
+                </Box>
+              </Stack>
             </Grid>
-          </RevealFromDownOnEnter>
+          </Grid>
+          {/* </RevealFromDownOnEnter> */}
           {isExploding && (
             <Box
               sx={{

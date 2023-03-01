@@ -22,6 +22,7 @@ import {
 } from "../database/overview";
 import { LandingViewProps, SimplifiedPost } from "../types";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
+import { NextSeo } from "next-seo";
 
 function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -76,12 +77,6 @@ const LandingView: FC<LandingViewProps> = (props) => {
     : "35%";
 
   useEffect(() => {
-    setIsLoading(false);
-
-    return () => {};
-  }, []);
-
-  useEffect(() => {
     setChunkedPosts(
       splitChunks(
         isAuthorized
@@ -95,6 +90,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
 
   useEffect(() => {
     setPosts(chunckedPosts[page - 1]);
+    setIsLoading(false);
     return () => {};
   }, [chunckedPosts]);
 
@@ -122,9 +118,10 @@ const LandingView: FC<LandingViewProps> = (props) => {
   return (
     <Box>
       {/* <Box flexGrow={100} /> */}
-      <Head>
-        <title>Tech blog | Martin Johannes Nilsen</title>
-      </Head>
+      <NextSeo
+        title="Tech blog | Martin Johannes Nilsen"
+        themeColor={theme.palette.primary.contrastText}
+      />
       {isLoading ? (
         <></>
       ) : (
@@ -204,12 +201,13 @@ const LandingView: FC<LandingViewProps> = (props) => {
                   >
                     <LandingViewCard
                       id={data.id}
-                      image={data.img}
+                      image={data.image}
                       title={data.title}
                       timestamp={data.timestamp}
                       summary={data.summary}
                       type={data.type}
                       tags={data.tags}
+                      published={data.published}
                     />
                   </Grid>
                 );

@@ -166,9 +166,10 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
           </Box>
           {/*  */}
           <Box sx={{ flexGrow: 100 }} />
-          {/* Timestamp */}
+          {/* Information gutter */}
           <Box>
             <Box display="flex" flexDirection="row" alignItems="center">
+              {/* Timestamp */}
               <CalendarMonthIcon
                 sx={{
                   opacity: 0.6,
@@ -189,6 +190,12 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
                   year: "numeric",
                 })}
               </Typography>
+              {/* Not published icon */}
+              {!props.published && (
+                <>
+                  <Box flexGrow={100} /> <>🖊</>
+                </>
+              )}
             </Box>
           </Box>
         </Box>

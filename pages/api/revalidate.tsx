@@ -5,7 +5,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Check for secret to confirm this is a valid request
-  if (req.query.secret !== process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN) {
+  if (!req.query.secret) {
+    return res.status(401).json({ message: "Missing token" });
+  } else if (
+    req.query.secret !== process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN
+  ) {
     return res.status(401).json({ message: "Invalid token" });
   }
 

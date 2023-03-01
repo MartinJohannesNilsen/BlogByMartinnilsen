@@ -71,6 +71,7 @@ const Footer: FC<FooterProps> = (props) => {
         <Box py={5} px={3} textAlign="center">
           <Box pb={1} px={1}>
             <Typography
+              fontFamily={theme.typography.fontFamily}
               variant="body1"
               color="textPrimary"
               style={{ fontWeight: 600, fontSize: lgUp ? "1rem" : "0.8rem" }}

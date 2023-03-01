@@ -49,7 +49,8 @@ export const SearchModal = (props: SearchModalProps) => {
   }, [textFieldValue]);
 
   // Hotkeys
-  useHotkeys(["Control+k", "Meta+k"], () => {
+  useHotkeys(["Control+k", "Meta+k"], (event) => {
+    event.preventDefault();
     props.handleModalClose();
   });
   useHotkeys(
@@ -222,7 +223,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           }}
                         >
                           <img
-                            src={post.img}
+                            src={post.image}
                             style={{
                               minWidth: "50px",
                               minHeight: "50px",

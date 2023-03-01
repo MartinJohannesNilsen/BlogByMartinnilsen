@@ -37,6 +37,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
           <Typography
             fontFamily={theme.typography.fontFamily}
             variant="body2"
+            color={theme.palette.text.primary}
             sx={{ opacity: 0.8 }}
             dangerouslySetInnerHTML={{
               __html: props.data.unsplash
@@ -52,6 +53,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
         <Box my={2}>
           <Typography
             fontFamily={theme.typography.fontFamily}
+            color={theme.palette.text.primary}
             variant="body2"
             sx={{ opacity: 0.8 }}
             dangerouslySetInnerHTML={{

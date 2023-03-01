@@ -86,6 +86,7 @@ export type BlogpostCardProps = {
   type: string;
   tags: string[];
   id: string;
+  published: boolean;
 };
 
 export type Post = {
@@ -120,7 +121,7 @@ export type SimplifiedPost = {
   id: string;
   title: string;
   summary: string;
-  img: string;
+  image: string;
   published: boolean;
   timestamp: number;
   type: string;

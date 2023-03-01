@@ -13,7 +13,7 @@ import {
   defaultAccentColor,
   defaultFontFamily,
 } from "./styles/themes/themeDefaults";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting
@@ -164,12 +164,7 @@ const CustomThemeProvider: React.FC = (props) => {
       }}
     >
       <StyledEngineProvider injectFirst>
-        <Head>
-          <meta
-            name="theme-color"
-            content={theme.palette.primary.contrastText}
-          />
-        </Head>
+        <NextSeo themeColor={theme.palette.primary.main} />
         <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
       </StyledEngineProvider>
     </ThemeContext.Provider>

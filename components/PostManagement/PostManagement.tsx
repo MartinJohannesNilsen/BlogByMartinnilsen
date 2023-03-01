@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { OutputData } from "@editorjs/editorjs";
 import {
   Box,
   Button,
@@ -14,45 +14,67 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useTheme } from "../../ThemeProvider";
-import { addPost, deletePost, getPost, updatePost } from "../../database/posts";
-import { ManageArticleViewProps, Post } from "../../types";
 import { withStyles } from "@mui/styles";
-import { ThemeEnum } from "../../styles/themes/themeMap";
-import colorLumincance from "../../utils/colorLuminance";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { FC, useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
-import { addTag, getTags } from "../../database/tags";
+import { useTheme } from "../../ThemeProvider";
 import {
   addPostsOverview,
   deletePostsOverview,
   updatePostsOverview,
 } from "../../database/overview";
-import { useRouter } from "next/router";
-import { OutputData } from "@editorjs/editorjs";
-import dynamic from "next/dynamic";
+import { addPost, deletePost, updatePost } from "../../database/posts";
+import { addTag, getTags } from "../../database/tags";
+import { ThemeEnum } from "../../styles/themes/themeMap";
+import { ManageArticleViewProps, Post } from "../../types";
+import colorLumincance from "../../utils/colorLuminance";
+import { useSnackbar } from "notistack";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
 }
 
 const revalidatePages = async (pages: string[]) => {
-  const res: string[] = [];
-  pages.map((page) => {
-    fetch(
-      "/api/revalidate?secret=" +
-        process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN +
-        "&path=" +
-        page,
-      {
-        headers: {
-          Accept: "application/json",
-        },
+  try {
+    const responses = await Promise.all(
+      pages.map((page) => {
+        return fetch(
+          "/api/revalidate?secret=" +
+            process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN +
+            "&path=" +
+            page,
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+      })
+    );
+    const res: {
+      status: number;
+      requests: {
+        status: number;
+        path: string;
+        revalidated: boolean;
+      }[];
+    } = { status: 200, requests: [] };
+    responses.map((response) => {
+      if (response.status !== 200) {
+        res.status = response.status;
       }
-    )
-      .then((response) => response.text())
-      .then((text) => res.push(page + ": " + text));
-  });
-  return res;
+      res.requests.push({
+        status: response.status,
+        path: new URL(response.url).searchParams.get("path"),
+        revalidated: response.status === 200,
+      });
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const StyledTextField = withStyles((theme) => ({
@@ -118,6 +140,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const handleNavigate = (path: string) => {
     window.location.href = path;
   };
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     setTheme(ThemeEnum.Light);
@@ -171,11 +194,15 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         if (props.post) {
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
+              enqueueSnackbar("Saving changes ...", {
+                variant: "default",
+                preventDuplicate: true,
+              });
               updatePostsOverview({
                 id: postId,
                 title: newObject.title,
                 summary: newObject.summary,
-                img: newObject.image,
+                image: newObject.image,
                 published: newObject.published,
                 timestamp: newObject.timestamp,
                 type: newObject.type,
@@ -184,8 +211,16 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
+                  enqueueSnackbar("Your changes are saved!", {
+                    variant: "success",
+                    preventDuplicate: true,
+                  });
                   setIsPosted(true);
-                  revalidatePages(["/", "/posts/" + postId]);
+                } else {
+                  enqueueSnackbar("An error occured!", {
+                    variant: "error",
+                    preventDuplicate: true,
+                  });
                 }
               });
             }
@@ -193,11 +228,15 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         } else {
           addPost(newObject).then((postId) => {
             if (postId) {
+              enqueueSnackbar("Creating post post ...", {
+                variant: "default",
+                preventDuplicate: true,
+              });
               addPostsOverview({
                 id: postId,
                 title: newObject.title,
                 summary: newObject.summary,
-                img: newObject.image,
+                image: newObject.image,
                 published: newObject.published,
                 timestamp: newObject.timestamp,
                 type: newObject.type,
@@ -206,9 +245,17 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
+                  enqueueSnackbar("The post was created!", {
+                    variant: "success",
+                    preventDuplicate: true,
+                  });
                   setPostId(postId);
                   setIsPosted(true);
-                  revalidatePages(["/", "/posts/" + postId]);
+                } else {
+                  enqueueSnackbar("An error occured!", {
+                    variant: "error",
+                    preventDuplicate: true,
+                  });
                 }
               });
             }
@@ -229,14 +276,33 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   };
 
   const handleDeletePost = () => {
+    handleDeleteDialogClose();
+    enqueueSnackbar("Deleting post ...", {
+      variant: "default",
+      preventDuplicate: true,
+    });
     deletePost(postId).then((postWasDeleted) => {
       if (postWasDeleted) {
         deletePostsOverview(postId).then((overviewWasUpdated) => {
           if (overviewWasUpdated) {
-            handleDeleteDialogClose();
-            revalidatePages(["/", "/posts/" + postId]);
-            handleNavigate("/");
+            enqueueSnackbar("Successfully deleted post!", {
+              variant: "success",
+              preventDuplicate: true,
+            });
+            revalidatePages(["/", "/posts/" + postId]).then((res) => {
+              handleNavigate("/");
+            });
+          } else {
+            enqueueSnackbar("An error occured ...", {
+              variant: "error",
+              preventDuplicate: true,
+            });
           }
+        });
+      } else {
+        enqueueSnackbar("An error occured ...", {
+          variant: "error",
+          preventDuplicate: true,
         });
       }
     });
@@ -267,7 +333,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         <Box
           display="flex"
           flexDirection="column"
-          // justifyContent="center"
           alignItems="center"
           sx={{
             minWidth: "100vw",
@@ -434,10 +499,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   >
                     {isPosted
                       ? props.post
-                        ? "Updated ✓"
+                        ? "Saved ✓"
                         : "Posted ✓"
                       : props.post
-                      ? "Update"
+                      ? "Save"
                       : "Post"}
                   </Typography>
                 </Button>
@@ -445,8 +510,24 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 {isPosted ? (
                   <Button
                     onClick={() => {
-                      // handleNavigate(`/posts/${postId}`);
-                      window.location.href = `/posts/${postId}`;
+                      enqueueSnackbar("Revalidating ...", {
+                        variant: "default",
+                        preventDuplicate: true,
+                      });
+                      revalidatePages(["/", "/posts/" + postId]).then((res) => {
+                        if (res.status === 200) {
+                          enqueueSnackbar("Revalidated!", {
+                            variant: "success",
+                            preventDuplicate: true,
+                          });
+                          handleNavigate(`/posts/${postId}`);
+                        } else {
+                          enqueueSnackbar("Error during revalidation!", {
+                            variant: "error",
+                            preventDuplicate: true,
+                          });
+                        }
+                      });
                     }}
                     sx={{
                       border: "2px solid " + theme.palette.text.primary,

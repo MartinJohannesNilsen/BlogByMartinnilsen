@@ -35,7 +35,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const [openSearchModal, setOpenSearchModal] = useState(false);
   const handleSearchModalOpen = () => setOpenSearchModal(true);
   const handleSearchModalClose = () => setOpenSearchModal(false);
-  useHotkeys(["Control+k", "Meta+k"], () => {
+  useHotkeys(["Control+k", "Meta+k"], (event) => {
+    event.preventDefault();
     handleSearchModalOpen();
   });
 
