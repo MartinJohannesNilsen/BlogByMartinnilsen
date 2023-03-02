@@ -50,7 +50,7 @@ const Footer: FC<FooterProps> = (props) => {
               width: scrollPosition + "0%",
               // background:
               //   "radial-gradient(circle at 10% 20%, rgb(233, 122, 129) 0%, rgb(181, 64, 149) 100.2%)",
-              background: theme.palette.secondary.main,
+              background: " theme.palette.secondary.main",
               transition: "background .15s ease",
             }}
           />
@@ -74,7 +74,7 @@ const Footer: FC<FooterProps> = (props) => {
               fontFamily={theme.typography.fontFamily}
               variant="body1"
               color="textPrimary"
-              style={{ fontWeight: 600, fontSize: lgUp ? "1rem" : "0.8rem" }}
+              style={{ fontWeight: 600, fontSize: lgUp ? "1.1rem" : "0.9rem" }}
             >
               {"Made in 🇳🇴 by "}
               <Link
@@ -89,7 +89,7 @@ const Footer: FC<FooterProps> = (props) => {
                   textDecoration: "none",
                   borderBottom:
                     "2px solid " +
-                    colorLuminance(theme.palette.secondary.main, 0.33),
+                    colorLuminance(theme.palette.secondary.main, 0.15),
                   "&:hover": {
                     borderBottom: "2px solid " + theme.palette.secondary.main,
                   },

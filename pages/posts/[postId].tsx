@@ -39,6 +39,7 @@ import TOCModal from "../../components/Modals/TOCModal";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
+import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
 
@@ -55,7 +56,6 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import { ThemeEnum } from "../../styles/themes/themeMap";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -104,8 +104,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     header: CustomHeader,
     code: CustomCode,
     divider: CustomDivider,
-    image: CustomImage,
     simpleimage: CustomImage,
+    uploadimage: CustomImage,
+    urlimage: CustomImage,
     linktool: CustomLinkTool,
     quote: CustomQuote,
     personality: CustomPersonality,
@@ -198,7 +199,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   color: theme.palette.secondary.main,
                   "&:hover": {
                     cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.33),
+                    color: colorLumincance(theme.palette.secondary.main, 0.1),
                   },
                 }}
                 href={"/"}
@@ -337,7 +338,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   color: theme.palette.secondary.main,
                   "&:hover": {
                     cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.33),
+                    color: colorLumincance(theme.palette.secondary.main, 0.1),
                   },
                 }}
                 href={"/"}
@@ -468,8 +469,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 p={2}
                 sx={{
                   minHeight: isMobile
-                    ? "calc(100vh - 73px - 120px)"
-                    : "calc(100vh - 73px - 120px)",
+                    ? "calc(100vh - 81px - 30px)"
+                    : "calc(100vh - 67px - 117px)",
                   width: xs ? "380px" : sm ? "500px" : "700px",
                   position: "relative",
                 }}
@@ -653,6 +654,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 <Button
                   sx={{
                     border: "2px solid " + theme.palette.text.primary,
+                    index: 2,
+                    backgroundColor: theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
                   }}
                 >
                   <Edit

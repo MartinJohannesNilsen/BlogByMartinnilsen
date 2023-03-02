@@ -88,7 +88,7 @@ export const TOCModal = (props: TOCModalProps) => {
             fontWeight: 600,
             fontSize: 14,
             borderBottom:
-              "2px solid " + colorLuminance(theme.palette.secondary.main, 0.33),
+              "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
             "&:hover": {
               borderBottom: "2px solid " + theme.palette.secondary.main,
             },
@@ -122,7 +122,7 @@ export const TOCModal = (props: TOCModalProps) => {
               fontSize: 14,
               borderBottom:
                 "2px solid " +
-                colorLuminance(theme.palette.secondary.main, 0.33),
+                colorLuminance(theme.palette.secondary.main, 0.15),
               "&:hover": {
                 borderBottom: "2px solid " + theme.palette.secondary.main,
               },

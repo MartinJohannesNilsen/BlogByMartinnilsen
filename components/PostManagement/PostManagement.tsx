@@ -366,10 +366,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                     color: theme.palette.secondary.main,
                     "&:hover": {
                       cursor: "pointer",
-                      color: colorLumincance(
-                        theme.palette.secondary.main,
-                        0.33
-                      ),
+                      color: colorLumincance(theme.palette.secondary.main, 0.1),
                     },
                   }}
                   href={"/"}

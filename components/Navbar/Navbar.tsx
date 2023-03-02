@@ -109,9 +109,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                 </ButtonBase>
               </Tooltip>
             </Box>
-          ) : (
-            <></>
-          )}
+          ) : null}
           <Box mx={1} mt={isMobile ? 0.25 : 0}>
             <Tooltip
               enterDelay={2000}
@@ -142,7 +140,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </ButtonBase>
             </Tooltip>
           </Box>
-          <Box mt={isMobile ? 0.37 : 0}>
+          <Box mt={isMobile ? 0.37 : 0} mr={1}>
             <Tooltip enterDelay={2000} title={"Open settings"}>
               <ButtonBase
                 onClick={() => {
@@ -162,7 +160,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </ButtonBase>
             </Tooltip>
           </Box>
-          <Box mx={1} mt={isMobile ? 0.25 : 0}>
+          <Box mt={isMobile ? 0.25 : 0}>
             <Tooltip enterDelay={2000} title={"Go to account"}>
               <ButtonBase href="/account">
                 <Person

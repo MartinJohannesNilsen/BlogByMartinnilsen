@@ -24,7 +24,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
       color: theme.palette.text.primary,
       textDecoration: "none",
       borderBottom:
-        "2px solid " + colorLuminance(theme.palette.secondary.main, 0.33),
+        "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
       "&:hover": {
         borderBottom: "2px solid " + theme.palette.secondary.main,
       },

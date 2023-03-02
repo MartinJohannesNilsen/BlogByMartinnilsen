@@ -267,7 +267,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
                   >
                     <IconButton
                       onClick={() => {
-                        setColorPickerOpen(true);
+                        setColorPickerOpen(!colorPickerOpen);
                       }}
                       sx={{
                         width: "35px",

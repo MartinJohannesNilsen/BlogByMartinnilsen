@@ -1,28 +1,31 @@
-import Paragraph from "@editorjs/paragraph";
-import List from "@editorjs/list";
-import Warning from "@editorjs/warning";
-import LinkTool from "@editorjs/link";
-import Header from "@editorjs/header";
-import Quote from "@editorjs/quote";
-import Marker from "@editorjs/marker";
+// General
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { cloudStorage } from "../../firebaseConfig";
+// Tools
 import CheckList from "@editorjs/checklist";
-import InlineCode from "@editorjs/inline-code";
-import SimpleImage from "@editorjs/simple-image";
-import InlineImage from "editorjs-inline-image";
-import InlineVideo from "./BlockTools/InlineVideo/tool";
-import Divider from "./BlockTools/Divider/tool";
 import Embed from "@editorjs/embed";
-
-// Code highlight editors
-import CodeBlock from "editorjs-code-highlight"; // Nice try, but textarea and marker is off
-import CodeBox from "@bomdi/codebox"; // Weird html format out, else good
+import Header from "@editorjs/header";
+import ImageTool from "@editorjs/image";
+import InlineCode from "@editorjs/inline-code";
+import LinkTool from "@editorjs/link";
+import List from "@editorjs/list";
+import Marker from "@editorjs/marker";
+import Paragraph from "@editorjs/paragraph";
+import Quote from "@editorjs/quote";
+import SimpleImage from "@editorjs/simple-image";
+import Warning from "@editorjs/warning";
+import InlineImage from "editorjs-inline-image";
+import Divider from "./BlockTools/Divider/tool";
+import InlineVideo from "./BlockTools/InlineVideo/tool";
+import Underline from "@editorjs/underline";
 // @ts-ignore
 import editorjsCodeflask from "@calumk/editorjs-codeflask";
-
-import Table from "@editorjs/table";
 // import Raw from '@editorjs/raw'
+// import ChangeCase from "editorjs-change-case";
+// import Table from "@editorjs/table";
 
 export const EDITOR_JS_TOOLS = {
+  underline: Underline,
   paragraph: {
     class: Paragraph,
     linkTool: true,
@@ -31,6 +34,8 @@ export const EDITOR_JS_TOOLS = {
       preserveBlank: true,
     },
   },
+  marker: Marker,
+  inlineCode: InlineCode,
   header: {
     class: Header,
     config: {
@@ -48,9 +53,7 @@ export const EDITOR_JS_TOOLS = {
     },
   },
   quote: Quote,
-  marker: Marker,
   checklist: CheckList,
-  inlineCode: InlineCode,
   code: {
     // Codeflask
     class: editorjsCodeflask,
@@ -59,10 +62,15 @@ export const EDITOR_JS_TOOLS = {
       title: "Code",
     },
   },
-  simpleImage: SimpleImage,
-  image: {
+  simpleImage: SimpleImage, // Add image by url paste
+  urlImage: {
+    // Open box with image url and unsplash
     class: InlineImage,
     inlineToolbar: true,
+    toolbox: {
+      icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 91.24" style="enable-background:new 0 0 122.88 91.24" xml:space="preserve"><g><path d="M6.23,0H116.7c1.72,0,3.25,0.7,4.37,1.81c1.11,1.11,1.81,2.69,1.81,4.37v78.88c0,1.72-0.7,3.25-1.81,4.37 c-0.09,0.09-0.19,0.19-0.33,0.28c-1.07,0.98-2.51,1.53-4.09,1.53H6.18c-1.72,0-3.25-0.7-4.37-1.81C0.7,88.32,0,86.74,0,85.06V6.18 c0-1.72,0.7-3.25,1.81-4.37S4.51,0,6.18,0L6.23,0L6.23,0L6.23,0z M31.74,21.42c4.9,0,8.87,3.97,8.87,8.86 c0,4.9-3.97,8.87-8.87,8.87s-8.87-3.97-8.87-8.87C22.87,25.39,26.84,21.42,31.74,21.42L31.74,21.42L31.74,21.42z M69.05,59.46 l17.73-30.66l18.84,47.65l-87.92,0v-5.91l7.39-0.37l7.39-18.1l3.69,12.93h11.08l9.6-24.75L69.05,59.46L69.05,59.46L69.05,59.46z M115.54,7.34H7.39v76.51h108.15L115.54,7.34L115.54,7.34L115.54,7.34z"/></g></svg>',
+      title: "Image (url)",
+    },
     config: {
       embed: {
         display: true,
@@ -73,14 +81,67 @@ export const EDITOR_JS_TOOLS = {
         maxResults: "12",
       },
     },
+  },
+  uploadImage: {
+    class: ImageTool,
     toolbox: {
       icon: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 91.24" style="enable-background:new 0 0 122.88 91.24" xml:space="preserve"><g><path d="M6.23,0H116.7c1.72,0,3.25,0.7,4.37,1.81c1.11,1.11,1.81,2.69,1.81,4.37v78.88c0,1.72-0.7,3.25-1.81,4.37 c-0.09,0.09-0.19,0.19-0.33,0.28c-1.07,0.98-2.51,1.53-4.09,1.53H6.18c-1.72,0-3.25-0.7-4.37-1.81C0.7,88.32,0,86.74,0,85.06V6.18 c0-1.72,0.7-3.25,1.81-4.37S4.51,0,6.18,0L6.23,0L6.23,0L6.23,0z M31.74,21.42c4.9,0,8.87,3.97,8.87,8.86 c0,4.9-3.97,8.87-8.87,8.87s-8.87-3.97-8.87-8.87C22.87,25.39,26.84,21.42,31.74,21.42L31.74,21.42L31.74,21.42z M69.05,59.46 l17.73-30.66l18.84,47.65l-87.92,0v-5.91l7.39-0.37l7.39-18.1l3.69,12.93h11.08l9.6-24.75L69.05,59.46L69.05,59.46L69.05,59.46z M115.54,7.34H7.39v76.51h108.15L115.54,7.34L115.54,7.34L115.54,7.34z"/></g></svg>',
-      title: "Image",
+      title: "Image (upload)",
+    },
+    config: {
+      uploader: {
+        async uploadByFile(file) {
+          try {
+            // Create filename
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            const hour = String(date.getHours()).padStart(2, "0");
+            const minute = String(date.getMinutes()).padStart(2, "0");
+            const second = String(date.getSeconds()).padStart(2, "0");
+            const extension = file.name.split(".").pop();
+            const fileName =
+              `${year}-${month}-${day}.${hour}${minute}${second}` +
+              "." +
+              extension;
+            let imageRef = ref(cloudStorage, "Images/" + fileName);
+            let metadata = {
+              contentType: "image/jpeg",
+            };
+            let uploadTask = await uploadBytes(imageRef, file, metadata);
+            const downloadURL = await getDownloadURL(uploadTask.ref);
+            return {
+              success: 1,
+              file: {
+                url: downloadURL,
+              },
+            };
+          } catch (error) {
+            console.log(error);
+          }
+        },
+      },
     },
   },
   divider: Divider,
   video: InlineVideo,
   embed: Embed,
+  linkTool: {
+    class: LinkTool,
+    config: {
+      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/linkPreview", // Your backend endpoint for url data fetching,
+    },
+  },
+  // table: {
+  //   class: Table,
+  //   inlineToolbar: true,
+  //   config: {
+  //     withHeadings: true,
+  //     rows: 2,
+  //     cols: 2,
+  //   },
+  // },
   // math: {
   //   // eslint-disable-line
   //   class: EJLaTeX,
@@ -90,12 +151,5 @@ export const EDITOR_JS_TOOLS = {
   //     title: "Math",
   //   },
   // },
-  linkTool: {
-    class: LinkTool,
-    config: {
-      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/linkPreview", // Your backend endpoint for url data fetching,
-    },
-  },
-  table: Table,
 };
 export default EDITOR_JS_TOOLS;

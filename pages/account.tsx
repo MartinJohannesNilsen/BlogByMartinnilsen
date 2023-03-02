@@ -48,11 +48,12 @@ export const account = () => {
         </Grid>
         <Grid item xs={3.6}>
           <TileButtonCard
+            disabled={!isAuthorized}
             icon={
               isAuthorized ? (
                 <Create sx={{ color: theme.palette.text.primary }} />
               ) : (
-                <Lock sx={{ color: "red" }} />
+                <Lock sx={{ fontSize: 36, opacity: 0.25 }} />
               )
             }
             text="Create"

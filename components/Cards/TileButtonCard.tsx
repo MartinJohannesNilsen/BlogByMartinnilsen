@@ -54,16 +54,35 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
   });
   const classes = useStyles();
 
+  // Locked card
+  if (props.disabled)
+    return (
+      <Card
+        className={classes.root}
+        // classes={{ root: state.raised ? classes.cardHovered : "" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            alignContent: "center",
+            justifyItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IconButton disabled>{props.icon}</IconButton>
+        </Box>
+      </Card>
+    );
+  // Regular card
   return (
     <Card
       className={classes.root}
       classes={{ root: state.raised ? classes.cardHovered : "" }}
-      style={{
-        background: props.href || props.onClick ? "" : "lightgrey",
-      }}
-      onMouseOver={() =>
-        setState({ raised: props.href || props.onClick ? true : false })
-      }
+      onMouseOver={() => setState({ raised: true })}
       onMouseOut={() => setState({ raised: false })}
     >
       <CardActionArea
@@ -71,17 +90,10 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
         sx={{
           height: "100%",
           width: "100%",
-          "&:hover": {
-            background:
-              props.href || props.onClick ? theme.palette.primary.main : "",
-          },
-          // backgroundColor: !props.href && !props.onClick ? "grey" : "",
         }}
       >
         <Box display="flex" justifyContent="center" alignItems="center" pt={2}>
-          <IconButton disabled sx={{ color: "green" }}>
-            {props.icon}
-          </IconButton>
+          <IconButton disabled>{props.icon}</IconButton>
         </Box>
         <CardContent>
           <Box

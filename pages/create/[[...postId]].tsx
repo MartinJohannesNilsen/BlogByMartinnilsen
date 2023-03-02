@@ -39,9 +39,7 @@ const ManageArticleView: FC = (props) => {
     return <></>;
   } else {
     return (
-      <>
-        {!postId ? <CreatePost /> : post ? <CreatePost post={post} /> : <></>}
-      </>
+      <>{!postId ? <CreatePost /> : post ? <CreatePost post={post} /> : null}</>
     );
   }
 };

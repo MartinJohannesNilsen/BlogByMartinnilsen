@@ -9,7 +9,7 @@ const CustomMath = (props: EditorjsRendererProps) => {
 
   return (
     <Box my={1}>
-      {props.data.math ? <BlockMath math={props.data.math} /> : <></>}
+      {props.data.math ? <BlockMath math={props.data.math} /> : null}
     </Box>
   );
 };

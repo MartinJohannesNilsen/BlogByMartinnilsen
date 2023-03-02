@@ -12,7 +12,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
       color: theme.palette.text.primary,
       textDecoration: "none",
       borderBottom:
-        "2px solid " + colorLuminance(theme.palette.secondary.main, 0.33),
+        "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
       "&:hover": {
         borderBottom: "2px solid " + theme.palette.secondary.main,
       },
@@ -30,7 +30,13 @@ const CustomImage = (props: EditorjsRendererProps) => {
     >
       <img
         style={{ width: "100%", borderRadius: "0px" }}
-        src={props.data.url}
+        src={
+          props.data.url
+            ? props.data.url
+            : props.data.file.url
+            ? props.data.file.url
+            : ""
+        }
       />
       {props.data.caption && props.data.caption !== "<br>" ? (
         <Box my={2}>
