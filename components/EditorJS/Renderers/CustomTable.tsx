@@ -1,15 +1,16 @@
-import { Box, useMediaQuery } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
-import { useTheme } from "../../../ThemeProvider";
-import DOMPurify from "isomorphic-dompurify";
-import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import DOMPurify from "isomorphic-dompurify";
+import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -27,46 +28,62 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
   // hide last border
   "&:last-child td, &:last-child th": {
-    border: 0,
+    borderBottom: 0,
   },
 }));
 
 const CustomTable = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
-  // const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  // const sm = useMediaQuery(theme.breakpoints.only("sm"));
+
+  const useStyles = makeStyles(() => ({
+    verticalLine: {
+      // borderWidth: 0,
+      borderRightWidth: 1,
+      borderRightColor: theme.palette.grey[700],
+      borderRightStyle: "solid",
+    },
+  }));
+  const style = useStyles();
+  const content: [[string]] = JSON.parse(props.data.content!);
+  const heading = props.data.withHeadings ? content.shift() : [];
 
   return (
     <Box my={1}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: "100%" }} aria-label="table">
-          <TableHead>
-            <TableRow>
-              {props.data.content!.shift()?.map((cell) => (
-                <StyledTableCell
-                  key={cell}
-                  align="center"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
-                  }}
-                />
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.data.content!.map((row) => (
-              <StyledTableRow key={row[0]}>
-                {row.map((cell) => {
+          {props.data.withHeadings ? (
+            <TableHead>
+              <TableRow>
+                {heading.map((cell, j) => (
                   <StyledTableCell
                     key={cell}
+                    className={
+                      j !== heading.length - 1 ? style.verticalLine : ""
+                    }
+                    align="center"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
+                    }}
+                  />
+                ))}
+              </TableRow>
+            </TableHead>
+          ) : null}
+          <TableBody>
+            {content.map((row, i) => (
+              <StyledTableRow key={i}>
+                {row.map((cell, j) => (
+                  <StyledTableCell
+                    key={cell}
+                    className={j !== row.length - 1 ? style.verticalLine : ""}
                     component="th"
                     scope="row"
                     align="center"
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
                     }}
-                  />;
-                })}
+                  />
+                ))}
               </StyledTableRow>
             ))}
           </TableBody>

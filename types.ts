@@ -37,7 +37,8 @@ export type EditorjsRendererProps = {
     alignment?: string;
     // Table
     withHeadings?: boolean;
-    content?: [[string]];
+    content?: string;
+    // content?: [[string]];
     // Personality
     name?: string;
     description?: string;

@@ -20,9 +20,12 @@ import InlineVideo from "./BlockTools/InlineVideo/tool";
 import Underline from "@editorjs/underline";
 // @ts-ignore
 import editorjsCodeflask from "@calumk/editorjs-codeflask";
-// import Raw from '@editorjs/raw'
+
+/* Development */
 // import ChangeCase from "editorjs-change-case";
+// Had to stringify the content for storing in Firebase, made my own fork
 // import Table from "@editorjs/table";
+import Table from "@martinjohannesnilsen/editorjs-table";
 
 export const EDITOR_JS_TOOLS = {
   underline: Underline,
@@ -133,15 +136,15 @@ export const EDITOR_JS_TOOLS = {
       endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/linkPreview", // Your backend endpoint for url data fetching,
     },
   },
-  // table: {
-  //   class: Table,
-  //   inlineToolbar: true,
-  //   config: {
-  //     withHeadings: true,
-  //     rows: 2,
-  //     cols: 2,
-  //   },
-  // },
+  table: {
+    class: Table,
+    inlineToolbar: true,
+    config: {
+      withHeadings: true,
+      rows: 2,
+      cols: 2,
+    },
+  },
   // math: {
   //   // eslint-disable-line
   //   class: EJLaTeX,
