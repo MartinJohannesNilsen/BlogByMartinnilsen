@@ -17,12 +17,14 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { matchSorter } from "match-sorter";
 import { isMobile } from "react-device-detect";
 import { East } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const router = useRouter();
   const handleNavigate = (path: string) => {
-    window.location.href = path;
+    router.push(path);
   };
   const [textFieldValue, setTextFieldValue] = useState("");
   const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);

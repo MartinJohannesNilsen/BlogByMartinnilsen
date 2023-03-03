@@ -17,6 +17,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
         borderBottom: "2px solid " + theme.palette.secondary.main,
       },
     },
+    imgStretched: {},
   }));
   const style = useStyles();
 
@@ -27,9 +28,15 @@ const CustomImage = (props: EditorjsRendererProps) => {
       width="100%"
       flexDirection="column"
       textAlign="center"
+      alignItems="center"
     >
       <img
-        style={{ width: "100%", borderRadius: "0px" }}
+        style={{
+          width: "100%",
+          borderRadius: "0px",
+          maxHeight: props.data.withBackground ? 400 : "none",
+          objectFit: "contain",
+        }}
         src={
           props.data.url
             ? props.data.url

@@ -90,10 +90,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const { width, height } = useWindowSize();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
-  const handleNavigate = (path: string) => {
-    window.location.href = path;
-  };
   const router = useRouter();
+  const handleNavigate = (path: string) => {
+    router.push(path);
+  };
   const postId = router.query.postId;
   const post = props.post;
   const { isAuthorized } = useAuthorized();
@@ -135,7 +135,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   useEffect(() => {
     setIsLoading(false);
     if (typeof window !== "undefined" && window.location.hash) {
-      window.location.href = window.location.hash;
+      router.push(window.location.hash);
     }
   }, [OutputElement]);
 

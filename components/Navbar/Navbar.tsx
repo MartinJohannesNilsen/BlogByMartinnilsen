@@ -12,6 +12,7 @@ import { NavbarProps } from "../../types";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import SearchModal from "../Modals/SearchModal";
 import SettingsModal from "../Modals/SettingsModal";
+import { useRouter } from "next/router";
 
 export const handleScroll = (name: string) => {
   $("html, body").animate(
@@ -39,8 +40,9 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   });
 
   // Navigation
+  const router = useRouter();
   const handleNavigate = (path: string) => {
-    window.location.href = path;
+    router.push(path);
   };
 
   const handleThemeChange = (event: any) => {

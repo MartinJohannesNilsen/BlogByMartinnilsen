@@ -6,7 +6,7 @@ import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
 
-export const account = () => {
+export const Account = () => {
   const { isAuthorized, session, status } = useAuthorized(true);
   const { theme } = useTheme();
   const backgroundBWBreakingPercentage = "45%";
@@ -73,4 +73,4 @@ export const account = () => {
     </Grid>
   );
 };
-export default account;
+export default Account;

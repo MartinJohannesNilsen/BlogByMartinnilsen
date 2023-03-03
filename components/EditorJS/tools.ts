@@ -18,17 +18,18 @@ import InlineImage from "editorjs-inline-image";
 import Divider from "./BlockTools/Divider/tool";
 import InlineVideo from "./BlockTools/InlineVideo/tool";
 import Underline from "@editorjs/underline";
+import Table from "@martinjohannesnilsen/editorjs-table";
 // @ts-ignore
 import editorjsCodeflask from "@calumk/editorjs-codeflask";
+// import EJLaTeX from "editorjs-latex";
 
 /* Development */
 // import ChangeCase from "editorjs-change-case";
 // Had to stringify the content for storing in Firebase, made my own fork
 // import Table from "@editorjs/table";
-import Table from "@martinjohannesnilsen/editorjs-table";
 
 export const EDITOR_JS_TOOLS = {
-  underline: Underline,
+  underline: { class: Underline, shortcut: "CMD+U" },
   paragraph: {
     class: Paragraph,
     linkTool: true,
@@ -37,8 +38,8 @@ export const EDITOR_JS_TOOLS = {
       preserveBlank: true,
     },
   },
-  marker: Marker,
-  inlineCode: InlineCode,
+  marker: { class: Marker, shortcut: "CMD+F" },
+  inlineCode: { class: InlineCode, shortcut: "CMD+E" },
   header: {
     class: Header,
     config: {
@@ -65,7 +66,9 @@ export const EDITOR_JS_TOOLS = {
       title: "Code",
     },
   },
-  simpleImage: SimpleImage, // Add image by url paste
+  simpleImage: {
+    class: SimpleImage,
+  }, // Add image by url paste
   urlImage: {
     // Open box with image url and unsplash
     class: InlineImage,
