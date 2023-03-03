@@ -23,7 +23,8 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
     },
     mark: {
       margin: "0 1px",
-      padding: "0 2px",
+      padding: "1px 2px",
+      borderRadius: "1px",
       backgroundColor: theme.palette.secondary.main,
     },
     link: {
