@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { TOCModalProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
+import { useRouter } from "next/router";
 
 const style = {
   position: "absolute" as "absolute",
@@ -29,6 +30,7 @@ const style = {
 
 export const TOCModal = (props: TOCModalProps) => {
   const { theme } = useTheme();
+  const router = useRouter();
 
   function extractHeadersIfJustHeader(html: string) {
     const regex = /<h([1-6])(?:.*?id="(.*?)")?>(.*?)<\/h([1-6])>/g;
@@ -67,13 +69,8 @@ export const TOCModal = (props: TOCModalProps) => {
         onClick={() => {
           props.handleModalClose();
           window.scrollTo(0, 0);
-          history.pushState(
-            "",
-            document.title,
-            window.location.pathname + window.location.search
-          );
+          router.replace(window.location.pathname + window.location.search);
         }}
-        // href={"#"}
         sx={{ maxWidth: "100%" }}
       >
         <Typography
@@ -103,8 +100,8 @@ export const TOCModal = (props: TOCModalProps) => {
         <ButtonBase
           onClick={() => {
             props.handleModalClose();
+            router.replace(`#${heading.id}`);
           }}
-          href={`#${heading.id}`}
           sx={{ maxWidth: "100%" }}
         >
           <Typography

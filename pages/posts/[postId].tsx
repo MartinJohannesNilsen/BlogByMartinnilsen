@@ -92,7 +92,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const router = useRouter();
   const handleNavigate = (path: string) => {
-    router.push(path);
+    // router.push(path); // TODO Seems to only getting a blank page
+    window.location.href = path;
   };
   const postId = router.query.postId;
   const post = props.post;
@@ -644,7 +645,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           {isAuthorized ? (
             <Box
               onClick={() => {
-                handleNavigate(("/create/" + postId) as string);
+                handleNavigate("/create/" + postId);
               }}
               display="flex"
               gap="10px"
