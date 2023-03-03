@@ -14,6 +14,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import dynamic from "next/dynamic";
@@ -176,7 +177,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     return () => {};
   }, [editorJSContent]);
 
-  const width = "700px";
+  // const width = "700px";
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const sm = useMediaQuery(theme.breakpoints.only("sm"));
+  const width = xs ? "380px" : sm ? "500px" : "700px";
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setIsPosted(false);
@@ -357,22 +361,29 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <Link
-                  fontFamily={theme.typography.fontFamily}
-                  variant="body1"
-                  fontWeight="900"
-                  sx={{
-                    textDecoration: "none",
-                    color: theme.palette.secondary.main,
-                    "&:hover": {
-                      cursor: "pointer",
-                      color: colorLumincance(theme.palette.secondary.main, 0.1),
-                    },
-                  }}
-                  href={"/"}
-                >
-                  ← Home
-                </Link>
+                {!xs ? (
+                  <Link
+                    fontFamily={theme.typography.fontFamily}
+                    variant="body1"
+                    fontWeight="900"
+                    sx={{
+                      textDecoration: "none",
+                      color: theme.palette.secondary.main,
+                      "&:hover": {
+                        cursor: "pointer",
+                        color: colorLumincance(
+                          theme.palette.secondary.main,
+                          0.1
+                        ),
+                      },
+                    }}
+                    href={"/"}
+                  >
+                    ← Home
+                  </Link>
+                ) : (
+                  <Box sx={{ minHeight: "40px" }} />
+                )}
               </Box>
               <Divider />
               <Typography
@@ -476,7 +487,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 gap="10px"
-                sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 100 }}
+                sx={
+                  xs
+                    ? { position: "fixed", left: 25, top: 25, zIndex: 100 }
+                    : { position: "fixed", left: 25, bottom: 25, zIndex: 100 }
+                }
               >
                 {/* Submit button */}
                 <Tooltip enterDelay={2000} title="Save changes" placement="top">
@@ -585,7 +600,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 gap="10px"
-                sx={{ position: "fixed", right: 25, bottom: 25, zIndex: 100 }}
+                sx={
+                  xs
+                    ? { position: "fixed", right: 25, top: 25, zIndex: 100 }
+                    : { position: "fixed", right: 25, bottom: 25, zIndex: 100 }
+                }
               >
                 {props.post ? (
                   <>
