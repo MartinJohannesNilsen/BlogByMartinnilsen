@@ -46,9 +46,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   };
 
   const handleThemeChange = (event: any) => {
-    event.target.checked === true
-      ? setTheme(ThemeEnum.Light)
-      : setTheme(ThemeEnum.Dark);
+    setTheme(
+      event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark,
+      true
+    );
   };
 
   return (

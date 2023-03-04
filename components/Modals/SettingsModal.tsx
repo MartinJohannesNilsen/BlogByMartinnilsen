@@ -162,7 +162,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
                         setTheme(
                           theme.palette.mode === "dark"
                             ? ThemeEnum.Dark
-                            : ThemeEnum.Light
+                            : ThemeEnum.Light,
+                          true
                         );
                       }}
                       disabled={fontFamily === element.font}
@@ -211,7 +212,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
                         setTheme(
                           theme.palette.mode === "dark"
                             ? ThemeEnum.Dark
-                            : ThemeEnum.Light
+                            : ThemeEnum.Light,
+                          true
                         );
                       }}
                       disabled={accentColor === element.color}
@@ -259,7 +261,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
                           setTheme(
                             theme.palette.mode === "dark"
                               ? ThemeEnum.Dark
-                              : ThemeEnum.Light
+                              : ThemeEnum.Light,
+                            true
                           );
                         }}
                       />

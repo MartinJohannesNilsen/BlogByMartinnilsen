@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps, session }) {
                 siteName: "MJNTech.dev",
                 images: [
                   {
-                    url: "https://t4.ftcdn.net/jpg/05/21/18/03/360_F_521180377_2iAVJqBQSo3cgKaVp8vMBR8asrC61DoU.jpg",
+                    url: "https://blog.mjntech.dev/icons/ogimage.png",
                   },
                 ],
               }}

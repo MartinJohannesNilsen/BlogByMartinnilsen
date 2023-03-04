@@ -56,6 +56,7 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
+import { makeStyles } from "@mui/styles";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -73,7 +74,6 @@ export const getStaticProps = async (context: any) => {
       notFound: true, //redirects to 404 page
     };
   }
-
   return {
     props: {
       post,
@@ -119,9 +119,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   };
 
   const handleThemeChange = (event: any) => {
-    event.target.checked === true
-      ? setTheme(ThemeEnum.Light)
-      : setTheme(ThemeEnum.Dark);
+    setTheme(
+      event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark,
+      true
+    );
   };
 
   const OutputElement = useMemo(() => {
@@ -585,35 +586,57 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   {OutputElement}
                 </Box>
                 <Box flexGrow={100} />
-                {/* Share and exploding */}
-                <Box
-                  mt={6}
-                  mb={3}
-                  py={2}
-                  sx={{
-                    borderTop: "2px solid rgba(100,100,100,0.2)",
-                    borderBottom: "2px solid rgba(100,100,100,0.2)",
-                  }}
-                  display="flex"
-                  justifyContent="center"
-                >
-                  <IconButton
-                    disabled={isExploding}
-                    sx={{ "&:disabled": { opacity: "0.5" } }}
-                    onClick={() => {
-                      setIsExploding(true);
-                      setTimeout(() => {
-                        setIsExploding(false);
-                      }, 4000);
-                    }}
+                {/* Share section */}
+                <Box mt={6} mb={3} py={2}>
+                  {/* Clap with horizontal lines */}
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    <Image
-                      src={ClappingHands.src}
-                      width={30}
-                      height={30}
-                      alt="Clapping hands button"
+                    <Box
+                      style={{
+                        width: "100%",
+                        borderBottom: "2px solid rgba(100,100,100,0.2)",
+                      }}
                     />
-                  </IconButton>
+                    <IconButton
+                      disabled={isExploding}
+                      sx={{ "&:disabled": { opacity: "0.5" }, marginX: 3 }}
+                      onClick={() => {
+                        setIsExploding(true);
+                        setTimeout(() => {
+                          setIsExploding(false);
+                        }, 3500);
+                      }}
+                    >
+                      <Image
+                        src={ClappingHands.src}
+                        width={30}
+                        height={30}
+                        alt="Clapping hands button"
+                      />
+                    </IconButton>
+                    <Box
+                      style={{
+                        width: "100%",
+                        borderBottom: "2px solid rgba(100,100,100,0.2)",
+                      }}
+                    />
+                  </Box>
+                  {/* Share and funding */}
+                  <Box>
+                    <Box>
+                      <Typography
+                        variant="body1"
+                        fontWeight={500}
+                        color="textPrimary"
+                        fontFamily={theme.typography.fontFamily}
+                      >
+                        Share on
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Box>
               </Stack>
             </Grid>

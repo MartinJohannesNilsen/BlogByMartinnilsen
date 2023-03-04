@@ -39,6 +39,14 @@ if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
 }
 
+const OGDEFAULTS = {
+  titleOptimal: 55,
+  titleMax: 60,
+  descriptionOptimal: 55,
+  descriptionWarning: 60,
+  descriptionMax: 160,
+};
+
 const revalidatePages = async (pages: string[]) => {
   try {
     const responses = await Promise.all(
@@ -428,6 +436,18 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 name="title"
                 required
                 fullWidth
+                inputProps={{
+                  maxlength: OGDEFAULTS.titleMax,
+                }}
+                helperText={`${data.title.length}/${OGDEFAULTS.titleMax}`}
+                sx={{
+                  ".MuiFormHelperText-root": {
+                    color:
+                      data.title.length <= OGDEFAULTS.titleOptimal
+                        ? "green"
+                        : "#cfa602",
+                  },
+                }}
                 value={data.title}
                 onChange={handleInputChange}
               />
@@ -435,6 +455,20 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 label="Summary"
                 name="summary"
                 fullWidth
+                inputProps={{
+                  maxlength: OGDEFAULTS.descriptionMax,
+                }}
+                helperText={`${data.summary.length}/${OGDEFAULTS.descriptionMax}`}
+                sx={{
+                  ".MuiFormHelperText-root": {
+                    color:
+                      data.summary.length <= OGDEFAULTS.descriptionOptimal
+                        ? "green"
+                        : data.summary.length <= OGDEFAULTS.descriptionWarning
+                        ? theme.palette.text.primary
+                        : "#cfa602",
+                  },
+                }}
                 value={data.summary}
                 onChange={handleInputChange}
               />
