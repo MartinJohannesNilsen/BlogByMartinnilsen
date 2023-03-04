@@ -222,6 +222,7 @@ export const SearchModal = (props: SearchModalProps) => {
                             borderRadius: "5px",
                             minWidth: "50px",
                             minHeight: "50px",
+                            background: "transparent",
                           }}
                         >
                           <img

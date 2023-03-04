@@ -198,10 +198,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 sx={{
                   fontSize: "25px",
                   textDecoration: "none",
-                  color: theme.palette.secondary.main,
+                  color: theme.palette.text.primary,
                   "&:hover": {
                     cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.1),
+                    color: theme.palette.secondary.main,
                   },
                 }}
                 href={"/"}

@@ -70,7 +70,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           alignItems="center"
           justifyContent="center"
           sx={{
-            width: isMobile ? "92%" : "80%",
+            width: isMobile ? "100%" : "80%",
           }}
         >
           <ButtonBase onClick={() => handleNavigate("/")}>
@@ -105,7 +105,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </Tooltip>
             </Box>
           ) : null}
-          <Box mx={1} mt={isMobile ? 0.25 : 0}>
+          <Box mx={isMobile ? 0.25 : 1} mt={isMobile ? 0.25 : 0}>
             <Tooltip
               enterDelay={2000}
               title={`Search${
@@ -135,7 +135,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </ButtonBase>
             </Tooltip>
           </Box>
-          <Box mt={isMobile ? 0.37 : 0} mr={1}>
+          <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 1}>
             <Tooltip enterDelay={2000} title={"Open settings"}>
               <ButtonBase
                 onClick={() => {
