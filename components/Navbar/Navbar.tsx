@@ -14,15 +14,6 @@ import SearchModal from "../Modals/SearchModal";
 import SettingsModal from "../Modals/SettingsModal";
 import { useRouter } from "next/router";
 
-export const handleScroll = (name: string) => {
-  $("html, body").animate(
-    {
-      scrollTop: $("#" + name)!.offset()!.top,
-    },
-    100
-  );
-};
-
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
   const { isAuthorized } = useAuthorized();
@@ -70,6 +61,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           paddingBottom: isMobile ? "26px" : "0",
           maxHeight: isMobile ? "30px" : "80px",
           backgroundColor: props.backgroundColor,
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Box
@@ -77,8 +70,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           alignItems="center"
           justifyContent="center"
           sx={{
-            width: isMobile ? "96%" : "90%",
-            marginX: isMobile ? "2%" : "5%",
+            width: isMobile ? "92%" : "80%",
           }}
         >
           <ButtonBase onClick={() => handleNavigate("/")}>
@@ -90,7 +82,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               style={{ borderRadius: "0" }}
             />
           </ButtonBase>
-          <Box flexGrow={1} />
+          <Box flexGrow={100} />
           {isAuthorized ? (
             <Box mt={isMobile ? 0 : -0.2}>
               <Tooltip enterDelay={2000} title={"Upload new post"}>

@@ -56,7 +56,7 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import { makeStyles } from "@mui/styles";
+import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -115,7 +115,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     video: CustomVideo,
     checklist: CustomChecklist,
     table: CustomTable,
-    // math: CustomMath,
+    math: CustomMath,
   };
 
   const handleThemeChange = (event: any) => {
@@ -314,7 +314,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             <Box
               display="flex"
               alignItems="center"
-              width={xs ? "380px" : sm ? "500px" : "700px"}
+              // width={xs ? "380px" : sm ? "500px" : "700px"}
+              width={"80%"}
+              px={3}
               pt={2}
               pb={2}
               position={"relative"}
@@ -333,14 +335,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 fontFamily={theme.typography.fontFamily}
                 variant="body1"
                 fontWeight="900"
-                mr={OutputString ? 7.25 : 1.25}
                 sx={{
                   fontSize: theme.typography.body1.fontSize,
                   textDecoration: "none",
-                  color: theme.palette.secondary.main,
+                  color: theme.palette.text.primary,
                   "&:hover": {
                     cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.1),
+                    color: theme.palette.secondary.main,
                   },
                 }}
                 href={"/"}
@@ -348,15 +349,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 {"← Home"}
               </Link>
               <Box flexGrow={100} />
-              <Box display="flex" ml={1}>
+              <Box display="flex">
                 {OutputString && (
                   <Tooltip enterDelay={2000} title={"Open table of contents"}>
-                    <ButtonBase
-                      onClick={() => setOpenTOCModal(true)}
-                      sx={{
-                        marginX: theme.spacing(0.75),
-                      }}
-                    >
+                    <ButtonBase onClick={() => setOpenTOCModal(true)}>
                       <MenuBook
                         sx={{
                           color: theme.palette.text.primary,
@@ -382,7 +378,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 )}
                 <Tooltip enterDelay={2000} title={"Open settings"}>
                   <ButtonBase
-                    sx={{ marginTop: 0.42 }}
+                    sx={{ marginTop: 0.42, marginLeft: theme.spacing(1) }}
                     onClick={() => {
                       setOpenSettingsModal(true);
                     }}
@@ -414,12 +410,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   }}
                 >
                   <Tooltip enterDelay={2000} title={"Share"}>
-                    <ButtonBase>
+                    <ButtonBase
+                      sx={{
+                        marginLeft: theme.spacing(0.25),
+                        marginRight: theme.spacing(-0.75),
+                      }}
+                    >
                       <IosShareOutlined
                         sx={{
                           color: theme.palette.text.primary,
                           height: "28px",
                           width: "32px",
+                          alignText: "right",
                           "&:hover": {
                             color: theme.palette.secondary.main,
                           },
@@ -625,8 +627,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     />
                   </Box>
                   {/* Share and funding */}
-                  <Box>
-                    <Box>
+                  {/* <Box sx={{ display: "flex", flexDirection: "row" }}> */}
+                  {/* Left */}
+                  {/* <Box width="100%" display="flex" justifyContent="center">
                       <Typography
                         variant="body1"
                         fontWeight={500}
@@ -636,7 +639,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         Share on
                       </Typography>
                     </Box>
-                  </Box>
+                    <Box width={108} mx={3} />
+                    <Box width="100%" display="flex" justifyContent="center">
+                      <Typography
+                        variant="body1"
+                        fontWeight={500}
+                        color="textPrimary"
+                        fontFamily={theme.typography.fontFamily}
+                      >
+                        Share on
+                      </Typography>
+                    </Box>
+                  </Box> */}
                 </Box>
               </Stack>
             </Grid>

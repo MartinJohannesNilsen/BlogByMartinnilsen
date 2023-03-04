@@ -1,19 +1,21 @@
+// @ts-nocheck
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
 } from "@mui/icons-material";
 import {
   Box,
-  Grid,
+  Unstable_Grid2 as Grid,
   IconButton,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import WavingHand from "public/assets/img/waving-hand.png";
 import { FC, useEffect, useState } from "react";
 import { useTheme } from "../ThemeProvider";
+import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import LandingViewCard from "../components/Cards/LandingViewCard";
 import Navbar from "../components/Navbar/Navbar";
 import {
@@ -21,8 +23,6 @@ import {
   getPostsOverview,
 } from "../database/overview";
 import { LandingViewProps, SimplifiedPost } from "../types";
-import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import { NextSeo } from "next-seo";
 
 function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -143,6 +143,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
               container
               rowSpacing={mdDown ? 5 : md ? 3 : 6}
               columnSpacing={mdDown ? 0 : 3}
+              justifyContent="center"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -152,6 +153,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                 paddingBottom: "100px",
               }}
             >
+              {/* Welcome */}
               <Grid
                 item
                 sx={{
@@ -188,6 +190,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                   }}
                 />
               </Grid>
+              {/* Cards */}
               {posts.map((data, index) => {
                 return (
                   <Grid

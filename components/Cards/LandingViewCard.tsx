@@ -47,6 +47,7 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
       classes={{ root: state.raised ? classes.cardHovered : "" }}
       onMouseOver={() => setState({ raised: true })}
       onMouseOut={() => setState({ raised: false })}
+      sx={{ width: "100%" }}
     >
       <CardActionArea
         href={`/posts/${props.id}`}
