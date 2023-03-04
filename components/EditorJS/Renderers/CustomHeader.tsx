@@ -1,10 +1,9 @@
-import parse from "html-react-parser";
-import { CSSProperties, useState } from "react";
-import { EditorjsRendererProps } from "../../../types";
-import { isMobile } from "react-device-detect";
 import { Box } from "@mui/material";
+import parse from "html-react-parser";
+import { CSSProperties } from "react";
+import { isMobile } from "react-device-detect";
 import { useTheme } from "../../../ThemeProvider";
-import { Link } from "@mui/icons-material";
+import { EditorjsRendererProps } from "../../../types";
 
 const defaultStyle: CSSProperties = {
   margin: "8px 0",

@@ -18,9 +18,9 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import Output from "editorjs-react-renderer";
 import DOMPurify from "isomorphic-dompurify";
 import { NextSeo } from "next-seo";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -41,7 +41,7 @@ import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
-import colorLumincance from "../../utils/colorLuminance";
+const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 
 // EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
@@ -50,13 +50,14 @@ import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
 import CustomHeader from "../../components/EditorJS/Renderers/CustomHeader";
 import CustomImage from "../../components/EditorJS/Renderers/CustomImage";
 import CustomLinkTool from "../../components/EditorJS/Renderers/CustomLinkTool";
+import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
 import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
 import CustomPersonality from "../../components/EditorJS/Renderers/CustomPersonality";
 import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
+import CustomList from "../../components/EditorJS/Renderers/CustomList";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -116,6 +117,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     checklist: CustomChecklist,
     table: CustomTable,
     math: CustomMath,
+    list: CustomList,
   };
 
   const handleThemeChange = (event: any) => {

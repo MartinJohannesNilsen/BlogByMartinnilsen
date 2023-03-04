@@ -3,11 +3,11 @@ import { ButtonBase, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { TOCModalProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
-import { useRouter } from "next/router";
 
 const style = {
   position: "absolute" as "absolute",

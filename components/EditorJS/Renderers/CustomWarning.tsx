@@ -1,9 +1,9 @@
 import { Box, Card, IconButton, Typography } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
-import { useTheme } from "../../../ThemeProvider";
 import DOMPurify from "isomorphic-dompurify";
-import speechBalloon from "public/assets/img/speech-balloon.png";
 import Image from "next/image";
+import speechBalloon from "public/assets/img/speech-balloon.png";
+import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
 
 const CustomWarning = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();

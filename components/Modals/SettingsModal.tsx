@@ -7,15 +7,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { withStyles } from "@mui/styles";
 import { useState } from "react";
+import { BlockPicker } from "react-color";
+import { isMobile } from "react-device-detect";
 import { useTheme } from "../../ThemeProvider";
 import { defaultFontFamily } from "../../styles/themes/themeDefaults";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../types";
 import { CustomSwitch as Switch } from "../Switch/Switch";
-import { BlockPicker } from "react-color";
-import { withStyles } from "@mui/styles";
-import { isMobile } from "react-device-detect";
 
 const style = {
   position: "absolute" as "absolute",

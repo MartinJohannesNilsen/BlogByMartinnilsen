@@ -1,15 +1,15 @@
-import { Box, Checkbox, Typography } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
-import { useTheme } from "../../../ThemeProvider";
 import { CheckCircle, RadioButtonUnchecked } from "@mui/icons-material";
+import { Box, Checkbox, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
+import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
 
 const CustomChecklist = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
 
   return (
     <Box my={1} display="flex" flexDirection="column">
-      {props.data.items?.map((item) => (
+      {props.data.items?.map((item: { text?: string; checked?: boolean }) => (
         <Box display="flex" alignItems={"center"} key={item.text}>
           <Checkbox
             disabled

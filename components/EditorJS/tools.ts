@@ -46,7 +46,13 @@ export const EDITOR_JS_TOOLS = {
       defaultLevel: 1,
     },
   },
-  list: List,
+  list: {
+    class: List,
+    inlineToolbar: true,
+    config: {
+      defaultStyle: "unordered",
+    },
+  },
   warning: {
     class: Warning,
     toolbox: {

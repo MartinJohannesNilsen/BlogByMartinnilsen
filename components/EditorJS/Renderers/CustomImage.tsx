@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
-import { useTheme } from "../../../ThemeProvider";
-import DOMPurify from "isomorphic-dompurify";
-import colorLuminance from "../../../utils/colorLuminance";
 import { makeStyles } from "@mui/styles";
+import DOMPurify from "isomorphic-dompurify";
+import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
+import colorLuminance from "../../../utils/colorLuminance";
 
 const CustomImage = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();

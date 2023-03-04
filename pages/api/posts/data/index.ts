@@ -24,7 +24,6 @@ export default async function handler(
     } else {
       return res.status(200).json({ data: JSON.stringify(data) });
     }
-    // return res.status(200).json({ data: JSON.stringify(data.data) });
   } else {
     return res
       .status(405)

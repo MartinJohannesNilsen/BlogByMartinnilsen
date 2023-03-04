@@ -1,7 +1,7 @@
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
-import { useTheme } from "../../../ThemeProvider";
 import DOMPurify from "isomorphic-dompurify";
+import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
 
 const CutsomQuote = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();

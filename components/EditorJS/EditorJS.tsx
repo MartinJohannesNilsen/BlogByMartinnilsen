@@ -1,9 +1,9 @@
 //./components/Editor
-import React, { memo, useEffect, useRef } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
-import { EDITOR_JS_TOOLS } from "./tools";
-import Undo from "editorjs-undo";
 import DragDrop from "editorjs-drag-drop";
+import Undo from "editorjs-undo";
+import { memo, useEffect, useRef } from "react";
+import { EDITOR_JS_TOOLS } from "./tools";
 
 //props
 type Props = {

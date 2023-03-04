@@ -1,11 +1,17 @@
 import { Box } from "@mui/material";
 import { BlockMath } from "react-katex";
+import { useTheme } from "../../../ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 
 const CustomMath = (props: EditorjsRendererProps) => {
+  const { theme } = useTheme();
   return (
     <Box my={1}>
-      {props.data.math ? <BlockMath math={props.data.math} /> : null}
+      {props.data.math ? (
+        <Box sx={{ color: theme.palette.text.primary }}>
+          <BlockMath math={props.data.math} />
+        </Box>
+      ) : null}
     </Box>
   );
 };

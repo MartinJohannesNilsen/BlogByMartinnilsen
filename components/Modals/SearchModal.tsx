@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+import { East } from "@mui/icons-material";
 import {
   Avatar,
   List,
@@ -11,13 +9,15 @@ import {
   TextField,
   useMediaQuery,
 } from "@mui/material";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import { matchSorter } from "match-sorter";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../ThemeProvider";
 import { SearchModalProps, SimplifiedPost } from "../../types";
-import { useHotkeys } from "react-hotkeys-hook";
-import { matchSorter } from "match-sorter";
-import { isMobile } from "react-device-detect";
-import { East } from "@mui/icons-material";
-import { useRouter } from "next/router";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
