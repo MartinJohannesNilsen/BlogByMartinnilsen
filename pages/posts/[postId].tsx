@@ -90,6 +90,8 @@ export const getStaticProps = async (context: any) => {
 };
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
+  const post = props.post;
+  const { isAuthorized } = useAuthorized(!post.published);
   const { theme, setTheme } = useTheme();
   const [openTOCModal, setOpenTOCModal] = useState(false);
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
@@ -104,8 +106,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     window.location.href = path;
   };
   const postId = router.query.postId;
-  const post = props.post;
-  const { isAuthorized } = useAuthorized();
 
   // Pass your custom renderers to Output
   const renderers = {
@@ -598,7 +598,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 </Box>
                 <Box flexGrow={100} />
                 {/* Share and applause section */}
-                <Box mt={6} py={2}>
+                <Box mt={6} py={3}>
                   {/* Clap with horizontal lines */}
                   <Box
                     display="flex"
@@ -662,7 +662,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   </Box> */}
                 </Box>
                 {/* Comment section */}
-                <Box mb={2}>
+                <Box mb={3}>
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMore />}>
                       <Typography>Reactions & Comments</Typography>
