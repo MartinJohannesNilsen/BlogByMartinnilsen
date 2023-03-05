@@ -24,7 +24,6 @@ import {
 } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { NextSeo } from "next-seo";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -45,6 +44,7 @@ import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
+import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
@@ -294,10 +294,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 />
                 <RWebShare
                   data={{
-                    text: 'Check out this post: "' + post.title + '"!',
+                    text: post.title,
                     url:
                       typeof window !== "undefined" ? window.location.href : "",
-                    title: "Link to post",
+                    title: "Check out this post!",
                   }}
                 >
                   <Tooltip enterDelay={2000} title={"Share"}>
@@ -412,10 +412,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 />
                 <RWebShare
                   data={{
-                    text: 'Check out this post: "' + post.title + '"!',
+                    text: post.title,
                     url:
                       typeof window !== "undefined" ? window.location.href : "",
-                    title: "Link to post",
+                    title: "Check out this post!",
                   }}
                 >
                   <Tooltip enterDelay={2000} title={"Share"}>
