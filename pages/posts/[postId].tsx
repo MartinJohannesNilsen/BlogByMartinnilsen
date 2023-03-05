@@ -1,7 +1,16 @@
-import { IosShareOutlined, MenuBook, Tune } from "@mui/icons-material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
+  AccessTime,
+  CalendarMonth,
+  Edit,
+  ExpandMore,
+  IosShareOutlined,
+  MenuBook,
+  Tune,
+} from "@mui/icons-material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   ButtonBase,
@@ -13,7 +22,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import Output from "editorjs-react-renderer";
 import DOMPurify from "isomorphic-dompurify";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
@@ -21,7 +29,7 @@ import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
-import { renderToString } from "react-dom/server";
+import { renderToStaticMarkup } from "react-dom/server";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { RWebShare } from "react-web-share";
 import { readingTime } from "reading-time-estimator";
@@ -29,13 +37,17 @@ import { useTheme } from "../../ThemeProvider";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
 import Footer from "../../components/Footer/Footer";
+import SettingsModal from "../../components/Modals/SettingsModal";
 import TOCModal from "../../components/Modals/TOCModal";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
+import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
-import colorLumincance from "../../utils/colorLuminance";
-import SettingsModal from "../../components/Modals/SettingsModal";
+import dynamic from "next/dynamic";
+// Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
+// const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
+import Output from "editorjs-react-renderer";
 
 // EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
@@ -44,13 +56,15 @@ import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
 import CustomHeader from "../../components/EditorJS/Renderers/CustomHeader";
 import CustomImage from "../../components/EditorJS/Renderers/CustomImage";
 import CustomLinkTool from "../../components/EditorJS/Renderers/CustomLinkTool";
+import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
 import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
 import CustomPersonality from "../../components/EditorJS/Renderers/CustomPersonality";
 import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import { ThemeEnum } from "../../styles/themes/themeMap";
+import CustomList from "../../components/EditorJS/Renderers/CustomList";
+import Giscus from "@giscus/react";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -68,7 +82,6 @@ export const getStaticProps = async (context: any) => {
       notFound: true, //redirects to 404 page
     };
   }
-
   return {
     props: {
       post,
@@ -85,10 +98,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const { width, height } = useWindowSize();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
+  const router = useRouter();
   const handleNavigate = (path: string) => {
+    // router.push(path); // TODO Seems to only getting a blank page
     window.location.href = path;
   };
-  const router = useRouter();
   const postId = router.query.postId;
   const post = props.post;
   const { isAuthorized } = useAuthorized();
@@ -99,8 +113,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     header: CustomHeader,
     code: CustomCode,
     divider: CustomDivider,
-    image: CustomImage,
     simpleimage: CustomImage,
+    uploadimage: CustomImage,
+    urlimage: CustomImage,
     linktool: CustomLinkTool,
     quote: CustomQuote,
     personality: CustomPersonality,
@@ -108,13 +123,15 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     video: CustomVideo,
     checklist: CustomChecklist,
     table: CustomTable,
-    // math: CustomMath,
+    math: CustomMath,
+    list: CustomList,
   };
 
   const handleThemeChange = (event: any) => {
-    event.target.checked === true
-      ? setTheme(ThemeEnum.Light)
-      : setTheme(ThemeEnum.Dark);
+    setTheme(
+      event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark,
+      true
+    );
   };
 
   const OutputElement = useMemo(() => {
@@ -129,12 +146,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   useEffect(() => {
     setIsLoading(false);
     if (typeof window !== "undefined" && window.location.hash) {
-      window.location.href = window.location.hash;
+      router.push(window.location.hash);
     }
   }, [OutputElement]);
 
   const OutputString = useMemo(() => {
-    return renderToString(OutputElement);
+    return renderToStaticMarkup(OutputElement);
   }, [OutputElement]);
 
   function extractTextContent(html: string) {
@@ -153,7 +170,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
       ) : !post ? (
         <></>
       ) : (
-        // (window.location.href = "/")
         <Box
           width="100%"
           display="flex"
@@ -191,10 +207,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 sx={{
                   fontSize: "25px",
                   textDecoration: "none",
-                  color: theme.palette.secondary.main,
+                  color: theme.palette.text.primary,
                   "&:hover": {
                     cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.33),
+                    color: theme.palette.secondary.main,
                   },
                 }}
                 href={"/"}
@@ -278,10 +294,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 />
                 <RWebShare
                   data={{
-                    text: 'Check out this post: "' + post.title + '"!',
+                    text: post.title,
                     url:
                       typeof window !== "undefined" ? window.location.href : "",
-                    title: "Link to post",
+                    title: "Check out this post!",
                   }}
                 >
                   <Tooltip enterDelay={2000} title={"Share"}>
@@ -307,7 +323,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             <Box
               display="flex"
               alignItems="center"
-              width={xs ? "380px" : sm ? "500px" : "700px"}
+              // width={xs ? "380px" : sm ? "500px" : "700px"}
+              width={"80%"}
+              px={3}
               pt={2}
               pb={2}
               position={"relative"}
@@ -326,14 +344,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 fontFamily={theme.typography.fontFamily}
                 variant="body1"
                 fontWeight="900"
-                mr={OutputString ? 7.25 : 1.25}
                 sx={{
                   fontSize: theme.typography.body1.fontSize,
                   textDecoration: "none",
-                  color: theme.palette.secondary.main,
+                  color: theme.palette.text.primary,
                   "&:hover": {
                     cursor: "pointer",
-                    color: colorLumincance(theme.palette.secondary.main, 0.33),
+                    color: theme.palette.secondary.main,
                   },
                 }}
                 href={"/"}
@@ -341,15 +358,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 {"← Home"}
               </Link>
               <Box flexGrow={100} />
-              <Box display="flex" ml={1}>
+              <Box display="flex">
                 {OutputString && (
                   <Tooltip enterDelay={2000} title={"Open table of contents"}>
-                    <ButtonBase
-                      onClick={() => setOpenTOCModal(true)}
-                      sx={{
-                        marginX: theme.spacing(0.75),
-                      }}
-                    >
+                    <ButtonBase onClick={() => setOpenTOCModal(true)}>
                       <MenuBook
                         sx={{
                           color: theme.palette.text.primary,
@@ -375,7 +387,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 )}
                 <Tooltip enterDelay={2000} title={"Open settings"}>
                   <ButtonBase
-                    sx={{ marginTop: 0.42 }}
+                    sx={{ marginTop: 0.42, marginLeft: theme.spacing(1) }}
                     onClick={() => {
                       setOpenSettingsModal(true);
                     }}
@@ -400,19 +412,25 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 />
                 <RWebShare
                   data={{
-                    text: 'Check out this post: "' + post.title + '"!',
+                    text: post.title,
                     url:
                       typeof window !== "undefined" ? window.location.href : "",
-                    title: "Link to post",
+                    title: "Check out this post!",
                   }}
                 >
                   <Tooltip enterDelay={2000} title={"Share"}>
-                    <ButtonBase>
+                    <ButtonBase
+                      sx={{
+                        marginLeft: theme.spacing(0.25),
+                        marginRight: theme.spacing(-0.75),
+                      }}
+                    >
                       <IosShareOutlined
                         sx={{
                           color: theme.palette.text.primary,
                           height: "28px",
                           width: "32px",
+                          alignText: "right",
                           "&:hover": {
                             color: theme.palette.secondary.main,
                           },
@@ -464,8 +482,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 p={2}
                 sx={{
                   minHeight: isMobile
-                    ? "calc(100vh - 73px - 120px)"
-                    : "calc(100vh - 73px - 120px)",
+                    ? "calc(100vh - 81px - 30px)"
+                    : "calc(100vh - 67px - 117px)",
                   width: xs ? "380px" : sm ? "500px" : "700px",
                   position: "relative",
                 }}
@@ -519,7 +537,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       justifyContent="center"
                       alignItems="center"
                     >
-                      <CalendarMonthIcon
+                      <CalendarMonth
                         sx={{
                           color: theme.palette.text.primary,
                           opacity: 0.6,
@@ -544,7 +562,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           year: "numeric",
                         })}
                       </Typography>
-                      <AccessTimeIcon
+                      <AccessTime
                         sx={{
                           color: theme.palette.text.primary,
                           opacity: 0.6,
@@ -579,35 +597,98 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   {OutputElement}
                 </Box>
                 <Box flexGrow={100} />
-                {/* Share and exploding */}
-                <Box
-                  mt={6}
-                  mb={3}
-                  py={2}
-                  sx={{
-                    borderTop: "2px solid rgba(100,100,100,0.2)",
-                    borderBottom: "2px solid rgba(100,100,100,0.2)",
-                  }}
-                  display="flex"
-                  justifyContent="center"
-                >
-                  <IconButton
-                    disabled={isExploding}
-                    sx={{ "&:disabled": { opacity: "0.5" } }}
-                    onClick={() => {
-                      setIsExploding(true);
-                      setTimeout(() => {
-                        setIsExploding(false);
-                      }, 4000);
-                    }}
+                {/* Share and applause section */}
+                <Box mt={6} py={2}>
+                  {/* Clap with horizontal lines */}
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    <Image
-                      src={ClappingHands.src}
-                      width={30}
-                      height={30}
-                      alt="Clapping hands button"
+                    <Box
+                      style={{
+                        width: "100%",
+                        borderBottom: "2px solid rgba(100,100,100,0.2)",
+                      }}
                     />
-                  </IconButton>
+                    <IconButton
+                      disabled={isExploding}
+                      sx={{ "&:disabled": { opacity: "0.5" }, marginX: 3 }}
+                      onClick={() => {
+                        setIsExploding(true);
+                        setTimeout(() => {
+                          setIsExploding(false);
+                        }, 3500);
+                      }}
+                    >
+                      <Image
+                        src={ClappingHands.src}
+                        width={30}
+                        height={30}
+                        alt="Clapping hands button"
+                      />
+                    </IconButton>
+                    <Box
+                      style={{
+                        width: "100%",
+                        borderBottom: "2px solid rgba(100,100,100,0.2)",
+                      }}
+                    />
+                  </Box>
+                  {/* Share and funding */}
+                  {/* <Box sx={{ display: "flex", flexDirection: "row" }}> */}
+                  {/* Left */}
+                  {/* <Box width="100%" display="flex" justifyContent="center">
+                      <Typography
+                        variant="body1"
+                        fontWeight={500}
+                        color="textPrimary"
+                        fontFamily={theme.typography.fontFamily}
+                      >
+                        Share on
+                      </Typography>
+                    </Box>
+                    <Box width={108} mx={3} />
+                    <Box width="100%" display="flex" justifyContent="center">
+                      <Typography
+                        variant="body1"
+                        fontWeight={500}
+                        color="textPrimary"
+                        fontFamily={theme.typography.fontFamily}
+                      >
+                        Share on
+                      </Typography>
+                    </Box>
+                  </Box> */}
+                </Box>
+                {/* Comment section */}
+                <Box mb={2}>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Typography>Comments</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Giscus
+                        repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
+                        repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
+                        categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
+                        id="comments"
+                        category="Comments"
+                        mapping="url"
+                        term="Welcome to the comment section!"
+                        strict="1"
+                        reactionsEnabled="1"
+                        emitMetadata="0"
+                        inputPosition="top"
+                        theme={
+                          theme.palette.mode === "light" ? "light" : "dark"
+                        }
+                        lang="en"
+                        loading="lazy"
+                        data-loading="lazy"
+                      />
+                    </AccordionDetails>
+                  </Accordion>
                 </Box>
               </Stack>
             </Grid>
@@ -639,21 +720,30 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           {isAuthorized ? (
             <Box
               onClick={() => {
-                handleNavigate(("/create/" + postId) as string);
+                handleNavigate("/create/" + postId);
               }}
               display="flex"
               gap="10px"
               sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 10 }}
             >
-              <Button
-                sx={{
-                  border: "2px solid " + theme.palette.text.primary,
-                }}
-              >
-                <Typography variant="button" color={theme.palette.text.primary}>
-                  Update
-                </Typography>
-              </Button>
+              <Tooltip enterDelay={2000} title="Edit post" placement="top">
+                <Button
+                  sx={{
+                    border: "2px solid " + theme.palette.text.primary,
+                    index: 2,
+                    backgroundColor: theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }}
+                >
+                  <Edit
+                    sx={{
+                      color: theme.palette.text.primary,
+                    }}
+                  />
+                </Button>
+              </Tooltip>
             </Box>
           ) : (
             <></>

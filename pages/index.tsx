@@ -1,19 +1,21 @@
+// @ts-nocheck
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
 } from "@mui/icons-material";
 import {
   Box,
-  Grid,
+  Unstable_Grid2 as Grid,
   IconButton,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import WavingHand from "public/assets/img/waving-hand.png";
 import { FC, useEffect, useState } from "react";
 import { useTheme } from "../ThemeProvider";
+import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import LandingViewCard from "../components/Cards/LandingViewCard";
 import Navbar from "../components/Navbar/Navbar";
 import {
@@ -21,8 +23,6 @@ import {
   getPostsOverview,
 } from "../database/overview";
 import { LandingViewProps, SimplifiedPost } from "../types";
-import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import { NextSeo } from "next-seo";
 
 function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -57,7 +57,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [chunckedPosts, setChunkedPosts] = useState<SimplifiedPost[][]>(
+  const [chunkedPosts, setChunkedPosts] = useState<SimplifiedPost[][]>(
     splitChunks(
       isAuthorized
         ? props.posts
@@ -65,9 +65,10 @@ const LandingView: FC<LandingViewProps> = (props) => {
       Number(process.env.NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE)
     )
   );
-  const [posts, setPosts] = useState<SimplifiedPost[]>(chunckedPosts[0]);
+  const [posts, setPosts] = useState<SimplifiedPost[]>(chunkedPosts[0]);
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const md = useMediaQuery(theme.breakpoints.only("md"));
+  const xl = useMediaQuery(theme.breakpoints.only("xl"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const backgroundBWBreakingPercentage = lgUp
@@ -89,20 +90,20 @@ const LandingView: FC<LandingViewProps> = (props) => {
   }, [isAuthorized]);
 
   useEffect(() => {
-    setPosts(chunckedPosts[page - 1]);
+    setPosts(chunkedPosts[page - 1]);
     setIsLoading(false);
     return () => {};
-  }, [chunckedPosts]);
+  }, [chunkedPosts]);
 
   const handleNextPage = () => {
     const endPage = Math.ceil(
-      props.posts.flat().length /
+      chunkedPosts.flat().length /
         Number(process.env.NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE)
     );
     if (page < endPage) {
       const newPage = Math.min(page + 1, endPage);
       setPage(newPage);
-      setPosts(chunckedPosts[newPage - 1]);
+      setPosts(chunkedPosts[newPage - 1]);
     }
   };
 
@@ -111,7 +112,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
     if (page > startPage) {
       const newPage = Math.max(page - 1, startPage);
       setPage(newPage);
-      setPosts(chunckedPosts[newPage - 1]);
+      setPosts(chunkedPosts[newPage - 1]);
     }
   };
 
@@ -128,7 +129,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
         <>
           <Navbar
             backgroundColor={theme.palette.primary.contrastText}
-            posts={chunckedPosts.flat()}
+            posts={chunkedPosts.flat()}
           />
           <Box
             sx={{
@@ -142,7 +143,8 @@ const LandingView: FC<LandingViewProps> = (props) => {
             <Grid
               container
               rowSpacing={mdDown ? 5 : md ? 3 : 6}
-              columnSpacing={mdDown ? 0 : 3}
+              columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+              // justifyContent="center"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -152,6 +154,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                 paddingBottom: "100px",
               }}
             >
+              {/* Welcome */}
               <Grid
                 item
                 sx={{
@@ -188,6 +191,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                   }}
                 />
               </Grid>
+              {/* Cards */}
               {posts.map((data, index) => {
                 return (
                   <Grid
@@ -245,7 +249,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                       !(
                         page <
                         Math.ceil(
-                          props.posts.flat().length /
+                          chunkedPosts.flat().length /
                             Number(
                               process.env
                                 .NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE

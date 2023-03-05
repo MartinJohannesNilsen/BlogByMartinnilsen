@@ -6,7 +6,7 @@ import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
 
-export const account = () => {
+export const Account = () => {
   const { isAuthorized, session, status } = useAuthorized(true);
   const { theme } = useTheme();
   const backgroundBWBreakingPercentage = "45%";
@@ -48,11 +48,12 @@ export const account = () => {
         </Grid>
         <Grid item xs={3.6}>
           <TileButtonCard
+            disabled={!isAuthorized}
             icon={
               isAuthorized ? (
                 <Create sx={{ color: theme.palette.text.primary }} />
               ) : (
-                <Lock sx={{ color: "red" }} />
+                <Lock sx={{ fontSize: 36, opacity: 0.25 }} />
               )
             }
             text="Create"
@@ -72,4 +73,4 @@ export const account = () => {
     </Grid>
   );
 };
-export default account;
+export default Account;

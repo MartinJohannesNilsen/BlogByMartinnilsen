@@ -1,6 +1,4 @@
-import { Person, Search } from "@mui/icons-material";
-import PostAddIcon from "@mui/icons-material/PostAdd";
-import TuneIcon from "@mui/icons-material/Tune";
+import { Person, PostAdd, Search, Tune } from "@mui/icons-material";
 import { AppBar, Box, ButtonBase, Toolbar, Tooltip } from "@mui/material";
 import $ from "jquery";
 import Image from "next/image";
@@ -14,15 +12,7 @@ import { NavbarProps } from "../../types";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import SearchModal from "../Modals/SearchModal";
 import SettingsModal from "../Modals/SettingsModal";
-
-export const handleScroll = (name: string) => {
-  $("html, body").animate(
-    {
-      scrollTop: $("#" + name)!.offset()!.top,
-    },
-    100
-  );
-};
+import { useRouter } from "next/router";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
@@ -41,14 +31,16 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   });
 
   // Navigation
+  const router = useRouter();
   const handleNavigate = (path: string) => {
-    window.location.href = path;
+    router.push(path);
   };
 
   const handleThemeChange = (event: any) => {
-    event.target.checked === true
-      ? setTheme(ThemeEnum.Light)
-      : setTheme(ThemeEnum.Dark);
+    setTheme(
+      event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark,
+      true
+    );
   };
 
   return (
@@ -69,6 +61,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           paddingBottom: isMobile ? "26px" : "0",
           maxHeight: isMobile ? "30px" : "80px",
           backgroundColor: props.backgroundColor,
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Box
@@ -76,8 +70,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           alignItems="center"
           justifyContent="center"
           sx={{
-            width: isMobile ? "96%" : "90%",
-            marginX: isMobile ? "2%" : "5%",
+            width: isMobile ? "100%" : "80%",
           }}
         >
           <ButtonBase onClick={() => handleNavigate("/")}>
@@ -89,7 +82,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               style={{ borderRadius: "0" }}
             />
           </ButtonBase>
-          <Box flexGrow={1} />
+          <Box flexGrow={100} />
           {isAuthorized ? (
             <Box mt={isMobile ? 0 : -0.2}>
               <Tooltip enterDelay={2000} title={"Upload new post"}>
@@ -98,7 +91,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                     handleNavigate("/create");
                   }}
                 >
-                  <PostAddIcon
+                  <PostAdd
                     sx={{
                       color: theme.palette.text.secondary,
                       height: "30px",
@@ -111,10 +104,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                 </ButtonBase>
               </Tooltip>
             </Box>
-          ) : (
-            <></>
-          )}
-          <Box mx={1} mt={isMobile ? 0.25 : 0}>
+          ) : null}
+          <Box mx={isMobile ? 0.25 : 1} mt={isMobile ? 0.25 : 0}>
             <Tooltip
               enterDelay={2000}
               title={`Search${
@@ -144,14 +135,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </ButtonBase>
             </Tooltip>
           </Box>
-          <Box mt={isMobile ? 0.37 : 0}>
+          <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 1}>
             <Tooltip enterDelay={2000} title={"Open settings"}>
               <ButtonBase
                 onClick={() => {
                   handleSettingsModalOpen();
                 }}
               >
-                <TuneIcon
+                <Tune
                   sx={{
                     color: theme.palette.text.secondary,
                     height: "30px",
@@ -164,7 +155,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </ButtonBase>
             </Tooltip>
           </Box>
-          <Box mx={1} mt={isMobile ? 0.25 : 0}>
+          <Box mt={isMobile ? 0.25 : 0}>
             <Tooltip enterDelay={2000} title={"Go to account"}>
               <ButtonBase href="/account">
                 <Person

@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+import { East } from "@mui/icons-material";
 import {
   Avatar,
   List,
@@ -11,18 +9,22 @@ import {
   TextField,
   useMediaQuery,
 } from "@mui/material";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import { matchSorter } from "match-sorter";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../ThemeProvider";
 import { SearchModalProps, SimplifiedPost } from "../../types";
-import { useHotkeys } from "react-hotkeys-hook";
-import { matchSorter } from "match-sorter";
-import { isMobile } from "react-device-detect";
-import { East } from "@mui/icons-material";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const router = useRouter();
   const handleNavigate = (path: string) => {
-    window.location.href = path;
+    router.push(path);
   };
   const [textFieldValue, setTextFieldValue] = useState("");
   const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);
@@ -220,6 +222,7 @@ export const SearchModal = (props: SearchModalProps) => {
                             borderRadius: "5px",
                             minWidth: "50px",
                             minHeight: "50px",
+                            background: "transparent",
                           }}
                         >
                           <img

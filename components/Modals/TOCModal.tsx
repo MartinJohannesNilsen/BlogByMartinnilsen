@@ -1,11 +1,12 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
+import { Close } from "@mui/icons-material";
 import { ButtonBase, IconButton } from "@mui/material";
-import { useTheme } from "../../ThemeProvider";
-import CloseIcon from "@mui/icons-material/Close";
-import { TOCModalProps } from "../../types";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { useTheme } from "../../ThemeProvider";
+import { TOCModalProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 
 const style = {
@@ -29,6 +30,7 @@ const style = {
 
 export const TOCModal = (props: TOCModalProps) => {
   const { theme } = useTheme();
+  const router = useRouter();
 
   function extractHeadersIfJustHeader(html: string) {
     const regex = /<h([1-6])(?:.*?id="(.*?)")?>(.*?)<\/h([1-6])>/g;
@@ -60,6 +62,7 @@ export const TOCModal = (props: TOCModalProps) => {
   }
 
   const TableOfContents = useMemo(() => {
+    if (!props.outputString) return null;
     const headings: { type: string; id: string | null; text: string }[] =
       extractHeaders(props.outputString);
     const elements: JSX.Element[] = [
@@ -67,13 +70,8 @@ export const TOCModal = (props: TOCModalProps) => {
         onClick={() => {
           props.handleModalClose();
           window.scrollTo(0, 0);
-          history.pushState(
-            "",
-            document.title,
-            window.location.pathname + window.location.search
-          );
+          router.replace(window.location.pathname + window.location.search);
         }}
-        // href={"#"}
         sx={{ maxWidth: "100%" }}
       >
         <Typography
@@ -88,7 +86,7 @@ export const TOCModal = (props: TOCModalProps) => {
             fontWeight: 600,
             fontSize: 14,
             borderBottom:
-              "2px solid " + colorLuminance(theme.palette.secondary.main, 0.33),
+              "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
             "&:hover": {
               borderBottom: "2px solid " + theme.palette.secondary.main,
             },
@@ -103,8 +101,8 @@ export const TOCModal = (props: TOCModalProps) => {
         <ButtonBase
           onClick={() => {
             props.handleModalClose();
+            router.replace(`#${heading.id}`);
           }}
-          href={`#${heading.id}`}
           sx={{ maxWidth: "100%" }}
         >
           <Typography
@@ -122,7 +120,7 @@ export const TOCModal = (props: TOCModalProps) => {
               fontSize: 14,
               borderBottom:
                 "2px solid " +
-                colorLuminance(theme.palette.secondary.main, 0.33),
+                colorLuminance(theme.palette.secondary.main, 0.15),
               "&:hover": {
                 borderBottom: "2px solid " + theme.palette.secondary.main,
               },
@@ -149,7 +147,7 @@ export const TOCModal = (props: TOCModalProps) => {
             style={{ position: "absolute", top: "5px", right: "5px" }}
             onClick={() => props.handleModalClose()}
           >
-            <CloseIcon />
+            <Close />
           </IconButton>
           <Typography
             fontFamily={theme.typography.fontFamily}

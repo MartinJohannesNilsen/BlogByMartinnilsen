@@ -27,9 +27,11 @@ export const _filterListOfSimplifiedPostsOnPublished = (
 const getAllPostIds = async (
   filterOnVisibility: boolean
 ): Promise<string[]> => {
-  const tagsSnapshot = await getDoc(doc(db, "administrative", db_document));
-  if (tagsSnapshot.exists()) {
-    const data = tagsSnapshot.data().values;
+  const postOverviewSnapshot = await getDoc(
+    doc(db, "administrative", db_document)
+  );
+  if (postOverviewSnapshot.exists()) {
+    const data = postOverviewSnapshot.data().values;
 
     const list: { id: string }[] = Object.values(
       filterOnVisibility
@@ -47,9 +49,11 @@ const getPostsOverview = async (
   sorted?: "asc" | "desc",
   filterOnPublished?: boolean
 ): Promise<SimplifiedPost[]> => {
-  const tagsSnapshot = await getDoc(doc(db, "administrative", db_document));
-  if (tagsSnapshot.exists()) {
-    let data = tagsSnapshot.data().values;
+  const postOverviewSnapshot = await getDoc(
+    doc(db, "administrative", db_document)
+  );
+  if (postOverviewSnapshot.exists()) {
+    let data = postOverviewSnapshot.data().values;
     if (sorted) {
       data = _sortListOfSimplifiedPostsOnTimestamp(data, sorted === "asc");
     }
@@ -66,9 +70,9 @@ const addPostsOverview = async (
   simplifiedPost: SimplifiedPost
 ): Promise<boolean> => {
   const docRef = doc(db, "administrative", db_document);
-  const tagsSnapshot = await getDoc(docRef);
-  if (tagsSnapshot.exists()) {
-    let values: SimplifiedPost[] = tagsSnapshot.data().values;
+  const postOverviewSnapshot = await getDoc(docRef);
+  if (postOverviewSnapshot.exists()) {
+    let values: SimplifiedPost[] = postOverviewSnapshot.data().values;
     values.map((post) => {
       if (post.id === simplifiedPost.id) {
         return false;

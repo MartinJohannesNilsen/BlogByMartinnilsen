@@ -1,4 +1,3 @@
-import React, { FC } from "react";
 import {
   Box,
   Link,
@@ -9,11 +8,12 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useRouter } from "next/router";
+import { FC } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { FooterProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";
-import { useRouter } from "next/router";
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -39,7 +39,8 @@ const Footer: FC<FooterProps> = (props) => {
             left: 0,
             bottom: 0,
             width: "100%",
-            height: "8px",
+            // height: "8px",
+            height: "5px",
             background: "transparent",
             zIndex: 1,
           }}
@@ -49,7 +50,7 @@ const Footer: FC<FooterProps> = (props) => {
               height: "100%",
               width: scrollPosition + "0%",
               // background:
-              //   "radial-gradient(circle at 10% 20%, rgb(233, 122, 129) 0%, rgb(181, 64, 149) 100.2%)",
+              // "radial-gradient(circle at 10% 20%, rgb(233, 122, 129) 0%, rgb(181, 64, 149) 100.2%)",
               background: theme.palette.secondary.main,
               transition: "background .15s ease",
             }}
@@ -74,7 +75,7 @@ const Footer: FC<FooterProps> = (props) => {
               fontFamily={theme.typography.fontFamily}
               variant="body1"
               color="textPrimary"
-              style={{ fontWeight: 600, fontSize: lgUp ? "1rem" : "0.8rem" }}
+              style={{ fontWeight: 600, fontSize: lgUp ? "1.1rem" : "0.9rem" }}
             >
               {"Made in 🇳🇴 by "}
               <Link
@@ -89,7 +90,7 @@ const Footer: FC<FooterProps> = (props) => {
                   textDecoration: "none",
                   borderBottom:
                     "2px solid " +
-                    colorLuminance(theme.palette.secondary.main, 0.33),
+                    colorLuminance(theme.palette.secondary.main, 0.15),
                   "&:hover": {
                     borderBottom: "2px solid " + theme.palette.secondary.main,
                   },

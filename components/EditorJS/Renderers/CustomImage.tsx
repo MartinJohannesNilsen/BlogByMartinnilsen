@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
-import { useTheme } from "../../../ThemeProvider";
-import DOMPurify from "isomorphic-dompurify";
-import colorLuminance from "../../../utils/colorLuminance";
 import { makeStyles } from "@mui/styles";
+import DOMPurify from "isomorphic-dompurify";
+import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
+import colorLuminance from "../../../utils/colorLuminance";
 
 const CustomImage = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
@@ -12,11 +12,12 @@ const CustomImage = (props: EditorjsRendererProps) => {
       color: theme.palette.text.primary,
       textDecoration: "none",
       borderBottom:
-        "2px solid " + colorLuminance(theme.palette.secondary.main, 0.33),
+        "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
       "&:hover": {
         borderBottom: "2px solid " + theme.palette.secondary.main,
       },
     },
+    imgStretched: {},
   }));
   const style = useStyles();
 
@@ -27,10 +28,22 @@ const CustomImage = (props: EditorjsRendererProps) => {
       width="100%"
       flexDirection="column"
       textAlign="center"
+      alignItems="center"
     >
       <img
-        style={{ width: "100%", borderRadius: "0px" }}
-        src={props.data.url}
+        style={{
+          width: "100%",
+          borderRadius: "0px",
+          maxHeight: props.data.withBackground ? 400 : "none",
+          objectFit: "contain",
+        }}
+        src={
+          props.data.url
+            ? props.data.url
+            : props.data.file.url
+            ? props.data.file.url
+            : ""
+        }
       />
       {props.data.caption && props.data.caption !== "<br>" ? (
         <Box my={2}>

@@ -32,7 +32,7 @@ export function getSelectedTheme() {
 
 export type ThemeContextType = {
   theme: Theme;
-  setTheme: (Theme: ThemeEnum) => void;
+  setTheme: (Theme: ThemeEnum, persist?: boolean) => void;
   setDefaultTheme: () => void;
   accentColor: string;
   setAccentColor: (accent: string) => void;
@@ -45,7 +45,7 @@ export const ThemeContext = createContext<ThemeContextType>({
     getSelectedTheme() === "dark"
       ? themeCreator(ThemeEnum.Dark)
       : themeCreator(ThemeEnum.Light),
-  setTheme: (theme) => {},
+  setTheme: (theme, persist) => {},
   setDefaultTheme: () => {},
   accentColor:
     typeof window !== "undefined"
@@ -106,8 +106,8 @@ const CustomThemeProvider: React.FC = (props) => {
     );
   };
 
-  const setTheme = (themeName: ThemeEnum): void => {
-    localStorage.setItem("theme", themeName);
+  const setTheme = (themeName: ThemeEnum, persist: boolean): void => {
+    if (persist) localStorage.setItem("theme", themeName);
     const underlayingTheme = themeCreator(themeName);
     _setTheme(
       createTheme({

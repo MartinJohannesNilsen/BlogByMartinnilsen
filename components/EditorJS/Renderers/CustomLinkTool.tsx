@@ -5,8 +5,8 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
 import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
 
 const CustomLinkTool = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();

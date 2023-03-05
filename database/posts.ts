@@ -22,6 +22,23 @@ import {
 import { db } from "../firebaseConfig";
 import { FirestorePost, Post } from "../types";
 
+const postConverterWithoutStringify = {
+  toFirestore: (post: Post): Post => {
+    return {
+      ...post,
+    };
+  },
+  fromFirestore: (
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
+  ): Post => {
+    const snapshotData = snapshot.data(options)! as Post;
+    return {
+      ...snapshotData,
+    };
+  },
+};
+
 const postConverter = {
   toFirestore: (post: Post): FirestorePost => {
     return {

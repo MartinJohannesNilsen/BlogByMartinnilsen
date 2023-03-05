@@ -37,17 +37,19 @@ export type EditorjsRendererProps = {
     alignment?: string;
     // Table
     withHeadings?: boolean;
-    content?: [[string]];
+    content?: string;
+    // content?: [[string]];
     // Personality
     name?: string;
     description?: string;
     photo?: string;
     // Checklist
     items?: [
-      {
-        text?: string;
-        checked?: boolean;
-      }
+      | string
+      | {
+          text?: string;
+          checked?: boolean;
+        }
     ];
     // Warning
     title?: string;
@@ -58,6 +60,8 @@ export type EditorjsRendererProps = {
     muted?: boolean;
     // Math
     math?: string;
+    // Lists
+    style?: "ordered" | "unordered";
   };
   style: {
     h1?: CSSProperties;

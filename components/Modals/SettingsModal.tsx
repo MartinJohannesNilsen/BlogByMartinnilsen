@@ -7,15 +7,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { withStyles } from "@mui/styles";
 import { useState } from "react";
+import { BlockPicker } from "react-color";
+import { isMobile } from "react-device-detect";
 import { useTheme } from "../../ThemeProvider";
 import { defaultFontFamily } from "../../styles/themes/themeDefaults";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../types";
 import { CustomSwitch as Switch } from "../Switch/Switch";
-import { BlockPicker } from "react-color";
-import { withStyles } from "@mui/styles";
-import { isMobile } from "react-device-detect";
 
 const style = {
   position: "absolute" as "absolute",
@@ -95,7 +95,10 @@ export const SettingsModal = (props: SettingsModalProps) => {
         <Box sx={style}>
           <IconButton
             style={{ position: "absolute", top: "5px", right: "5px" }}
-            onClick={() => props.handleModalClose()}
+            onClick={() => {
+              props.handleModalClose();
+              setColorPickerOpen(false);
+            }}
           >
             <Close />
           </IconButton>
@@ -159,7 +162,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
                         setTheme(
                           theme.palette.mode === "dark"
                             ? ThemeEnum.Dark
-                            : ThemeEnum.Light
+                            : ThemeEnum.Light,
+                          true
                         );
                       }}
                       disabled={fontFamily === element.font}
@@ -208,7 +212,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
                         setTheme(
                           theme.palette.mode === "dark"
                             ? ThemeEnum.Dark
-                            : ThemeEnum.Light
+                            : ThemeEnum.Light,
+                          true
                         );
                       }}
                       disabled={accentColor === element.color}
@@ -256,7 +261,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
                           setTheme(
                             theme.palette.mode === "dark"
                               ? ThemeEnum.Dark
-                              : ThemeEnum.Light
+                              : ThemeEnum.Light,
+                            true
                           );
                         }}
                       />
@@ -264,7 +270,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
                   >
                     <IconButton
                       onClick={() => {
-                        setColorPickerOpen(true);
+                        setColorPickerOpen(!colorPickerOpen);
                       }}
                       sx={{
                         width: "35px",

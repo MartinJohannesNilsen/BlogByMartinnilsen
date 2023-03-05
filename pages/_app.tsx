@@ -35,11 +35,11 @@ function MyApp({ Component, pageProps, session }) {
               openGraph={{
                 type: "website",
                 locale: "en_US",
-                url: "https://MJNTech.dev",
+                url: "https://blog.MJNTech.dev",
                 siteName: "MJNTech.dev",
                 images: [
                   {
-                    url: "https://t4.ftcdn.net/jpg/05/21/18/03/360_F_521180377_2iAVJqBQSo3cgKaVp8vMBR8asrC61DoU.jpg",
+                    url: "https://blog.mjntech.dev/icons/ogimage.png",
                   },
                 ],
               }}

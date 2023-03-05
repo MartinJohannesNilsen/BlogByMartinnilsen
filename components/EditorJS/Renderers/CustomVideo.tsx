@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import { EditorjsRendererProps } from "../../../types";
-import { useTheme } from "../../../ThemeProvider";
-import ReactPlayer from "react-player/lazy";
 import DOMPurify from "isomorphic-dompurify";
+import ReactPlayer from "react-player/lazy";
+import { useTheme } from "../../../ThemeProvider";
+import { EditorjsRendererProps } from "../../../types";
 
 const CustomVideo = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();

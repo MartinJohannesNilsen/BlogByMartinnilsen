@@ -12,7 +12,9 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import dynamic from "next/dynamic";
@@ -29,12 +31,20 @@ import { addPost, deletePost, updatePost } from "../../database/posts";
 import { addTag, getTags } from "../../database/tags";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ManageArticleViewProps, Post } from "../../types";
-import colorLumincance from "../../utils/colorLuminance";
 import { useSnackbar } from "notistack";
+import { Delete, Launch, Save, Update } from "@mui/icons-material";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
 }
+
+const OGDEFAULTS = {
+  titleOptimal: 55,
+  titleMax: 60,
+  descriptionOptimal: 55,
+  descriptionWarning: 60,
+  descriptionMax: 160,
+};
 
 const revalidatePages = async (pages: string[]) => {
   try {
@@ -113,6 +123,7 @@ export function isvalidHTTPUrl(string: string) {
 const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const { theme, setTheme } = useTheme();
   const [isPosted, setIsPosted] = useState<boolean>(false);
+  const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const [postId, setPostId] = useState<string>(
@@ -140,7 +151,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const handleNavigate = (path: string) => {
     window.location.href = path;
   };
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     setTheme(ThemeEnum.Light);
@@ -169,10 +180,14 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
   useEffect(() => {
     setIsPosted(false);
+    setIsRevalidated(false);
     return () => {};
   }, [editorJSContent]);
 
-  const width = "700px";
+  // const width = "700px";
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const sm = useMediaQuery(theme.breakpoints.only("sm"));
+  const width = xs ? "380px" : sm ? "500px" : "700px";
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setIsPosted(false);
@@ -194,9 +209,12 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         if (props.post) {
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
-              enqueueSnackbar("Saving changes ...", {
+              const key = enqueueSnackbar("Saving changes ...", {
                 variant: "default",
                 preventDuplicate: true,
+                onClick: () => {
+                  closeSnackbar(key);
+                },
               });
               updatePostsOverview({
                 id: postId,
@@ -211,15 +229,21 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
-                  enqueueSnackbar("Your changes are saved!", {
+                  const key = enqueueSnackbar("Your changes are saved!", {
                     variant: "success",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                   setIsPosted(true);
                 } else {
-                  enqueueSnackbar("An error occured!", {
+                  const key = enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                 }
               });
@@ -228,9 +252,12 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         } else {
           addPost(newObject).then((postId) => {
             if (postId) {
-              enqueueSnackbar("Creating post post ...", {
+              const key = enqueueSnackbar("Creating post ...", {
                 variant: "default",
                 preventDuplicate: true,
+                onClick: () => {
+                  closeSnackbar(key);
+                },
               });
               addPostsOverview({
                 id: postId,
@@ -245,16 +272,22 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
-                  enqueueSnackbar("The post was created!", {
+                  const key = enqueueSnackbar("Successfully created post!", {
                     variant: "success",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                   setPostId(postId);
                   setIsPosted(true);
                 } else {
-                  enqueueSnackbar("An error occured!", {
+                  const key = enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                 }
               });
@@ -277,32 +310,44 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
   const handleDeletePost = () => {
     handleDeleteDialogClose();
-    enqueueSnackbar("Deleting post ...", {
+    const key = enqueueSnackbar("Deleting post ...", {
       variant: "default",
       preventDuplicate: true,
+      onClick: () => {
+        closeSnackbar(key);
+      },
     });
     deletePost(postId).then((postWasDeleted) => {
       if (postWasDeleted) {
         deletePostsOverview(postId).then((overviewWasUpdated) => {
           if (overviewWasUpdated) {
-            enqueueSnackbar("Successfully deleted post!", {
+            const key = enqueueSnackbar("Successfully deleted post!", {
               variant: "success",
               preventDuplicate: true,
+              onClick: () => {
+                closeSnackbar(key);
+              },
             });
             revalidatePages(["/", "/posts/" + postId]).then((res) => {
               handleNavigate("/");
             });
           } else {
-            enqueueSnackbar("An error occured ...", {
+            const key = enqueueSnackbar("An error occured ...", {
               variant: "error",
               preventDuplicate: true,
+              onClick: () => {
+                closeSnackbar(key);
+              },
             });
           }
         });
       } else {
-        enqueueSnackbar("An error occured ...", {
+        const key = enqueueSnackbar("An error occured ...", {
           variant: "error",
           preventDuplicate: true,
+          onClick: () => {
+            closeSnackbar(key);
+          },
         });
       }
     });
@@ -353,25 +398,26 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <Link
-                  fontFamily={theme.typography.fontFamily}
-                  variant="body1"
-                  fontWeight="900"
-                  sx={{
-                    textDecoration: "none",
-                    color: theme.palette.secondary.main,
-                    "&:hover": {
-                      cursor: "pointer",
-                      color: colorLumincance(
-                        theme.palette.secondary.main,
-                        0.33
-                      ),
-                    },
-                  }}
-                  href={"/"}
-                >
-                  ← Home
-                </Link>
+                {!xs ? (
+                  <Link
+                    fontFamily={theme.typography.fontFamily}
+                    variant="body1"
+                    fontWeight="900"
+                    sx={{
+                      textDecoration: "none",
+                      color: theme.palette.text.primary,
+                      "&:hover": {
+                        cursor: "pointer",
+                        color: theme.palette.secondary.main,
+                      },
+                    }}
+                    href={"/"}
+                  >
+                    ← Home
+                  </Link>
+                ) : (
+                  <Box sx={{ minHeight: "40px" }} />
+                )}
               </Box>
               <Divider />
               <Typography
@@ -416,6 +462,18 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 name="title"
                 required
                 fullWidth
+                inputProps={{
+                  maxlength: OGDEFAULTS.titleMax,
+                }}
+                helperText={`${data.title.length}/${OGDEFAULTS.titleMax}`}
+                sx={{
+                  ".MuiFormHelperText-root": {
+                    color:
+                      data.title.length <= OGDEFAULTS.titleOptimal
+                        ? "green"
+                        : "#cfa602",
+                  },
+                }}
                 value={data.title}
                 onChange={handleInputChange}
               />
@@ -423,6 +481,20 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 label="Summary"
                 name="summary"
                 fullWidth
+                inputProps={{
+                  maxlength: OGDEFAULTS.descriptionMax,
+                }}
+                helperText={`${data.summary.length}/${OGDEFAULTS.descriptionMax}`}
+                sx={{
+                  ".MuiFormHelperText-root": {
+                    color:
+                      data.summary.length <= OGDEFAULTS.descriptionOptimal
+                        ? "green"
+                        : data.summary.length <= OGDEFAULTS.descriptionWarning
+                        ? theme.palette.text.primary
+                        : "#cfa602",
+                  },
+                }}
                 value={data.summary}
                 onChange={handleInputChange}
               />
@@ -475,62 +547,21 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 gap="10px"
-                sx={{ position: "fixed", left: 25, bottom: 25, zIndex: 100 }}
+                sx={
+                  xs
+                    ? { position: "fixed", left: 25, top: 25, zIndex: 100 }
+                    : { position: "fixed", left: 25, bottom: 25, zIndex: 100 }
+                }
               >
-                <Button
-                  type="submit"
-                  disabled={isPosted}
-                  sx={{
-                    border: isPosted
-                      ? "2px solid green"
-                      : "2px solid " + theme.palette.text.primary,
-                    zIndex: 2,
-                    backgroundColor: theme.palette.primary.main,
-                    "&:hover": {
-                      backgroundColor: theme.palette.primary.dark,
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="button"
-                    sx={{
-                      color: isPosted ? "green" : theme.palette.text.primary,
-                    }}
-                  >
-                    {isPosted
-                      ? props.post
-                        ? "Saved ✓"
-                        : "Posted ✓"
-                      : props.post
-                      ? "Save"
-                      : "Post"}
-                  </Typography>
-                </Button>
-
-                {isPosted ? (
+                {/* Submit button */}
+                <Tooltip enterDelay={2000} title="Save changes" placement="top">
                   <Button
-                    onClick={() => {
-                      enqueueSnackbar("Revalidating ...", {
-                        variant: "default",
-                        preventDuplicate: true,
-                      });
-                      revalidatePages(["/", "/posts/" + postId]).then((res) => {
-                        if (res.status === 200) {
-                          enqueueSnackbar("Revalidated!", {
-                            variant: "success",
-                            preventDuplicate: true,
-                          });
-                          handleNavigate(`/posts/${postId}`);
-                        } else {
-                          enqueueSnackbar("Error during revalidation!", {
-                            variant: "error",
-                            preventDuplicate: true,
-                          });
-                        }
-                      });
-                    }}
+                    type="submit"
+                    disabled={isPosted}
                     sx={{
-                      border: "2px solid " + theme.palette.text.primary,
+                      border: isPosted
+                        ? "2px solid green"
+                        : "2px solid " + theme.palette.text.primary,
                       zIndex: 2,
                       backgroundColor: theme.palette.primary.main,
                       "&:hover": {
@@ -538,15 +569,105 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                       },
                     }}
                   >
-                    <Typography
-                      variant="button"
+                    <Save
                       sx={{
-                        color: theme.palette.text.primary,
+                        color: isPosted ? "green" : theme.palette.text.primary,
+                      }}
+                    />
+                  </Button>
+                </Tooltip>
+                {/* Revalidate button */}
+                {isPosted ? (
+                  <Tooltip
+                    enterDelay={2000}
+                    title="Revalidate pages"
+                    placement="top"
+                  >
+                    <Button
+                      onClick={() => {
+                        const key = enqueueSnackbar("Revalidating pages ...", {
+                          variant: "default",
+                          preventDuplicate: true,
+                          onClick: () => {
+                            closeSnackbar(key);
+                          },
+                        });
+                        revalidatePages(["/", "/posts/" + postId]).then(
+                          (res) => {
+                            if (res.status === 200) {
+                              const key = enqueueSnackbar(
+                                "Revalidated pages!",
+                                {
+                                  variant: "success",
+                                  preventDuplicate: true,
+                                  onClick: () => {
+                                    closeSnackbar(key);
+                                  },
+                                }
+                              );
+                              setIsRevalidated(true);
+                            } else {
+                              const key = enqueueSnackbar(
+                                "Error during revalidation!",
+                                {
+                                  variant: "error",
+                                  preventDuplicate: true,
+                                  onClick: () => {
+                                    closeSnackbar(key);
+                                  },
+                                }
+                              );
+                            }
+                          }
+                        );
+                      }}
+                      disabled={isRevalidated}
+                      sx={{
+                        border: isRevalidated
+                          ? "2px solid green"
+                          : "2px solid " + theme.palette.text.primary,
+                        zIndex: 2,
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
                       }}
                     >
-                      View
-                    </Typography>
-                  </Button>
+                      <Update
+                        sx={{
+                          color: isRevalidated
+                            ? "green"
+                            : theme.palette.text.primary,
+                        }}
+                      />
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <></>
+                )}
+                {/* View button */}
+                {isPosted && isRevalidated ? (
+                  <Tooltip enterDelay={2000} title="View post" placement="top">
+                    <Button
+                      onClick={() => {
+                        handleNavigate(`/posts/${postId}`);
+                      }}
+                      sx={{
+                        border: "2px solid " + theme.palette.text.primary,
+                        zIndex: 2,
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }}
+                    >
+                      <Launch
+                        sx={{
+                          color: theme.palette.text.primary,
+                        }}
+                      />
+                    </Button>
+                  </Tooltip>
                 ) : (
                   <></>
                 )}
@@ -554,30 +675,37 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 gap="10px"
-                sx={{ position: "fixed", right: 25, bottom: 25, zIndex: 100 }}
+                sx={
+                  xs
+                    ? { position: "fixed", right: 25, top: 25, zIndex: 100 }
+                    : { position: "fixed", right: 25, bottom: 25, zIndex: 100 }
+                }
               >
                 {props.post ? (
                   <>
-                    <Button
-                      onClick={handleDeleteDialogOpen}
-                      sx={{
-                        border: "2px solid red",
-                        backgroundColor: theme.palette.primary.main,
-                        "&:hover": {
-                          backgroundColor: theme.palette.primary.dark,
-                        },
-                      }}
+                    <Tooltip
+                      enterDelay={2000}
+                      title="Delete post"
+                      placement="top"
                     >
-                      <Typography
-                        variant="button"
+                      <Button
+                        onClick={handleDeleteDialogOpen}
                         sx={{
-                          color: "red",
-                          zIndex: 2,
+                          border: "2px solid red",
+                          index: 2,
+                          backgroundColor: theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
                         }}
                       >
-                        Delete
-                      </Typography>
-                    </Button>
+                        <Delete
+                          sx={{
+                            color: "red",
+                          }}
+                        />
+                      </Button>
+                    </Tooltip>
                     <Dialog
                       open={deleteDialogOpen}
                       onClose={handleDeleteDialogClose}

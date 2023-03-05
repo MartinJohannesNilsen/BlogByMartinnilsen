@@ -1,8 +1,10 @@
 //./components/Editor
-import React, { memo, useEffect, useRef } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
+import DragDrop from "editorjs-drag-drop";
+import Undo from "editorjs-undo";
+import { memo, useEffect, useRef } from "react";
 import { EDITOR_JS_TOOLS } from "./tools";
-import { useHotkeys } from "react-hotkeys-hook";
+
 //props
 type Props = {
   data?: OutputData;
@@ -12,6 +14,7 @@ type Props = {
 const EditorBlock = ({ data, onChange, holder }: Props) => {
   //add a reference to editor
   const ref = useRef<EditorJS>();
+
   //initialize editorjs
   useEffect(() => {
     //initialize editor if we don't have a reference
@@ -20,6 +23,10 @@ const EditorBlock = ({ data, onChange, holder }: Props) => {
         holder: holder,
         tools: EDITOR_JS_TOOLS,
         data,
+        onReady: () => {
+          new Undo({ editor });
+          new DragDrop(editor);
+        },
         async onChange(api, event) {
           const data = await api.saver.save();
           onChange(data);
