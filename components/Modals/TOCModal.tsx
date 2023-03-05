@@ -62,6 +62,7 @@ export const TOCModal = (props: TOCModalProps) => {
   }
 
   const TableOfContents = useMemo(() => {
+    if (!props.outputString) return null;
     const headings: { type: string; id: string | null; text: string }[] =
       extractHeaders(props.outputString);
     const elements: JSX.Element[] = [

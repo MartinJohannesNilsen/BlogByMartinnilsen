@@ -2,11 +2,15 @@ import {
   AccessTime,
   CalendarMonth,
   Edit,
+  ExpandMore,
   IosShareOutlined,
   MenuBook,
   Tune,
 } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   ButtonBase,
@@ -26,7 +30,7 @@ import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
-import { renderToString } from "react-dom/server";
+import { renderToStaticMarkup } from "react-dom/server";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { RWebShare } from "react-web-share";
 import { readingTime } from "reading-time-estimator";
@@ -41,7 +45,9 @@ import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
-const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
+// Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
+// const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
+import Output from "editorjs-react-renderer";
 
 // EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
@@ -58,6 +64,7 @@ import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import CustomList from "../../components/EditorJS/Renderers/CustomList";
+import Giscus from "@giscus/react";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -144,7 +151,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   }, [OutputElement]);
 
   const OutputString = useMemo(() => {
-    return renderToString(OutputElement);
+    return renderToStaticMarkup(OutputElement);
   }, [OutputElement]);
 
   function extractTextContent(html: string) {
@@ -590,8 +597,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   {OutputElement}
                 </Box>
                 <Box flexGrow={100} />
-                {/* Share section */}
-                <Box mt={6} mb={3} py={2}>
+                {/* Share and applause section */}
+                <Box mt={6} py={2}>
                   {/* Clap with horizontal lines */}
                   <Box
                     display="flex"
@@ -653,6 +660,35 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       </Typography>
                     </Box>
                   </Box> */}
+                </Box>
+                {/* Comment section */}
+                <Box mb={2}>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Typography>Comments</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Giscus
+                        repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
+                        repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
+                        categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
+                        id="comments"
+                        category="Comments"
+                        mapping="url"
+                        term="Welcome to the comment section!"
+                        strict="1"
+                        reactionsEnabled="1"
+                        emitMetadata="0"
+                        inputPosition="top"
+                        theme={
+                          theme.palette.mode === "light" ? "light" : "dark"
+                        }
+                        lang="en"
+                        loading="lazy"
+                        data-loading="lazy"
+                      />
+                    </AccordionDetails>
+                  </Accordion>
                 </Box>
               </Stack>
             </Grid>

@@ -23,16 +23,16 @@ const CustomList = (props: EditorjsRendererProps) => {
   if (props.data.style === "ordered") {
     return (
       <ol style={{ color: theme.palette.text.primary }}>
-        {items.map((item) => (
-          <li>{item}</li>
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
         ))}
       </ol>
     );
   } else if (props.data.style === "unordered") {
     return (
       <ul style={{ color: theme.palette.text.primary }}>
-        {items.map((item) => (
-          <li>{item}</li>
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
         ))}
       </ul>
     );

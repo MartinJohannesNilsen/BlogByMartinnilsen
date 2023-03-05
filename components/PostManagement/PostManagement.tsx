@@ -31,7 +31,6 @@ import { addPost, deletePost, updatePost } from "../../database/posts";
 import { addTag, getTags } from "../../database/tags";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ManageArticleViewProps, Post } from "../../types";
-import colorLumincance from "../../utils/colorLuminance";
 import { useSnackbar } from "notistack";
 import { Delete, Launch, Save, Update } from "@mui/icons-material";
 let EditorBlock;
@@ -152,7 +151,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const handleNavigate = (path: string) => {
     window.location.href = path;
   };
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     setTheme(ThemeEnum.Light);
@@ -210,9 +209,12 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         if (props.post) {
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
-              enqueueSnackbar("Saving changes ...", {
+              const key = enqueueSnackbar("Saving changes ...", {
                 variant: "default",
                 preventDuplicate: true,
+                onClick: () => {
+                  closeSnackbar(key);
+                },
               });
               updatePostsOverview({
                 id: postId,
@@ -227,15 +229,21 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
-                  enqueueSnackbar("Your changes are saved!", {
+                  const key = enqueueSnackbar("Your changes are saved!", {
                     variant: "success",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                   setIsPosted(true);
                 } else {
-                  enqueueSnackbar("An error occurred!", {
+                  const key = enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                 }
               });
@@ -244,9 +252,12 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         } else {
           addPost(newObject).then((postId) => {
             if (postId) {
-              enqueueSnackbar("Creating post ...", {
+              const key = enqueueSnackbar("Creating post ...", {
                 variant: "default",
                 preventDuplicate: true,
+                onClick: () => {
+                  closeSnackbar(key);
+                },
               });
               addPostsOverview({
                 id: postId,
@@ -261,16 +272,22 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 readTime: newObject.readTime,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
-                  enqueueSnackbar("Successfully created post!", {
+                  const key = enqueueSnackbar("Successfully created post!", {
                     variant: "success",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                   setPostId(postId);
                   setIsPosted(true);
                 } else {
-                  enqueueSnackbar("An error occurred!", {
+                  const key = enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
+                    onClick: () => {
+                      closeSnackbar(key);
+                    },
                   });
                 }
               });
@@ -293,32 +310,44 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
   const handleDeletePost = () => {
     handleDeleteDialogClose();
-    enqueueSnackbar("Deleting post ...", {
+    const key = enqueueSnackbar("Deleting post ...", {
       variant: "default",
       preventDuplicate: true,
+      onClick: () => {
+        closeSnackbar(key);
+      },
     });
     deletePost(postId).then((postWasDeleted) => {
       if (postWasDeleted) {
         deletePostsOverview(postId).then((overviewWasUpdated) => {
           if (overviewWasUpdated) {
-            enqueueSnackbar("Successfully deleted post!", {
+            const key = enqueueSnackbar("Successfully deleted post!", {
               variant: "success",
               preventDuplicate: true,
+              onClick: () => {
+                closeSnackbar(key);
+              },
             });
             revalidatePages(["/", "/posts/" + postId]).then((res) => {
               handleNavigate("/");
             });
           } else {
-            enqueueSnackbar("An error occured ...", {
+            const key = enqueueSnackbar("An error occured ...", {
               variant: "error",
               preventDuplicate: true,
+              onClick: () => {
+                closeSnackbar(key);
+              },
             });
           }
         });
       } else {
-        enqueueSnackbar("An error occured ...", {
+        const key = enqueueSnackbar("An error occured ...", {
           variant: "error",
           preventDuplicate: true,
+          onClick: () => {
+            closeSnackbar(key);
+          },
         });
       }
     });
@@ -556,23 +585,38 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   >
                     <Button
                       onClick={() => {
-                        enqueueSnackbar("Revalidating pages ...", {
+                        const key = enqueueSnackbar("Revalidating pages ...", {
                           variant: "default",
                           preventDuplicate: true,
+                          onClick: () => {
+                            closeSnackbar(key);
+                          },
                         });
                         revalidatePages(["/", "/posts/" + postId]).then(
                           (res) => {
                             if (res.status === 200) {
-                              enqueueSnackbar("Revalidated pages!", {
-                                variant: "success",
-                                preventDuplicate: true,
-                              });
+                              const key = enqueueSnackbar(
+                                "Revalidated pages!",
+                                {
+                                  variant: "success",
+                                  preventDuplicate: true,
+                                  onClick: () => {
+                                    closeSnackbar(key);
+                                  },
+                                }
+                              );
                               setIsRevalidated(true);
                             } else {
-                              enqueueSnackbar("Error during revalidation!", {
-                                variant: "error",
-                                preventDuplicate: true,
-                              });
+                              const key = enqueueSnackbar(
+                                "Error during revalidation!",
+                                {
+                                  variant: "error",
+                                  preventDuplicate: true,
+                                  onClick: () => {
+                                    closeSnackbar(key);
+                                  },
+                                }
+                              );
                             }
                           }
                         );
