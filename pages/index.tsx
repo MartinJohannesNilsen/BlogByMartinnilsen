@@ -72,7 +72,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-  const backgroundBWBreakingPercentage = lgUp ? "45%" : mdDown ? "45%" : "45%";
+  const backgroundBWBreakingPercentage = lgUp ? "45%" : mdDown ? "45%" : "40%";
 
   useEffect(() => {
     setChunkedPosts(
@@ -147,7 +147,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             {/* Welcome */}
             <Box
               sx={{
-                marginTop: lgUp ? "120px" : xs ? "80px" : "80px",
+                marginTop: xs ? "80px" : "120px",
                 marginBottom: xs ? "25px" : "50px",
               }}
               display="flex"
