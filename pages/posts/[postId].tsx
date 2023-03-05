@@ -665,7 +665,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 <Box mb={2}>
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMore />}>
-                      <Typography>Comments</Typography>
+                      <Typography>Reactions & Comments</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Giscus
@@ -685,7 +685,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         }
                         lang="en"
                         loading="lazy"
-                        data-loading="lazy"
                       />
                     </AccordionDetails>
                   </Accordion>
