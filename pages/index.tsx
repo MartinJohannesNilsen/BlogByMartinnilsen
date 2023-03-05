@@ -72,11 +72,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-  const backgroundBWBreakingPercentage = lgUp
-    ? "45%"
-    : mdDown
-    ? "27.5%"
-    : "35%";
+  const backgroundBWBreakingPercentage = lgUp ? "45%" : mdDown ? "45%" : "45%";
 
   useEffect(() => {
     setChunkedPosts(
@@ -144,15 +140,15 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             display="flex"
             flexDirection="column"
             sx={{
-              height: isMobile ? "calc(100% - 85px)" : "calc(100% - 64px)",
+              height: isMobile ? "100%" : "calc(100% - 64px)",
               width: "100%",
             }}
           >
             {/* Welcome */}
             <Box
               sx={{
-                marginTop: lgUp ? "120px" : xs ? "60px" : "80px",
-                marginBottom: "50px",
+                marginTop: lgUp ? "120px" : xs ? "80px" : "80px",
+                marginBottom: xs ? "25px" : "50px",
               }}
               display="flex"
               alignItems="center"
@@ -219,7 +215,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               })}
             </Grid>
             {/* Pagination */}
-            <Box flexGrow={100} />
+            <Box flexGrow={1} />
             <Box
               display="flex"
               alignItems="center"

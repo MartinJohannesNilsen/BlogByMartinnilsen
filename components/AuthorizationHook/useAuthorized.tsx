@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function useAuthorized(required?: boolean) {
   const [isAuthorized, setIsAuthorized] = useState(false);

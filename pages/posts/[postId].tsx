@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { NextSeo } from "next-seo";
+import ErrorPage from "next/error";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -44,18 +45,20 @@ import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
 
 // EditorJS renderers
+import Giscus from "@giscus/react";
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../../components/EditorJS/Renderers/CustomCode";
 import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
 import CustomHeader from "../../components/EditorJS/Renderers/CustomHeader";
 import CustomImage from "../../components/EditorJS/Renderers/CustomImage";
 import CustomLinkTool from "../../components/EditorJS/Renderers/CustomLinkTool";
+import CustomList from "../../components/EditorJS/Renderers/CustomList";
 import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
 import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
 import CustomPersonality from "../../components/EditorJS/Renderers/CustomPersonality";
@@ -63,8 +66,6 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import CustomList from "../../components/EditorJS/Renderers/CustomList";
-import Giscus from "@giscus/react";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -91,7 +92,7 @@ export const getStaticProps = async (context: any) => {
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const post = props.post;
-  const { isAuthorized } = useAuthorized(!post.published);
+  const { isAuthorized, status } = useAuthorized(!post.published);
   const { theme, setTheme } = useTheme();
   const [openTOCModal, setOpenTOCModal] = useState(false);
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
@@ -168,6 +169,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
       {isLoading ? (
         <></>
       ) : !post ? (
+        <></>
+      ) : !post.published && status === "loading" ? (
         <></>
       ) : (
         <Box

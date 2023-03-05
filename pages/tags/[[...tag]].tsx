@@ -431,7 +431,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
               display="flex"
               alignItems="center"
               justifyContent="center"
-              mb={xs ? 5 : 10}
+              py={xs ? 5 : 10}
             >
               <IconButton
                 sx={{
