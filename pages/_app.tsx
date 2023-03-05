@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps, session }) {
               openGraph={{
                 type: "website",
                 locale: "en_US",
-                url: "https://MJNTech.dev",
+                url: "https://blog.MJNTech.dev",
                 siteName: "MJNTech.dev",
                 images: [
                   {
