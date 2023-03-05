@@ -14,17 +14,18 @@ import { NextSeo } from "next-seo";
 import Image from "next/image";
 import WavingHand from "public/assets/img/waving-hand.png";
 import { FC, useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { useTheme } from "../ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import LandingViewCard from "../components/Cards/LandingViewCard";
+import LandingPageCard from "../components/Cards/LandingPageCard";
 import Navbar from "../components/Navbar/Navbar";
 import {
   _filterListOfSimplifiedPostsOnPublished,
   getPostsOverview,
 } from "../database/overview";
-import { LandingViewProps, SimplifiedPost } from "../types";
+import { LandingPageProps, SimplifiedPost } from "../types";
 
-function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
+export function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
   let result = [];
   for (var i = 0; i < arr.length; i += chunkSize) {
@@ -52,7 +53,7 @@ export const getStaticProps = async (context: any) => {
   };
 };
 
-const LandingView: FC<LandingViewProps> = (props) => {
+const LandingPage: FC<LandingPageProps> = (props) => {
   const { isAuthorized } = useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +63,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
       isAuthorized
         ? props.posts
         : _filterListOfSimplifiedPostsOnPublished(props.posts, "published"),
-      Number(process.env.NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE)
+      Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
     )
   );
   const [posts, setPosts] = useState<SimplifiedPost[]>(chunkedPosts[0]);
@@ -72,7 +73,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const backgroundBWBreakingPercentage = lgUp
-    ? "40%"
+    ? "45%"
     : mdDown
     ? "27.5%"
     : "35%";
@@ -83,7 +84,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
         isAuthorized
           ? props.posts
           : _filterListOfSimplifiedPostsOnPublished(props.posts, "published"),
-        Number(process.env.NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE)
+        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
       )
     );
     return () => {};
@@ -98,7 +99,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
   const handleNextPage = () => {
     const endPage = Math.ceil(
       chunkedPosts.flat().length /
-        Number(process.env.NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE)
+        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
     );
     if (page < endPage) {
       const newPage = Math.min(page + 1, endPage);
@@ -126,72 +127,72 @@ const LandingView: FC<LandingViewProps> = (props) => {
       {isLoading ? (
         <></>
       ) : (
-        <>
+        <Box
+          sx={{
+            height: "100vh",
+            width: "100%",
+            background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
+          }}
+        >
           <Navbar
             backgroundColor={theme.palette.primary.contrastText}
+            textColor={theme.palette.text.secondary}
             posts={chunkedPosts.flat()}
           />
+          {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
           <Box
+            display="flex"
+            flexDirection="column"
             sx={{
-              minHeight: "calc(100vh - 64px)",
+              height: isMobile ? "calc(100% - 85px)" : "calc(100% - 64px)",
               width: "100%",
-              background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
-              // backgroundColor: theme.palette.primary.main,
             }}
           >
-            {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
+            {/* Welcome */}
+            <Box
+              sx={{
+                marginTop: lgUp ? "120px" : xs ? "50px" : "80px",
+                marginBottom: "50px",
+              }}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography
+                variant={mdDown ? "h3" : "h1"}
+                fontFamily={theme.typography.fontFamily}
+                color={theme.palette.text.secondary}
+                fontWeight={600}
+              >
+                Welcome
+              </Typography>
+              <Image
+                src={WavingHand.src}
+                width={WavingHand.width}
+                height={WavingHand.width}
+                alt="Icon of a waving hand"
+                style={{
+                  marginLeft: mdDown ? "15px" : "25px",
+                  width: mdDown
+                    ? theme.typography.h3.fontSize
+                    : theme.typography.h1.fontSize,
+                  height: mdDown
+                    ? theme.typography.h3.fontSize
+                    : theme.typography.h1.fontSize,
+                  marginBottom: "5px",
+                }}
+              />
+            </Box>
             <Grid
               container
               rowSpacing={mdDown ? 5 : md ? 3 : 6}
               columnSpacing={mdDown ? 0 : xl ? 5 : 3}
-              // justifyContent="center"
               sx={{
                 width: "100%",
-                height: "100%",
                 paddingX: lgUp ? "150px" : xs ? "50px" : "80px",
-                paddingY: lgUp ? "100px" : xs ? "50px" : "80px",
-                marginX: 0,
-                paddingBottom: "100px",
+                margin: 0,
               }}
             >
-              {/* Welcome */}
-              <Grid
-                item
-                sx={{
-                  marginBottom: mdDown ? "0px" : md ? "40px" : "20px",
-                  marginTop: mdDown ? "50px" : "20px",
-                }}
-                xs={12}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Typography
-                  variant={mdDown ? "h3" : "h1"}
-                  fontFamily={theme.typography.fontFamily}
-                  color={theme.palette.text.secondary}
-                  fontWeight={600}
-                >
-                  Welcome
-                </Typography>
-                <Image
-                  src={WavingHand.src}
-                  width={WavingHand.width}
-                  height={WavingHand.width}
-                  alt="Icon of a waving hand"
-                  style={{
-                    marginLeft: mdDown ? "15px" : "25px",
-                    width: mdDown
-                      ? theme.typography.h3.fontSize
-                      : theme.typography.h1.fontSize,
-                    height: mdDown
-                      ? theme.typography.h3.fontSize
-                      : theme.typography.h1.fontSize,
-                    marginBottom: "5px",
-                  }}
-                />
-              </Grid>
-              {/* Cards */}
               {posts.map((data, index) => {
                 return (
                   <Grid
@@ -203,7 +204,7 @@ const LandingView: FC<LandingViewProps> = (props) => {
                     xl={6}
                     // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
                   >
-                    <LandingViewCard
+                    <LandingPageCard
                       id={data.id}
                       image={data.image}
                       title={data.title}
@@ -216,59 +217,52 @@ const LandingView: FC<LandingViewProps> = (props) => {
                   </Grid>
                 );
               })}
-              <Grid
-                item
-                xs={12}
-                mt={4}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Box display="flex" alignItems="center">
-                  <IconButton
-                    sx={{
-                      color: "text.primary",
-                    }}
-                    disabled={page <= 1}
-                    onClick={() => handlePreviousPage()}
-                  >
-                    <ArrowBackIosNewSharp color="inherit" />
-                  </IconButton>
-                  <Typography
-                    marginX={3}
-                    variant="subtitle2"
-                    color="textPrimary"
-                  >
-                    {page}
-                  </Typography>
-                  <IconButton
-                    sx={{
-                      color: "text.primary",
-                    }}
-                    disabled={
-                      !(
-                        page <
-                        Math.ceil(
-                          chunkedPosts.flat().length /
-                            Number(
-                              process.env
-                                .NEXT_PUBLIC_LANDING_VIEW_POSTS_PER_PAGE
-                            )
-                        )
-                      )
-                    }
-                    onClick={() => handleNextPage()}
-                  >
-                    <ArrowForwardIosSharp color="inherit" />
-                  </IconButton>
-                </Box>
-              </Grid>
             </Grid>
+            {/* Pagination */}
+            <Box flexGrow={100} />
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              py={xs ? 5 : 10}
+            >
+              <IconButton
+                sx={{
+                  color: "text.primary",
+                }}
+                disabled={page <= 1}
+                onClick={() => handlePreviousPage()}
+              >
+                <ArrowBackIosNewSharp color="inherit" />
+              </IconButton>
+              <Typography marginX={3} variant="subtitle2" color="textPrimary">
+                {page}
+              </Typography>
+              <IconButton
+                sx={{
+                  color: "text.primary",
+                }}
+                disabled={
+                  !(
+                    page <
+                    Math.ceil(
+                      chunkedPosts.flat().length /
+                        Number(
+                          process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE
+                        )
+                    )
+                  )
+                }
+                onClick={() => handleNextPage()}
+              >
+                <ArrowForwardIosSharp color="inherit" />
+              </IconButton>
+            </Box>
             {/* </RevealFromDownOnEnter> */}
           </Box>
-        </>
+        </Box>
       )}
     </Box>
   );
 };
-export default LandingView;
+export default LandingPage;

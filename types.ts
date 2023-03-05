@@ -141,6 +141,7 @@ export type NavbarSection = {
 
 export type NavbarProps = {
   backgroundColor: string;
+  textColor: string;
   posts: SimplifiedPost[];
 };
 
@@ -192,6 +193,7 @@ export type ManageArticleViewProps = {
   post?: Post;
 };
 export type ReadArticleViewProps = { post: Post };
-export type LandingViewProps = { posts: SimplifiedPost[] };
+export type LandingPageProps = { posts: SimplifiedPost[] };
+export type TagsPageProps = { posts: SimplifiedPost[]; tags: string[] };
 export type ListViewProps = {};
 export type FooterProps = {};

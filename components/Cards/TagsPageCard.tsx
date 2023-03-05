@@ -13,7 +13,7 @@ import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { BlogpostCardProps } from "../../types";
 
-export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
+export const TagsPageCard: FC<BlogpostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
@@ -52,7 +52,6 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
       <CardActionArea
         href={`/posts/${props.id}`}
         sx={{
-          height: "350px",
           width: "100%",
           "&:hover": {
             backgroundColor: theme.palette.primary.main,
@@ -61,34 +60,23 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
         }}
       >
         <Box display="flex" flexDirection="column" sx={{ height: "100%" }}>
-          {/* Image and type/tag rows */}
+          {/* Image, title and summary */}
           <Box display="flex" flexDirection="row">
-            <Image
-              src={props.image}
-              alt=""
-              width={80}
-              height={80}
-              object-fit="cover"
-              style={{ borderRadius: 2 }}
-              // fill={true}
-            />
+            {/* Title and summary */}
             <Box
+              pr="15px"
               display="flex"
               flexDirection="column"
-              justifyContent="flex-start"
-              sx={{
-                height: "80px",
-                textAlign: "left",
-                padding: "10px 0px 10px 12px",
-                maxWidth: "500px",
-              }}
+              sx={{ maxWidth: "650px" }}
             >
               <Typography
-                variant="body1"
+                variant={"h6"}
+                fontSize={xs ? "16px" : ""}
                 fontWeight={700}
-                color={theme.palette.secondary.main}
+                color="textPrimary"
                 fontFamily={theme.typography.fontFamily}
                 sx={{
+                  // lineHeight: "26px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "webkit-flex",
@@ -96,19 +84,18 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
                   lineClamp: 1,
                   WebkitBoxOrient: "vertical",
                 }}
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    props.type
-                      ? "//&nbsp;&nbsp;" + props.type + "&nbsp;&nbsp;//"
-                      : ""
-                  ),
-                }}
-              />
+              >
+                {props.title}
+              </Typography>
               <Typography
+                mt={1}
                 variant="body2"
+                fontSize={xs ? "14px" : ""}
+                fontWeight={500}
                 color="textPrimary"
                 fontFamily={theme.typography.fontFamily}
                 sx={{
+                  // lineHeight: "26px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "webkit-flex",
@@ -117,59 +104,21 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
                   WebkitBoxOrient: "vertical",
                 }}
               >
-                {props.tags.map((tag, index) =>
-                  index != 0 ? ", " + tag : tag
-                )}
+                {props.summary}
               </Typography>
             </Box>
+            <Box flexGrow={1} />
+            <Image
+              src={props.image}
+              alt=""
+              width={xs ? 70 : 82}
+              height={xs ? 70 : 82}
+              object-fit="cover"
+              style={{ borderRadius: 2 }}
+            />
           </Box>
-          {/* Title and summary */}
-          <Box
-            display="flex"
-            flexDirection="column"
-            pt={2}
-            sx={{ maxWidth: "650px" }}
-          >
-            <Typography
-              variant="h6"
-              fontWeight={700}
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-              sx={{
-                lineHeight: "26px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "webkit-flex",
-                WebkitLineClamp: 2,
-                lineClamp: 2,
-                WebkitBoxOrient: "vertical",
-              }}
-            >
-              {props.title}
-            </Typography>
-            <Typography
-              mt={1}
-              variant="body1"
-              fontWeight={500}
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-              sx={{
-                lineHeight: "26px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "webkit-flex",
-                WebkitLineClamp: 5,
-                lineClamp: 5,
-                WebkitBoxOrient: "vertical",
-              }}
-            >
-              {props.summary}
-            </Typography>
-          </Box>
-          {/*  */}
-          <Box sx={{ flexGrow: 100 }} />
           {/* Information gutter */}
-          <Box>
+          <Box pt="10px">
             <Box display="flex" flexDirection="row" alignItems="center">
               {/* Timestamp */}
               <CalendarMonth
@@ -206,4 +155,4 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
   );
 };
 
-export default LandingViewCard;
+export default TagsPageCard;

@@ -1,6 +1,5 @@
-import { Person, PostAdd, Search, Tune } from "@mui/icons-material";
+import { Person, PostAdd, Search, Tag, Tune } from "@mui/icons-material";
 import { AppBar, Box, ButtonBase, Toolbar, Tooltip } from "@mui/material";
-import $ from "jquery";
 import Image from "next/image";
 import logo from "public/assets/img/terminal.png";
 import { FC, useState } from "react";
@@ -93,7 +92,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                 >
                   <PostAdd
                     sx={{
-                      color: theme.palette.text.secondary,
+                      color: props.textColor,
                       height: "30px",
                       width: "30px",
                       "&:hover": {
@@ -105,7 +104,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </Tooltip>
             </Box>
           ) : null}
-          <Box mx={isMobile ? 0.25 : 1} mt={isMobile ? 0.25 : 0}>
+          <Box mt={isMobile ? 0.25 : 0} mx={isMobile ? 0.25 : 0.5}>
             <Tooltip
               enterDelay={2000}
               title={`Search${
@@ -124,7 +123,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               >
                 <Search
                   sx={{
-                    color: theme.palette.text.secondary,
+                    color: props.textColor,
                     height: "30px",
                     width: "30px",
                     "&:hover": {
@@ -135,7 +134,23 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               </ButtonBase>
             </Tooltip>
           </Box>
-          <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 1}>
+          <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
+            <Tooltip enterDelay={2000} title={"Go to tags"}>
+              <ButtonBase href="/tags">
+                <Tag
+                  sx={{
+                    color: props.textColor,
+                    height: "30px",
+                    width: "30px",
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
+                  }}
+                />
+              </ButtonBase>
+            </Tooltip>
+          </Box>
+          <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
             <Tooltip enterDelay={2000} title={"Open settings"}>
               <ButtonBase
                 onClick={() => {
@@ -144,7 +159,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               >
                 <Tune
                   sx={{
-                    color: theme.palette.text.secondary,
+                    color: props.textColor,
                     height: "30px",
                     width: "30px",
                     "&:hover": {
@@ -160,7 +175,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               <ButtonBase href="/account">
                 <Person
                   sx={{
-                    color: theme.palette.text.secondary,
+                    color: props.textColor,
                     height: "30px",
                     width: "30px",
                     "&:hover": {
