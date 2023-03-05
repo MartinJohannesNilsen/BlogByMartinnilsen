@@ -151,7 +151,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             {/* Welcome */}
             <Box
               sx={{
-                marginTop: lgUp ? "120px" : xs ? "50px" : "80px",
+                marginTop: lgUp ? "120px" : xs ? "60px" : "80px",
                 marginBottom: "50px",
               }}
               display="flex"
