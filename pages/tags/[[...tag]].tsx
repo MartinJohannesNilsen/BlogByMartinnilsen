@@ -417,7 +417,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
                       fontWeight={600}
                       sx={{ opacity: 0.5 }}
                     >
-                      There are no posts yet with this tag ...
+                      No posts yet with this tag ...
                     </Typography>
                   </Box>
                 )}
