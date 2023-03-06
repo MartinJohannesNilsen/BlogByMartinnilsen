@@ -72,7 +72,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-  const backgroundBWBreakingPercentage = lgUp ? "45%" : mdDown ? "45%" : "40%";
+  const backgroundBWBreakingPercentage = lgUp ? "45%" : mdDown ? "35%" : "35%";
 
   useEffect(() => {
     setChunkedPosts(
@@ -127,7 +127,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
           sx={{
             height: "100vh",
             width: "100%",
-            background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
+            background: theme.palette.primary.main,
           }}
         >
           <Navbar
@@ -141,6 +141,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             flexDirection="column"
             sx={{
               height: isMobile ? "100%" : "calc(100% - 64px)",
+              background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
               paddingTop: isMobile ? "50px" : "0",
               width: "100%",
             }}
@@ -148,8 +149,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             {/* Welcome */}
             <Box
               sx={{
-                marginTop: xs ? "80px" : "120px",
-                marginBottom: xs ? "25px" : "50px",
+                // marginTop: xs ? "30px" : isMobile ? "2%" : "8%",
+                // marginBottom: xs ? "15px" : isMobile ? "2%" : "5%",
+                marginTop: xs ? "30px" : "50px",
+                marginBottom: xs ? "15px" : "20px",
               }}
               display="flex"
               alignItems="center"

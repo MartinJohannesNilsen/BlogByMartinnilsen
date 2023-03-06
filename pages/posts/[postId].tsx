@@ -220,7 +220,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               >
                 ←
               </Link>
-              {OutputString && (
+              {OutputString ? (
                 <Tooltip enterDelay={2000} title={"Open table of contents"}>
                   <ButtonBase
                     onClick={() => setOpenTOCModal(true)}
@@ -241,6 +241,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     />
                   </ButtonBase>
                 </Tooltip>
+              ) : (
+                <Box sx={{ height: "32px", width: "32px" }} />
               )}
               {/* TOCModal */}
               {OutputString && (
@@ -362,7 +364,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               </Link>
               <Box flexGrow={100} />
               <Box display="flex">
-                {OutputString && (
+                {OutputString ? (
                   <Tooltip enterDelay={2000} title={"Open table of contents"}>
                     <ButtonBase onClick={() => setOpenTOCModal(true)}>
                       <MenuBook
@@ -377,6 +379,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       />
                     </ButtonBase>
                   </Tooltip>
+                ) : (
+                  <Box sx={{ height: "32px", width: "32px" }} />
                 )}
                 {/* TOCModal */}
                 {OutputString && (

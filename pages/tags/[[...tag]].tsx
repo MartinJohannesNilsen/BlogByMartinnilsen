@@ -286,7 +286,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
               </Typography>
             </Box>
             {/* Grid of tags and posts */}
-            <Grid container py={mdDown ? 2 : 5} rowSpacing={4}>
+            <Grid container py={xs ? 2 : 4} rowSpacing={xs ? 2 : 4}>
               {/* Tags */}
               <Grid item xs={12} lg={4} order={{ lg: 3, xl: 3 }}>
                 <Box>
