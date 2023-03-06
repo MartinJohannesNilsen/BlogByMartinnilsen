@@ -33,6 +33,7 @@ import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ManageArticleViewProps, Post } from "../../types";
 import { useSnackbar } from "notistack";
 import { Delete, Launch, Save, Update } from "@mui/icons-material";
+import { useHotkeys } from "react-hotkeys-hook";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -184,7 +185,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     return () => {};
   }, [editorJSContent]);
 
-  // const width = "700px";
+  // Width
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const width = xs ? "380px" : sm ? "500px" : "700px";
@@ -369,6 +370,12 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     setIsPosted(false);
     setData({ ...data, published: event.target.value === "true" });
   };
+
+  // TODO implement useHotKeys onSubmit. Now it gives empty object. Make sure to validate form and save non-empty object
+  // useHotkeys(["Control+s", "Meta+s"], (event) => {
+  //   event.preventDefault();
+  //   handleSubmit(event);
+  // });
 
   return (
     <>

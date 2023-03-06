@@ -141,6 +141,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             flexDirection="column"
             sx={{
               height: isMobile ? "100%" : "calc(100% - 64px)",
+              paddingTop: isMobile ? "50px" : "0",
               width: "100%",
             }}
           >
