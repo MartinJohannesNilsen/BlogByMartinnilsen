@@ -140,6 +140,7 @@ export const SearchModal = (props: SearchModalProps) => {
                     (e.metaKey && e.key === "k") ||
                     (e.ctrlKey && e.key === "k")
                   ) {
+                    e.preventDefault();
                     props.handleModalClose();
                   } else if (e.key === "ArrowUp") {
                     setActiveItem(Math.max(0, activeItem - 1));
