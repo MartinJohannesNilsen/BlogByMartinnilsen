@@ -186,15 +186,15 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           {isMobile ? (
             // Mobile
             <Box
-              display="flex"
-              alignItems="center"
-              width={"95%"}
+              width={"100%"}
               pt={5}
               pb={0.5}
               position={"fixed"}
+              display="flex"
+              justifyContent={"center"}
               sx={{
-                top: 0,
                 backgroundColor: theme.palette.primary.dark,
+                top: 0,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -203,115 +203,43 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 WebkitTransform: "translateZ(0)",
               }}
             >
-              <Link
-                fontFamily={theme.typography.fontFamily}
-                variant="body1"
-                fontWeight="900"
+              <Box
+                display="flex"
+                alignItems="center"
                 sx={{
-                  fontSize: "25px",
-                  textDecoration: "none",
-                  color: theme.palette.text.primary,
-                  "&:hover": {
-                    cursor: "pointer",
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-                href={"/"}
-              >
-                ←
-              </Link>
-              {OutputString ? (
-                <Tooltip enterDelay={2000} title={"Open table of contents"}>
-                  <ButtonBase
-                    onClick={() => setOpenTOCModal(true)}
-                    sx={{
-                      marginTop: -0.4,
-                      marginX: theme.spacing(0.75),
-                    }}
-                  >
-                    <MenuBook
-                      sx={{
-                        color: theme.palette.text.primary,
-                        height: "32px",
-                        width: "32px",
-                        "&:hover": {
-                          color: theme.palette.secondary.main,
-                        },
-                      }}
-                    />
-                  </ButtonBase>
-                </Tooltip>
-              ) : (
-                <Box sx={{ height: "32px", width: "32px" }} />
-              )}
-              {/* TOCModal */}
-              {OutputString && (
-                <TOCModal
-                  open={openTOCModal}
-                  handleModalOpen={() => setOpenTOCModal(true)}
-                  handleModalClose={() => setOpenTOCModal(false)}
-                  outputString={OutputString}
-                  postTitle={post.title}
-                />
-              )}
-              <Box flexGrow={100} />
-              <Typography
-                fontFamily={theme.typography.fontFamily}
-                variant="body1"
-                fontWeight="800"
-                textAlign="center"
-                color={theme.palette.text.primary}
-                marginX={1}
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
+                  width: "95%",
                 }}
               >
-                {post.title}
-              </Typography>
-              <Box flexGrow={100} />
-              <Box display="flex" ml={1}>
-                <Tooltip enterDelay={2000} title={"Open settings"}>
-                  <ButtonBase
-                    sx={{ marginBottom: 0 }}
-                    onClick={() => {
-                      setOpenSettingsModal(true);
-                    }}
-                  >
-                    <Tune
-                      sx={{
-                        color: theme.palette.text.primary,
-                        height: "32px",
-                        width: "32px",
-                        "&:hover": {
-                          color: theme.palette.secondary.main,
-                        },
-                      }}
-                    />
-                  </ButtonBase>
-                </Tooltip>
-                <SettingsModal
-                  open={openSettingsModal}
-                  handleModalOpen={() => setOpenSettingsModal(true)}
-                  handleModalClose={() => setOpenSettingsModal(false)}
-                  handleThemeChange={handleThemeChange}
-                />
-                <RWebShare
-                  data={{
-                    text: post.title,
-                    url:
-                      typeof window !== "undefined" ? window.location.href : "",
-                    title: "Check out this post!",
+                <Link
+                  fontFamily={theme.typography.fontFamily}
+                  variant="body1"
+                  fontWeight="900"
+                  sx={{
+                    fontSize: "25px",
+                    textDecoration: "none",
+                    color: theme.palette.text.primary,
+                    "&:hover": {
+                      cursor: "pointer",
+                      color: theme.palette.secondary.main,
+                    },
                   }}
+                  href={"/"}
                 >
-                  <Tooltip enterDelay={2000} title={"Share"}>
-                    <ButtonBase>
-                      <IosShareOutlined
+                  ←
+                </Link>
+                {OutputString ? (
+                  <Tooltip enterDelay={2000} title={"Open table of contents"}>
+                    <ButtonBase
+                      onClick={() => setOpenTOCModal(true)}
+                      sx={{
+                        marginTop: -0.4,
+                        marginX: theme.spacing(0.75),
+                      }}
+                    >
+                      <MenuBook
                         sx={{
-                          marginBottom: 0.33,
                           color: theme.palette.text.primary,
-                          height: "28px",
+                          height: "32px",
                           width: "32px",
                           "&:hover": {
                             color: theme.palette.secondary.main,
@@ -320,7 +248,89 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       />
                     </ButtonBase>
                   </Tooltip>
-                </RWebShare>
+                ) : (
+                  <Box sx={{ height: "32px", width: "32px" }} />
+                )}
+                {/* TOCModal */}
+                {OutputString && (
+                  <TOCModal
+                    open={openTOCModal}
+                    handleModalOpen={() => setOpenTOCModal(true)}
+                    handleModalClose={() => setOpenTOCModal(false)}
+                    outputString={OutputString}
+                    postTitle={post.title}
+                  />
+                )}
+                <Box flexGrow={100} />
+                <Typography
+                  fontFamily={theme.typography.fontFamily}
+                  variant="body1"
+                  fontWeight="800"
+                  textAlign="center"
+                  color={theme.palette.text.primary}
+                  marginX={1}
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {post.title}
+                </Typography>
+                <Box flexGrow={100} />
+                <Box display="flex" ml={1}>
+                  <Tooltip enterDelay={2000} title={"Open settings"}>
+                    <ButtonBase
+                      sx={{ marginBottom: 0 }}
+                      onClick={() => {
+                        setOpenSettingsModal(true);
+                      }}
+                    >
+                      <Tune
+                        sx={{
+                          color: theme.palette.text.primary,
+                          height: "32px",
+                          width: "32px",
+                          "&:hover": {
+                            color: theme.palette.secondary.main,
+                          },
+                        }}
+                      />
+                    </ButtonBase>
+                  </Tooltip>
+                  <SettingsModal
+                    open={openSettingsModal}
+                    handleModalOpen={() => setOpenSettingsModal(true)}
+                    handleModalClose={() => setOpenSettingsModal(false)}
+                    handleThemeChange={handleThemeChange}
+                  />
+                  <RWebShare
+                    data={{
+                      text: post.title,
+                      url:
+                        typeof window !== "undefined"
+                          ? window.location.href
+                          : "",
+                      title: "Check out this post!",
+                    }}
+                  >
+                    <Tooltip enterDelay={2000} title={"Share"}>
+                      <ButtonBase>
+                        <IosShareOutlined
+                          sx={{
+                            marginBottom: 0.33,
+                            color: theme.palette.text.primary,
+                            height: "28px",
+                            width: "32px",
+                            "&:hover": {
+                              color: theme.palette.secondary.main,
+                            },
+                          }}
+                        />
+                      </ButtonBase>
+                    </Tooltip>
+                  </RWebShare>
+                </Box>
               </Box>
             </Box>
           ) : (
