@@ -189,15 +189,15 @@ const TagsPage: FC<TagsPageProps> = (props) => {
     return <ErrorPage statusCode={403} title="Unauthorized access" />;
   }
   if (
-    (tag && router.query.tag.length > 1) ||
-    (tag &&
-      !["all", "published", "unpublished"]
-        .concat(props.tags)
-        .find(
-          (item) =>
-            tag.toLowerCase().replace(" ", "") ===
-            item.toLowerCase().replace(" ", "")
-        ))
+    // (tag && router.query.tag.length > 1) ||
+    tag &&
+    !["all", "published", "unpublished"]
+      .concat(props.tags)
+      .find(
+        (item) =>
+          tag.toLowerCase().replace(" ", "") ===
+          item.toLowerCase().replace(" ", "")
+      )
   ) {
     return <ErrorPage statusCode={404} />;
   }

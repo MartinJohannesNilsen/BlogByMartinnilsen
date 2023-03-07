@@ -94,7 +94,9 @@ export const ShareModal = (props: ShareModalProps) => {
           <SharePreviewCard
             title={props.data.title}
             summary={props.data.summary}
-            image={props.data.image}
+            // TODO ogimages should be correct size for larger cards
+            // image={props.data.image}
+            image={"https://blog.mjntech.dev/icons/ogimage.png"}
             url={window.location.host}
             width={props.data.width}
             height={props.data.height}

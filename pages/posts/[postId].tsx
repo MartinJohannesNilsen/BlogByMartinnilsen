@@ -322,32 +322,46 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       handleModalClose={() => setOpenSettingsModal(false)}
                       handleThemeChange={handleThemeChange}
                     />
-                    <RWebShare
-                      data={{
-                        text: post.title,
-                        url:
-                          typeof window !== "undefined"
-                            ? window.location.href
-                            : "",
-                        title: "Check out this post!",
-                      }}
-                    >
-                      <Tooltip enterDelay={2000} title={"Share"}>
-                        <ButtonBase>
-                          <IosShareOutlined
-                            sx={{
-                              marginBottom: 0.33,
-                              color: theme.palette.text.primary,
-                              height: "28px",
-                              width: "32px",
-                              "&:hover": {
-                                color: theme.palette.secondary.main,
-                              },
-                            }}
-                          />
-                        </ButtonBase>
-                      </Tooltip>
-                    </RWebShare>
+                    {!post.published ? (
+                      <IosShareOutlined
+                        sx={{
+                          marginBottom: 0.33,
+                          color: theme.palette.text.primary,
+                          height: "28px",
+                          width: "32px",
+                          "&:hover": {
+                            color: theme.palette.secondary.main,
+                          },
+                        }}
+                      />
+                    ) : (
+                      <RWebShare
+                        data={{
+                          text: post.title,
+                          url:
+                            typeof window !== "undefined"
+                              ? window.location.href
+                              : "",
+                          title: "Check out this post!",
+                        }}
+                      >
+                        <Tooltip enterDelay={2000} title={"Share"}>
+                          <ButtonBase>
+                            <IosShareOutlined
+                              sx={{
+                                marginBottom: 0.33,
+                                color: theme.palette.text.primary,
+                                height: "28px",
+                                width: "32px",
+                                "&:hover": {
+                                  color: theme.palette.secondary.main,
+                                },
+                              }}
+                            />
+                          </ButtonBase>
+                        </Tooltip>
+                      </RWebShare>
+                    )}
                   </Box>
                 </Box>
               </Box>
@@ -448,6 +462,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   {/* ShareModal */}
                   <Tooltip enterDelay={2000} title={"Share"}>
                     <ButtonBase
+                      disabled={!post.published}
                       onClick={() => {
                         setOpenShareModal(true);
                       }}
@@ -658,6 +673,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         <>
                           <Tooltip enterDelay={2000} title={"Share"}>
                             <IconButton
+                              disabled={!post.published}
                               sx={{ marginRight: 3 }}
                               onClick={() => {
                                 setOpenShareModal(true);
