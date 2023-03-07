@@ -1,5 +1,6 @@
 import {
   AccessTime,
+  ArrowBack,
   CalendarMonth,
   Edit,
   ExpandMore,
@@ -24,7 +25,6 @@ import {
 } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { NextSeo } from "next-seo";
-import ErrorPage from "next/error";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -66,6 +66,7 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
+import ShareModal from "../../components/Modals/ShareModal";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -96,6 +97,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const { theme, setTheme } = useTheme();
   const [openTOCModal, setOpenTOCModal] = useState(false);
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
+  const [openShareModal, setOpenShareModal] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { width, height } = useWindowSize();
@@ -210,23 +212,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   width: "95%",
                 }}
               >
-                <Link
-                  fontFamily={theme.typography.fontFamily}
-                  variant="body1"
-                  fontWeight="900"
+                <ArrowBack
                   sx={{
+                    fontFamily: theme.typography.fontFamily,
                     fontSize: "25px",
-                    textDecoration: "none",
                     color: theme.palette.text.primary,
                     "&:hover": {
                       cursor: "pointer",
                       color: theme.palette.secondary.main,
                     },
                   }}
-                  href={"/"}
-                >
-                  ←
-                </Link>
+                  onClick={() => router.push("/")}
+                />
                 {OutputString ? (
                   <Tooltip enterDelay={2000} title={"Open table of contents"}>
                     <ButtonBase
@@ -338,7 +335,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             <Box
               display="flex"
               alignItems="center"
-              // width={xs ? "380px" : sm ? "500px" : "700px"}
               width={"80%"}
               px={3}
               pt={2}
@@ -402,6 +398,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     postTitle={post.title}
                   />
                 )}
+                {/* SettingsModal */}
                 <Tooltip enterDelay={2000} title={"Open settings"}>
                   <ButtonBase
                     sx={{ marginTop: 0.42, marginLeft: theme.spacing(1) }}
@@ -427,35 +424,43 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   handleModalClose={() => setOpenSettingsModal(false)}
                   handleThemeChange={handleThemeChange}
                 />
-                <RWebShare
-                  data={{
-                    text: post.title,
-                    url:
-                      typeof window !== "undefined" ? window.location.href : "",
-                    title: "Check out this post!",
-                  }}
-                >
-                  <Tooltip enterDelay={2000} title={"Share"}>
-                    <ButtonBase
+                {/* ShareModal */}
+                <Tooltip enterDelay={2000} title={"Share"}>
+                  <ButtonBase
+                    onClick={() => {
+                      setOpenShareModal(true);
+                    }}
+                    sx={{
+                      marginLeft: theme.spacing(0.25),
+                      marginRight: theme.spacing(-0.75),
+                    }}
+                  >
+                    <IosShareOutlined
                       sx={{
-                        marginLeft: theme.spacing(0.25),
-                        marginRight: theme.spacing(-0.75),
+                        color: theme.palette.text.primary,
+                        height: "28px",
+                        width: "32px",
+                        alignText: "right",
+                        "&:hover": {
+                          color: theme.palette.secondary.main,
+                        },
                       }}
-                    >
-                      <IosShareOutlined
-                        sx={{
-                          color: theme.palette.text.primary,
-                          height: "28px",
-                          width: "32px",
-                          alignText: "right",
-                          "&:hover": {
-                            color: theme.palette.secondary.main,
-                          },
-                        }}
-                      />
-                    </ButtonBase>
-                  </Tooltip>
-                </RWebShare>
+                    />
+                  </ButtonBase>
+                </Tooltip>
+                <ShareModal
+                  open={openShareModal}
+                  handleModalOpen={() => setOpenShareModal(true)}
+                  handleModalClose={() => setOpenShareModal(false)}
+                  data={{
+                    title: post.title,
+                    summary: post.summary,
+                    image: post.image,
+                    url: window.location.href,
+                    height: xs ? 100 : 130,
+                    width: xs ? 400 : 500,
+                  }}
+                />
               </Box>
             </Box>
           )}
@@ -633,23 +638,63 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         borderBottom: "2px solid rgba(100,100,100,0.2)",
                       }}
                     />
-                    <IconButton
-                      disabled={isExploding}
-                      sx={{ "&:disabled": { opacity: "0.5" }, marginX: 3 }}
-                      onClick={() => {
-                        setIsExploding(true);
-                        setTimeout(() => {
-                          setIsExploding(false);
-                        }, 3500);
-                      }}
-                    >
-                      <Image
-                        src={ClappingHands.src}
-                        width={30}
-                        height={30}
-                        alt="Clapping hands button"
-                      />
-                    </IconButton>
+                    <Tooltip enterDelay={2000} title={"Clap"}>
+                      <IconButton
+                        disabled={isExploding}
+                        sx={{
+                          "&:disabled": { opacity: "0.5" },
+                          marginLeft: 3,
+                          marginRight: isMobile ? 3 : 0.5,
+                        }}
+                        onClick={() => {
+                          setIsExploding(true);
+                          setTimeout(() => {
+                            setIsExploding(false);
+                          }, 3500);
+                        }}
+                      >
+                        <Image
+                          src={ClappingHands.src}
+                          width={30}
+                          height={30}
+                          alt="Clapping hands button"
+                        />
+                      </IconButton>
+                    </Tooltip>
+                    {!isMobile ? (
+                      <>
+                        <Tooltip enterDelay={2000} title={"Share"}>
+                          <IconButton
+                            sx={{ marginRight: 3 }}
+                            onClick={() => {
+                              setOpenShareModal(true);
+                            }}
+                          >
+                            <IosShareOutlined
+                              sx={{
+                                color: theme.palette.text.primary,
+                                opacity: 0.5,
+                                height: "30px",
+                                width: "30px",
+                              }}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                        <ShareModal
+                          open={openShareModal}
+                          handleModalOpen={() => setOpenShareModal(true)}
+                          handleModalClose={() => setOpenShareModal(false)}
+                          data={{
+                            title: post.title,
+                            summary: post.summary,
+                            image: post.image,
+                            url: window.location.href,
+                            height: xs ? 100 : 130,
+                            width: xs ? 400 : 500,
+                          }}
+                        />
+                      </>
+                    ) : null}
                     <Box
                       style={{
                         width: "100%",
@@ -687,7 +732,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 <Box mb={3}>
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMore />}>
-                      <Typography>Reactions & Comments</Typography>
+                      <Typography
+                        fontFamily={theme.typography.fontFamily}
+                        color={theme.palette.text.primary}
+                      >
+                        Reactions & Comments
+                      </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Giscus

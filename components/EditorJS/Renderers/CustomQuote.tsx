@@ -17,8 +17,9 @@ const CutsomQuote = (props: EditorjsRendererProps) => {
       >
         <Typography
           fontFamily={theme.typography.fontFamily}
-          variant="h6"
-          fontWeight="400"
+          variant="body1"
+          fontWeight="600"
+          fontSize={17}
           color={theme.palette.text.primary}
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(props.data.text!),

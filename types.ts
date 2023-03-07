@@ -93,6 +93,15 @@ export type BlogpostCardProps = {
   published: boolean;
 };
 
+export type SharePreviewCardProps = {
+  title: string;
+  summary: string;
+  image: string;
+  url: string;
+  width: number;
+  height: number;
+};
+
 export type Post = {
   published: boolean;
   type: string;
@@ -165,6 +174,13 @@ export type SettingsModalProps = {
   handleModalOpen: () => void;
   handleModalClose: () => void;
   handleThemeChange: (event: any) => void;
+};
+
+export type ShareModalProps = {
+  open: boolean;
+  handleModalOpen: () => void;
+  handleModalClose: () => void;
+  data: SharePreviewCardProps;
 };
 
 export type SearchModalProps = {
