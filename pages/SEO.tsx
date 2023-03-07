@@ -51,6 +51,7 @@ export const SEO = ({ children, pageMeta }: SEOProps) => {
         <meta name="description" content={meta.description} />
         <meta name="theme-color" content={meta.themeColor} />
         {meta.canonical ? <link rel="canonical" href={meta.canonical} /> : null}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {/* Open Graph */}
         <meta property="og:title" content={meta.title} />

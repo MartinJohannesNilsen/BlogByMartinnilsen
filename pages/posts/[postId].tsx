@@ -166,7 +166,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     return readingTime(text, 275);
   }, [OutputString]);
 
-  if (!post.published) return <></>;
+  if (!post.published && !isAuthorized) return <></>;
   return (
     <SEO
       pageMeta={{
@@ -178,7 +178,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
         canonical: process.env.NEXTAUTH_URL + "/posts/" + postId,
         openGraph: {
           url: process.env.NEXTAUTH_URL + "/posts/" + postId,
-          image: post.image,
+          // image: post.image,
+          image: "https://blog.mjntech.dev/icons/ogimage.png",
           type: "article",
           article: {
             published: new Date(post.timestamp),

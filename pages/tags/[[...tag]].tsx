@@ -1,3 +1,4 @@
+import ErrorPage from "next/error";
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
@@ -31,7 +32,7 @@ export async function getStaticPaths() {
   const tagList = await getTags();
   const paths: string[] = [];
   tagList.forEach((tag) => {
-    paths.push(`/tags/${tag}`);
+    paths.push(`/tags/${tag.toLowerCase().replace(" ", "")}`);
   });
   return { paths, fallback: "blocking" };
 }
@@ -48,29 +49,6 @@ export const getStaticProps = async (context: any) => {
   );
   const posts = db_posts;
   const tags = await getTags();
-  const allowedParams = tags.concat("all", "published", "unpublished");
-  // Check if single tag is provided
-  if (context.params.tag && context.params.tag.length > 1) {
-    {
-      return {
-        notFound: true, //redirects to 404 page
-      };
-    }
-  }
-  // If single tag is provided, check that tag exists in list (case insensitive and without space)
-  if (context.params.tag && context.params.tag[0]) {
-    if (
-      !allowedParams.find(
-        (item) =>
-          context.params.tag[0].toLowerCase().replace(" ", "") ===
-          item.toLowerCase().replace(" ", "")
-      )
-    ) {
-      return {
-        notFound: true, //redirects to 404 page
-      };
-    }
-  }
 
   return {
     props: {
@@ -119,9 +97,6 @@ const TagsPage: FC<TagsPageProps> = (props) => {
   const [chunkedPosts, setChunkedPosts] = useState<SimplifiedPost[][]>([[]]);
   const [posts, setPosts] = useState<SimplifiedPost[]>(chunkedPosts[0]);
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const md = useMediaQuery(theme.breakpoints.only("md"));
-  const xl = useMediaQuery(theme.breakpoints.only("xl"));
-  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   const updateData = () => {
@@ -134,22 +109,6 @@ const TagsPage: FC<TagsPageProps> = (props) => {
           Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
         )
       );
-    } else if (tag.toLowerCase() === "published") {
-      setChunkedPosts(
-        splitChunks(
-          _filterListOfSimplifiedPostsOnPublished(props.posts, "published"),
-          Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
-        )
-      );
-    } else if (tag.toLowerCase() === "unpublished") {
-      if (isAuthorized) {
-        setChunkedPosts(
-          splitChunks(
-            _filterListOfSimplifiedPostsOnPublished(props.posts, "unpublished"),
-            Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
-          )
-        );
-      }
     } else if (tag.toLowerCase() === "published") {
       setChunkedPosts(
         splitChunks(
@@ -225,6 +184,23 @@ const TagsPage: FC<TagsPageProps> = (props) => {
     }
   };
 
+  // Check if single tag is provided or if tag not in allowed list
+  if (tag && (tag === "unpublished" || tag === "published") && !isAuthorized) {
+    return <ErrorPage statusCode={403} title="Unauthorized access" />;
+  }
+  if (
+    (tag && router.query.tag.length > 1) ||
+    (tag &&
+      !["all", "published", "unpublished"]
+        .concat(props.tags)
+        .find(
+          (item) =>
+            tag.toLowerCase().replace(" ", "") ===
+            item.toLowerCase().replace(" ", "")
+        ))
+  ) {
+    return <ErrorPage statusCode={404} />;
+  }
   return (
     <SEO
       pageMeta={{
