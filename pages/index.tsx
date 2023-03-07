@@ -147,6 +147,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               width: "100%",
             }}
           >
+            <Box flexGrow={1} />
             {/* Welcome */}
             <Box
               sx={{
@@ -184,6 +185,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 }}
               />
             </Box>
+            <Box flexGrow={1} />
             <Grid
               container
               rowSpacing={mdDown ? 5 : md ? 3 : 6}
