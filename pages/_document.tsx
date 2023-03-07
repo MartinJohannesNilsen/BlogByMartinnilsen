@@ -4,6 +4,9 @@ export default function Document() {
   return (
     <Html>
       <Head>
+        {/* Standard */}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
         {/* Theme */}
         <meta
           name="theme-color"

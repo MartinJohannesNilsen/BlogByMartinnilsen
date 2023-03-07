@@ -10,7 +10,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -26,6 +25,7 @@ import { getTags } from "../../database/tags";
 import { SimplifiedPost, TagsPageProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
 import { splitChunks } from "../index";
+import SEO from "../SEO";
 
 export async function getStaticPaths() {
   const tagList = await getTags();
@@ -226,20 +226,16 @@ const TagsPage: FC<TagsPageProps> = (props) => {
   };
 
   return (
-    <Box>
-      {/* <Box flexGrow={100} /> */}
-      <NextSeo
-        title={
-          tag
-            ? tag.toLowerCase() === "published" ||
-              tag.toLowerCase() === "unpublished"
-              ? tag.charAt(0).toUpperCase() + tag.slice(1)
-              : "#" +
-                _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
-            : "All posts"
-        }
-        themeColor={theme.palette.primary.main}
-      />
+    <SEO
+      pageMeta={{
+        title: tag
+          ? tag.toLowerCase() === "published" ||
+            tag.toLowerCase() === "unpublished"
+            ? tag.charAt(0).toUpperCase() + tag.slice(1)
+            : "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
+          : "All posts",
+      }}
+    >
       {isLoading ? (
         <></>
       ) : (
@@ -466,7 +462,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
           </Box>
         </Box>
       )}
-    </Box>
+    </SEO>
   );
 };
 export default TagsPage;

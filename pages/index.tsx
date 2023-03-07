@@ -10,7 +10,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { NextSeo } from "next-seo";
 import Image from "next/image";
 import WavingHand from "public/assets/img/waving-hand.png";
 import { FC, useEffect, useState } from "react";
@@ -24,6 +23,7 @@ import {
   getPostsOverview,
 } from "../database/overview";
 import { LandingPageProps, SimplifiedPost } from "../types";
+import SEO from "./SEO";
 
 export function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -114,12 +114,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   };
 
   return (
-    <Box>
-      {/* <Box flexGrow={100} /> */}
-      <NextSeo
-        title="Tech blog | Martin Johannes Nilsen"
-        themeColor={theme.palette.primary.contrastText}
-      />
+    <SEO pageMeta={{ themeColor: theme.palette.primary.contrastText }}>
       {isLoading ? (
         <></>
       ) : (
@@ -265,7 +260,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
           </Box>
         </Box>
       )}
-    </Box>
+    </SEO>
   );
 };
 export default LandingPage;
