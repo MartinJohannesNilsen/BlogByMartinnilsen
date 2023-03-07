@@ -125,7 +125,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
       ) : (
         <Box
           sx={{
-            height: "100vh",
+            height: "100%",
             width: "100%",
             background: theme.palette.primary.main,
           }}
@@ -140,6 +140,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             display="flex"
             flexDirection="column"
             sx={{
+              minHeight: isMobile ? "100vh" : "calc(100vh - 64px)",
               height: isMobile ? "100%" : "calc(100% - 64px)",
               background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
               paddingTop: isMobile ? "50px" : "0",
