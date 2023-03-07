@@ -329,9 +329,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           color: theme.palette.text.primary,
                           height: "28px",
                           width: "32px",
-                          "&:hover": {
-                            color: theme.palette.secondary.main,
-                          },
                         }}
                       />
                     ) : (
