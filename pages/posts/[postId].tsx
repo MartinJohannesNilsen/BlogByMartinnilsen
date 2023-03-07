@@ -194,7 +194,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               position={"fixed"}
               sx={{
                 top: 0,
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: theme.palette.primary.dark,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -462,6 +462,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               <NextSeo
                 title={post.title}
                 description={post.summary}
+                themeColor={
+                  isMobile
+                    ? theme.palette.primary.dark
+                    : theme.palette.primary.main
+                }
                 canonical={window.location.href}
                 openGraph={{
                   type: "article",
