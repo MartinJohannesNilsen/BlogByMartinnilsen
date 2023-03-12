@@ -208,7 +208,7 @@ export type TOCModalProps = {
 export type ManageArticleViewProps = {
   post?: Post;
 };
-export type ReadArticleViewProps = { post: Post };
+export type ReadArticleViewProps = { post: Post; postId: string };
 export type LandingPageProps = { posts: SimplifiedPost[] };
 export type TagsPageProps = { posts: SimplifiedPost[]; tags: string[] };
 export type ListViewProps = {};

@@ -78,7 +78,8 @@ export async function getStaticPaths() {
 }
 
 export const getStaticProps = async (context: any) => {
-  const post = await getPost(context.params.postId as string);
+  const postId = context.params.postId as string;
+  const post = await getPost(postId);
   if (!post) {
     return {
       notFound: true, //redirects to 404 page
@@ -87,6 +88,7 @@ export const getStaticProps = async (context: any) => {
   return {
     props: {
       post,
+      postId,
     },
   };
 };
@@ -108,7 +110,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     // router.push(path); // TODO Seems to only getting a blank page
     window.location.href = path;
   };
-  const postId = router.query.postId;
 
   // Pass your custom renderers to Output
   const renderers = {
@@ -175,9 +176,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
         themeColor: isMobile
           ? theme.palette.primary.dark
           : theme.palette.primary.main,
-        canonical: window.location.href,
+        canonical: "https://blog.mjntech.dev/posts/" + props.postId,
         openGraph: {
-          url: window.location.href,
+          url: "https://blog.mjntech.dev/posts/" + props.postId,
           // image: post.image,
           image: "https://blog.mjntech.dev/icons/ogimage.png",
           type: "article",
@@ -797,7 +798,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             {isAuthorized ? (
               <Box
                 onClick={() => {
-                  handleNavigate("/create/" + postId);
+                  handleNavigate("/create/" + props.postId);
                 }}
                 display="flex"
                 gap="10px"
