@@ -6,7 +6,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { createContext, useContext, useMemo, useState } from "react";
-import SEO from "./pages/SEO";
 import {
   defaultAccentColor,
   defaultFontFamily,

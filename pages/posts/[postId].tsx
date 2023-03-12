@@ -175,9 +175,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
         themeColor: isMobile
           ? theme.palette.primary.dark
           : theme.palette.primary.main,
-        canonical: process.env.NEXTAUTH_URL + "/posts/" + postId,
+        canonical: window.location.href,
         openGraph: {
-          url: process.env.NEXTAUTH_URL + "/posts/" + postId,
+          url: window.location.href,
           // image: post.image,
           image: "https://blog.mjntech.dev/icons/ogimage.png",
           type: "article",
