@@ -215,6 +215,9 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
           <Output renderers={renderers} data={data.data} />
         );
         const text = extractTextContent(html);
+        // const readMin = readingTime(text, 275).minutes;
+        // const readTime = (readMin === 0 ? "<1" : readMin) + " min read";
+        // const readTime = Math.max(readMin, 1) + " min read";
         const readTime = readingTime(text, 275).text;
 
         // Create object
