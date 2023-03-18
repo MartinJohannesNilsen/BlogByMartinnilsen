@@ -206,8 +206,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               // Mobile
               <Box
                 width={"100%"}
-                pt={5}
-                pb={0.5}
+                pt={4.75}
+                pb={0.75}
                 position={"fixed"}
                 display="flex"
                 justifyContent={"center"}
@@ -232,7 +232,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   <ArrowBack
                     sx={{
                       fontFamily: theme.typography.fontFamily,
-                      fontSize: "25px",
+                      fontSize: "30px",
                       color: theme.palette.text.primary,
                       "&:hover": {
                         cursor: "pointer",

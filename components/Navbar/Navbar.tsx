@@ -43,151 +43,144 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   };
 
   return (
-    <AppBar
-      elevation={0}
-      position={isMobile ? "fixed" : "static"}
+    <Box
+      width={"100%"}
+      pt={4.75}
+      pb={0.75}
+      position={isMobile ? "fixed" : "relative"}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
       sx={{
-        zIndex: 2,
-        maxHeight: isMobile ? "30px" : "80px",
         backgroundColor: props.backgroundColor,
+        top: 0,
+        zIndex: 1000,
+        marginTop: "-34px",
+        WebkitTransform: "translateZ(0)",
       }}
     >
-      <Toolbar
+      <Box
+        display="flex"
+        alignItems="center"
         sx={{
-          zIndex: 2,
-          marginTop: isMobile ? "-35px" : "0",
-          paddingTop: isMobile ? "59px" : "0",
-          paddingBottom: isMobile ? "26px" : "0",
-          maxHeight: isMobile ? "30px" : "80px",
-          backgroundColor: props.backgroundColor,
-          display: "flex",
-          justifyContent: "center",
+          width: isMobile ? "95%" : "80%",
         }}
       >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            width: isMobile ? "100%" : "80%",
-          }}
-        >
-          <ButtonBase onClick={() => handleNavigate("/")}>
-            <Image
-              src={logo.src}
-              alt=""
-              width={32}
-              height={32}
-              style={{ borderRadius: "0" }}
-            />
-          </ButtonBase>
-          <Box flexGrow={100} />
-          {isAuthorized ? (
-            <Box mt={isMobile ? 0 : -0.2}>
-              <Tooltip enterDelay={2000} title={"Upload new post"}>
-                <ButtonBase
-                  onClick={() => {
-                    handleNavigate("/create");
+        <ButtonBase onClick={() => handleNavigate("/")}>
+          <Image
+            src={logo.src}
+            alt=""
+            width={32}
+            height={32}
+            style={{ borderRadius: "0" }}
+          />
+        </ButtonBase>
+        <Box flexGrow={100} />
+        {isAuthorized ? (
+          <Box mt={isMobile ? 0 : -0.2}>
+            <Tooltip enterDelay={2000} title={"Upload new post"}>
+              <ButtonBase
+                onClick={() => {
+                  handleNavigate("/create");
+                }}
+              >
+                <PostAdd
+                  sx={{
+                    color: props.textColor,
+                    height: "30px",
+                    width: "30px",
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
                   }}
-                >
-                  <PostAdd
-                    sx={{
-                      color: props.textColor,
-                      height: "30px",
-                      width: "30px",
-                      "&:hover": {
-                        color: theme.palette.secondary.main,
-                      },
-                    }}
-                  />
-                </ButtonBase>
-              </Tooltip>
-            </Box>
-          ) : null}
-          <Box mt={isMobile ? 0.25 : 0} mx={isMobile ? 0.25 : 0.5}>
-            <Tooltip
-              enterDelay={2000}
-              title={`Search${
-                isMobile
-                  ? ""
-                  : typeof navigator !== "undefined" &&
-                    navigator.userAgent.indexOf("Mac OS X") != -1
-                  ? " (⌘ + k)"
-                  : " (ctrl + k)"
-              }`}
+                />
+              </ButtonBase>
+            </Tooltip>
+          </Box>
+        ) : null}
+        <Box mt={isMobile ? 0.25 : 0} mx={isMobile ? 0.25 : 0.5}>
+          <Tooltip
+            enterDelay={2000}
+            title={`Search${
+              isMobile
+                ? ""
+                : typeof navigator !== "undefined" &&
+                  navigator.userAgent.indexOf("Mac OS X") != -1
+                ? " (⌘ + k)"
+                : " (ctrl + k)"
+            }`}
+          >
+            <ButtonBase
+              onClick={() => {
+                handleSearchModalOpen();
+              }}
             >
-              <ButtonBase
-                onClick={() => {
-                  handleSearchModalOpen();
+              <Search
+                sx={{
+                  color: props.textColor,
+                  height: "30px",
+                  width: "30px",
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
                 }}
-              >
-                <Search
-                  sx={{
-                    color: props.textColor,
-                    height: "30px",
-                    width: "30px",
-                    "&:hover": {
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                />
-              </ButtonBase>
-            </Tooltip>
-          </Box>
-          <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
-            <Tooltip enterDelay={2000} title={"Go to tags"}>
-              <ButtonBase href="/tags">
-                <Tag
-                  sx={{
-                    color: props.textColor,
-                    height: "30px",
-                    width: "30px",
-                    "&:hover": {
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                />
-              </ButtonBase>
-            </Tooltip>
-          </Box>
-          <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
-            <Tooltip enterDelay={2000} title={"Open settings"}>
-              <ButtonBase
-                onClick={() => {
-                  handleSettingsModalOpen();
-                }}
-              >
-                <Tune
-                  sx={{
-                    color: props.textColor,
-                    height: "30px",
-                    width: "30px",
-                    "&:hover": {
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                />
-              </ButtonBase>
-            </Tooltip>
-          </Box>
-          <Box mt={isMobile ? 0.25 : 0}>
-            <Tooltip enterDelay={2000} title={"Go to account"}>
-              <ButtonBase href="/account">
-                <Person
-                  sx={{
-                    color: props.textColor,
-                    height: "30px",
-                    width: "30px",
-                    "&:hover": {
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                />
-              </ButtonBase>
-            </Tooltip>
-          </Box>
+              />
+            </ButtonBase>
+          </Tooltip>
         </Box>
-      </Toolbar>
+        <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
+          <Tooltip enterDelay={2000} title={"Go to tags"}>
+            <ButtonBase href="/tags">
+              <Tag
+                sx={{
+                  color: props.textColor,
+                  height: "30px",
+                  width: "30px",
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              />
+            </ButtonBase>
+          </Tooltip>
+        </Box>
+        <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
+          <Tooltip enterDelay={2000} title={"Open settings"}>
+            <ButtonBase
+              onClick={() => {
+                handleSettingsModalOpen();
+              }}
+            >
+              <Tune
+                sx={{
+                  color: props.textColor,
+                  height: "30px",
+                  width: "30px",
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              />
+            </ButtonBase>
+          </Tooltip>
+        </Box>
+        <Box mt={isMobile ? 0.25 : 0}>
+          <Tooltip enterDelay={2000} title={"Go to account"}>
+            <ButtonBase href="/account">
+              <Person
+                sx={{
+                  color: props.textColor,
+                  height: "30px",
+                  width: "30px",
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              />
+            </ButtonBase>
+          </Tooltip>
+        </Box>
+      </Box>
       <SearchModal
         open={openSearchModal}
         handleModalOpen={handleSearchModalOpen}
@@ -200,7 +193,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         handleModalClose={handleSettingsModalClose}
         handleThemeChange={handleThemeChange}
       />
-    </AppBar>
+    </Box>
   );
 };
 export default Navbar;
