@@ -206,7 +206,7 @@ export const LandingPageCard: FC<PostCardProps> = (props) => {
                 fontWeight="600"
                 sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
               >
-                {props.readTime}
+                {props.readTime ? props.readTime : "⎯"}
               </Typography>
               {/* Not published icon */}
               {!props.published && (

@@ -66,57 +66,44 @@ const getPostsOverview = async (
   }
 };
 
-const addPostsOverview = async (StoredPost: StoredPost): Promise<boolean> => {
+const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
   const docRef = doc(db, "administrative", db_document);
   const postOverviewSnapshot = await getDoc(docRef);
   if (postOverviewSnapshot.exists()) {
     let values: StoredPost[] = postOverviewSnapshot.data().values;
     values.map((post) => {
-      if (post.id === StoredPost.id) {
+      if (post.id === newPost.id) {
         return false;
       }
     });
-    values.push(StoredPost);
-    await updateDoc(docRef, { values: values }).catch((error) => {
-      console.log(error);
-      return false;
-    });
-    return true;
+    values.push(newPost);
+    await updateDoc(docRef, { values: values })
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        console.log(error);
+        return false;
+      });
   }
   return false;
 };
 
 const updatePostsOverview = async (
-  StoredPost: StoredPost
+  updatedPost: StoredPost
 ): Promise<boolean> => {
   const docRef = doc(db, "administrative", db_document);
-  await getPostsOverview()
-    .then(async (data: StoredPost[]) => {
-      let values = [...data];
-      values.map((post: StoredPost) => {
-        if (post.id === StoredPost.id) {
-          post.title = StoredPost.title;
-          post.description = StoredPost.description;
-          post.icon = StoredPost.icon;
-          post.image = StoredPost.image;
-          post.published = StoredPost.published;
-          post.timestamp = StoredPost.timestamp;
-          post.type = StoredPost.type;
-          post.tags = StoredPost.tags;
-          post.author = StoredPost.author;
-          post.readTime = StoredPost.readTime;
-        }
-      });
-      await updateDoc(docRef, { values: values }).catch((error) => {
-        console.log(error);
-        return false;
-      });
-      return true;
-    })
-    .catch((error) => {
-      console.log(error);
-      return false;
-    });
+  const data = await getPostsOverview().catch((error) => {
+    console.log(error);
+    return false;
+  });
+  let values = (data as StoredPost[]).map((originalPost: StoredPost) =>
+    originalPost.id === updatedPost.id ? updatedPost : originalPost
+  );
+  await updateDoc(docRef, { values: values }).catch((error) => {
+    console.log(error);
+    return false;
+  });
   return true;
 };
 
@@ -130,17 +117,20 @@ const deletePostsOverview = async (id: string): Promise<boolean> => {
           values.splice(index, 1);
         }
       });
-      await updateDoc(docRef, { values: values }).catch((error) => {
-        console.log(error);
-        return false;
-      });
-      return true;
+      await updateDoc(docRef, { values: values })
+        .then(() => {
+          return true;
+        })
+        .catch((error) => {
+          console.log(error);
+          return false;
+        });
     })
     .catch((error) => {
       console.log(error);
       return false;
     });
-  return true;
+  return false;
 };
 
 export {
