@@ -1,4 +1,8 @@
-import { East } from "@mui/icons-material";
+import {
+  East,
+  KeyboardReturn,
+  SubdirectoryArrowLeft,
+} from "@mui/icons-material";
 import {
   Avatar,
   List,
@@ -22,6 +26,7 @@ import { SearchModalProps, StoredPost } from "../../types";
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const router = useRouter();
   const handleNavigate = (path: string) => {
     router.push(path);
@@ -107,7 +112,7 @@ export const SearchModal = (props: SearchModalProps) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: xs ? 350 : 500,
+            width: xs ? 350 : lgUp ? 600 : 500,
             height: "450px",
             outline: 0,
           }}
@@ -261,7 +266,17 @@ export const SearchModal = (props: SearchModalProps) => {
                       />
                       <Box flexGrow={100} />
                       <ListItemText>
-                        <East
+                        {/* <East
+                          sx={{
+                            position: "absolute",
+                            top: "55%",
+                            right: "5px",
+                            transform: "translate(-50%, -50%)",
+                            display:
+                              activeItem === index ? "inline-block" : "none",
+                          }}
+                        /> */}
+                        <KeyboardReturn
                           sx={{
                             position: "absolute",
                             top: "55%",
@@ -271,18 +286,6 @@ export const SearchModal = (props: SearchModalProps) => {
                               activeItem === index ? "inline-block" : "none",
                           }}
                         />
-                        {/* <Typography
-                          sx={{
-                            position: "absolute",
-                            top: "55%",
-                            right: "10px",
-                            transform: "translate(-50%, -50%)",
-                          }}
-                          fontFamily={theme.typography.fontFamily}
-                          fontWeight={600}
-                        >
-                          {activeItem === index ? "↩" : ""}
-                        </Typography> */}
                       </ListItemText>
                     </ListItemButton>
                   </ListItem>

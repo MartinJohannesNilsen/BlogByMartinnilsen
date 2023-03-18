@@ -20,10 +20,10 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { FirestorePost, Post } from "../types";
+import { FirestoreFullPost, FullPost } from "../types";
 
 const postConverterWithoutStringify = {
-  toFirestore: (post: Post): Post => {
+  toFirestore: (post: FullPost): FullPost => {
     return {
       ...post,
     };
@@ -31,8 +31,8 @@ const postConverterWithoutStringify = {
   fromFirestore: (
     snapshot: QueryDocumentSnapshot,
     options: SnapshotOptions
-  ): Post => {
-    const snapshotData = snapshot.data(options)! as Post;
+  ): FullPost => {
+    const snapshotData = snapshot.data(options)! as FullPost;
     return {
       ...snapshotData,
     };
@@ -40,7 +40,7 @@ const postConverterWithoutStringify = {
 };
 
 const postConverter = {
-  toFirestore: (post: Post): FirestorePost => {
+  toFirestore: (post: FullPost): FirestoreFullPost => {
     return {
       ...post,
       data: JSON.stringify(post.data),
@@ -49,8 +49,8 @@ const postConverter = {
   fromFirestore: (
     snapshot: QueryDocumentSnapshot,
     options: SnapshotOptions
-  ): Post => {
-    const snapshotData = snapshot.data(options)! as FirestorePost;
+  ): FullPost => {
+    const snapshotData = snapshot.data(options)! as FirestoreFullPost;
     return {
       ...snapshotData,
       data: JSON.parse(snapshotData.data),
@@ -58,7 +58,7 @@ const postConverter = {
   },
 };
 
-const getPost = async (id: string): Promise<Post | null> => {
+const getPost = async (id: string): Promise<FullPost | null> => {
   const postSnapshot = await getDoc(
     doc(db, "posts", id).withConverter(postConverter)
   );
@@ -168,7 +168,7 @@ const getPaginatedCollection = async (
   }
 };
 
-const addPost = async (newDocument: Post): Promise<string> => {
+const addPost = async (newDocument: FullPost): Promise<string> => {
   const docRef = await addDoc(
     collection(db, "posts").withConverter(postConverter),
     newDocument
@@ -178,9 +178,9 @@ const addPost = async (newDocument: Post): Promise<string> => {
 
 const updatePost = async (
   id: string,
-  updateDocument: Post
+  updateDocument: FullPost
 ): Promise<boolean> => {
-  const firestorePost: FirestorePost = {
+  const firestorePost: FirestoreFullPost = {
     ...updateDocument,
     data: JSON.stringify(updateDocument.data),
   };
