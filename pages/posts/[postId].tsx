@@ -66,7 +66,7 @@ import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import ShareModal from "../../components/Modals/ShareModal";
-import SEO from "../SEO";
+import SEO from "../../components/SEO/SEO";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -93,6 +93,28 @@ export const getStaticProps = async (context: any) => {
   };
 };
 
+export const DEFAULT_OGIMAGE = "https://blog.mjntech.dev/icons/ogimage.png";
+
+// Pass your custom renderers to Output
+export const renderers = {
+  paragraph: CustomParagraph,
+  header: CustomHeader,
+  code: CustomCode,
+  divider: CustomDivider,
+  simpleimage: CustomImage,
+  uploadimage: CustomImage,
+  urlimage: CustomImage,
+  linktool: CustomLinkTool,
+  quote: CustomQuote,
+  personality: CustomPersonality,
+  warning: CustomWarning,
+  video: CustomVideo,
+  checklist: CustomChecklist,
+  table: CustomTable,
+  math: CustomMath,
+  list: CustomList,
+};
+
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const post = props.post;
   const { isAuthorized, status } = useAuthorized(!post.published);
@@ -109,26 +131,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const handleNavigate = (path: string) => {
     // router.push(path); // TODO Seems to only getting a blank page
     window.location.href = path;
-  };
-
-  // Pass your custom renderers to Output
-  const renderers = {
-    paragraph: CustomParagraph,
-    header: CustomHeader,
-    code: CustomCode,
-    divider: CustomDivider,
-    simpleimage: CustomImage,
-    uploadimage: CustomImage,
-    urlimage: CustomImage,
-    linktool: CustomLinkTool,
-    quote: CustomQuote,
-    personality: CustomPersonality,
-    warning: CustomWarning,
-    video: CustomVideo,
-    checklist: CustomChecklist,
-    table: CustomTable,
-    math: CustomMath,
-    list: CustomList,
   };
 
   const handleThemeChange = (event: any) => {
@@ -158,29 +160,22 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     return renderToStaticMarkup(OutputElement);
   }, [OutputElement]);
 
-  function extractTextContent(html: string) {
-    return html.replace(/<[^>]+>/g, " ");
-  }
-
-  const ReadingTime = useMemo(() => {
-    const text = extractTextContent(OutputString);
-    return readingTime(text, 275);
-  }, [OutputString]);
-
   if (!post.published && !isAuthorized) return <></>;
   return (
     <SEO
       pageMeta={{
         title: post.title,
-        description: post.summary,
+        description: post.description,
         themeColor: isMobile
           ? theme.palette.primary.dark
           : theme.palette.primary.main,
         canonical: "https://blog.mjntech.dev/posts/" + props.postId,
         openGraph: {
           url: "https://blog.mjntech.dev/posts/" + props.postId,
-          // image: post.image,
-          image: "https://blog.mjntech.dev/icons/ogimage.png",
+          image:
+            post.image && post.image.trim() !== ""
+              ? post.image
+              : "https://blog.mjntech.dev/icons/ogimage.png",
           type: "article",
           article: {
             published: new Date(post.timestamp),
@@ -488,8 +483,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     handleModalClose={() => setOpenShareModal(false)}
                     data={{
                       title: post.title,
-                      summary: post.summary,
-                      image: post.image,
+                      description: post.description,
+                      image:
+                        post.image && post.image.trim() !== ""
+                          ? post.image
+                          : "https://blog.mjntech.dev/icons/ogimage.png",
                       url: window.location.href,
                       height: xs ? 100 : 130,
                       width: xs ? 400 : 500,
@@ -614,7 +612,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             fontSize: xs ? "12px" : "default",
                           }}
                         >
-                          {ReadingTime.text}
+                          {post.readTime ? post.readTime : "⎯"}
                         </Typography>
                       </Box>
                     </Box>
@@ -693,8 +691,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             handleModalClose={() => setOpenShareModal(false)}
                             data={{
                               title: post.title,
-                              summary: post.summary,
-                              image: post.image,
+                              description: post.description,
+                              image:
+                                post.image && post.image.trim() !== ""
+                                  ? post.image
+                                  : "https://blog.mjntech.dev/icons/ogimage.png",
                               url: window.location.href,
                               height: xs ? 100 : 130,
                               width: xs ? 400 : 500,

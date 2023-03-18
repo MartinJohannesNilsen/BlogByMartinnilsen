@@ -93,10 +93,8 @@ export const ShareModal = (props: ShareModalProps) => {
           {/* Card preview */}
           <SharePreviewCard
             title={props.data.title}
-            summary={props.data.summary}
-            // TODO ogimages should be correct size for larger cards
-            // image={props.data.image}
-            image={"https://blog.mjntech.dev/icons/ogimage.png"}
+            description={props.data.description}
+            image={props.data.image}
             url={window.location.host}
             width={props.data.width}
             height={props.data.height}
@@ -174,7 +172,7 @@ export const ShareModal = (props: ShareModalProps) => {
             <FacebookShareButton
               url={props.data.url}
               title={props.data.title}
-              quote={props.data.summary}
+              quote={props.data.description}
             >
               <Facebook
                 sx={{
@@ -200,7 +198,7 @@ export const ShareModal = (props: ShareModalProps) => {
             <LinkedinShareButton
               url={props.data.url}
               title={props.data.title}
-              summary={props.data.summary}
+              summary={props.data.description}
               source={window.location.host}
             >
               <LinkedIn

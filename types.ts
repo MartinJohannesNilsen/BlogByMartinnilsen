@@ -82,65 +82,42 @@ export type EditorjsRendererProps = {
   config: { disableDefaultStyle?: any };
 };
 
-export type BlogpostCardProps = {
-  title: string;
-  timestamp: number;
-  summary: string;
-  image: string;
-  type: string;
-  tags: string[];
-  id: string;
-  published: boolean;
-};
-
 export type SharePreviewCardProps = {
   title: string;
-  summary: string;
+  description: string;
   image: string;
   url: string;
   width: number;
   height: number;
 };
 
-export type Post = {
-  published: boolean;
-  type: string;
-  tags: string[];
-  title: string;
-  summary: string;
-  image: string;
-  data: OutputData;
-  author: string;
-  timestamp: number;
-  views: number;
-  readTime: string;
-};
-
-export type FirestorePost = {
-  published: boolean;
-  type: string;
-  tags: string[];
-  title: string;
-  summary: string;
-  image: string;
-  data: string;
-  author: string;
-  timestamp: number;
-  views: number;
-  readTime: string;
-};
-
-export type SimplifiedPost = {
+export type PostCardProps = PostProps & {
   id: string;
-  title: string;
-  summary: string;
-  image: string;
-  published: boolean;
-  timestamp: number;
-  type: string;
-  tags: string[];
+};
+
+type PostProps = {
   author: string;
+  icon: string;
+  image?: string;
   readTime: string;
+  description: string;
+  tags: string[];
+  timestamp: number;
+  title: string;
+  type: string;
+  published: boolean;
+};
+
+export type FullPost = PostProps & {
+  data: OutputData;
+};
+
+export type FirestoreFullPost = PostProps & {
+  data: string;
+};
+
+export type StoredPost = PostProps & {
+  id: string;
 };
 
 export type NavbarSection = {
@@ -151,7 +128,7 @@ export type NavbarSection = {
 export type NavbarProps = {
   backgroundColor: string;
   textColor: string;
-  posts: SimplifiedPost[];
+  posts: StoredPost[];
 };
 
 // Component types
@@ -187,7 +164,7 @@ export type SearchModalProps = {
   open: boolean;
   handleModalOpen: () => void;
   handleModalClose: () => void;
-  postsOverview?: SimplifiedPost[];
+  postsOverview?: StoredPost[];
 };
 
 export type Headings = {
@@ -206,10 +183,10 @@ export type TOCModalProps = {
 
 // View props types
 export type ManageArticleViewProps = {
-  post?: Post;
+  post?: FullPost;
 };
-export type ReadArticleViewProps = { post: Post; postId: string };
-export type LandingPageProps = { posts: SimplifiedPost[] };
-export type TagsPageProps = { posts: SimplifiedPost[]; tags: string[] };
+export type ReadArticleViewProps = { post: FullPost; postId: string };
+export type LandingPageProps = { posts: StoredPost[] };
+export type TagsPageProps = { posts: StoredPost[]; tags: string[] };
 export type ListViewProps = {};
 export type FooterProps = {};

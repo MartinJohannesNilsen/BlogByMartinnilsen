@@ -19,13 +19,13 @@ import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import LandingPageCard from "../components/Cards/LandingPageCard";
 import Navbar from "../components/Navbar/Navbar";
 import {
-  _filterListOfSimplifiedPostsOnPublished,
+  _filterListOfStoredPostsOnPublished,
   getPostsOverview,
 } from "../database/overview";
-import { LandingPageProps, SimplifiedPost } from "../types";
-import SEO from "./SEO";
+import { LandingPageProps, StoredPost } from "../types";
+import SEO from "../components/SEO/SEO";
 
-export function splitChunks(arr: SimplifiedPost[], chunkSize: number) {
+export function splitChunks(arr: StoredPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
   let result = [];
   for (var i = 0; i < arr.length; i += chunkSize) {
@@ -58,15 +58,15 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [chunkedPosts, setChunkedPosts] = useState<SimplifiedPost[][]>(
+  const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
     splitChunks(
       isAuthorized
         ? props.posts
-        : _filterListOfSimplifiedPostsOnPublished(props.posts, "published"),
+        : _filterListOfStoredPostsOnPublished(props.posts, "published"),
       Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
     )
   );
-  const [posts, setPosts] = useState<SimplifiedPost[]>(chunkedPosts[0]);
+  const [posts, setPosts] = useState<StoredPost[]>(chunkedPosts[0]);
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const md = useMediaQuery(theme.breakpoints.only("md"));
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
@@ -79,7 +79,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
       splitChunks(
         isAuthorized
           ? props.posts
-          : _filterListOfSimplifiedPostsOnPublished(props.posts, "published"),
+          : _filterListOfStoredPostsOnPublished(props.posts, "published"),
         Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
       )
     );
@@ -203,11 +203,14 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
                   >
                     <LandingPageCard
+                      author={data.author}
+                      readTime={data.readTime}
                       id={data.id}
+                      icon={data.icon}
                       image={data.image}
                       title={data.title}
                       timestamp={data.timestamp}
-                      summary={data.summary}
+                      description={data.description}
                       type={data.type}
                       tags={data.tags}
                       published={data.published}

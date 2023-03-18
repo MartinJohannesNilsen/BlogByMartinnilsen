@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useTheme } from "../ThemeProvider";
+import { useTheme } from "../../ThemeProvider";
 
 type MetaProps = {
   title?: string;

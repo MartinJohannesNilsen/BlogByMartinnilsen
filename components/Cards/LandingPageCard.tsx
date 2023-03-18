@@ -11,9 +11,9 @@ import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
-import { BlogpostCardProps } from "../../types";
+import { PostCardProps } from "../../types";
 
-export const LandingPageCard: FC<BlogpostCardProps> = (props) => {
+export const LandingPageCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
@@ -64,7 +64,7 @@ export const LandingPageCard: FC<BlogpostCardProps> = (props) => {
           {/* Image and type/tag rows */}
           <Box display="flex" flexDirection="row">
             <Image
-              src={props.image}
+              src={props.icon}
               alt=""
               width={80}
               height={80}
@@ -162,7 +162,7 @@ export const LandingPageCard: FC<BlogpostCardProps> = (props) => {
                 WebkitBoxOrient: "vertical",
               }}
             >
-              {props.summary}
+              {props.description}
             </Typography>
           </Box>
           {/*  */}

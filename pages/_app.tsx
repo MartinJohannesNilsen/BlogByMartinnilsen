@@ -1,5 +1,4 @@
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import { Analytics } from "@vercel/analytics/react";
 import { SessionProvider } from "next-auth/react";
 import { SnackbarProvider } from "notistack";
 import ThemeProvider from "../ThemeProvider";
@@ -24,7 +23,6 @@ function MyApp({ Component, pageProps, session }) {
             {/* {process.env.NEXT_PUBLIC_SHOW_MUI_SIZE === "true"
             ? showMuiSize()
             : ""} */}
-            <Analytics />
           </SnackbarProvider>
         </ThemeProvider>
       </StyledEngineProvider>

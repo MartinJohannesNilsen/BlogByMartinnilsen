@@ -87,7 +87,7 @@ export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
               opacity: 0.6,
             }}
           >
-            {props.summary}
+            {props.description}
           </Typography>
         </Box>
       </Box>

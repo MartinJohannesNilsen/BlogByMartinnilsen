@@ -7,13 +7,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
-import { BlogpostCardProps } from "../../types";
+import { PostCardProps } from "../../types";
 
-export const TagsPageCard: FC<BlogpostCardProps> = (props) => {
+export const TagsPageCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
@@ -104,17 +103,16 @@ export const TagsPageCard: FC<BlogpostCardProps> = (props) => {
                   WebkitBoxOrient: "vertical",
                 }}
               >
-                {props.summary}
+                {props.description}
               </Typography>
             </Box>
             <Box flexGrow={1} />
             <Image
-              src={props.image}
+              src={props.icon}
               alt=""
               width={xs ? 70 : 82}
               height={xs ? 70 : 82}
-              object-fit="cover"
-              style={{ borderRadius: 2 }}
+              style={{ borderRadius: 2, objectFit: "cover" }}
             />
           </Box>
           {/* Information gutter */}

@@ -19,14 +19,14 @@ import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import TagsPageCard from "../../components/Cards/TagsPageCard";
 import Navbar from "../../components/Navbar/Navbar";
 import {
-  _filterListOfSimplifiedPostsOnPublished,
+  _filterListOfStoredPostsOnPublished,
   getPostsOverview,
 } from "../../database/overview";
 import { getTags } from "../../database/tags";
-import { SimplifiedPost, TagsPageProps } from "../../types";
+import { StoredPost, TagsPageProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
 import { splitChunks } from "../index";
-import SEO from "../SEO";
+import SEO from "../../components/SEO/SEO";
 
 export async function getStaticPaths() {
   const tagList = await getTags();
@@ -78,8 +78,8 @@ const _getCaseInsensitiveElement = (list: string[], element: string) => {
   return list[index];
 };
 
-export const _filterListOfSimplifiedPostsOnTag = (
-  data: SimplifiedPost[],
+export const _filterListOfStoredPostsOnTag = (
+  data: StoredPost[],
   tag: string
 ) => {
   return data.filter((post) => post.tags.includes(tag));
@@ -94,8 +94,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
   const [tag, setTag] = useState<string>(
     router.query.tag ? router.query.tag[0] : null
   );
-  const [chunkedPosts, setChunkedPosts] = useState<SimplifiedPost[][]>([[]]);
-  const [posts, setPosts] = useState<SimplifiedPost[]>(chunkedPosts[0]);
+  const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>([[]]);
+  const [posts, setPosts] = useState<StoredPost[]>(chunkedPosts[0]);
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
@@ -105,14 +105,14 @@ const TagsPage: FC<TagsPageProps> = (props) => {
         splitChunks(
           isAuthorized
             ? props.posts
-            : _filterListOfSimplifiedPostsOnPublished(props.posts, "published"),
+            : _filterListOfStoredPostsOnPublished(props.posts, "published"),
           Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
         )
       );
     } else if (tag.toLowerCase() === "published") {
       setChunkedPosts(
         splitChunks(
-          _filterListOfSimplifiedPostsOnPublished(props.posts, "published"),
+          _filterListOfStoredPostsOnPublished(props.posts, "published"),
           Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
         )
       );
@@ -120,7 +120,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
       if (isAuthorized) {
         setChunkedPosts(
           splitChunks(
-            _filterListOfSimplifiedPostsOnPublished(props.posts, "unpublished"),
+            _filterListOfStoredPostsOnPublished(props.posts, "unpublished"),
             Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
           )
         );
@@ -129,15 +129,12 @@ const TagsPage: FC<TagsPageProps> = (props) => {
       setChunkedPosts(
         splitChunks(
           isAuthorized
-            ? _filterListOfSimplifiedPostsOnTag(
+            ? _filterListOfStoredPostsOnTag(
                 props.posts,
                 _getCaseInsensitiveElement(props.tags, tag)
               )
-            : _filterListOfSimplifiedPostsOnTag(
-                _filterListOfSimplifiedPostsOnPublished(
-                  props.posts,
-                  "published"
-                ),
+            : _filterListOfStoredPostsOnTag(
+                _filterListOfStoredPostsOnPublished(props.posts, "published"),
                 _getCaseInsensitiveElement(props.tags, tag)
               ),
           Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
@@ -368,14 +365,17 @@ const TagsPage: FC<TagsPageProps> = (props) => {
                     return (
                       <Grid item key={index} xs={12}>
                         <TagsPageCard
+                          author={data.author}
+                          description={data.description}
+                          icon={data.icon}
                           id={data.id}
                           image={data.image}
-                          title={data.title}
-                          timestamp={data.timestamp}
-                          summary={data.summary}
-                          type={data.type}
-                          tags={data.tags}
                           published={data.published}
+                          readTime={data.readTime}
+                          tags={data.tags}
+                          timestamp={data.timestamp}
+                          title={data.title}
+                          type={data.type}
                         />
                       </Grid>
                     );

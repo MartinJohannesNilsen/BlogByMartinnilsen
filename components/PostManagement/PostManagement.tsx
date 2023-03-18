@@ -30,10 +30,13 @@ import {
 import { addPost, deletePost, updatePost } from "../../database/posts";
 import { addTag, getTags } from "../../database/tags";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { ManageArticleViewProps, Post } from "../../types";
+import { ManageArticleViewProps, FullPost } from "../../types";
 import { useSnackbar } from "notistack";
 import { Delete, Launch, Save, Update } from "@mui/icons-material";
-import { useHotkeys } from "react-hotkeys-hook";
+import Output from "editorjs-react-renderer";
+import { renderToStaticMarkup } from "react-dom/server";
+import { readingTime } from "reading-time-estimator";
+import { renderers } from "../../pages/posts/[postId]";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -136,17 +139,17 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const [editorJSContent, setEditorJSContent] = useState<OutputData>(
     props.post ? props.post.data : { blocks: [] }
   );
-  const [data, setData] = useState<Post>({
+  const [data, setData] = useState<FullPost>({
     published: false,
     type: "",
     tags: [],
     title: "",
-    summary: "",
-    image: "http://www.",
+    description: "",
+    icon: "",
+    image: "",
     data: { blocks: [] },
     author: "Martin Johannes Nilsen",
     timestamp: Date.now(),
-    views: 0,
     readTime: "",
   });
   const handleNavigate = (path: string) => {
@@ -199,14 +202,29 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     });
   };
 
+  function extractTextContent(html: string) {
+    return html.replace(/<[^>]+>/g, " ");
+  }
+
   const handleSubmit = (event: { preventDefault: () => void }) => {
     try {
       event.preventDefault();
       if (!isPosted) {
+        // Get read time
+        const html = renderToStaticMarkup(
+          <Output renderers={renderers} data={data.data} />
+        );
+        const text = extractTextContent(html);
+        const readTime = readingTime(text, 275).text;
+
+        // Create object
         const newObject = {
           ...data,
           data: editorJSContent,
+          readTime: readTime,
         };
+
+        // Check if post exists, then update, or add new
         if (props.post) {
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
@@ -220,7 +238,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               updatePostsOverview({
                 id: postId,
                 title: newObject.title,
-                summary: newObject.summary,
+                description: newObject.description,
+                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
                 timestamp: newObject.timestamp,
@@ -263,7 +282,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               addPostsOverview({
                 id: postId,
                 title: newObject.title,
-                summary: newObject.summary,
+                description: newObject.description,
+                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
                 timestamp: newObject.timestamp,
@@ -485,32 +505,50 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 onChange={handleInputChange}
               />
               <StyledTextField
-                label="Summary"
-                name="summary"
+                label="Description"
+                name="description"
                 fullWidth
                 inputProps={{
                   maxlength: OGDEFAULTS.descriptionMax,
                 }}
-                helperText={`${data.summary.length}/${OGDEFAULTS.descriptionMax}`}
+                helperText={`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
                 sx={{
                   ".MuiFormHelperText-root": {
                     color:
-                      data.summary.length <= OGDEFAULTS.descriptionOptimal
+                      data.description.length <= OGDEFAULTS.descriptionOptimal
                         ? "green"
-                        : data.summary.length <= OGDEFAULTS.descriptionWarning
+                        : data.description.length <=
+                          OGDEFAULTS.descriptionWarning
                         ? theme.palette.text.primary
                         : "#cfa602",
                   },
                 }}
-                value={data.summary}
+                value={data.description}
                 onChange={handleInputChange}
               />
               <StyledTextField
-                label="Image"
-                name="image"
-                error={!isvalidHTTPUrl(data.image)}
+                label="Icon"
+                name="icon"
+                error={
+                  data.icon &&
+                  data.icon.trim() !== "" &&
+                  !isvalidHTTPUrl(data.icon)
+                }
                 helperText={"Incorrect url format (missing http/https)"}
                 required
+                fullWidth
+                value={data.icon}
+                onChange={handleInputChange}
+              />
+              <StyledTextField
+                label="Open Graph Image"
+                name="image"
+                error={
+                  data.image &&
+                  data.image.trim() !== "" &&
+                  !isvalidHTTPUrl(data.image)
+                }
+                helperText={"Incorrect url format (missing http/https)"}
                 fullWidth
                 value={data.image}
                 onChange={handleInputChange}

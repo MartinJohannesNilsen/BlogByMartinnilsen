@@ -5,7 +5,7 @@ import { useTheme } from "../ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
-import SEO from "./SEO";
+import SEO from "../components/SEO/SEO";
 
 export const Account = () => {
   const { isAuthorized, session, status } = useAuthorized(true);

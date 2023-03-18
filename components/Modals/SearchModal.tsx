@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../ThemeProvider";
-import { SearchModalProps, SimplifiedPost } from "../../types";
+import { SearchModalProps, StoredPost } from "../../types";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
@@ -28,7 +28,7 @@ export const SearchModal = (props: SearchModalProps) => {
   };
   const [textFieldValue, setTextFieldValue] = useState("");
   const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);
-  const [matchedItems, setMatchedItems] = useState<SimplifiedPost[]>([]);
+  const [matchedItems, setMatchedItems] = useState<StoredPost[]>([]);
   const [activeItem, setActiveItem] = useState(isMobile ? -1 : 0);
 
   // Filter/search
@@ -161,7 +161,7 @@ export const SearchModal = (props: SearchModalProps) => {
             </Box>
             {props.postsOverview && (
               <List sx={{ paddingY: 0 }}>
-                {matchedItems!.map((post: SimplifiedPost, index: number) => (
+                {matchedItems!.map((post: StoredPost, index: number) => (
                   <ListItem
                     key={index}
                     sx={{
@@ -227,7 +227,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           }}
                         >
                           <img
-                            src={post.image}
+                            src={post.icon}
                             style={{
                               minWidth: "50px",
                               minHeight: "50px",
@@ -246,7 +246,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                         }}
-                        secondary={post.summary}
+                        secondary={post.description}
                         secondaryTypographyProps={{
                           color: theme.palette.text.primary,
                           fontFamily: theme.typography.fontFamily,
