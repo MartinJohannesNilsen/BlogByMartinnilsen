@@ -45,8 +45,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   return (
     <Box
       width={"100%"}
-      pt={4.75}
-      pb={0.75}
+      pt={isMobile ? 4.75 : 2}
+      pb={isMobile ? 0.75 : 2}
       position={isMobile ? "fixed" : "relative"}
       display="flex"
       alignItems="center"
@@ -55,7 +55,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         backgroundColor: props.backgroundColor,
         top: 0,
         zIndex: 1000,
-        marginTop: "-34px",
+        marginTop: isMobile ? "-34px" : 0,
         WebkitTransform: "translateZ(0)",
       }}
     >
