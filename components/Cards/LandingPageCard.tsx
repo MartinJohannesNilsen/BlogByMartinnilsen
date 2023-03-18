@@ -1,4 +1,4 @@
-import { CalendarMonth } from "@mui/icons-material";
+import { AccessTime, CalendarMonth } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -185,11 +185,28 @@ export const LandingPageCard: FC<PostCardProps> = (props) => {
                 sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
               >
                 {new Date(props.timestamp).toLocaleDateString("en-GB", {
-                  weekday: "long",
+                  // weekday: "long",
                   day: "2-digit",
                   month: "short",
                   year: "numeric",
                 })}
+              </Typography>
+              {/* Read time */}
+              <AccessTime
+                sx={{
+                  opacity: 0.6,
+                  marginLeft: "12px",
+                  marginRight: "6px",
+                  fontSize: xs ? "12px" : "default",
+                }}
+              />
+              <Typography
+                fontFamily={theme.typography.fontFamily}
+                variant="body2"
+                fontWeight="600"
+                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+              >
+                {props.readTime}
               </Typography>
               {/* Not published icon */}
               {!props.published && (

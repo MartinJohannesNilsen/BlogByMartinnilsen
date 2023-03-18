@@ -98,7 +98,7 @@ export type PostCardProps = PostProps & {
 type PostProps = {
   author: string;
   icon: string;
-  image?: string;
+  image: string;
   readTime: string;
   description: string;
   tags: string[];
