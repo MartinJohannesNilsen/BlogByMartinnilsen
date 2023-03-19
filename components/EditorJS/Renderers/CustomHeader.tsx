@@ -1,4 +1,4 @@
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import parse from "html-react-parser";
 import { CSSProperties, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -17,6 +17,7 @@ const HeaderOutput = ({
   config,
 }: EditorjsRendererProps): JSX.Element => {
   const { theme } = useTheme();
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
   if (!data || !data.text || typeof data.text != "string") return <></>;
   if (!style || typeof style !== "object") style = {};
   if (!config || typeof config !== "object")
@@ -111,7 +112,17 @@ const HeaderOutput = ({
     );
 
   const [showHash, setShowHash] = useState(false);
-  const margin = data.level === 1 ? 4 : data.level === 2 ? 3.5 : 3;
+  const margin = xs
+    ? data.level === 1
+      ? 2.5
+      : data.level === 2
+      ? 2
+      : 2
+    : data.level === 1
+    ? 4
+    : data.level === 2
+    ? 3.5
+    : 3;
   const mobileScrollFix = (
     <Box
       position="relative"
