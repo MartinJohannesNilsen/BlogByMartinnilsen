@@ -29,7 +29,8 @@ export const SEO = ({ children, pageMeta }: SEOProps) => {
 
   const meta: MetaProps = {
     themeColor: theme.palette.primary.main,
-    title: "Tech blog | Martin Johannes Nilsen",
+    // title: "Tech blog | Martin Johannes Nilsen",
+    title: "Blog by MJNTech",
     description:
       "A tech blog by Martin Johannes Nilsen, a Software Engineer, M.Sc. Student and passionate problem solver.",
     author: "Martin Johannes Nilsen",
