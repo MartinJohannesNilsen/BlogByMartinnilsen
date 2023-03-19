@@ -424,6 +424,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               ) {
                 e.preventDefault();
                 handleSubmit(e);
+              } else if (e.key === "Tab") {
+                // e.preventDefault();
               }
             }}
           >

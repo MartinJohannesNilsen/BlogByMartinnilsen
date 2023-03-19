@@ -1,6 +1,6 @@
-import { Box } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import parse from "html-react-parser";
-import { CSSProperties } from "react";
+import { CSSProperties, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../../ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
@@ -110,8 +110,20 @@ const HeaderOutput = ({
       </h4>
     );
 
+  const [showHash, setShowHash] = useState(false);
+  const margin = data.level === 1 ? 4 : data.level === 2 ? 3.5 : 3;
   const mobileScrollFix = (
-    <Box position="relative">
+    <Box
+      position="relative"
+      pl={margin}
+      ml={-margin}
+      onMouseEnter={() => {
+        setShowHash(true);
+      }}
+      onMouseLeave={() => {
+        setShowHash(false);
+      }}
+    >
       <a
         id={parse(data.text).toString().replaceAll(" ", "_")}
         style={{
@@ -122,7 +134,41 @@ const HeaderOutput = ({
           scrollBehavior: "smooth",
         }}
       ></a>
-      {element}
+      <Box display="flex" alignItems="center">
+        {showHash ? (
+          <Link
+            // disableRipple
+            href={"#" + parse(data.text).toString().replaceAll(" ", "_")}
+            sx={{
+              mt: data.level === 1 ? 0.75 : data.level === 2 ? 0.9 : 0.95,
+              position: "absolute",
+              left: -1,
+              opacity: 0.5,
+              "&:hover": {
+                opacity: 1,
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize:
+                  data.level === 1
+                    ? theme.typography.h4
+                    : data.level === 2
+                    ? theme.typography.h5
+                    : theme.typography.h6,
+                color: theme.palette.text.primary,
+                fontFamily: theme.typography.fontFamily,
+              }}
+            >
+              {/* {data.level === 1 ? "1" : data.level === 2 ? "2" : "3"} */}#
+            </Typography>
+          </Link>
+        ) : (
+          <Box />
+        )}
+        {element}
+      </Box>
     </Box>
   );
 
