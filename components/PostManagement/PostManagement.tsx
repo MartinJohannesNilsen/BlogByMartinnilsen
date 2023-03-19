@@ -37,6 +37,7 @@ import Output from "editorjs-react-renderer";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readingTime } from "reading-time-estimator";
 import { renderers } from "../../pages/posts/[postId]";
+import { useHotkeys } from "react-hotkeys-hook";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -394,11 +395,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     setData({ ...data, published: event.target.value === "true" });
   };
 
-  // TODO implement useHotKeys onSubmit. Now it gives empty object. Make sure to validate form and save non-empty object
-  // useHotkeys(["Control+s", "Meta+s"], (event) => {
-  //   event.preventDefault();
-  //   handleSubmit(event);
-  // });
+  useHotkeys(["Control+s", "Meta+s"], (event) => {
+    event.preventDefault();
+    // handleSubmit(event);
+  });
 
   return (
     <>
@@ -415,7 +415,18 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
             backgroundColor: theme.palette.primary.main,
           }}
         >
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={handleSubmit}
+            onKeyDown={(e) => {
+              if (
+                (e.metaKey && e.key === "s") ||
+                (e.ctrlKey && e.key === "s")
+              ) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+          >
             <Box my={1}>
               <Box
                 display="flex"
