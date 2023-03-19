@@ -104,7 +104,7 @@ const CustomThemeProvider: React.FC = (props) => {
     );
   };
 
-  const setTheme = (themeName: ThemeEnum, persist: boolean): void => {
+  const setTheme = (themeName: ThemeEnum, persist?: boolean): void => {
     if (persist) localStorage.setItem("theme", themeName);
     const underlayingTheme = themeCreator(themeName);
     _setTheme(
