@@ -5,6 +5,8 @@ import {
   Edit,
   ExpandMore,
   IosShareOutlined,
+  LocalCafe,
+  LocalCafeOutlined,
   MenuBook,
   Tune,
 } from "@mui/icons-material";
@@ -630,7 +632,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   <Box flexGrow={100} />
                   {/* Share and applause section */}
                   <Box mt={6} py={3}>
-                    {/* Clap with horizontal lines */}
+                    {/* Horizontal lines */}
                     <Box
                       display="flex"
                       justifyContent="center"
@@ -642,67 +644,97 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           borderBottom: "2px solid rgba(100,100,100,0.2)",
                         }}
                       />
-                      <Tooltip enterDelay={2000} title={"Clap"}>
-                        <IconButton
-                          disabled={isExploding}
-                          sx={{
-                            "&:disabled": { opacity: "0.5" },
-                            marginLeft: 3,
-                            marginRight: isMobile ? 3 : 0.5,
-                          }}
-                          onClick={() => {
-                            setIsExploding(true);
-                            setTimeout(() => {
-                              setIsExploding(false);
-                            }, 3500);
-                          }}
-                        >
-                          <Image
-                            src={ClappingHands.src}
-                            width={30}
-                            height={30}
-                            alt="Clapping hands button"
-                          />
-                        </IconButton>
-                      </Tooltip>
-                      {!isMobile ? (
-                        <>
-                          <Tooltip enterDelay={2000} title={"Share"}>
-                            <IconButton
-                              disabled={!post.published}
-                              sx={{ marginRight: 3 }}
-                              onClick={() => {
-                                setOpenShareModal(true);
-                              }}
-                            >
-                              <IosShareOutlined
-                                sx={{
-                                  color: theme.palette.text.primary,
-                                  opacity: 0.5,
-                                  height: "30px",
-                                  width: "30px",
+                      <Box display="flex" sx={{ paddingBottom: "6px" }}>
+                        {/* Share */}
+                        {!isMobile ? (
+                          <>
+                            <Tooltip enterDelay={2000} title={"Share"}>
+                              <IconButton
+                                disableRipple
+                                disabled={!post.published}
+                                sx={{ marginLeft: 3 }}
+                                onClick={() => {
+                                  setOpenShareModal(true);
                                 }}
-                              />
-                            </IconButton>
-                          </Tooltip>
-                          <ShareModal
-                            open={openShareModal}
-                            handleModalOpen={() => setOpenShareModal(true)}
-                            handleModalClose={() => setOpenShareModal(false)}
-                            data={{
-                              title: post.title,
-                              description: post.description,
-                              image:
-                                post.image && post.image.trim() !== ""
-                                  ? post.image
-                                  : "https://blog.mjntech.dev/icons/ogimage.png",
-                              url: window.location.href,
-                              height: xs ? 100 : 130,
-                              width: xs ? 400 : 500,
+                              >
+                                <IosShareOutlined
+                                  sx={{
+                                    color: theme.palette.text.primary,
+                                    // opacity: 0.5,
+                                    height: "30px",
+                                    width: "30px",
+                                  }}
+                                />
+                              </IconButton>
+                            </Tooltip>
+                            <ShareModal
+                              open={openShareModal}
+                              handleModalOpen={() => setOpenShareModal(true)}
+                              handleModalClose={() => setOpenShareModal(false)}
+                              data={{
+                                title: post.title,
+                                description: post.description,
+                                image:
+                                  post.image && post.image.trim() !== ""
+                                    ? post.image
+                                    : "https://blog.mjntech.dev/icons/ogimage.png",
+                                url: window.location.href,
+                                height: xs ? 100 : 130,
+                                width: xs ? 400 : 500,
+                              }}
+                            />
+                          </>
+                        ) : null}
+                        {/* Clap */}
+                        <Tooltip enterDelay={2000} title={"Clap"}>
+                          <IconButton
+                            disableRipple
+                            disabled={isExploding}
+                            sx={{
+                              "&:disabled": { opacity: "0.5" },
+                              marginLeft: isMobile ? 3 : 0.5,
+                              marginRight: 0.5,
                             }}
-                          />
-                        </>
-                      ) : null}
+                            onClick={() => {
+                              setIsExploding(true);
+                              setTimeout(() => {
+                                setIsExploding(false);
+                              }, 3500);
+                            }}
+                          >
+                            <Image
+                              src={ClappingHands.src}
+                              width={30}
+                              height={30}
+                              alt="Clapping hands button"
+                            />
+                          </IconButton>
+                        </Tooltip>
+                        {/* Paypal */}
+                        <Tooltip enterDelay={2000} title={"Buy me a cacao"}>
+                          <IconButton
+                            disableRipple
+                            // disabled={!post.published}
+                            sx={{ marginRight: 3 }}
+                            onClick={() => {
+                              handleNavigate(
+                                "https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ"
+                              );
+                            }}
+                          >
+                            <LocalCafeOutlined
+                              sx={{
+                                // color: "#65463E",
+                                color: theme.palette.text.primary,
+                                // opacity: 0.5,
+                                marginTop: "5px",
+                                height: "30px",
+                                width: "30px",
+                              }}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                       <Box
                         style={{
                           width: "100%",
@@ -710,31 +742,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         }}
                       />
                     </Box>
-                    {/* Share and funding */}
-                    {/* <Box sx={{ display: "flex", flexDirection: "row" }}> */}
-                    {/* Left */}
-                    {/* <Box width="100%" display="flex" justifyContent="center">
-                      <Typography
-                        variant="body1"
-                        fontWeight={500}
-                        color="textPrimary"
-                        fontFamily={theme.typography.fontFamily}
-                      >
-                        Share on
-                      </Typography>
-                    </Box>
-                    <Box width={108} mx={3} />
-                    <Box width="100%" display="flex" justifyContent="center">
-                      <Typography
-                        variant="body1"
-                        fontWeight={500}
-                        color="textPrimary"
-                        fontFamily={theme.typography.fontFamily}
-                      >
-                        Share on
-                      </Typography>
-                    </Box>
-                  </Box> */}
                   </Box>
                   {/* Comment section */}
                   <Box mb={3}>

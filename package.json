@@ -9,7 +9,7 @@
 		"build": "next build",
 		"start": "next build && next start",
 		"deploy": "vercel",
-		"deploy-prod": "vercel --prod",
+		"deploy-prod": "vercel deploy --prod",
 		"deploy-prebuilt": "vercel build && vercel deploy --prebuilt"
 	},
 	"dependencies": {
@@ -94,6 +94,7 @@
 		"editorjs-latex": "^1.0.0",
 		"editorjs-undo": "^2.0.18",
 		"eslint": "^7.29.0",
+		"html-react-parser": "^3.0.12",
 		"isomorphic-dompurify": "^1.0.0",
 		"jquery": "^3.6.3",
 		"match-sorter": "^6.3.1",
