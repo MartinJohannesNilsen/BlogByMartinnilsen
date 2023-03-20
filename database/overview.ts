@@ -77,16 +77,12 @@ const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
       }
     });
     values.push(newPost);
-    await updateDoc(docRef, { values: values })
-      .then(() => {
-        return true;
-      })
-      .catch((error) => {
-        console.log(error);
-        return false;
-      });
+    await updateDoc(docRef, { values: values }).catch((error) => {
+      console.log(error);
+      return false;
+    });
   }
-  return false;
+  return true;
 };
 
 const updatePostsOverview = async (
@@ -117,20 +113,16 @@ const deletePostsOverview = async (id: string): Promise<boolean> => {
           values.splice(index, 1);
         }
       });
-      await updateDoc(docRef, { values: values })
-        .then(() => {
-          return true;
-        })
-        .catch((error) => {
-          console.log(error);
-          return false;
-        });
+      await updateDoc(docRef, { values: values }).catch((error) => {
+        console.log(error);
+        return false;
+      });
     })
     .catch((error) => {
       console.log(error);
       return false;
     });
-  return false;
+  return true;
 };
 
 export {
