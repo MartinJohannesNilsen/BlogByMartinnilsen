@@ -306,6 +306,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   });
                   setPostId(postId);
                   setIsPosted(true);
+                  handleRevalidate(postId);
                 } else {
                   const key = enqueueSnackbar("An error occurred!", {
                     variant: "error",
@@ -393,6 +394,36 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const handlePublishedRadioChange = (event: { target: { value: any } }) => {
     setIsPosted(false);
     setData({ ...data, published: event.target.value === "true" });
+  };
+
+  const handleRevalidate = (postId) => {
+    const key = enqueueSnackbar("Revalidating pages ...", {
+      variant: "default",
+      preventDuplicate: true,
+      onClick: () => {
+        closeSnackbar(key);
+      },
+    });
+    revalidatePages(["/", "/posts/" + postId]).then((res) => {
+      if (res.status === 200) {
+        const key = enqueueSnackbar("Revalidated pages!", {
+          variant: "success",
+          preventDuplicate: true,
+          onClick: () => {
+            closeSnackbar(key);
+          },
+        });
+        setIsRevalidated(true);
+      } else {
+        const key = enqueueSnackbar("Error during revalidation!", {
+          variant: "error",
+          preventDuplicate: true,
+          onClick: () => {
+            closeSnackbar(key);
+          },
+        });
+      }
+    });
   };
 
   useHotkeys(["Control+s", "Meta+s"], (event) => {
@@ -646,41 +677,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   >
                     <Button
                       onClick={() => {
-                        const key = enqueueSnackbar("Revalidating pages ...", {
-                          variant: "default",
-                          preventDuplicate: true,
-                          onClick: () => {
-                            closeSnackbar(key);
-                          },
-                        });
-                        revalidatePages(["/", "/posts/" + postId]).then(
-                          (res) => {
-                            if (res.status === 200) {
-                              const key = enqueueSnackbar(
-                                "Revalidated pages!",
-                                {
-                                  variant: "success",
-                                  preventDuplicate: true,
-                                  onClick: () => {
-                                    closeSnackbar(key);
-                                  },
-                                }
-                              );
-                              setIsRevalidated(true);
-                            } else {
-                              const key = enqueueSnackbar(
-                                "Error during revalidation!",
-                                {
-                                  variant: "error",
-                                  preventDuplicate: true,
-                                  onClick: () => {
-                                    closeSnackbar(key);
-                                  },
-                                }
-                              );
-                            }
-                          }
-                        );
+                        handleRevalidate(postId);
                       }}
                       disabled={isRevalidated}
                       sx={{
