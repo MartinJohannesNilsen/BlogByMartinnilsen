@@ -192,7 +192,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   // Width
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
-  const width = xs ? "380px" : sm ? "500px" : "700px";
+  const width = xs ? "380px" : sm ? "90vw" : "750px";
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setIsPosted(false);

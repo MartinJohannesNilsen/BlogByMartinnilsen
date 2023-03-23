@@ -5,7 +5,6 @@ import {
   Edit,
   ExpandMore,
   IosShareOutlined,
-  LocalCafe,
   LocalCafeOutlined,
   MenuBook,
   Tune,
@@ -34,7 +33,6 @@ import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { RWebShare } from "react-web-share";
-import { readingTime } from "reading-time-estimator";
 import { useTheme } from "../../ThemeProvider";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
@@ -514,7 +512,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     minHeight: isMobile
                       ? "calc(100vh - 81px - 30px)"
                       : "calc(100vh - 67px - 117px)",
-                    width: xs ? "380px" : sm ? "500px" : "700px",
+                    width: xs ? "380px" : sm ? "90vw" : "760px",
                     position: "relative",
                   }}
                 >
