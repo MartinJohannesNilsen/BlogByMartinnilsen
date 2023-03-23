@@ -36,11 +36,6 @@ const CustomList = (props: EditorjsRendererProps) => {
         borderBottom: "2px solid " + theme.palette.secondary.main,
       },
     },
-    underline: {
-      color: theme.palette.text.primary,
-      textDecoration: "none",
-      borderBottom: "2px solid " + theme.palette.text.primary,
-    },
   }));
   const style = useStyles();
 
@@ -59,10 +54,9 @@ const CustomList = (props: EditorjsRendererProps) => {
         fontFamily={theme.typography.fontFamily}
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(
-            props.data
-              .text!.replace(/<code .*?>/gm, code)
+            item
+              .replace(/<code .*?>/gm, code)
               .replace(/<mark .*?>/gm, mark)
-              // .replace(/<u .*?>/gm, underline)
               .replace(/<a href=/gm, link)
           ),
         }}
