@@ -228,8 +228,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
           readTime: readTime,
         };
 
-        // Check if post exists, then update, or add new
-        if (props.post) {
+        // If post exists, then update, or add new
+        if (postId !== "") {
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
               const key = enqueueSnackbar("Saving changes ...", {
