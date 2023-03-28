@@ -75,7 +75,6 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
                 color="textPrimary"
                 fontFamily={theme.typography.fontFamily}
                 sx={{
-                  // lineHeight: "26px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "webkit-flex",
@@ -94,7 +93,6 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
                 color="textPrimary"
                 fontFamily={theme.typography.fontFamily}
                 sx={{
-                  // lineHeight: "26px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "webkit-flex",

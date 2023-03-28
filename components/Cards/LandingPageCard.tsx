@@ -69,7 +69,6 @@ export const LandingPageCard: FC<PostCardProps> = (props) => {
               width={80}
               height={80}
               style={{ borderRadius: 2, objectFit: "cover" }}
-              // fill={true}
             />
             <Box
               display="flex"

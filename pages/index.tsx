@@ -18,12 +18,12 @@ import { useTheme } from "../ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import LandingPageCard from "../components/Cards/LandingPageCard";
 import Navbar from "../components/Navbar/Navbar";
+import SEO from "../components/SEO/SEO";
 import {
   _filterListOfStoredPostsOnPublished,
   getPostsOverview,
 } from "../database/overview";
 import { LandingPageProps, StoredPost } from "../types";
-import SEO from "../components/SEO/SEO";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";

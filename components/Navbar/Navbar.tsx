@@ -1,6 +1,7 @@
 import { Person, PostAdd, Search, Tag, Tune } from "@mui/icons-material";
-import { AppBar, Box, ButtonBase, Toolbar, Tooltip } from "@mui/material";
+import { Box, ButtonBase, Tooltip } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import logo from "public/assets/img/terminal.png";
 import { FC, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -11,7 +12,6 @@ import { NavbarProps } from "../../types";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import SearchModal from "../Modals/SearchModal";
 import SettingsModal from "../Modals/SettingsModal";
-import { useRouter } from "next/router";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();

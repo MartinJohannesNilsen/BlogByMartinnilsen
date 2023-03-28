@@ -1,8 +1,4 @@
-import {
-  East,
-  KeyboardReturn,
-  SubdirectoryArrowLeft,
-} from "@mui/icons-material";
+import { KeyboardReturn } from "@mui/icons-material";
 import {
   Avatar,
   List,

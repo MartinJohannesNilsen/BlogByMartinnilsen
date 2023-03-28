@@ -5,7 +5,6 @@ import {
   CardContent,
   IconButton,
   Typography,
-  styled,
   useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -57,10 +56,7 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
   // Locked card
   if (props.disabled)
     return (
-      <Card
-        className={classes.root}
-        // classes={{ root: state.raised ? classes.cardHovered : "" }}
-      >
+      <Card className={classes.root}>
         <Box
           sx={{
             display: "flex",

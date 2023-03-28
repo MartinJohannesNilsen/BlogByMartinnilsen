@@ -1,4 +1,5 @@
 import { OutputData } from "@editorjs/editorjs";
+import { Delete, Launch, Save, Update } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -17,10 +18,15 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
+import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { FC, useEffect, useState } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
+import { readingTime } from "reading-time-estimator";
 import { useTheme } from "../../ThemeProvider";
 import {
   addPostsOverview,
@@ -29,15 +35,9 @@ import {
 } from "../../database/overview";
 import { addPost, deletePost, updatePost } from "../../database/posts";
 import { addTag, getTags } from "../../database/tags";
-import { ThemeEnum } from "../../styles/themes/themeMap";
-import { ManageArticleViewProps, FullPost } from "../../types";
-import { useSnackbar } from "notistack";
-import { Delete, Launch, Save, Update } from "@mui/icons-material";
-import Output from "editorjs-react-renderer";
-import { renderToStaticMarkup } from "react-dom/server";
-import { readingTime } from "reading-time-estimator";
 import { renderers } from "../../pages/posts/[postId]";
-import { useHotkeys } from "react-hotkeys-hook";
+import { ThemeEnum } from "../../styles/themes/themeMap";
+import { FullPost, ManageArticleViewProps } from "../../types";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));

@@ -14,10 +14,11 @@ import {
   Modal,
   Tooltip,
   Typography,
-  Zoom,
   useMediaQuery,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
+import { useState } from "react";
+import { FaLink } from "react-icons/fa";
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -28,8 +29,6 @@ import {
 import { useTheme } from "../../ThemeProvider";
 import { ShareModalProps } from "../../types";
 import SharePreviewCard from "../Cards/SharePreviewCard";
-import { FaLink } from "react-icons/fa";
-import { useState } from "react";
 
 const TransparentTooltip = withStyles({
   tooltip: {

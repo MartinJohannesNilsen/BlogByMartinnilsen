@@ -1,3 +1,4 @@
+import Giscus from "@giscus/react";
 import {
   AccessTime,
   ArrowBack,
@@ -5,7 +6,6 @@ import {
   Edit,
   ExpandMore,
   IosShareOutlined,
-  LocalCafeOutlined,
   MenuBook,
   Tune,
 } from "@mui/icons-material";
@@ -25,12 +25,13 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
+import { BiCoffeeTogo } from "react-icons/bi";
+import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { RWebShare } from "react-web-share";
 import { useTheme } from "../../ThemeProvider";
@@ -38,17 +39,13 @@ import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
 import Footer from "../../components/Footer/Footer";
 import SettingsModal from "../../components/Modals/SettingsModal";
+import ShareModal from "../../components/Modals/ShareModal";
 import TOCModal from "../../components/Modals/TOCModal";
+import SEO from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
-import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
-import Giscus from "@giscus/react";
-import ShareModal from "../../components/Modals/ShareModal";
-import SEO from "../../components/SEO/SEO";
-import { TbConfetti, TbShare2 } from "react-icons/tb";
-import { BiCoffeeTogo } from "react-icons/bi";
 // import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
@@ -702,12 +699,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                               }, 3500);
                             }}
                           >
-                            {/* <Image
-                              src={ClappingHands.src}
-                              width={30}
-                              height={30}
-                              alt="Clapping hands button"
-                            /> */}
                             <TbConfetti
                               style={{
                                 color: theme.palette.text.primary,
@@ -722,7 +713,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         <Tooltip enterDelay={2000} title={"Buy me a cacao"}>
                           <IconButton
                             disableRipple
-                            // disabled={!post.published}
                             sx={{ marginRight: 3, marginLeft: -0.25 }}
                             onClick={() => {
                               handleNavigate(
@@ -730,16 +720,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                               );
                             }}
                           >
-                            {/* <LocalCafeOutlined
-                              sx={{
-                                // color: "#65463E",
-                                color: theme.palette.text.primary,
-                                // opacity: 0.5,
-                                marginTop: "5px",
-                                height: "30px",
-                                width: "30px",
-                              }}
-                            /> */}
                             <BiCoffeeTogo
                               style={{
                                 color: theme.palette.text.primary,

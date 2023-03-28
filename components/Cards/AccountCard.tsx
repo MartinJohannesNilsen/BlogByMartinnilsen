@@ -9,9 +9,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { Session } from "next-auth";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
-import { Session } from "next-auth";
 
 type AccountCard = {
   session: Session;

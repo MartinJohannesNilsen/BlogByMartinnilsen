@@ -1,4 +1,3 @@
-import ErrorPage from "next/error";
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
@@ -11,6 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -18,6 +18,7 @@ import { useTheme } from "../ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import TagsPageCard from "../components/Cards/TagsPageCard";
 import Navbar from "../components/Navbar/Navbar";
+import SEO from "../components/SEO/SEO";
 import {
   _filterListOfStoredPostsOnPublished,
   getPostsOverview,
@@ -26,16 +27,6 @@ import { getTags } from "../database/tags";
 import { StoredPost, TagsPageProps } from "../types";
 import colorLumincance from "../utils/colorLuminance";
 import { splitChunks } from "./index";
-import SEO from "../components/SEO/SEO";
-
-// export async function getStaticPaths() {
-//   // const paths: string[] = [];
-//   // const tagList = await getTags();
-//   // tagList.forEach((tag) => {
-//   //   paths.push(`/tags/${tag.toLowerCase().replace(" ", "")}`);
-//   // });
-//   return { paths: ["/tags"], fallback: true };
-// }
 
 // Next.js functions
 // On-demand Revalidation, thus no defined revalidation interval

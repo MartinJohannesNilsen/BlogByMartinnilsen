@@ -35,15 +35,6 @@ export const InlineVideo = (props: {
                       setTextfieldData({ url: textFieldRef.current.value });
                     }
                   }}
-                  // endIcon={
-                  //   <FileUpload
-                  //     sx={{
-                  //       marginLeft: -0.5,
-                  //       marginRight: 1,
-                  //       color: theme.palette.text.primary,
-                  //     }}
-                  //   />
-                  // }
                 >
                   <Typography
                     fontFamily={theme.typography.fontFamily}

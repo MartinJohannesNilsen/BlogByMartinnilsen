@@ -126,9 +126,9 @@ const deletePostsOverview = async (id: string): Promise<boolean> => {
 };
 
 export {
+  addPostsOverview,
+  deletePostsOverview,
   getAllPostIds,
   getPostsOverview,
-  addPostsOverview,
   updatePostsOverview,
-  deletePostsOverview,
 };

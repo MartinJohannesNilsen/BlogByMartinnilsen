@@ -202,10 +202,10 @@ const deletePost = async (id: string): Promise<boolean> => {
 };
 
 export {
+  addPost,
+  deletePost,
+  getPaginatedCollection,
   getPost,
   getPostCount,
-  getPaginatedCollection,
-  addPost,
   updatePost,
-  deletePost,
 };
