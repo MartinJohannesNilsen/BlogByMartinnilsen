@@ -28,7 +28,7 @@ const CutsomQuote = (props: EditorjsRendererProps) => {
       </Box>
       <Box
         display="flex"
-        pl={2}
+        // pl={2}
         mt={0.5}
         sx={{ borderLeft: "5px solid transparent" }}
       >
