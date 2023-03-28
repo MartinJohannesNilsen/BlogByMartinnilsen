@@ -222,7 +222,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
           sx={{
             height: "100vh",
             width: "100%",
-            background: theme.palette.primary.main,
+            backgroundColor: theme.palette.primary.main,
           }}
         >
           <Navbar
@@ -238,6 +238,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
               width: "100%",
               paddingX: lgUp ? "150px" : xs ? "20px" : "80px",
               paddingTop: xs ? "60px" : "80px",
+              backgroundColor: theme.palette.primary.main,
             }}
           >
             {/* Header */}
@@ -411,7 +412,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
               display="flex"
               alignItems="center"
               justifyContent="center"
-              py={xs ? 5 : 10}
+              pt={xs ? 1 : 1}
+              pb={xs ? 5 : 5}
             >
               <IconButton
                 sx={{
