@@ -155,10 +155,6 @@ const TagsPage: FC<TagsPageProps> = (props) => {
     }
   }, [tag]);
 
-  // useEffect(() => {
-  //   return () => {};
-  // }, [tag]);
-
   useEffect(() => {
     setPosts(chunkedPosts[page - 1]);
     setIsLoading(false);
@@ -220,9 +216,9 @@ const TagsPage: FC<TagsPageProps> = (props) => {
       ) : (
         <Box
           sx={{
-            height: "100vh",
+            height: "100%",
             width: "100%",
-            backgroundColor: theme.palette.primary.main,
+            background: theme.palette.primary.main,
           }}
         >
           <Navbar
@@ -234,7 +230,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
             display="flex"
             flexDirection="column"
             sx={{
-              height: isMobile ? "100%" : "calc(100% - 64px)",
+              minHeight: xs ? "100vh" : "calc(100vh - 64px)",
+              height: xs ? "100%" : "calc(100% - 64px)",
               width: "100%",
               paddingX: lgUp ? "150px" : xs ? "20px" : "80px",
               paddingTop: xs ? "60px" : "80px",
@@ -412,7 +409,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
               display="flex"
               alignItems="center"
               justifyContent="center"
-              pt={xs ? 1 : 1}
+              pt={xs ? 3 : 3}
               pb={xs ? 5 : 5}
             >
               <IconButton
