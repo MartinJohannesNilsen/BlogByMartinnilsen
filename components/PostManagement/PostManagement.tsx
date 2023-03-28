@@ -404,7 +404,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         closeSnackbar(key);
       },
     });
-    revalidatePages(["/", "/posts/" + postId]).then((res) => {
+    revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
       if (res.status === 200) {
         const key = enqueueSnackbar("Revalidated pages!", {
           variant: "success",

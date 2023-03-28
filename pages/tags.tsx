@@ -14,28 +14,28 @@ import {
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../../ThemeProvider";
-import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
-import TagsPageCard from "../../components/Cards/TagsPageCard";
-import Navbar from "../../components/Navbar/Navbar";
+import { useTheme } from "../ThemeProvider";
+import useAuthorized from "../components/AuthorizationHook/useAuthorized";
+import TagsPageCard from "../components/Cards/TagsPageCard";
+import Navbar from "../components/Navbar/Navbar";
 import {
   _filterListOfStoredPostsOnPublished,
   getPostsOverview,
-} from "../../database/overview";
-import { getTags } from "../../database/tags";
-import { StoredPost, TagsPageProps } from "../../types";
-import colorLumincance from "../../utils/colorLuminance";
-import { splitChunks } from "../index";
-import SEO from "../../components/SEO/SEO";
+} from "../database/overview";
+import { getTags } from "../database/tags";
+import { StoredPost, TagsPageProps } from "../types";
+import colorLumincance from "../utils/colorLuminance";
+import { splitChunks } from "./index";
+import SEO from "../components/SEO/SEO";
 
-export async function getStaticPaths() {
-  const tagList = await getTags();
-  const paths: string[] = [];
-  tagList.forEach((tag) => {
-    paths.push(`/tags/${tag.toLowerCase().replace(" ", "")}`);
-  });
-  return { paths, fallback: "blocking" };
-}
+// export async function getStaticPaths() {
+//   // const paths: string[] = [];
+//   // const tagList = await getTags();
+//   // tagList.forEach((tag) => {
+//   //   paths.push(`/tags/${tag.toLowerCase().replace(" ", "")}`);
+//   // });
+//   return { paths: ["/tags"], fallback: true };
+// }
 
 // Next.js functions
 // On-demand Revalidation, thus no defined revalidation interval
@@ -91,9 +91,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const router = useRouter();
-  const [tag, setTag] = useState<string>(
-    router.query.tag ? router.query.tag[0] : null
-  );
+  const [tag, setTag] = useState<string>("loading");
+  const { query, isReady } = useRouter();
   const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>([[]]);
   const [posts, setPosts] = useState<StoredPost[]>(chunkedPosts[0]);
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
@@ -149,10 +148,25 @@ const TagsPage: FC<TagsPageProps> = (props) => {
   }, [isAuthorized]);
 
   useEffect(() => {
-    updateData();
-    setPage(1);
-    return () => {};
+    if (isReady) {
+      if (query.name as string) {
+        setTag(query.name as string);
+      } else {
+        setTag(null);
+      }
+    }
+  }, [isReady]);
+
+  useEffect(() => {
+    if (isReady) {
+      updateData();
+      setPage(1);
+    }
   }, [tag]);
+
+  // useEffect(() => {
+  //   return () => {};
+  // }, [tag]);
 
   useEffect(() => {
     setPosts(chunkedPosts[page - 1]);
@@ -182,6 +196,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
   };
 
   // Check if single tag is provided or if tag not in allowed list
+  if (tag === "loading") return <></>;
   if (tag && (tag === "unpublished" || tag === "published") && !isAuthorized) {
     return <ErrorPage statusCode={403} title="Unauthorized access" />;
   }
@@ -196,7 +211,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
           item.toLowerCase().replace(" ", "")
       )
   ) {
-    return <ErrorPage statusCode={404} />;
+    return <ErrorPage statusCode={404} title="This tag could not be found" />;
   }
   return (
     <SEO
@@ -324,7 +339,9 @@ const TagsPage: FC<TagsPageProps> = (props) => {
                           margin: 0.5,
                         }}
                         onClick={() => {
-                          router.replace("/tags/" + element.replace(" ", ""));
+                          router.replace(
+                            "/tags?name=" + element.replace(" ", "")
+                          );
                           setTag(element);
                         }}
                       >
