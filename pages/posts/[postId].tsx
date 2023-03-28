@@ -776,7 +776,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               </Grid>
             </Grid>
             {/* </RevealFromDownOnEnter> */}
-            {isExploding && (
+            {isExploding ? (
               <Box
                 sx={{
                   position: "fixed",
@@ -789,14 +789,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 }}
               >
                 <ConfettiExplosion
-                  force={isMobile ? 0.8 : 0.5}
+                  force={isMobile ? 0.8 : 0.6}
                   duration={4000}
                   particleCount={250}
                   height={height - 100}
                   width={width - 100}
                 />
               </Box>
-            )}
+            ) : null}
             <Footer />
             {/* Buttons for administration */}
             {isAuthorized ? (
