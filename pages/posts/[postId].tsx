@@ -44,13 +44,17 @@ import { getPost } from "../../database/posts";
 import ClappingHands from "../../public/assets/img/clapping-hands.png";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
+import Giscus from "@giscus/react";
+import ShareModal from "../../components/Modals/ShareModal";
+import SEO from "../../components/SEO/SEO";
+import { TbConfetti, TbShare2 } from "react-icons/tb";
+import { BiCoffeeTogo } from "react-icons/bi";
 // import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
 
 // EditorJS renderers
-import Giscus from "@giscus/react";
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../../components/EditorJS/Renderers/CustomCode";
 import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
@@ -65,8 +69,6 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
-import ShareModal from "../../components/Modals/ShareModal";
-import SEO from "../../components/SEO/SEO";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -655,8 +657,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                                   setOpenShareModal(true);
                                 }}
                               >
-                                <IosShareOutlined
-                                  sx={{
+                                <TbShare2
+                                  style={{
                                     color: theme.palette.text.primary,
                                     // opacity: 0.5,
                                     height: "30px",
@@ -683,8 +685,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             />
                           </>
                         ) : null}
-                        {/* Clap */}
-                        <Tooltip enterDelay={2000} title={"Clap"}>
+                        {/* Confetti */}
+                        <Tooltip enterDelay={2000} title={"Confetti"}>
                           <IconButton
                             disableRipple
                             disabled={isExploding}
@@ -700,11 +702,19 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                               }, 3500);
                             }}
                           >
-                            <Image
+                            {/* <Image
                               src={ClappingHands.src}
                               width={30}
                               height={30}
                               alt="Clapping hands button"
+                            /> */}
+                            <TbConfetti
+                              style={{
+                                color: theme.palette.text.primary,
+                                // opacity: 0.5,
+                                height: "30px",
+                                width: "30px",
+                              }}
                             />
                           </IconButton>
                         </Tooltip>
@@ -713,20 +723,28 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           <IconButton
                             disableRipple
                             // disabled={!post.published}
-                            sx={{ marginRight: 3 }}
+                            sx={{ marginRight: 3, marginLeft: -0.25 }}
                             onClick={() => {
                               handleNavigate(
                                 "https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ"
                               );
                             }}
                           >
-                            <LocalCafeOutlined
+                            {/* <LocalCafeOutlined
                               sx={{
                                 // color: "#65463E",
                                 color: theme.palette.text.primary,
                                 // opacity: 0.5,
                                 marginTop: "5px",
                                 height: "30px",
+                                width: "30px",
+                              }}
+                            /> */}
+                            <BiCoffeeTogo
+                              style={{
+                                color: theme.palette.text.primary,
+                                // opacity: 0.5,
+                                height: "29px",
                                 width: "30px",
                               }}
                             />
