@@ -11,7 +11,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import WavingHand from "public/assets/img/waving-hand.png";
+import WavingHand from "public/assets/imgs/waving-hand.png";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../ThemeProvider";

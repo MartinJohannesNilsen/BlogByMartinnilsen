@@ -9,7 +9,7 @@ const CutsomQuote = (props: EditorjsRendererProps) => {
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
 
   return (
-    <Box display="flex" flexDirection="column" my={1} pl={1}>
+    <Box display="flex" flexDirection="column" my={1}>
       <Box
         sx={{ borderLeft: "3px solid" + theme.palette.secondary.main }}
         textAlign="left"

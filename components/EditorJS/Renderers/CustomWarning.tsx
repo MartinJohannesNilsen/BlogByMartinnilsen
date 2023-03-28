@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
-import speechBalloon from "public/assets/img/speech-balloon.png";
+import speechBalloon from "public/assets/imgs/speech-balloon.png";
 import { useTheme } from "../../../ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 
