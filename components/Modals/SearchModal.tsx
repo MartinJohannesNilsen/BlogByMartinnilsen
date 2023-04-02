@@ -12,7 +12,7 @@ import {
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { matchSorter } from "match-sorter";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -25,7 +25,7 @@ export const SearchModal = (props: SearchModalProps) => {
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const router = useRouter();
   const handleNavigate = (path: string) => {
-    router.push(path);
+    window.location.href = path;
   };
   const [textFieldValue, setTextFieldValue] = useState("");
   const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);

@@ -3,7 +3,7 @@ import { ButtonBase, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { TOCModalProps } from "../../types";

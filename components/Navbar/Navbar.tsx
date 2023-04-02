@@ -1,7 +1,7 @@
 import { Person, PostAdd, Search, Tag, Tune } from "@mui/icons-material";
 import { Box, ButtonBase, Tooltip } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import logo from "public/assets/imgs/terminal.png";
 import { FC, useState } from "react";
 import { isMobile } from "react-device-detect";

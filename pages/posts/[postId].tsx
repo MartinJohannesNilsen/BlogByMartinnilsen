@@ -25,7 +25,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
@@ -126,7 +126,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const router = useRouter();
   const handleNavigate = (path: string) => {
-    // router.push(path); // TODO Seems to only getting a blank page
     window.location.href = path;
   };
 
@@ -149,7 +148,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   useEffect(() => {
     setIsLoading(false);
     if (typeof window !== "undefined" && window.location.hash) {
-      router.push(window.location.hash);
+      handleNavigate(window.location.hash);
     }
   }, [OutputElement]);
 
@@ -236,7 +235,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         color: theme.palette.secondary.main,
                       },
                     }}
-                    onClick={() => router.push("/")}
+                    onClick={() => handleNavigate("/")}
                   />
                   {OutputString ? (
                     <Tooltip enterDelay={2000} title={"Open table of contents"}>
