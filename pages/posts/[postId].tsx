@@ -41,7 +41,7 @@ import Footer from "../../components/Footer/Footer";
 import SettingsModal from "../../components/Modals/SettingsModal";
 import ShareModal from "../../components/Modals/ShareModal";
 import TOCModal from "../../components/Modals/TOCModal";
-import SEO from "../../components/SEO/SEO";
+import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import { ThemeEnum } from "../../styles/themes/themeMap";
@@ -91,8 +91,6 @@ export const getStaticProps = async (context: any) => {
     },
   };
 };
-
-export const DEFAULT_OGIMAGE = "https://blog.mjntech.dev/icons/ogimage.png";
 
 // Pass your custom renderers to Output
 export const renderers = {
@@ -174,7 +172,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           image:
             post.image && post.image.trim() !== ""
               ? post.image
-              : "https://blog.mjntech.dev/icons/ogimage.png",
+              : DEFAULT_OGIMAGE,
           type: "article",
           article: {
             published: new Date(post.timestamp),
@@ -486,7 +484,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       image:
                         post.image && post.image.trim() !== ""
                           ? post.image
-                          : "https://blog.mjntech.dev/icons/ogimage.png",
+                          : DEFAULT_OGIMAGE,
                       url: window.location.href,
                       height: xs ? 100 : 130,
                       width: xs ? 400 : 500,
@@ -674,7 +672,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                                 image:
                                   post.image && post.image.trim() !== ""
                                     ? post.image
-                                    : "https://blog.mjntech.dev/icons/ogimage.png",
+                                    : DEFAULT_OGIMAGE,
                                 url: window.location.href,
                                 height: xs ? 100 : 130,
                                 width: xs ? 400 : 500,

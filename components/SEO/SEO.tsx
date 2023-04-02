@@ -24,6 +24,9 @@ type SEOProps = {
   pageMeta: MetaProps;
 };
 
+export const DEFAULT_OGIMAGE =
+  "https://blog.mjntech.dev/assets/icons/ogimage.png";
+
 export const SEO = ({ children, pageMeta }: SEOProps) => {
   const { theme } = useTheme();
 
@@ -37,7 +40,7 @@ export const SEO = ({ children, pageMeta }: SEOProps) => {
     openGraph: {
       type: "website",
       url: "https://blog.MJNTech.dev",
-      image: "https://blog.mjntech.dev/icons/ogimage.png",
+      image: DEFAULT_OGIMAGE,
     },
     twitter: { handle: "@MartinJNilsen", cardType: "summary" },
     ...pageMeta,
