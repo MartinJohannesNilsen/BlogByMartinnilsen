@@ -114,7 +114,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   };
 
   return (
-    <SEO pageMeta={{ themeColor: theme.palette.primary.contrastText }}>
+    <SEO
+      pageMeta={{
+        themeColor: isMobile
+          ? theme.palette.primary.main
+          : theme.palette.primary.contrastText,
+      }}
+    >
       {isLoading ? (
         <></>
       ) : (
@@ -126,8 +132,16 @@ const LandingPage: FC<LandingPageProps> = (props) => {
           }}
         >
           <Navbar
-            backgroundColor={theme.palette.primary.contrastText}
-            textColor={theme.palette.text.secondary}
+            backgroundColor={
+              isMobile
+                ? theme.palette.primary.main
+                : theme.palette.primary.contrastText
+            }
+            textColor={
+              isMobile
+                ? theme.palette.text.primary
+                : theme.palette.text.secondary
+            }
             posts={chunkedPosts.flat()}
           />
           {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}

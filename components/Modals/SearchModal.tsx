@@ -257,32 +257,28 @@ export const SearchModal = (props: SearchModalProps) => {
                         }}
                         sx={{
                           width: "100%",
-                          marginRight: 6,
+                          marginRight: isMobile ? 0 : 5,
                         }}
                       />
-                      <Box flexGrow={100} />
-                      <ListItemText>
-                        {/* <East
-                          sx={{
-                            position: "absolute",
-                            top: "55%",
-                            right: "5px",
-                            transform: "translate(-50%, -50%)",
-                            display:
-                              activeItem === index ? "inline-block" : "none",
-                          }}
-                        /> */}
-                        <KeyboardReturn
-                          sx={{
-                            position: "absolute",
-                            top: "55%",
-                            right: "5px",
-                            transform: "translate(-50%, -50%)",
-                            display:
-                              activeItem === index ? "inline-block" : "none",
-                          }}
-                        />
-                      </ListItemText>
+                      {!isMobile ? (
+                        <>
+                          <Box flexGrow={100} />
+                          <ListItemText>
+                            <KeyboardReturn
+                              sx={{
+                                position: "absolute",
+                                top: "55%",
+                                right: "5px",
+                                transform: "translate(-50%, -50%)",
+                                display:
+                                  activeItem === index
+                                    ? "inline-block"
+                                    : "none",
+                              }}
+                            />
+                          </ListItemText>
+                        </>
+                      ) : null}
                     </ListItemButton>
                   </ListItem>
                 ))}
