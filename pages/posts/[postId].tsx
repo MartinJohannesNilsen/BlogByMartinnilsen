@@ -790,7 +790,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   duration={4000}
                   particleCount={250}
                   height={height - 100}
-                  width={width - 100}
+                  width={xs ? height : width - 100}
                 />
               </Box>
             ) : null}
