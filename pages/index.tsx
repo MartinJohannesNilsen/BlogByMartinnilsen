@@ -188,7 +188,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 mt={2}
                 mb={5}
               >
-                A blog about programming, technology and everything between.
+                A blog about technology, programming and everything between.
               </Typography>
             </Box>
 
