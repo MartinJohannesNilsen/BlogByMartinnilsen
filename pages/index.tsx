@@ -5,6 +5,7 @@ import {
 } from "@mui/icons-material";
 import {
   Box,
+  Divider,
   Unstable_Grid2 as Grid,
   IconButton,
   Typography,
@@ -116,9 +117,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   return (
     <SEO
       pageMeta={{
-        themeColor: isMobile
-          ? theme.palette.primary.main
-          : theme.palette.primary.contrastText,
+        themeColor: theme.palette.primary.main,
       }}
     >
       {isLoading ? (
@@ -132,16 +131,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
           }}
         >
           <Navbar
-            backgroundColor={
-              isMobile
-                ? theme.palette.primary.main
-                : theme.palette.primary.contrastText
-            }
-            textColor={
-              isMobile
-                ? theme.palette.text.primary
-                : theme.palette.text.secondary
-            }
+            backgroundColor={theme.palette.primary.main}
+            textColor={theme.palette.text.primary}
             posts={chunkedPosts.flat()}
           />
           {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
@@ -151,13 +142,14 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             sx={{
               minHeight: isMobile ? "100vh" : "calc(100vh - 64px)",
               height: isMobile ? "100%" : "calc(100% - 64px)",
-              background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
+              //background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
+              background: theme.palette.primary.main,
               paddingTop: isMobile ? "50px" : "0",
               width: "100%",
             }}
           >
             <Box flexGrow={1} />
-            {/* Welcome */}
+            {/* Tech Blog */}
             <Box
               sx={{
                 // marginTop: xs ? "30px" : isMobile ? "2%" : "8%",
@@ -166,35 +158,52 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 marginBottom: xs ? "15px" : "20px",
               }}
               display="flex"
+              flexDirection="column"
               alignItems="center"
               justifyContent="center"
+              height="30vh"
             >
               <Typography
                 variant={mdDown ? "h3" : "h1"}
                 fontFamily={theme.typography.fontFamily}
-                color={theme.palette.text.secondary}
+                color={theme.palette.text.primary}
                 fontWeight={600}
-              >
-                Welcome
-              </Typography>
-              <Image
-                src={WavingHand.src}
-                width={WavingHand.width}
-                height={WavingHand.width}
-                alt="Icon of a waving hand"
                 style={{
-                  marginLeft: mdDown ? "15px" : "25px",
-                  width: mdDown
-                    ? theme.typography.h3.fontSize
-                    : theme.typography.h1.fontSize,
-                  height: mdDown
-                    ? theme.typography.h3.fontSize
-                    : theme.typography.h1.fontSize,
-                  marginBottom: "5px",
+                  borderBottomWidth: "600px",
+                  borderBottom: "solid 4px " + theme.palette.secondary.main,
                 }}
-              />
+                py={2}
+                px={5}
+                textAlign="center"
+              >
+                MJNTech
+              </Typography>
+              <Typography
+                variant={mdDown ? "h5" : "h3"}
+                fontFamily={theme.typography.fontFamily}
+                color={theme.palette.text.primary}
+                fontWeight={600}
+                textAlign="center"
+                mx="20%"
+                mt={2}
+              >
+                A blog about programming, technology and everything between.
+              </Typography>
             </Box>
+
             <Box flexGrow={1} />
+            {/* <Typography
+              variant={mdDown ? "h5" : "h3"}
+              fontFamily={theme.typography.fontFamily}
+              color={theme.palette.text.primary}
+              fontWeight={600}
+              mt={2}
+              mb={0.5}
+              px={lgUp ? "150px" : xs ? "50px" : "80px"}
+              sx={{ opacity: 0.6 }}
+            >
+              Latest
+            </Typography> */}
             <Grid
               container
               rowSpacing={mdDown ? 5 : md ? 3 : 6}
