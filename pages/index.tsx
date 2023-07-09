@@ -184,8 +184,9 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 color={theme.palette.text.primary}
                 fontWeight={600}
                 textAlign="center"
-                mx="20%"
+                mx={isMobile || xs ? "15px" : sm ? "30px" : "20%"}
                 mt={2}
+                mb={5}
               >
                 A blog about programming, technology and everything between.
               </Typography>
