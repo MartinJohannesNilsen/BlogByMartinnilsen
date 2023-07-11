@@ -148,25 +148,72 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               width: "100%",
             }}
           >
-            {/* <Typography
-              variant={mdDown ? "h5" : "h3"}
-              fontFamily={theme.typography.fontFamily}
-              color={theme.palette.text.primary}
-              fontWeight={600}
-              mt={2}
-              mb={0.5}
+            <Box
+              display="flex"
+              flexDirection="row"
               px={lgUp ? "150px" : xs ? "50px" : "80px"}
-              sx={{ opacity: 0.6 }}
+              sx={{}}
             >
-              Latest
-            </Typography> */}
+              {/* <Typography
+                variant={"h5"}
+                fontFamily={theme.typography.fontFamily}
+                color={theme.palette.text.primary}
+                fontWeight={500}
+                opacity={0.5}
+                mt={2}
+                mb={0.5}
+                sx={{ opacity: 0.6 }}
+              >
+                Latest
+              </Typography> */}
+              <Box flexGrow={1} />
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                // py={xs ? 5 : 10}
+              >
+                <IconButton
+                  sx={{
+                    color: "text.primary",
+                  }}
+                  disabled={page <= 1}
+                  onClick={() => handlePreviousPage()}
+                >
+                  <ArrowBackIosNewSharp color="inherit" />
+                </IconButton>
+                <Typography marginX={3} variant="subtitle2" color="textPrimary">
+                  {page}
+                </Typography>
+                <IconButton
+                  sx={{
+                    color: "text.primary",
+                  }}
+                  disabled={
+                    !(
+                      page <
+                      Math.ceil(
+                        chunkedPosts.flat().length /
+                          Number(
+                            process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE
+                          )
+                      )
+                    )
+                  }
+                  onClick={() => handleNextPage()}
+                >
+                  <ArrowForwardIosSharp color="inherit" />
+                </IconButton>
+              </Box>
+            </Box>
             <Grid
               container
-              rowSpacing={mdDown ? 5 : md ? 3 : 6}
+              rowSpacing={mdDown ? 5 : md ? 3 : 3}
               columnSpacing={mdDown ? 0 : xl ? 5 : 3}
               sx={{
                 width: "100%",
                 paddingX: lgUp ? "150px" : xs ? "50px" : "80px",
+                paddingBottom: lgUp ? "0px" : xs ? "30px" : "20px",
                 margin: 0,
               }}
             >
@@ -198,46 +245,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 );
               })}
             </Grid>
-            {/* Pagination */}
-            <Box flexGrow={1} />
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              py={xs ? 5 : 10}
-            >
-              <IconButton
-                sx={{
-                  color: "text.primary",
-                }}
-                disabled={page <= 1}
-                onClick={() => handlePreviousPage()}
-              >
-                <ArrowBackIosNewSharp color="inherit" />
-              </IconButton>
-              <Typography marginX={3} variant="subtitle2" color="textPrimary">
-                {page}
-              </Typography>
-              <IconButton
-                sx={{
-                  color: "text.primary",
-                }}
-                disabled={
-                  !(
-                    page <
-                    Math.ceil(
-                      chunkedPosts.flat().length /
-                        Number(
-                          process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE
-                        )
-                    )
-                  )
-                }
-                onClick={() => handleNextPage()}
-              >
-                <ArrowForwardIosSharp color="inherit" />
-              </IconButton>
-            </Box>
             {/* </RevealFromDownOnEnter> */}
           </Box>
         </Box>

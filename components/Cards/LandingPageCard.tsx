@@ -34,7 +34,7 @@ export const LandingPageCard: FC<PostCardProps> = (props) => {
       transform: xl
         ? "scale3d(1.02, 1.02, 1)"
         : lg
-        ? "scale3d(1.04, 1.04, 1)"
+        ? "scale3d(1.03, 1.03, 1)"
         : "scale3d(1.05, 1.05, 1)",
       width: "100%",
     },
