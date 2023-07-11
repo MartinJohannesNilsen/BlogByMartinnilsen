@@ -144,55 +144,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               height: isMobile ? "100%" : "calc(100% - 64px)",
               //background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
               background: theme.palette.primary.main,
-              paddingTop: isMobile ? "50px" : "0",
+              paddingTop: isMobile ? "50px" : "10px",
               width: "100%",
             }}
           >
-            <Box flexGrow={1} />
-            {/* Tech Blog */}
-            <Box
-              sx={{
-                // marginTop: xs ? "30px" : isMobile ? "2%" : "8%",
-                // marginBottom: xs ? "15px" : isMobile ? "2%" : "5%",
-                marginTop: xs ? "30px" : "50px",
-                marginBottom: xs ? "15px" : "20px",
-              }}
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              height="30vh"
-            >
-              <Typography
-                variant={mdDown ? "h3" : "h1"}
-                fontFamily={theme.typography.fontFamily}
-                color={theme.palette.text.primary}
-                fontWeight={600}
-                style={{
-                  borderBottomWidth: "600px",
-                  borderBottom: "solid 4px " + theme.palette.secondary.main,
-                }}
-                py={2}
-                px={5}
-                textAlign="center"
-              >
-                MJNTech
-              </Typography>
-              <Typography
-                variant={mdDown ? "h5" : "h3"}
-                fontFamily={theme.typography.fontFamily}
-                color={theme.palette.text.primary}
-                fontWeight={600}
-                textAlign="center"
-                mx={isMobile || mdDown ? "15px" : "20%"}
-                mt={2}
-                mb={5}
-              >
-                A blog about technology, programming and everything between.
-              </Typography>
-            </Box>
-
-            <Box flexGrow={1} />
             {/* <Typography
               variant={mdDown ? "h5" : "h3"}
               fontFamily={theme.typography.fontFamily}

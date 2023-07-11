@@ -1,5 +1,5 @@
 import { Person, PostAdd, Search, Tag, Tune } from "@mui/icons-material";
-import { Box, ButtonBase, Tooltip } from "@mui/material";
+import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import logo from "public/assets/imgs/terminal.png";
@@ -66,7 +66,16 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           width: isMobile ? "95%" : "80%",
         }}
       >
-        <ButtonBase onClick={() => handleNavigate("/")}>
+        <ButtonBase
+          onClick={() => handleNavigate("/")}
+          disableRipple
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Image
             src={logo.src}
             alt=""
@@ -74,6 +83,16 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             height={32}
             style={{ borderRadius: "0" }}
           />
+          <Typography
+            variant={"h5"}
+            fontFamily={theme.typography.fontFamily}
+            color={theme.palette.text.primary}
+            fontWeight={700}
+            textAlign="left"
+            pl={0.5}
+          >
+            Blog
+          </Typography>
         </ButtonBase>
         <Box flexGrow={100} />
         {isAuthorized ? (
