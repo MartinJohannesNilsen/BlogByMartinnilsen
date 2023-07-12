@@ -21,7 +21,7 @@ import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import LandingPageCard from "../components/Cards/LandingPageCard";
+import LandingPageCard from "../components/Cards/LandingPageGridCard";
 import Navbar from "../components/Navbar/Navbar";
 import SEO from "../components/SEO/SEO";
 import {
@@ -261,10 +261,12 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       size="small"
                     >
                       <ToggleButton value={false}>
-                        <ViewColumnRounded sx={{ color: "white" }} />
+                        <ViewColumnRounded
+                          sx={{ color: theme.palette.text.primary }}
+                        />
                       </ToggleButton>
                       <ToggleButton value={true}>
-                        <GridView sx={{ color: "white" }} />
+                        <GridView sx={{ color: theme.palette.text.primary }} />
                       </ToggleButton>
                     </ToggleButtonGroup>
                   </Box>
@@ -311,7 +313,14 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       })}
                     </Grid>
                   ) : (
-                    <></>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      mt="200px"
+                    >
+                      <Typography variant="h4"> Coming soon ... </Typography>
+                    </Box>
                   )}
                 </Box>
               </Box>

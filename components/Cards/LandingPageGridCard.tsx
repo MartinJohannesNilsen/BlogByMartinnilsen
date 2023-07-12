@@ -13,7 +13,7 @@ import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
 
-export const LandingPageCard: FC<PostCardProps> = (props) => {
+export const LandingPageGridCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
@@ -221,4 +221,4 @@ export const LandingPageCard: FC<PostCardProps> = (props) => {
   );
 };
 
-export default LandingPageCard;
+export default LandingPageGridCard;
