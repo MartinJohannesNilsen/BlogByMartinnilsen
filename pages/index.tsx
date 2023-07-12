@@ -2,17 +2,21 @@
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
+  GridView,
+  ViewColumnRounded,
 } from "@mui/icons-material";
 import {
   Box,
-  Divider,
+  Button,
+  ButtonGroup,
   Unstable_Grid2 as Grid,
   IconButton,
   Typography,
   useMediaQuery,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import Image from "next/image";
-import WavingHand from "public/assets/imgs/waving-hand.png";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../ThemeProvider";
@@ -68,12 +72,12 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     )
   );
   const [posts, setPosts] = useState<StoredPost[]>(chunkedPosts[0]);
+  const [cardView, setCardView] = useState<Boolean>(true);
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const md = useMediaQuery(theme.breakpoints.only("md"));
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-  const backgroundBWBreakingPercentage = lgUp ? "45%" : mdDown ? "35%" : "35%";
 
   useEffect(() => {
     setChunkedPosts(
@@ -114,6 +118,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     }
   };
 
+  const handleChangeView = (
+    event: React.MouseEvent<HTMLElement>,
+    newView: string | null
+  ) => {
+    setCardView(newView);
+  };
+
   return (
     <SEO
       pageMeta={{
@@ -135,7 +146,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             textColor={theme.palette.text.primary}
             posts={chunkedPosts.flat()}
           />
-          {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
           <Box
             display="flex"
             flexDirection="column"
@@ -148,104 +158,164 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               width: "100%",
             }}
           >
-            <Box
-              display="flex"
-              flexDirection="row"
-              px={lgUp ? "150px" : xs ? "50px" : "80px"}
-              sx={{}}
-            >
-              {/* <Typography
-                variant={"h5"}
-                fontFamily={theme.typography.fontFamily}
-                color={theme.palette.text.primary}
-                fontWeight={500}
-                opacity={0.5}
-                mt={2}
-                mb={0.5}
-                sx={{ opacity: 0.6 }}
-              >
-                Latest
-              </Typography> */}
-              <Box flexGrow={1} />
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                // py={xs ? 5 : 10}
-              >
-                <IconButton
+            {xs ? (
+              <Box>
+                <Grid
+                  container
+                  rowSpacing={mdDown ? 5 : md ? 3 : 3}
+                  columnSpacing={mdDown ? 0 : xl ? 5 : 3}
                   sx={{
-                    color: "text.primary",
+                    width: "100%",
+                    paddingX: lgUp ? "150px" : xs ? "50px" : "80px",
+                    paddingBottom: lgUp ? "0px" : xs ? "30px" : "20px",
+                    margin: 0,
                   }}
-                  disabled={page <= 1}
-                  onClick={() => handlePreviousPage()}
                 >
-                  <ArrowBackIosNewSharp color="inherit" />
-                </IconButton>
-                <Typography marginX={3} variant="subtitle2" color="textPrimary">
-                  {page}
-                </Typography>
-                <IconButton
-                  sx={{
-                    color: "text.primary",
-                  }}
-                  disabled={
-                    !(
-                      page <
-                      Math.ceil(
-                        chunkedPosts.flat().length /
-                          Number(
-                            process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE
-                          )
-                      )
-                    )
-                  }
-                  onClick={() => handleNextPage()}
-                >
-                  <ArrowForwardIosSharp color="inherit" />
-                </IconButton>
+                  {posts.map((data, index) => {
+                    return (
+                      <Grid
+                        item
+                        key={index}
+                        xs={12}
+                        md={6}
+                        lg={index % 4 === 0 ? 12 : 4}
+                        xl={6}
+                        // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
+                      >
+                        <LandingPageCard
+                          author={data.author}
+                          readTime={data.readTime}
+                          id={data.id}
+                          icon={data.icon}
+                          image={data.image}
+                          title={data.title}
+                          timestamp={data.timestamp}
+                          description={data.description}
+                          type={data.type}
+                          tags={data.tags}
+                          published={data.published}
+                        />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
               </Box>
-            </Box>
-            <Grid
-              container
-              rowSpacing={mdDown ? 5 : md ? 3 : 3}
-              columnSpacing={mdDown ? 0 : xl ? 5 : 3}
-              sx={{
-                width: "100%",
-                paddingX: lgUp ? "150px" : xs ? "50px" : "80px",
-                paddingBottom: lgUp ? "0px" : xs ? "30px" : "20px",
-                margin: 0,
-              }}
-            >
-              {posts.map((data, index) => {
-                return (
-                  <Grid
-                    item
-                    key={index}
-                    xs={12}
-                    md={6}
-                    lg={index % 4 === 0 ? 12 : 4}
-                    xl={6}
-                    // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
-                  >
-                    <LandingPageCard
-                      author={data.author}
-                      readTime={data.readTime}
-                      id={data.id}
-                      icon={data.icon}
-                      image={data.image}
-                      title={data.title}
-                      timestamp={data.timestamp}
-                      description={data.description}
-                      type={data.type}
-                      tags={data.tags}
-                      published={data.published}
-                    />
-                  </Grid>
-                );
-              })}
-            </Grid>
-            {/* </RevealFromDownOnEnter> */}
+            ) : (
+              <Box>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  px={lgUp ? "150px" : xs ? "50px" : "80px"}
+                >
+                  <Box flexGrow={1} />
+                  <Box>
+                    {cardView ? (
+                      <ButtonGroup sx={{ paddingRight: 1 }}>
+                        <IconButton
+                          sx={{
+                            color: "text.primary",
+                          }}
+                          disabled={page <= 1}
+                          onClick={() => handlePreviousPage()}
+                        >
+                          <ArrowBackIosNewSharp color="inherit" />
+                        </IconButton>
+                        <Box
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                          sx={{ width: "40px" }}
+                        >
+                          <Typography variant="subtitle2" color="textPrimary">
+                            {page}
+                          </Typography>
+                        </Box>
+                        <IconButton
+                          sx={{
+                            color: "text.primary",
+                          }}
+                          disabled={
+                            !(
+                              page <
+                              Math.ceil(
+                                chunkedPosts.flat().length /
+                                  Number(
+                                    process.env
+                                      .NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE
+                                  )
+                              )
+                            )
+                          }
+                          onClick={() => handleNextPage()}
+                        >
+                          <ArrowForwardIosSharp color="inherit" />
+                        </IconButton>
+                      </ButtonGroup>
+                    ) : (
+                      <></>
+                    )}
+                    <ToggleButtonGroup
+                      value={cardView}
+                      exclusive
+                      onChange={handleChangeView}
+                      size="small"
+                    >
+                      <ToggleButton value={false}>
+                        <ViewColumnRounded sx={{ color: "white" }} />
+                      </ToggleButton>
+                      <ToggleButton value={true}>
+                        <GridView sx={{ color: "white" }} />
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                  </Box>
+                </Box>
+                <Box>
+                  {cardView ? (
+                    <Grid
+                      container
+                      rowSpacing={mdDown ? 5 : md ? 3 : 3}
+                      columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+                      sx={{
+                        width: "100%",
+                        paddingX: lgUp ? "150px" : xs ? "50px" : "80px",
+                        paddingBottom: lgUp ? "0px" : xs ? "30px" : "20px",
+                        margin: 0,
+                      }}
+                    >
+                      {posts.map((data, index) => {
+                        return (
+                          <Grid
+                            item
+                            key={index}
+                            xs={12}
+                            md={6}
+                            lg={index % 4 === 0 ? 12 : 4}
+                            xl={6}
+                            // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
+                          >
+                            <LandingPageCard
+                              author={data.author}
+                              readTime={data.readTime}
+                              id={data.id}
+                              icon={data.icon}
+                              image={data.image}
+                              title={data.title}
+                              timestamp={data.timestamp}
+                              description={data.description}
+                              type={data.type}
+                              tags={data.tags}
+                              published={data.published}
+                            />
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  ) : (
+                    <></>
+                  )}
+                </Box>
+              </Box>
+            )}
           </Box>
         </Box>
       )}
