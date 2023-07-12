@@ -122,7 +122,9 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     event: React.MouseEvent<HTMLElement>,
     newView: string | null
   ) => {
-    setCardView(newView);
+    // If toggle between anyways
+    // setCardView(newView);
+    if (newView == true || newView == false) setCardView(newView);
   };
 
   return (
@@ -260,12 +262,20 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       onChange={handleChangeView}
                       size="small"
                     >
-                      <ToggleButton value={false}>
+                      <ToggleButton
+                        value={false}
+                        selected={!cardView}
+                        disabled={!cardView}
+                      >
                         <ViewColumnRounded
                           sx={{ color: theme.palette.text.primary }}
                         />
                       </ToggleButton>
-                      <ToggleButton value={true}>
+                      <ToggleButton
+                        value={true}
+                        selected={cardView}
+                        disabled={cardView}
+                      >
                         <GridView sx={{ color: theme.palette.text.primary }} />
                       </ToggleButton>
                     </ToggleButtonGroup>
