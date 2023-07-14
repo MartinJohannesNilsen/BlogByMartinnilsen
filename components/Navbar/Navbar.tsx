@@ -1,5 +1,11 @@
 import { Person, PostAdd, Search, Tag, Tune } from "@mui/icons-material";
-import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  ButtonBase,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import logo from "public/assets/imgs/terminal.png";
@@ -28,6 +34,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
     event.preventDefault();
     handleSearchModalOpen();
   });
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const sm = useMediaQuery(theme.breakpoints.only("sm"));
+  const md = useMediaQuery(theme.breakpoints.only("md"));
+  const lg = useMediaQuery(theme.breakpoints.only("lg"));
+  const xl = useMediaQuery(theme.breakpoints.only("xl"));
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   // Navigation
   const router = useRouter();
@@ -63,7 +76,9 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         display="flex"
         alignItems="center"
         sx={{
-          width: isMobile ? "95%" : "80%",
+          // width: isMobile || xs ? "95%" : "80%",
+          width: "100%",
+          paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
         }}
       >
         <ButtonBase

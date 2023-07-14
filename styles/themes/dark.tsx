@@ -13,6 +13,7 @@ export const dark = createTheme({
       contrastText: "#fbfbfb",
       main: "#161518",
       dark: "#141315",
+      light: "#141315",
     },
     // accent color
     secondary: {

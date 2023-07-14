@@ -31,7 +31,9 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
       width: "100%",
     },
     cardHovered: {
-      transform: xl
+      transform: !props.enlargeOnHover
+        ? "none"
+        : xl
         ? "scale3d(1.02, 1.02, 1)"
         : lg
         ? "scale3d(1.03, 1.03, 1)"

@@ -1,8 +1,10 @@
 import { AccessTime, CalendarMonth } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
+  CardMedia,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -12,6 +14,8 @@ import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import { isMobile } from "react-device-detect";
 
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -23,20 +27,15 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   });
   const useStyles = makeStyles({
     root: {
-      transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-      boxShadow:
-        theme.palette.mode === "light"
-          ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
-          : "",
+      // transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
       width: "100%",
-    },
-    cardHovered: {
-      transform: xl
-        ? "scale3d(1.02, 1.02, 1)"
-        : lg
-        ? "scale3d(1.03, 1.03, 1)"
-        : "scale3d(1.05, 1.05, 1)",
-      width: "100%",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main,
+      },
+      ".MuiCardActionArea-hoverHighlight": {
+        background: "transparent",
+      },
+      backgroundColor: theme.palette.primary.light,
     },
   });
   const classes = useStyles();
@@ -44,88 +43,45 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   return (
     <Card
       className={classes.root}
-      classes={{ root: state.raised ? classes.cardHovered : "" }}
       onMouseOver={() => setState({ raised: true })}
       onMouseOut={() => setState({ raised: false })}
-      sx={{ width: "100%" }}
+      sx={{
+        // width: "100%",
+        borderRadius: 4,
+        boxShadow: "none",
+      }}
     >
       <CardActionArea
         href={`/posts/${props.id}`}
         sx={{
-          height: "350px",
+          height: xs && isMobile ? 450 : 500,
+          maxHeight: xs && isMobile ? 450 : 500,
           width: "100%",
-          "&:hover": {
-            backgroundColor: theme.palette.primary.main,
-          },
-          padding: "20px",
         }}
       >
-        <Box display="flex" flexDirection="column" sx={{ height: "100%" }}>
-          {/* Image and type/tag rows */}
-          <Box display="flex" flexDirection="row">
-            <Image
-              src={props.icon}
-              alt=""
-              width={80}
-              height={80}
-              style={{ borderRadius: 2, objectFit: "cover" }}
-            />
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="flex-start"
-              sx={{
-                height: "80px",
-                textAlign: "left",
-                padding: "10px 0px 10px 12px",
-                maxWidth: "500px",
-              }}
-            >
-              <Typography
-                variant="body1"
-                fontWeight={700}
-                color={theme.palette.secondary.main}
-                fontFamily={theme.typography.fontFamily}
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "webkit-flex",
-                  WebkitLineClamp: 1,
-                  lineClamp: 1,
-                  WebkitBoxOrient: "vertical",
-                }}
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    props.type
-                      ? "//&nbsp;&nbsp;" + props.type + "&nbsp;&nbsp;//"
-                      : ""
-                  ),
-                }}
-              />
-              <Typography
-                variant="body2"
-                color="textPrimary"
-                fontFamily={theme.typography.fontFamily}
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "webkit-flex",
-                  WebkitLineClamp: 2,
-                  lineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                }}
-              >
-                {props.tags.map((tag, index) =>
-                  index != 0 ? ", " + tag : tag
-                )}
-              </Typography>
-            </Box>
-          </Box>
-          {/* Title and summary */}
+        <CardMedia sx={{ height: 210 }}>
+          <Image
+            src={props.image || DEFAULT_OGIMAGE}
+            alt=""
+            fill={true}
+            // width={350}
+            // height={210}
+            style={{ objectFit: "cover", borderRadius: 0, maxHeight: 210 }}
+          />
+        </CardMedia>
+        <Box
+          display="flex"
+          flexDirection="column"
+          sx={{
+            height: xs && isMobile ? "225px" : "275px",
+            padding: "10px 20px",
+          }}
+        >
+          {/* Title and description */}
           <Box
             display="flex"
             flexDirection="column"
-            pt={2}
+            pt={0}
             sx={{ maxWidth: "650px" }}
           >
             <Typography
@@ -164,10 +120,41 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
               {props.description}
             </Typography>
           </Box>
-          {/*  */}
-          <Box sx={{ flexGrow: 100 }} />
+          {/* Tags */}
+          <Box sx={{ flexGrow: 1 }} />
           {/* Information gutter */}
           <Box>
+            {/* Tags */}
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              pt={3}
+              pb={1}
+            >
+              {props.tags.map((tag, index) => (
+                <Button disabled variant="contained" sx={{ marginRight: 1 }}>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    color="textPrimary"
+                    fontFamily={theme.typography.fontFamily}
+                    sx={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "webkit-flex",
+                      WebkitLineClamp: 2,
+                      lineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      opacity: 0.6,
+                    }}
+                  >
+                    {tag}
+                  </Typography>
+                </Button>
+              ))}
+            </Box>
+            {/* Date and reading time */}
             <Box display="flex" flexDirection="row" alignItems="center">
               {/* Timestamp */}
               <CalendarMonth

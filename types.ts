@@ -106,6 +106,7 @@ type PostProps = {
   title: string;
   type: string;
   published: boolean;
+  enlargeOnHover?: boolean;
 };
 
 export type FullPost = PostProps & {
