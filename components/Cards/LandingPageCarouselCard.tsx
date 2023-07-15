@@ -53,7 +53,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
       }}
     >
       <CardActionArea
-        disableTouchRipple
+        // disableTouchRipple
         href={`/posts/${props.id}`}
         sx={{
           height: xs && isMobile ? 450 : 500,

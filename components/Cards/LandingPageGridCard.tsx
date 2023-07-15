@@ -59,6 +59,9 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
           "&:hover": {
             backgroundColor: theme.palette.primary.main,
           },
+          "&:active": {
+            backgroundColor: theme.palette.primary.light,
+          },
           padding: "20px",
         }}
       >
