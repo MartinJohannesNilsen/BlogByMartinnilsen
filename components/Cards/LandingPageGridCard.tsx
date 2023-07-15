@@ -29,6 +29,13 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
           ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
           : "",
       width: "100%",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main,
+      },
+      "&:active": {
+        backgroundColor: theme.palette.primary.main,
+      },
+      backgroundColor: theme.palette.primary.main,
     },
     cardHovered: {
       transform: !props.enlargeOnHover
@@ -56,12 +63,6 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
         sx={{
           height: "350px",
           width: "100%",
-          "&:hover": {
-            backgroundColor: theme.palette.primary.main,
-          },
-          "&:active": {
-            backgroundColor: theme.palette.primary.light,
-          },
           padding: "20px",
         }}
       >
@@ -178,14 +179,15 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
               sx={{
                 opacity: 0.6,
                 marginRight: "6px",
-                fontSize: xs ? "13px" : "default",
+                // marginBottom: "3px",
+                fontSize: "default",
               }}
             />
             <Typography
               fontFamily={theme.typography.fontFamily}
               variant="body2"
               fontWeight="600"
-              sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+              sx={{ opacity: 0.6, fontSize: "default" }}
             >
               {new Date(props.timestamp).toLocaleDateString("en-GB", {
                 // weekday: "long",
@@ -200,14 +202,15 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
                 opacity: 0.6,
                 marginLeft: "12px",
                 marginRight: "6px",
-                fontSize: xs ? "13px" : "default",
+                // marginBottom: "3px",
+                fontSize: "default",
               }}
             />
             <Typography
               fontFamily={theme.typography.fontFamily}
               variant="body2"
               fontWeight="600"
-              sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+              sx={{ opacity: 0.6, fontSize: "default" }}
             >
               {props.readTime ? props.readTime : "⎯"}
             </Typography>
@@ -215,9 +218,7 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
             {!props.published && (
               <>
                 <Box flexGrow={100} />{" "}
-                <Typography sx={{ fontSize: xs ? "13px" : "default" }}>
-                  🖊
-                </Typography>
+                <Typography sx={{ fontSize: "default" }}>🖊</Typography>
               </>
             )}
           </Box>

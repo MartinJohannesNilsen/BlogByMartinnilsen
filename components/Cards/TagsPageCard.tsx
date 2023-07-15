@@ -28,6 +28,13 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
           ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
           : "",
       width: "100%",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main,
+      },
+      "&:active": {
+        backgroundColor: theme.palette.primary.main,
+      },
+      backgroundColor: theme.palette.primary.main,
     },
     cardHovered: {
       transform: xl
@@ -52,9 +59,6 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
         href={`/posts/${props.id}`}
         sx={{
           width: "100%",
-          "&:hover": {
-            backgroundColor: theme.palette.primary.main,
-          },
           padding: "20px",
         }}
       >
@@ -121,14 +125,15 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
                 sx={{
                   opacity: 0.6,
                   marginRight: "6px",
-                  fontSize: xs ? "12px" : "default",
+                  // marginBottom: "3px",
+                  fontSize: "13px",
                 }}
               />
               <Typography
                 fontFamily={theme.typography.fontFamily}
                 variant="body2"
                 fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+                sx={{ opacity: 0.6, fontSize: "13px" }}
               >
                 {new Date(props.timestamp).toLocaleDateString("en-GB", {
                   // weekday: "long",
@@ -143,21 +148,23 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
                   opacity: 0.6,
                   marginLeft: "12px",
                   marginRight: "6px",
-                  fontSize: xs ? "12px" : "default",
+                  // marginBottom: "3px",
+                  fontSize: "13px",
                 }}
               />
               <Typography
                 fontFamily={theme.typography.fontFamily}
                 variant="body2"
                 fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+                sx={{ opacity: 0.6, fontSize: "13px" }}
               >
                 {props.readTime ? props.readTime : "⎯"}
               </Typography>
               {/* Not published icon */}
               {!props.published && (
                 <>
-                  <Box flexGrow={100} /> <>🖊</>
+                  <Box flexGrow={100} />{" "}
+                  <Typography sx={{ fontSize: "13px" }}>🖊</Typography>
                 </>
               )}
             </Box>

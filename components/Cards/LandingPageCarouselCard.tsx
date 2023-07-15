@@ -135,7 +135,12 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
               pb={1}
             >
               {props.tags.map((tag, index) => (
-                <Button disabled variant="contained" sx={{ marginRight: 1 }}>
+                <Button
+                  key={index}
+                  disabled
+                  variant="contained"
+                  sx={{ marginRight: 1 }}
+                >
                   <Typography
                     variant="body2"
                     fontWeight={600}
@@ -163,7 +168,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 sx={{
                   opacity: 0.6,
                   marginRight: "6px",
-                  marginBottom: "3px",
+                  // marginBottom: "3px",
                   fontSize: "default",
                 }}
               />
@@ -186,7 +191,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                   opacity: 0.6,
                   marginLeft: "12px",
                   marginRight: "6px",
-                  marginBottom: "3px",
+                  // marginBottom: "3px",
                   fontSize: "default",
                 }}
               />
@@ -202,9 +207,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
               {!props.published && (
                 <>
                   <Box flexGrow={100} />{" "}
-                  <Typography sx={{ fontSize: xs ? "13px" : "default" }}>
-                    🖊
-                  </Typography>
+                  <Typography sx={{ fontSize: "default" }}>🖊</Typography>
                 </>
               )}
             </Box>

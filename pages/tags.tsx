@@ -234,7 +234,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
               height: xs ? "100%" : "calc(100% - 64px)",
               width: "100%",
               paddingX: lgUp ? "150px" : xs ? "20px" : "80px",
-              paddingTop: xs ? "60px" : "40px",
+              paddingTop: isMobile ? "55px" : xs ? "20px" : "40px",
               backgroundColor: theme.palette.primary.main,
             }}
           >

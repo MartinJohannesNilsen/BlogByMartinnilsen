@@ -33,6 +33,7 @@ import { LandingPageProps, StoredPost } from "../types";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
+import useStickyState from "../utils/useStickyState";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -66,7 +67,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const { isAuthorized } = useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
-  const [gridView, setGridView] = useState<Boolean>(false);
+  const [gridView, setGridView] = useStickyState<Boolean>("gridView", false);
   const [page, setPage] = useState(1);
   const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
     splitChunks(
@@ -96,12 +97,12 @@ const LandingPage: FC<LandingPageProps> = (props) => {
         Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
       )
     );
-    setIsLoading(false);
     return () => {};
   }, [isAuthorized]);
 
   useEffect(() => {
     setIsLoading(true);
+    setCurrentSlide(0);
     setPosts(
       xs
         ? chunkedPosts.flat()
@@ -109,11 +110,30 @@ const LandingPage: FC<LandingPageProps> = (props) => {
         ? chunkedPosts.flat()
         : chunkedPosts[page - 1]
     );
-    setCurrentSlide(0);
-    setIsLoading(false);
     // instanceRef && instanceRef.current?.update;
     return () => {};
   }, [chunkedPosts, gridView]);
+
+  useEffect(() => {
+    setIsLoading(false);
+    // instanceRef && instanceRef.current?.update;
+    return () => {};
+  }, [posts]);
+
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   setPosts(
+  //     xs
+  //       ? chunkedPosts.flat()
+  //       : !gridView
+  //       ? chunkedPosts.flat()
+  //       : chunkedPosts[page - 1]
+  //   );
+  //   setCurrentSlide(0);
+  //   setIsLoading(false);
+  //   // instanceRef && instanceRef.current?.update;
+  //   return () => {};
+  // }, [chunkedPosts]);
 
   const handleNextPage = () => {
     const endPage = Math.ceil(
