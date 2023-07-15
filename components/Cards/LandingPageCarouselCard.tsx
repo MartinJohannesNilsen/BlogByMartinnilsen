@@ -163,14 +163,15 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 sx={{
                   opacity: 0.6,
                   marginRight: "6px",
-                  fontSize: xs ? "13px" : "default",
+                  marginBottom: "3px",
+                  fontSize: "default",
                 }}
               />
               <Typography
                 fontFamily={theme.typography.fontFamily}
                 variant="body2"
                 fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+                sx={{ opacity: 0.6, fontSize: "default" }}
               >
                 {new Date(props.timestamp).toLocaleDateString("en-GB", {
                   // weekday: "long",
@@ -185,14 +186,15 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                   opacity: 0.6,
                   marginLeft: "12px",
                   marginRight: "6px",
-                  fontSize: xs ? "13px" : "default",
+                  marginBottom: "3px",
+                  fontSize: "default",
                 }}
               />
               <Typography
                 fontFamily={theme.typography.fontFamily}
                 variant="body2"
                 fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+                sx={{ opacity: 0.6, fontSize: "default" }}
               >
                 {props.readTime ? props.readTime : "⎯"}
               </Typography>

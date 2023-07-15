@@ -66,6 +66,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const { isAuthorized } = useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
+  const [gridView, setGridView] = useState<Boolean>(false);
   const [page, setPage] = useState(1);
   const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
     splitChunks(
@@ -76,9 +77,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     )
   );
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const [cardView, setCardView] = useState<Boolean>(false);
   const [posts, setPosts] = useState<StoredPost[]>(
-    xs || !cardView ? props.posts : chunkedPosts[0]
+    xs ? chunkedPosts.flat() : !gridView ? chunkedPosts.flat() : chunkedPosts[0]
   );
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const md = useMediaQuery(theme.breakpoints.only("md"));
@@ -96,20 +96,24 @@ const LandingPage: FC<LandingPageProps> = (props) => {
         Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
       )
     );
+    setIsLoading(false);
     return () => {};
   }, [isAuthorized]);
 
   useEffect(() => {
-    if (xs || !cardView)
-      setPosts(
-        isAuthorized
-          ? props.posts
-          : _filterListOfStoredPostsOnPublished(props.posts, "published")
-      );
-    else setPosts(chunkedPosts[page - 1]);
+    setIsLoading(true);
+    setPosts(
+      xs
+        ? chunkedPosts.flat()
+        : !gridView
+        ? chunkedPosts.flat()
+        : chunkedPosts[page - 1]
+    );
+    setCurrentSlide(0);
     setIsLoading(false);
+    // instanceRef && instanceRef.current?.update;
     return () => {};
-  }, [chunkedPosts, cardView]);
+  }, [chunkedPosts, gridView]);
 
   const handleNextPage = () => {
     const endPage = Math.ceil(
@@ -137,8 +141,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     newView: string | null
   ) => {
     // If toggle between anyways
-    // setCardView(newView);
-    if (newView == true || newView == false) setCardView(newView);
+    // setGridView(newView);
+    if (newView == true || newView == false) setGridView(newView);
   };
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -209,15 +213,15 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                   <Box flexGrow={1} />
                   {/* Grid View */}
                   <ToggleButtonGroup
-                    value={cardView}
+                    value={gridView}
                     exclusive
                     onChange={handleChangeView}
                     size="small"
                   >
                     <ToggleButton
                       value={false}
-                      selected={!cardView}
-                      disabled={!cardView}
+                      selected={!gridView}
+                      disabled={!gridView}
                     >
                       <ViewColumnRounded
                         sx={{ color: theme.palette.text.primary }}
@@ -225,8 +229,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     </ToggleButton>
                     <ToggleButton
                       value={true}
-                      selected={cardView}
-                      disabled={cardView}
+                      selected={gridView}
+                      disabled={gridView}
                     >
                       <GridView sx={{ color: theme.palette.text.primary }} />
                     </ToggleButton>
@@ -235,15 +239,16 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 {/* Content */}
                 <Box>
                   {/* Grid View */}
-                  {cardView ? (
+                  {gridView ? (
                     <Grid
                       container
                       rowSpacing={mdDown ? 2 : md ? 3 : 3}
                       columnSpacing={mdDown ? 0 : xl ? 5 : 3}
                       sx={{
                         width: "100%",
-                        paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
-                        paddingBottom: lgUp ? "0px" : xs ? "4 0px" : "20px",
+                        paddingX: lgUp ? 18 : xs ? 2 : 10,
+                        paddingTop: xs ? 1 : 0,
+                        paddingBottom: lgUp ? 0 : xs ? 5 : 2.5,
                         margin: 0,
                       }}
                     >
@@ -348,7 +353,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                                 e.stopPropagation() ||
                                 instanceRef.current?.next()
                               }
-                              disabled={currentSlide === posts.length - 1} //TODO Fix logic
+                              disabled={currentSlide === posts.length - 1}
                             >
                               <ArrowForwardIosSharp color="inherit" />
                             </IconButton>
@@ -372,7 +377,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 >
                   <Box flexGrow={1} />
                   <Box>
-                    {cardView ? (
+                    {gridView ? (
                       <ButtonGroup sx={{ paddingRight: 1 }}>
                         <IconButton
                           sx={{
@@ -416,15 +421,15 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       </ButtonGroup>
                     ) : null}
                     <ToggleButtonGroup
-                      value={cardView}
+                      value={gridView}
                       exclusive
                       onChange={handleChangeView}
                       size="small"
                     >
                       <ToggleButton
                         value={false}
-                        selected={!cardView}
-                        disabled={!cardView}
+                        selected={!gridView}
+                        disabled={!gridView}
                       >
                         <ViewColumnRounded
                           sx={{ color: theme.palette.text.primary }}
@@ -432,8 +437,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       </ToggleButton>
                       <ToggleButton
                         value={true}
-                        selected={cardView}
-                        disabled={cardView}
+                        selected={gridView}
+                        disabled={gridView}
                       >
                         <GridView sx={{ color: theme.palette.text.primary }} />
                       </ToggleButton>
@@ -444,10 +449,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 {/* Content */}
                 <Box>
                   {/* Grid View */}
-                  {cardView ? (
+                  {gridView ? (
                     <Grid
                       container
-                      rowSpacing={mdDown ? 5 : md ? 3 : 3}
+                      rowSpacing={mdDown ? 3 : md ? 3 : 3}
                       columnSpacing={mdDown ? 0 : xl ? 5 : 3}
                       sx={{
                         width: "100%",
@@ -552,7 +557,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                                 e.stopPropagation() ||
                                 instanceRef.current?.next()
                               }
-                              disabled={currentSlide === posts.length - 3} //TODO Fix logic
+                              disabled={
+                                currentSlide ===
+                                posts.length - (sm ? 1 : md ? 1 : lg ? 2 : 2)
+                              }
                             >
                               <ArrowForwardIosSharp color="inherit" />
                             </IconButton>
