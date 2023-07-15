@@ -169,53 +169,54 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
           {/*  */}
           <Box sx={{ flexGrow: 100 }} />
           {/* Information gutter */}
-          <Box>
-            <Box display="flex" flexDirection="row" alignItems="center">
-              {/* Timestamp */}
-              <CalendarMonth
-                sx={{
-                  opacity: 0.6,
-                  marginRight: "6px",
-                  fontSize: xs ? "12px" : "default",
-                }}
-              />
-              <Typography
-                fontFamily={theme.typography.fontFamily}
-                variant="body2"
-                fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
-              >
-                {new Date(props.timestamp).toLocaleDateString("en-GB", {
-                  // weekday: "long",
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </Typography>
-              {/* Read time */}
-              <AccessTime
-                sx={{
-                  opacity: 0.6,
-                  marginLeft: "12px",
-                  marginRight: "6px",
-                  fontSize: xs ? "12px" : "default",
-                }}
-              />
-              <Typography
-                fontFamily={theme.typography.fontFamily}
-                variant="body2"
-                fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
-              >
-                {props.readTime ? props.readTime : "⎯"}
-              </Typography>
-              {/* Not published icon */}
-              {!props.published && (
-                <>
-                  <Box flexGrow={100} /> <>🖊</>
-                </>
-              )}
-            </Box>
+          <Box display="flex" flexDirection="row" alignItems="center">
+            {/* Timestamp */}
+            <CalendarMonth
+              sx={{
+                opacity: 0.6,
+                marginRight: "6px",
+                fontSize: xs ? "13px" : "default",
+              }}
+            />
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="body2"
+              fontWeight="600"
+              sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+            >
+              {new Date(props.timestamp).toLocaleDateString("en-GB", {
+                // weekday: "long",
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+            </Typography>
+            {/* Read time */}
+            <AccessTime
+              sx={{
+                opacity: 0.6,
+                marginLeft: "12px",
+                marginRight: "6px",
+                fontSize: xs ? "13px" : "default",
+              }}
+            />
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="body2"
+              fontWeight="600"
+              sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
+            >
+              {props.readTime ? props.readTime : "⎯"}
+            </Typography>
+            {/* Not published icon */}
+            {!props.published && (
+              <>
+                <Box flexGrow={100} />{" "}
+                <Typography sx={{ fontSize: xs ? "13px" : "default" }}>
+                  🖊
+                </Typography>
+              </>
+            )}
           </Box>
         </Box>
       </CardActionArea>

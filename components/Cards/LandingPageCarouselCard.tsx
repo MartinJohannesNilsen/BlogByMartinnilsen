@@ -30,12 +30,13 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
       // transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
       width: "100%",
       "&:hover": {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light,
       },
-      ".MuiCardActionArea-hoverHighlight": {
-        background: "transparent",
+      "&:active": {
+        backgroundColor: theme.palette.primary.light,
       },
       backgroundColor: theme.palette.primary.light,
+      // boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px",
     },
   });
   const classes = useStyles();
@@ -52,6 +53,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
       }}
     >
       <CardActionArea
+        disableTouchRipple
         href={`/posts/${props.id}`}
         sx={{
           height: xs && isMobile ? 450 : 500,
@@ -73,7 +75,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
           display="flex"
           flexDirection="column"
           sx={{
-            height: xs && isMobile ? "225px" : "275px",
+            height: xs && isMobile ? "235px" : "285px",
             padding: "10px 20px",
           }}
         >
@@ -161,7 +163,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 sx={{
                   opacity: 0.6,
                   marginRight: "6px",
-                  fontSize: xs ? "12px" : "default",
+                  fontSize: xs ? "13px" : "default",
                 }}
               />
               <Typography
@@ -183,7 +185,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                   opacity: 0.6,
                   marginLeft: "12px",
                   marginRight: "6px",
-                  fontSize: xs ? "12px" : "default",
+                  fontSize: xs ? "13px" : "default",
                 }}
               />
               <Typography
@@ -197,7 +199,10 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
               {/* Not published icon */}
               {!props.published && (
                 <>
-                  <Box flexGrow={100} /> <>🖊</>
+                  <Box flexGrow={100} />{" "}
+                  <Typography sx={{ fontSize: xs ? "13px" : "default" }}>
+                    🖊
+                  </Typography>
                 </>
               )}
             </Box>

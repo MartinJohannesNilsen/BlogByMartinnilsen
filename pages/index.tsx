@@ -158,6 +158,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     // created() {
     //   setLoaded(true);
     // },
+    // range: { min: 0, max: posts.length, align: true },
     defaultAnimation: {
       duration: 3000,
     },
@@ -242,7 +243,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       sx={{
                         width: "100%",
                         paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
-                        paddingBottom: lgUp ? "0px" : xs ? "30px" : "20px",
+                        paddingBottom: lgUp ? "0px" : xs ? "4 0px" : "20px",
                         margin: 0,
                       }}
                     >
@@ -283,7 +284,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                         flexDirection="column"
                         justifyContent="center"
                         alignItems="center"
-                        my={isMobile ? 0 : 6}
+                        my={isMobile ? 4 : 6}
                         sx={{
                           padding: lgUp ? "0 150px" : xs ? "20px 0" : "0 80px",
                         }}
@@ -324,11 +325,12 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                             );
                           })}
                         </Box>
-                        <Box mt={xs ? 2 : 4}>
+                        <Box mt={4}>
                           <ButtonGroup sx={{ padding: 1 }}>
                             <IconButton
                               sx={{
                                 color: "text.primary",
+                                paddingRight: 2,
                               }}
                               onClick={(e) =>
                                 e.stopPropagation() ||
