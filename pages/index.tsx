@@ -120,21 +120,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     return () => {};
   }, [posts]);
 
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   setPosts(
-  //     xs
-  //       ? chunkedPosts.flat()
-  //       : !gridView
-  //       ? chunkedPosts.flat()
-  //       : chunkedPosts[page - 1]
-  //   );
-  //   setCurrentSlide(0);
-  //   setIsLoading(false);
-  //   // instanceRef && instanceRef.current?.update;
-  //   return () => {};
-  // }, [chunkedPosts]);
-
   const handleNextPage = () => {
     const endPage = Math.ceil(
       chunkedPosts.flat().length /
