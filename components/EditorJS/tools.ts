@@ -22,6 +22,8 @@ import InlineVideo from "./BlockTools/InlineVideo/tool";
 import editorjsCodeflask from "@calumk/editorjs-codeflask";
 // @ts-ignore
 import Table from "@martinjohannesnilsen/editorjs-table";
+// Math
+const EJLaTeX = require("editorjs-latex");
 
 /* Development */
 // import ChangeCase from "editorjs-change-case";
