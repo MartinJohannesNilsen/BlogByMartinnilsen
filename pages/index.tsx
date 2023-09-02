@@ -155,12 +155,12 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const [sliderRef, instanceRef] = useKeenSlider({
     mode: "free-snap",
     slides: {
-      origin: "auto",
+      origin: xs ? "auto" : "center",
       // perView: xs ? 1.2 : sm ? 1.2 : md ? 2.5 : lg ? 3.5 : 5.5,
       perView: "auto",
       spacing: xs ? 20 : sm ? 20 : md ? 30 : lg ? 40 : 50,
     },
-    initial: 0,
+    initial: lgUp ? 1 : 0,
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
     },
@@ -187,6 +187,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             height: "100%",
             width: "100%",
             background: theme.palette.primary.main,
+            userSelect: "none",
           }}
         >
           <Navbar
@@ -498,12 +499,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     <Box height="100%">
                       <Box flexGrow={1} />
                       <Box
+                        height="100%"
                         display="flex"
                         flexDirection="column"
                         justifyContent="center"
                         alignItems="center"
                         py={8}
-                        sx={{ paddingX: lgUp ? "150px" : xs ? "50px" : "80px" }}
+                        sx={{ paddingX: "0px" }}
                       >
                         <Box
                           ref={sliderRef}
@@ -540,7 +542,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                             );
                           })}
                         </Box>
-                        <Box mt={6}>
+                        <Box mt={7}>
                           <ButtonGroup sx={{ padding: 1 }}>
                             <IconButton
                               sx={{
