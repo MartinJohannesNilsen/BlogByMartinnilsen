@@ -35,7 +35,7 @@ export const SEO = ({ children, pageMeta }: SEOProps) => {
     // title: "Tech blog | Martin Johannes Nilsen",
     title: "Blog by MJNTech",
     description:
-      "A tech blog by Martin Johannes Nilsen, a Software Engineer, M.Sc. Student and passionate problem solver.",
+      "A tech blog by Martin Johannes Nilsen, a Software Engineer with an M.Sc. degree and a passionate problem solver.",
     author: "Martin Johannes Nilsen",
     openGraph: {
       type: "website",
