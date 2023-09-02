@@ -160,7 +160,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
       perView: "auto",
       spacing: xs ? 20 : sm ? 20 : md ? 30 : lg ? 40 : 50,
     },
-    initial: lgUp ? 1 : 0,
+    initial: typeof window !== "undefined" && window.innerWidth >= 1200 ? 1 : 0,
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
     },
