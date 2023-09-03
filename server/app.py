@@ -18,7 +18,7 @@ def index():
 """
 Simple version
 """
-@app.route("/fetchLinkPreview")
+@app.route("/fetchlinkpreview")
 def link_preview():
     # Get queryparams and create out object
     args = request.args
@@ -86,7 +86,7 @@ def _get_image(html):
     return image
 
 
-@app.route("/advancedFetchLinkPreview")
+@app.route("/advancedfetchlinkpreview")
 def advanced_link_preview():
     # Get url
     args = request.args

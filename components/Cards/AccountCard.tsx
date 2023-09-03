@@ -9,9 +9,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { Session } from "next-auth";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
-import { Session } from "next-auth";
 
 type AccountCard = {
   session: Session;
@@ -114,10 +114,33 @@ export const AccountCard: FC<AccountCard> = (props) => {
           textAlign="center"
           mt={1}
         >
-          <Typography variant="h5" gutterBottom>
+          <Typography
+            variant="h5"
+            gutterBottom
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "webkit-flex",
+              WebkitLineClamp: 1,
+              lineClamp: 1,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
             {props.session.user.name}
           </Typography>
-          <Typography variant="body1">{props.session.user.email}</Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "webkit-flex",
+              WebkitLineClamp: 1,
+              lineClamp: 1,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {props.session.user.email}
+          </Typography>
           <Typography
             variant="body1"
             sx={{ fontWeight: 800, color: theme.palette.secondary.main }}

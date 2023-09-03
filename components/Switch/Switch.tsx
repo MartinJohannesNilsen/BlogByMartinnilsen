@@ -1,5 +1,5 @@
-import withStyles from "@mui/styles/withStyles";
 import Switch from "@mui/material/Switch";
+import withStyles from "@mui/styles/withStyles";
 
 export const CustomSwitch = withStyles((theme) => ({
   root: {

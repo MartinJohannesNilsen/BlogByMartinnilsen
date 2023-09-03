@@ -28,4 +28,4 @@ const addTag = async (tag: string): Promise<boolean> => {
   return false;
 };
 
-export { getTags, addTag };
+export { addTag, getTags };

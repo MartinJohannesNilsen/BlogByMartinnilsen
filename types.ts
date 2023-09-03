@@ -82,56 +82,43 @@ export type EditorjsRendererProps = {
   config: { disableDefaultStyle?: any };
 };
 
-export type BlogpostCardProps = {
+export type SharePreviewCardProps = {
   title: string;
-  timestamp: number;
-  summary: string;
+  description: string;
   image: string;
-  type: string;
-  tags: string[];
-  id: string;
-  published: boolean;
+  url: string;
+  width: number;
+  height: number;
 };
 
-export type Post = {
-  published: boolean;
-  type: string;
-  tags: string[];
-  title: string;
-  summary: string;
+export type PostCardProps = PostProps & {
+  id: string;
+};
+
+type PostProps = {
+  author: string;
+  icon: string;
   image: string;
+  readTime: string;
+  description: string;
+  tags: string[];
+  timestamp: number;
+  title: string;
+  type: string;
+  published: boolean;
+  enlargeOnHover?: boolean;
+};
+
+export type FullPost = PostProps & {
   data: OutputData;
-  author: string;
-  timestamp: number;
-  views: number;
-  readTime: string;
 };
 
-export type FirestorePost = {
-  published: boolean;
-  type: string;
-  tags: string[];
-  title: string;
-  summary: string;
-  image: string;
+export type FirestoreFullPost = PostProps & {
   data: string;
-  author: string;
-  timestamp: number;
-  views: number;
-  readTime: string;
 };
 
-export type SimplifiedPost = {
+export type StoredPost = PostProps & {
   id: string;
-  title: string;
-  summary: string;
-  image: string;
-  published: boolean;
-  timestamp: number;
-  type: string;
-  tags: string[];
-  author: string;
-  readTime: string;
 };
 
 export type NavbarSection = {
@@ -141,7 +128,8 @@ export type NavbarSection = {
 
 export type NavbarProps = {
   backgroundColor: string;
-  posts: SimplifiedPost[];
+  textColor: string;
+  posts: StoredPost[];
 };
 
 // Component types
@@ -166,11 +154,18 @@ export type SettingsModalProps = {
   handleThemeChange: (event: any) => void;
 };
 
+export type ShareModalProps = {
+  open: boolean;
+  handleModalOpen: () => void;
+  handleModalClose: () => void;
+  data: SharePreviewCardProps;
+};
+
 export type SearchModalProps = {
   open: boolean;
   handleModalOpen: () => void;
   handleModalClose: () => void;
-  postsOverview?: SimplifiedPost[];
+  postsOverview?: StoredPost[];
 };
 
 export type Headings = {
@@ -189,9 +184,10 @@ export type TOCModalProps = {
 
 // View props types
 export type ManageArticleViewProps = {
-  post?: Post;
+  post?: FullPost;
 };
-export type ReadArticleViewProps = { post: Post };
-export type LandingViewProps = { posts: SimplifiedPost[] };
+export type ReadArticleViewProps = { post: FullPost; postId: string };
+export type LandingPageProps = { posts: StoredPost[] };
+export type TagsPageProps = { posts: StoredPost[]; tags: string[] };
 export type ListViewProps = {};
 export type FooterProps = {};

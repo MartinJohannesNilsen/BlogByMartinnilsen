@@ -4,6 +4,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { useTheme } from "../../../ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import colorLuminance from "../../../utils/colorLuminance";
+import { isMobile } from "react-device-detect";
 
 const CustomImage = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
@@ -34,7 +35,11 @@ const CustomImage = (props: EditorjsRendererProps) => {
         style={{
           width: "100%",
           borderRadius: "0px",
-          maxHeight: props.data.withBackground ? 400 : "none",
+          maxHeight: props.data.withBackground
+            ? isMobile
+              ? 215
+              : 400
+            : "none",
           objectFit: "contain",
         }}
         src={

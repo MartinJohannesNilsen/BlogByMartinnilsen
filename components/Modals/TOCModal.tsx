@@ -1,50 +1,37 @@
 import { Close } from "@mui/icons-material";
-import { ButtonBase, IconButton } from "@mui/material";
+import { ButtonBase, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { TOCModalProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 350,
-  maxHeight: "60vh",
-  bgcolor: "background.paper",
-  borderRadius: 2,
-  outline: 0,
-  display: "flex",
-  textAlign: "left",
-  flexDirection: "column",
-  rowGap: "10px",
-  justifyContent: "flex-start",
-  boxShadow: 24,
-  p: 4,
-};
-
 export const TOCModal = (props: TOCModalProps) => {
   const { theme } = useTheme();
   const router = useRouter();
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
 
-  function extractHeadersIfJustHeader(html: string) {
-    const regex = /<h([1-6])(?:.*?id="(.*?)")?>(.*?)<\/h([1-6])>/g;
-    const headings = [];
-    let match;
-    while ((match = regex.exec(html))) {
-      headings.push({
-        type: `h${match[1]}`,
-        id: match[2] || null,
-        text: match[3],
-      });
-    }
-    return headings;
-  }
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: xs ? 350 : 500,
+    maxHeight: "60vh",
+    bgcolor: "background.paper",
+    borderRadius: 2,
+    outline: 0,
+    display: "flex",
+    textAlign: "left",
+    flexDirection: "column",
+    rowGap: "10px",
+    justifyContent: "flex-start",
+    boxShadow: 24,
+    p: 4,
+  };
 
   function extractHeaders(html: string) {
     const regex =

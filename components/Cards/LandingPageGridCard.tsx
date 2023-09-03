@@ -1,4 +1,4 @@
-import { CalendarMonth } from "@mui/icons-material";
+import { AccessTime, CalendarMonth } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -11,9 +11,9 @@ import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
-import { BlogpostCardProps } from "../../types";
+import { PostCardProps } from "../../types";
 
-export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
+export const LandingPageGridCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
@@ -29,12 +29,21 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
           ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
           : "",
       width: "100%",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main,
+      },
+      "&:active": {
+        backgroundColor: theme.palette.primary.main,
+      },
+      backgroundColor: theme.palette.primary.main,
     },
     cardHovered: {
-      transform: xl
+      transform: !props.enlargeOnHover
+        ? "none"
+        : xl
         ? "scale3d(1.02, 1.02, 1)"
         : lg
-        ? "scale3d(1.04, 1.04, 1)"
+        ? "scale3d(1.03, 1.03, 1)"
         : "scale3d(1.05, 1.05, 1)",
       width: "100%",
     },
@@ -54,9 +63,6 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
         sx={{
           height: "350px",
           width: "100%",
-          "&:hover": {
-            backgroundColor: theme.palette.primary.main,
-          },
           padding: "20px",
         }}
       >
@@ -64,13 +70,11 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
           {/* Image and type/tag rows */}
           <Box display="flex" flexDirection="row">
             <Image
-              src={props.image}
+              src={props.icon}
               alt=""
               width={80}
               height={80}
-              object-fit="cover"
-              style={{ borderRadius: 2 }}
-              // fill={true}
+              style={{ borderRadius: 2, objectFit: "cover" }}
             />
             <Box
               display="flex"
@@ -163,42 +167,60 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
                 WebkitBoxOrient: "vertical",
               }}
             >
-              {props.summary}
+              {props.description}
             </Typography>
           </Box>
           {/*  */}
           <Box sx={{ flexGrow: 100 }} />
           {/* Information gutter */}
-          <Box>
-            <Box display="flex" flexDirection="row" alignItems="center">
-              {/* Timestamp */}
-              <CalendarMonth
-                sx={{
-                  opacity: 0.6,
-                  marginRight: "6px",
-                  fontSize: xs ? "12px" : "default",
-                }}
-              />
-              <Typography
-                fontFamily={theme.typography.fontFamily}
-                variant="body2"
-                fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: xs ? "13px" : "default" }}
-              >
-                {new Date(props.timestamp).toLocaleDateString("en-GB", {
-                  weekday: "long",
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </Typography>
-              {/* Not published icon */}
-              {!props.published && (
-                <>
-                  <Box flexGrow={100} /> <>🖊</>
-                </>
-              )}
-            </Box>
+          <Box display="flex" flexDirection="row" alignItems="center">
+            {/* Timestamp */}
+            <CalendarMonth
+              sx={{
+                opacity: 0.6,
+                marginRight: "6px",
+                // marginBottom: "3px",
+                fontSize: "default",
+              }}
+            />
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="body2"
+              fontWeight="600"
+              sx={{ opacity: 0.6, fontSize: "default" }}
+            >
+              {new Date(props.timestamp).toLocaleDateString("en-GB", {
+                // weekday: "long",
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+            </Typography>
+            {/* Read time */}
+            <AccessTime
+              sx={{
+                opacity: 0.6,
+                marginLeft: "12px",
+                marginRight: "6px",
+                // marginBottom: "3px",
+                fontSize: "default",
+              }}
+            />
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="body2"
+              fontWeight="600"
+              sx={{ opacity: 0.6, fontSize: "default" }}
+            >
+              {props.readTime ? props.readTime : "⎯"}
+            </Typography>
+            {/* Not published icon */}
+            {!props.published && (
+              <>
+                <Box flexGrow={100} />{" "}
+                <Typography sx={{ fontSize: "default" }}>🖊</Typography>
+              </>
+            )}
           </Box>
         </Box>
       </CardActionArea>
@@ -206,4 +228,4 @@ export const LandingViewCard: FC<BlogpostCardProps> = (props) => {
   );
 };
 
-export default LandingViewCard;
+export default LandingPageGridCard;

@@ -1,12 +1,19 @@
-import { Box, Card, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  IconButton,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
-import speechBalloon from "public/assets/img/speech-balloon.png";
+import speechBalloon from "public/assets/imgs/speech-balloon.png";
 import { useTheme } from "../../../ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 
 const CustomWarning = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
 
   return (
     <Box my={1}>
@@ -14,11 +21,14 @@ const CustomWarning = (props: EditorjsRendererProps) => {
         sx={{
           display: "flex",
           alignItems: "center",
-          padding: "15px",
+          padding: xs ? "15px" : "15px",
           boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
         }}
       >
-        <IconButton disabled={true} sx={{ margin: "0 10px 0 0px" }}>
+        <IconButton
+          disabled={true}
+          sx={{ margin: xs ? "0 7.5px 0 -5px" : "0 10px 0 0px" }}
+        >
           <Image
             src={speechBalloon.src}
             width={30}

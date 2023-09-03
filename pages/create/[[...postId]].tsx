@@ -4,11 +4,11 @@ import { FC, useEffect, useState } from "react";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import CreatePost from "../../components/PostManagement/PostManagement";
 import { getPost } from "../../database/posts";
-import { Post } from "../../types";
+import { FullPost } from "../../types";
 
 const ManageArticleView: FC = (props) => {
   const { isAuthorized, session, status } = useAuthorized(true);
-  const [post, setPost] = useState<Post>(null);
+  const [post, setPost] = useState<FullPost>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { postId } = router.query;

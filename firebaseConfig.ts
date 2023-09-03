@@ -15,7 +15,11 @@ const config = {
 const firebaseApp = initializeApp(config);
 const db = getFirestore(firebaseApp);
 let analytics;
-if (firebaseApp.name && typeof window !== "undefined") {
+if (
+  firebaseApp.name &&
+  typeof window !== "undefined" &&
+  process.env.NODE_ENV === "production"
+) {
   analytics = getAnalytics(firebaseApp);
 }
 const cloudStorage = getStorage();

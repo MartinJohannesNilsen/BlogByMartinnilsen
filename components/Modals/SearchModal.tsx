@@ -1,4 +1,4 @@
-import { East } from "@mui/icons-material";
+import { KeyboardReturn } from "@mui/icons-material";
 import {
   Avatar,
   List,
@@ -12,23 +12,24 @@ import {
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { matchSorter } from "match-sorter";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../ThemeProvider";
-import { SearchModalProps, SimplifiedPost } from "../../types";
+import { SearchModalProps, StoredPost } from "../../types";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const router = useRouter();
   const handleNavigate = (path: string) => {
-    router.push(path);
+    window.location.href = path;
   };
   const [textFieldValue, setTextFieldValue] = useState("");
   const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);
-  const [matchedItems, setMatchedItems] = useState<SimplifiedPost[]>([]);
+  const [matchedItems, setMatchedItems] = useState<StoredPost[]>([]);
   const [activeItem, setActiveItem] = useState(isMobile ? -1 : 0);
 
   // Filter/search
@@ -38,7 +39,7 @@ export const SearchModal = (props: SearchModalProps) => {
       setMaxNumberOfItems(0);
     } else {
       const bestMatch = matchSorter(props.postsOverview!, textFieldValue, {
-        keys: ["title", "summary"],
+        keys: ["title", "description"],
       });
       const min = Math.min(
         bestMatch.length,
@@ -107,7 +108,7 @@ export const SearchModal = (props: SearchModalProps) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: xs ? 350 : 500,
+            width: xs ? 350 : lgUp ? 600 : 500,
             height: "450px",
             outline: 0,
           }}
@@ -140,6 +141,7 @@ export const SearchModal = (props: SearchModalProps) => {
                     (e.metaKey && e.key === "k") ||
                     (e.ctrlKey && e.key === "k")
                   ) {
+                    e.preventDefault();
                     props.handleModalClose();
                   } else if (e.key === "ArrowUp") {
                     setActiveItem(Math.max(0, activeItem - 1));
@@ -160,7 +162,7 @@ export const SearchModal = (props: SearchModalProps) => {
             </Box>
             {props.postsOverview && (
               <List sx={{ paddingY: 0 }}>
-                {matchedItems!.map((post: SimplifiedPost, index: number) => (
+                {matchedItems!.map((post: StoredPost, index: number) => (
                   <ListItem
                     key={index}
                     sx={{
@@ -226,7 +228,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           }}
                         >
                           <img
-                            src={post.image}
+                            src={post.icon}
                             style={{
                               minWidth: "50px",
                               minHeight: "50px",
@@ -245,7 +247,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                         }}
-                        secondary={post.summary}
+                        secondary={post.description}
                         secondaryTypographyProps={{
                           color: theme.palette.text.primary,
                           fontFamily: theme.typography.fontFamily,
@@ -255,34 +257,28 @@ export const SearchModal = (props: SearchModalProps) => {
                         }}
                         sx={{
                           width: "100%",
-                          marginRight: 6,
+                          marginRight: isMobile ? 0 : 5,
                         }}
                       />
-                      <Box flexGrow={100} />
-                      <ListItemText>
-                        <East
-                          sx={{
-                            position: "absolute",
-                            top: "55%",
-                            right: "5px",
-                            transform: "translate(-50%, -50%)",
-                            display:
-                              activeItem === index ? "inline-block" : "none",
-                          }}
-                        />
-                        {/* <Typography
-                          sx={{
-                            position: "absolute",
-                            top: "55%",
-                            right: "10px",
-                            transform: "translate(-50%, -50%)",
-                          }}
-                          fontFamily={theme.typography.fontFamily}
-                          fontWeight={600}
-                        >
-                          {activeItem === index ? "↩" : ""}
-                        </Typography> */}
-                      </ListItemText>
+                      {!isMobile ? (
+                        <>
+                          <Box flexGrow={100} />
+                          <ListItemText>
+                            <KeyboardReturn
+                              sx={{
+                                position: "absolute",
+                                top: "55%",
+                                right: "5px",
+                                transform: "translate(-50%, -50%)",
+                                display:
+                                  activeItem === index
+                                    ? "inline-block"
+                                    : "none",
+                              }}
+                            />
+                          </ListItemText>
+                        </>
+                      ) : null}
                     </ListItemButton>
                   </ListItem>
                 ))}

@@ -1,4 +1,5 @@
 import { OutputData } from "@editorjs/editorjs";
+import { Delete, Launch, Save, Update } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -17,10 +18,15 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
+import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { FC, useEffect, useState } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
+import { readingTime } from "reading-time-estimator";
 import { useTheme } from "../../ThemeProvider";
 import {
   addPostsOverview,
@@ -29,10 +35,9 @@ import {
 } from "../../database/overview";
 import { addPost, deletePost, updatePost } from "../../database/posts";
 import { addTag, getTags } from "../../database/tags";
+import { renderers } from "../../pages/posts/[postId]";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { ManageArticleViewProps, Post } from "../../types";
-import { useSnackbar } from "notistack";
-import { Delete, Launch, Save, Update } from "@mui/icons-material";
+import { FullPost, ManageArticleViewProps } from "../../types";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -135,17 +140,17 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   const [editorJSContent, setEditorJSContent] = useState<OutputData>(
     props.post ? props.post.data : { blocks: [] }
   );
-  const [data, setData] = useState<Post>({
+  const [data, setData] = useState<FullPost>({
     published: false,
     type: "",
     tags: [],
     title: "",
-    summary: "",
-    image: "http://www.",
+    description: "",
+    icon: "",
+    image: "",
     data: { blocks: [] },
     author: "Martin Johannes Nilsen",
     timestamp: Date.now(),
-    views: 0,
     readTime: "",
   });
   const handleNavigate = (path: string) => {
@@ -184,10 +189,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     return () => {};
   }, [editorJSContent]);
 
-  // const width = "700px";
+  // Width
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
-  const width = xs ? "380px" : sm ? "500px" : "700px";
+  const width = xs ? "380px" : sm ? "90vw" : "750px";
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setIsPosted(false);
@@ -198,15 +203,33 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     });
   };
 
+  function extractTextContent(html: string) {
+    return html.replace(/<[^>]+>/g, " ");
+  }
+
   const handleSubmit = (event: { preventDefault: () => void }) => {
     try {
       event.preventDefault();
       if (!isPosted) {
+        // Get read time
+        const html = renderToStaticMarkup(
+          <Output renderers={renderers} data={data.data} />
+        );
+        const text = extractTextContent(html);
+        // const readTime = readingTime(text, 275).text;
+        // const readTime = "<" + Math.max(readingTime(text, 275).minutes, 1) + " min read";
+        const readTime =
+          Math.max(readingTime(text, 275).minutes, 1) + " min read";
+
+        // Create object
         const newObject = {
           ...data,
           data: editorJSContent,
+          readTime: readTime,
         };
-        if (props.post) {
+
+        // If post exists, then update, or add new
+        if (postId !== "") {
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
               const key = enqueueSnackbar("Saving changes ...", {
@@ -219,7 +242,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               updatePostsOverview({
                 id: postId,
                 title: newObject.title,
-                summary: newObject.summary,
+                description: newObject.description,
+                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
                 timestamp: newObject.timestamp,
@@ -262,7 +286,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               addPostsOverview({
                 id: postId,
                 title: newObject.title,
-                summary: newObject.summary,
+                description: newObject.description,
+                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
                 timestamp: newObject.timestamp,
@@ -281,6 +306,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   });
                   setPostId(postId);
                   setIsPosted(true);
+                  handleRevalidate(postId);
                 } else {
                   const key = enqueueSnackbar("An error occurred!", {
                     variant: "error",
@@ -370,6 +396,41 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     setData({ ...data, published: event.target.value === "true" });
   };
 
+  const handleRevalidate = (postId) => {
+    const key = enqueueSnackbar("Revalidating pages ...", {
+      variant: "default",
+      preventDuplicate: true,
+      onClick: () => {
+        closeSnackbar(key);
+      },
+    });
+    revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
+      if (res.status === 200) {
+        const key = enqueueSnackbar("Revalidated pages!", {
+          variant: "success",
+          preventDuplicate: true,
+          onClick: () => {
+            closeSnackbar(key);
+          },
+        });
+        setIsRevalidated(true);
+      } else {
+        const key = enqueueSnackbar("Error during revalidation!", {
+          variant: "error",
+          preventDuplicate: true,
+          onClick: () => {
+            closeSnackbar(key);
+          },
+        });
+      }
+    });
+  };
+
+  useHotkeys(["Control+s", "Meta+s"], (event) => {
+    event.preventDefault();
+    // handleSubmit(event);
+  });
+
   return (
     <>
       {isLoading ? (
@@ -385,7 +446,20 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
             backgroundColor: theme.palette.primary.main,
           }}
         >
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={handleSubmit}
+            onKeyDown={(e) => {
+              if (
+                (e.metaKey && e.key === "s") ||
+                (e.ctrlKey && e.key === "s")
+              ) {
+                e.preventDefault();
+                handleSubmit(e);
+              } else if (e.key === "Tab") {
+                // e.preventDefault();
+              }
+            }}
+          >
             <Box my={1}>
               <Box
                 display="flex"
@@ -478,32 +552,50 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 onChange={handleInputChange}
               />
               <StyledTextField
-                label="Summary"
-                name="summary"
+                label="Description"
+                name="description"
                 fullWidth
                 inputProps={{
                   maxlength: OGDEFAULTS.descriptionMax,
                 }}
-                helperText={`${data.summary.length}/${OGDEFAULTS.descriptionMax}`}
+                helperText={`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
                 sx={{
                   ".MuiFormHelperText-root": {
                     color:
-                      data.summary.length <= OGDEFAULTS.descriptionOptimal
+                      data.description.length <= OGDEFAULTS.descriptionOptimal
                         ? "green"
-                        : data.summary.length <= OGDEFAULTS.descriptionWarning
+                        : data.description.length <=
+                          OGDEFAULTS.descriptionWarning
                         ? theme.palette.text.primary
                         : "#cfa602",
                   },
                 }}
-                value={data.summary}
+                value={data.description}
                 onChange={handleInputChange}
               />
               <StyledTextField
-                label="Image"
-                name="image"
-                error={!isvalidHTTPUrl(data.image)}
+                label="Icon"
+                name="icon"
+                error={
+                  data.icon &&
+                  data.icon.trim() !== "" &&
+                  !isvalidHTTPUrl(data.icon)
+                }
                 helperText={"Incorrect url format (missing http/https)"}
                 required
+                fullWidth
+                value={data.icon}
+                onChange={handleInputChange}
+              />
+              <StyledTextField
+                label="Open Graph Image"
+                name="image"
+                error={
+                  data.image &&
+                  data.image.trim() !== "" &&
+                  !isvalidHTTPUrl(data.image)
+                }
+                helperText={"Incorrect url format (missing http/https)"}
                 fullWidth
                 value={data.image}
                 onChange={handleInputChange}
@@ -585,41 +677,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   >
                     <Button
                       onClick={() => {
-                        const key = enqueueSnackbar("Revalidating pages ...", {
-                          variant: "default",
-                          preventDuplicate: true,
-                          onClick: () => {
-                            closeSnackbar(key);
-                          },
-                        });
-                        revalidatePages(["/", "/posts/" + postId]).then(
-                          (res) => {
-                            if (res.status === 200) {
-                              const key = enqueueSnackbar(
-                                "Revalidated pages!",
-                                {
-                                  variant: "success",
-                                  preventDuplicate: true,
-                                  onClick: () => {
-                                    closeSnackbar(key);
-                                  },
-                                }
-                              );
-                              setIsRevalidated(true);
-                            } else {
-                              const key = enqueueSnackbar(
-                                "Error during revalidation!",
-                                {
-                                  variant: "error",
-                                  preventDuplicate: true,
-                                  onClick: () => {
-                                    closeSnackbar(key);
-                                  },
-                                }
-                              );
-                            }
-                          }
-                        );
+                        handleRevalidate(postId);
                       }}
                       disabled={isRevalidated}
                       sx={{

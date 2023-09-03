@@ -22,6 +22,8 @@ import InlineVideo from "./BlockTools/InlineVideo/tool";
 import editorjsCodeflask from "@calumk/editorjs-codeflask";
 // @ts-ignore
 import Table from "@martinjohannesnilsen/editorjs-table";
+// Math
+const EJLaTeX = require("editorjs-latex");
 
 /* Development */
 // import ChangeCase from "editorjs-change-case";
@@ -140,7 +142,7 @@ export const EDITOR_JS_TOOLS = {
   linkTool: {
     class: LinkTool,
     config: {
-      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/linkPreview", // Your backend endpoint for url data fetching,
+      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/linkpreview", // Your backend endpoint for url data fetching,
     },
   },
   table: {

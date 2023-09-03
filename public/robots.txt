@@ -5,3 +5,5 @@ Disallow: /create/
 Disallow: /api
 Disallow: /api/
 Disallow: /account
+Disallow: /tags/published
+Disallow: /tags/unpublished

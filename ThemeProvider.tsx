@@ -1,19 +1,17 @@
-import React, { useState, createContext, useContext, useMemo } from "react";
 import {
-  ThemeProvider,
   StyledEngineProvider,
   Theme,
-  useMediaQuery,
+  ThemeProvider,
   createTheme,
+  useMediaQuery,
 } from "@mui/material";
-import { themeCreator } from "./styles/themes/themeMap";
-import { ThemeEnum } from "./styles/themes/themeMap";
-import useDidUpdate from "./utils/useDidUpdate";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import {
   defaultAccentColor,
   defaultFontFamily,
 } from "./styles/themes/themeDefaults";
-import { NextSeo } from "next-seo";
+import { ThemeEnum, themeCreator } from "./styles/themes/themeMap";
+import useDidUpdate from "./utils/useDidUpdate";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting
@@ -106,7 +104,7 @@ const CustomThemeProvider: React.FC = (props) => {
     );
   };
 
-  const setTheme = (themeName: ThemeEnum, persist: boolean): void => {
+  const setTheme = (themeName: ThemeEnum, persist?: boolean): void => {
     if (persist) localStorage.setItem("theme", themeName);
     const underlayingTheme = themeCreator(themeName);
     _setTheme(
@@ -164,7 +162,6 @@ const CustomThemeProvider: React.FC = (props) => {
       }}
     >
       <StyledEngineProvider injectFirst>
-        <NextSeo themeColor={theme.palette.primary.main} />
         <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
       </StyledEngineProvider>
     </ThemeContext.Provider>

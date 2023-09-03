@@ -1,10 +1,10 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { SimplifiedPost } from "../types";
+import { StoredPost } from "../types";
 const db_document = "overview";
 
-const _sortListOfSimplifiedPostsOnTimestamp = (
-  data: SimplifiedPost[],
+const _sortListOfStoredPostsOnTimestamp = (
+  data: StoredPost[],
   asc?: boolean
 ) => {
   if (asc) {
@@ -12,8 +12,8 @@ const _sortListOfSimplifiedPostsOnTimestamp = (
   }
   return data.sort((prev, next) => next.timestamp - prev.timestamp); //Descending, latest (largest timestamp) first
 };
-export const _filterListOfSimplifiedPostsOnPublished = (
-  data: SimplifiedPost[],
+export const _filterListOfStoredPostsOnPublished = (
+  data: StoredPost[],
   filter: "published" | "unpublished" | "all"
 ) => {
   if (filter === "published") {
@@ -35,7 +35,7 @@ const getAllPostIds = async (
 
     const list: { id: string }[] = Object.values(
       filterOnVisibility
-        ? data.filter((post: SimplifiedPost) => post.published)
+        ? data.filter((post: StoredPost) => post.published)
         : data
     );
     const res = list.map((val) => val.id);
@@ -48,17 +48,17 @@ const getAllPostIds = async (
 const getPostsOverview = async (
   sorted?: "asc" | "desc",
   filterOnPublished?: boolean
-): Promise<SimplifiedPost[]> => {
+): Promise<StoredPost[]> => {
   const postOverviewSnapshot = await getDoc(
     doc(db, "administrative", db_document)
   );
   if (postOverviewSnapshot.exists()) {
     let data = postOverviewSnapshot.data().values;
     if (sorted) {
-      data = _sortListOfSimplifiedPostsOnTimestamp(data, sorted === "asc");
+      data = _sortListOfStoredPostsOnTimestamp(data, sorted === "asc");
     }
     if (filterOnPublished) {
-      data = _filterListOfSimplifiedPostsOnPublished(data, "published");
+      data = _filterListOfStoredPostsOnPublished(data, "published");
     }
     return data;
   } else {
@@ -66,67 +66,49 @@ const getPostsOverview = async (
   }
 };
 
-const addPostsOverview = async (
-  simplifiedPost: SimplifiedPost
-): Promise<boolean> => {
+const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
   const docRef = doc(db, "administrative", db_document);
   const postOverviewSnapshot = await getDoc(docRef);
   if (postOverviewSnapshot.exists()) {
-    let values: SimplifiedPost[] = postOverviewSnapshot.data().values;
+    let values: StoredPost[] = postOverviewSnapshot.data().values;
     values.map((post) => {
-      if (post.id === simplifiedPost.id) {
+      if (post.id === newPost.id) {
         return false;
       }
     });
-    values.push(simplifiedPost);
+    values.push(newPost);
     await updateDoc(docRef, { values: values }).catch((error) => {
       console.log(error);
       return false;
     });
-    return true;
   }
-  return false;
+  return true;
 };
 
 const updatePostsOverview = async (
-  simplifiedPost: SimplifiedPost
+  updatedPost: StoredPost
 ): Promise<boolean> => {
   const docRef = doc(db, "administrative", db_document);
-  await getPostsOverview()
-    .then(async (data: SimplifiedPost[]) => {
-      let values = [...data];
-      values.map((post: SimplifiedPost) => {
-        if (post.id === simplifiedPost.id) {
-          post.title = simplifiedPost.title;
-          post.summary = simplifiedPost.summary;
-          post.image = simplifiedPost.image;
-          post.published = simplifiedPost.published;
-          post.timestamp = simplifiedPost.timestamp;
-          post.type = simplifiedPost.type;
-          post.tags = simplifiedPost.tags;
-          post.author = simplifiedPost.author;
-          post.readTime = simplifiedPost.readTime;
-        }
-      });
-      await updateDoc(docRef, { values: values }).catch((error) => {
-        console.log(error);
-        return false;
-      });
-      return true;
-    })
-    .catch((error) => {
-      console.log(error);
-      return false;
-    });
+  const data = await getPostsOverview().catch((error) => {
+    console.log(error);
+    return false;
+  });
+  let values = (data as StoredPost[]).map((originalPost: StoredPost) =>
+    originalPost.id === updatedPost.id ? updatedPost : originalPost
+  );
+  await updateDoc(docRef, { values: values }).catch((error) => {
+    console.log(error);
+    return false;
+  });
   return true;
 };
 
 const deletePostsOverview = async (id: string): Promise<boolean> => {
   const docRef = doc(db, "administrative", db_document);
   await getPostsOverview()
-    .then(async (data: SimplifiedPost[]) => {
+    .then(async (data: StoredPost[]) => {
       let values = [...data];
-      values.map((post: SimplifiedPost, index: number) => {
+      values.map((post: StoredPost, index: number) => {
         if (post.id === id) {
           values.splice(index, 1);
         }
@@ -135,7 +117,6 @@ const deletePostsOverview = async (id: string): Promise<boolean> => {
         console.log(error);
         return false;
       });
-      return true;
     })
     .catch((error) => {
       console.log(error);
@@ -145,9 +126,9 @@ const deletePostsOverview = async (id: string): Promise<boolean> => {
 };
 
 export {
+  addPostsOverview,
+  deletePostsOverview,
   getAllPostIds,
   getPostsOverview,
-  addPostsOverview,
   updatePostsOverview,
-  deletePostsOverview,
 };
