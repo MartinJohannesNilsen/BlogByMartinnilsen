@@ -12,6 +12,7 @@ import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
+import React from "react";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -162,8 +163,8 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 display: "webkit-flex",
-                WebkitLineClamp: 5,
-                lineClamp: 5,
+                WebkitLineClamp: xs ? 3 : 5,
+                lineClamp: xs ? 3 : 5,
                 WebkitBoxOrient: "vertical",
               }}
             >

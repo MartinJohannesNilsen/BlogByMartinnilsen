@@ -20,7 +20,6 @@ import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
 import Navbar from "../components/Navbar/Navbar";
 import SEO from "../components/SEO/SEO";
 import {
@@ -28,11 +27,12 @@ import {
   getPostsOverview,
 } from "../database/overview";
 import { LandingPageProps, StoredPost } from "../types";
-// import { Slider } from "../components/Slider/CardSlider";
+import useStickyState from "../utils/useStickyState";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
-import useStickyState from "../utils/useStickyState";
+import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
+import LandingPageListCard from "../components/Cards/LandingPageListCard";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -69,7 +69,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const [cardLayout, setCardLayout] = useStickyState<String>(
     "cardLayout",
-    xs ? "grid" : "slideshow"
+    xs ? "grid" : "carousel"
   );
   const [page, setPage] = useState(1);
   const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
@@ -143,7 +143,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     event: React.MouseEvent<HTMLElement>,
     newView: string | null
   ) => {
-    if (["slideshow", "grid", "list"].includes(newView)) setCardLayout(newView);
+    if (["carousel", "grid", "list"].includes(newView)) setCardLayout(newView);
   };
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -257,9 +257,9 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     size="small"
                   >
                     <ToggleButton
-                      value={"slideshow"}
-                      selected={cardLayout === "slideshow"}
-                      disabled={cardLayout === "slideshow"}
+                      value={"carousel"}
+                      selected={cardLayout === "carousel"}
+                      disabled={cardLayout === "carousel"}
                     >
                       <ViewColumnRounded
                         sx={{ color: theme.palette.text.primary }}
@@ -288,8 +288,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               {/* Content */}
               <Box>
                 {/* Card layouts */}
-
-                {cardLayout === "slideshow" ? (
+                {cardLayout === "carousel" ? (
                   <Box height="100%">
                     <Box flexGrow={1} />
                     <Box
@@ -411,49 +410,45 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       );
                     })}
                   </Grid>
-                ) : (
+                ) : cardLayout === "list" ? (
                   <Grid
                     container
-                    rowSpacing={xs ? 2 : 3}
+                    rowSpacing={xs ? 2.5 : 3}
                     columnSpacing={mdDown ? 0 : xl ? 5 : 3}
                     sx={{
                       width: "100%",
                       paddingTop: xs ? 1 : 0,
                       paddingX: lgUp ? "150px" : xs ? 2 : "80px",
-                      paddingBottom: lgUp ? "0px" : xs ? 5 : "20px",
+                      paddingBottom: xs ? 5 : 7,
                       margin: 0,
                     }}
                   >
                     {posts.map((data, index) => {
                       return (
-                        <Grid
-                          item
-                          key={index}
-                          xs={12}
-                          md={6}
-                          lg={index % 4 === 0 ? 12 : 4}
-                          xl={6}
-                          // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
-                        >
-                          <LandingPageGridCard
-                            author={data.author}
-                            readTime={data.readTime}
-                            id={data.id}
-                            icon={data.icon}
-                            image={data.image}
-                            title={data.title}
-                            timestamp={data.timestamp}
-                            description={data.description}
-                            type={data.type}
-                            tags={data.tags}
-                            published={data.published}
-                            enlargeOnHover={false}
-                          />
-                        </Grid>
+                        <>
+                          <Grid item key={index} md={2} lg={3} />
+                          <Grid item key={index} xs={12} sm={12} md={8} lg={6}>
+                            <LandingPageListCard
+                              author={data.author}
+                              readTime={data.readTime}
+                              id={data.id}
+                              icon={data.icon}
+                              image={data.image}
+                              title={data.title}
+                              timestamp={data.timestamp}
+                              description={data.description}
+                              type={data.type}
+                              tags={data.tags}
+                              published={data.published}
+                              enlargeOnHover={false}
+                            />
+                          </Grid>
+                          <Grid item key={index} md={2} lg={3} />
+                        </>
                       );
                     })}
                   </Grid>
-                )}
+                ) : null}
               </Box>
             </Box>
           </Box>
