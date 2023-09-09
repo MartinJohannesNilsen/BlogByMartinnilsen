@@ -649,7 +649,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 <Tooltip enterDelay={2000} title="Save changes" placement="top">
                   <Button
                     type="submit"
-                    disabled={isPosted}
+                    disabled={isPosted || editorJSContent.blocks.length === 0}
                     sx={{
                       border: isPosted
                         ? "2px solid green"
