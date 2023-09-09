@@ -224,7 +224,11 @@ const TagsPage: FC<TagsPageProps> = (props) => {
           <Navbar
             backgroundColor={theme.palette.primary.main}
             textColor={theme.palette.text.primary}
-            posts={chunkedPosts.flat()}
+            posts={
+              isAuthorized
+                ? props.posts
+                : _filterListOfStoredPostsOnPublished(props.posts, "published")
+            }
           />
           <Box
             display="flex"
