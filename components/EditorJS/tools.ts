@@ -24,6 +24,8 @@ import editorjsCodeflask from "@calumk/editorjs-codeflask";
 import Table from "@martinjohannesnilsen/editorjs-table";
 // Math
 const EJLaTeX = require("editorjs-latex");
+// Iframe
+const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
 
 /* Development */
 // import ChangeCase from "editorjs-change-case";
@@ -139,6 +141,7 @@ export const EDITOR_JS_TOOLS = {
   divider: Divider,
   video: InlineVideo,
   embed: Embed,
+  iframe: Iframe,
   linkTool: {
     class: LinkTool,
     config: {
