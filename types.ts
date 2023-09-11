@@ -62,6 +62,8 @@ export type EditorjsRendererProps = {
     math?: string;
     // Lists
     style?: "ordered" | "unordered";
+    // Iframe
+    frame?: string;
   };
   style: {
     h1?: CSSProperties;

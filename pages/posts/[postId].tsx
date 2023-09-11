@@ -66,6 +66,7 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
+import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -110,6 +111,7 @@ export const renderers = {
   table: CustomTable,
   math: CustomMath,
   list: CustomList,
+  iframe: CustomIframe,
 };
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
