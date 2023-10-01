@@ -21,11 +21,6 @@ import React from "react";
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const lg = useMediaQuery(theme.breakpoints.only("lg"));
-  const xl = useMediaQuery(theme.breakpoints.only("xl"));
-  const [state, setState] = useState({
-    raised: false,
-  });
   const useStyles = makeStyles({
     root: {
       // transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
@@ -37,7 +32,6 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
         backgroundColor: theme.palette.primary.light,
       },
       backgroundColor: theme.palette.primary.light,
-      // boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px",
     },
   });
   const classes = useStyles();
@@ -45,8 +39,6 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   return (
     <Card
       className={classes.root}
-      // onMouseOver={() => setState({ raised: true })}
-      // onMouseOut={() => setState({ raised: false })}
       sx={{
         borderRadius: 4,
         boxShadow: "none",

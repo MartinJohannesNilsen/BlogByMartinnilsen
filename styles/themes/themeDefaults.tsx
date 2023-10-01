@@ -3,7 +3,8 @@ import { themeCreator } from "./themeMap";
 
 export const defaultFontFamily =
   "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol";
-export const defaultAccentColor = "#29939b";
+// export const defaultAccentColor = "#29939b";
+export const defaultAccentColor = "#e9b384";
 
 // Create base theme
 const defaultTheme = createTheme();

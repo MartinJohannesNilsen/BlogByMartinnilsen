@@ -86,6 +86,7 @@ export const TOCModal = (props: TOCModalProps) => {
     headings.map((heading) =>
       elements.push(
         <ButtonBase
+          key={heading.id}
           onClick={() => {
             props.handleModalClose();
             router.replace(`#${heading.id}`);

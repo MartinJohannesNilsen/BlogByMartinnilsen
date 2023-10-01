@@ -38,6 +38,7 @@ import { addTag, getTags } from "../../database/tags";
 import { renderers } from "../../pages/posts/[postId]";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManageArticleViewProps } from "../../types";
+import { DEFAULT_ICON, DEFAULT_OGIMAGE } from "../SEO/SEO";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -146,7 +147,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     tags: [],
     title: "",
     description: "",
-    icon: "",
+    icon: DEFAULT_ICON,
     image: "",
     data: { blocks: [] },
     author: "Martin Johannes Nilsen",

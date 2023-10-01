@@ -11,6 +11,7 @@ import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 
 export const TagsPageCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -109,10 +110,17 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
               </Typography>
             </Box>
             <Box flexGrow={1} />
-            <Image
+            {/* <Image
               src={props.icon}
               alt=""
               width={xs ? 70 : 82}
+              height={xs ? 70 : 82}
+              style={{ borderRadius: 2, objectFit: "cover" }}
+            /> */}
+            <Image
+              src={props.image || DEFAULT_OGIMAGE}
+              alt={'OpenGraph image for article titled "' + props.title + '"'}
+              width={xs ? 70 : 125}
               height={xs ? 70 : 82}
               style={{ borderRadius: 2, objectFit: "cover" }}
             />

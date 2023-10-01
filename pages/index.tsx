@@ -2,9 +2,9 @@
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
-  GridView,
-  ViewColumnRounded,
-  ViewStreamRounded,
+  GridViewSharp,
+  TableRowsSharp,
+  ViewWeekSharp,
 } from "@mui/icons-material";
 import {
   Box,
@@ -12,6 +12,7 @@ import {
   Unstable_Grid2 as Grid,
   IconButton,
   Typography,
+  Tooltip,
   useMediaQuery,
   ToggleButtonGroup,
   ToggleButton,
@@ -66,10 +67,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const { isAuthorized } = useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
-  const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const [cardLayout, setCardLayout] = useStickyState<String>(
     "cardLayout",
-    xs ? "grid" : "carousel"
+    mdDown ? "grid" : "carousel"
   );
   const [page, setPage] = useState(1);
   const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
@@ -77,17 +78,17 @@ const LandingPage: FC<LandingPageProps> = (props) => {
       isAuthorized
         ? props.posts
         : _filterListOfStoredPostsOnPublished(props.posts, "published"),
-      Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
+      Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
     )
   );
   const [posts, setPosts] = useState<StoredPost[]>(
-    xs || cardLayout !== "grid" ? chunkedPosts.flat() : chunkedPosts[0]
+    mdDown || cardLayout !== "grid" ? chunkedPosts.flat() : chunkedPosts[0]
   );
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const md = useMediaQuery(theme.breakpoints.only("md"));
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
-  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   useEffect(() => {
@@ -96,7 +97,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
         isAuthorized
           ? props.posts
           : _filterListOfStoredPostsOnPublished(props.posts, "published"),
-        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
+        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
       )
     );
     return () => {};
@@ -106,11 +107,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     setIsLoading(true);
     setCurrentSlide(0);
     setPosts(
-      xs || cardLayout !== "grid" ? chunkedPosts.flat() : chunkedPosts[page - 1]
+      mdDown || cardLayout !== "grid"
+        ? chunkedPosts.flat()
+        : chunkedPosts[page - 1]
     );
     // instanceRef && instanceRef.current?.update;
     return () => {};
-  }, [chunkedPosts, cardLayout]);
+  }, [chunkedPosts, cardLayout, mdDown]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -121,7 +124,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const handleNextPage = () => {
     const endPage = Math.ceil(
       chunkedPosts.flat().length /
-        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
+        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
     );
     if (page < endPage) {
       const newPage = Math.min(page + 1, endPage);
@@ -207,7 +210,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               >
                 <Box flexGrow={1} />
                 <Box>
-                  {!xs && cardLayout === "grid" ? (
+                  {!mdDown && cardLayout === "grid" ? (
                     <ButtonGroup sx={{ paddingRight: 1 }}>
                       <IconButton
                         sx={{
@@ -239,7 +242,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                               chunkedPosts.flat().length /
                                 Number(
                                   process.env
-                                    .NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE
+                                    .NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT
                                 )
                             )
                           )
@@ -261,25 +264,36 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       selected={cardLayout === "carousel"}
                       disabled={cardLayout === "carousel"}
                     >
-                      <ViewColumnRounded
+                      {/* <ViewCarouselSharp
                         sx={{ color: theme.palette.text.primary }}
-                      />
+                      /> */}
+                      <Tooltip enterDelay={2000} title="Carousel layout">
+                        <ViewWeekSharp
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
                     </ToggleButton>
                     <ToggleButton
                       value={"grid"}
                       selected={cardLayout === "grid"}
                       disabled={cardLayout === "grid"}
                     >
-                      <GridView sx={{ color: theme.palette.text.primary }} />
+                      <Tooltip enterDelay={2000} title="Grid layout">
+                        <GridViewSharp
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
                     </ToggleButton>
                     <ToggleButton
                       value={"list"}
                       selected={cardLayout === "list"}
                       disabled={cardLayout === "list"}
                     >
-                      <ViewStreamRounded
-                        sx={{ color: theme.palette.text.primary }}
-                      />
+                      <Tooltip enterDelay={2000} title="List layout">
+                        <TableRowsSharp
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
                     </ToggleButton>
                   </ToggleButtonGroup>
                 </Box>
@@ -375,9 +389,9 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     columnSpacing={mdDown ? 0 : xl ? 5 : 3}
                     sx={{
                       width: "100%",
-                      paddingTop: xs ? 1 : 0,
+                      paddingTop: mdDown ? 1 : 2.5,
                       paddingX: lgUp ? "150px" : xs ? 2 : "80px",
-                      paddingBottom: lgUp ? "0px" : xs ? 5 : "20px",
+                      paddingBottom: lgUp ? "0px" : mdDown ? 5 : "20px",
                       margin: 0,
                     }}
                   >
@@ -388,7 +402,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                           key={index}
                           xs={12}
                           md={6}
-                          lg={index % 4 === 0 ? 12 : 4}
+                          // lg={index % 4 === 0 ? 12 : 4}
+                          lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
                           xl={6}
                           // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
                         >
@@ -417,7 +432,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     columnSpacing={mdDown ? 0 : xl ? 5 : 3}
                     sx={{
                       width: "100%",
-                      paddingTop: xs ? 1 : 0,
+                      paddingTop: mdDown ? 1 : 2.5,
                       paddingX: lgUp ? "150px" : xs ? 2 : "80px",
                       paddingBottom: xs ? 5 : 7,
                       margin: 0,

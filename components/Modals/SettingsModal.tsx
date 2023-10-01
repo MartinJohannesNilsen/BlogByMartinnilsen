@@ -75,7 +75,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
     "#37D67A",
     "#2CCCE4",
     "#555555",
-    "#f5bd3b",
+    "#E9B384",
     "#ff8a65",
     "#ba68c8",
     "#7ca18d",

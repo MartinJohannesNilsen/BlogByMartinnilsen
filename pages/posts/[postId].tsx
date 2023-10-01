@@ -33,7 +33,6 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
-import { RWebShare } from "react-web-share";
 import { useTheme } from "../../ThemeProvider";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
@@ -138,6 +137,30 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     );
   };
 
+  const handleSharing = async ({ url, title, text, icon }) => {
+    const shareDetails = {
+      url, // The URL of the webpage you want to share
+      title, // The title of the shared content
+      text, // The description or text to accompany the shared content
+      icon, // URL of the image for the preview
+    };
+    if (navigator.share) {
+      try {
+        await navigator
+          .share(shareDetails)
+          .then(() =>
+            console.log("Hooray! Your content was shared to the world")
+          );
+      } catch (error) {
+        console.log(shareDetails);
+        console.log(`Oops! I couldn't share to the world because: ${error}`);
+      }
+    } else {
+      // fallback code
+      setOpenShareModal(true);
+    }
+  };
+
   const OutputElement = useMemo(() => {
     return (
       post &&
@@ -170,10 +193,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
         canonical: "https://blog.mjntech.dev/posts/" + props.postId,
         openGraph: {
           url: "https://blog.mjntech.dev/posts/" + props.postId,
-          image:
-            post.image && post.image.trim() !== ""
-              ? post.image
-              : DEFAULT_OGIMAGE,
+          image: post.image || DEFAULT_OGIMAGE,
           type: "article",
           article: {
             published: new Date(post.timestamp),
@@ -326,32 +346,33 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         }}
                       />
                     ) : (
-                      <RWebShare
-                        data={{
-                          text: post.title,
-                          url:
-                            typeof window !== "undefined"
-                              ? window.location.href
-                              : "",
-                          title: "Check out this post!",
-                        }}
-                      >
-                        <Tooltip enterDelay={2000} title={"Share"}>
-                          <ButtonBase>
-                            <IosShareOutlined
-                              sx={{
-                                marginBottom: 0.33,
-                                color: theme.palette.text.primary,
-                                height: "28px",
-                                width: "32px",
-                                "&:hover": {
-                                  color: theme.palette.secondary.main,
-                                },
-                              }}
-                            />
-                          </ButtonBase>
-                        </Tooltip>
-                      </RWebShare>
+                      <Tooltip enterDelay={2000} title={"Share"}>
+                        <ButtonBase
+                          onClick={() => {
+                            handleSharing({
+                              url:
+                                typeof window !== "undefined"
+                                  ? window.location.href
+                                  : "",
+                              title: post.title,
+                              text: "Check out this post!",
+                              icon: post.image || DEFAULT_OGIMAGE,
+                            });
+                          }}
+                        >
+                          <IosShareOutlined
+                            sx={{
+                              marginBottom: 0.33,
+                              color: theme.palette.text.primary,
+                              height: "28px",
+                              width: "32px",
+                              "&:hover": {
+                                color: theme.palette.secondary.main,
+                              },
+                            }}
+                          />
+                        </ButtonBase>
+                      </Tooltip>
                     )}
                   </Box>
                 </Box>
