@@ -33,7 +33,7 @@ export const TOCModal = (props: TOCModalProps) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: xs ? 350 : 500,
+    width: xs ? 370 : 500,
     maxHeight: "70vh",
     bgcolor: "background.paper",
     borderRadius: 2,

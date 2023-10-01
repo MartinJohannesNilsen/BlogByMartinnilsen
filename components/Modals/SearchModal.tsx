@@ -109,7 +109,7 @@ export const SearchModal = (props: SearchModalProps) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: xs ? 350 : lgUp ? 700 : 550,
+            width: xs ? 370 : lgUp ? 700 : 550,
             height: "450px",
             outline: 0,
           }}
