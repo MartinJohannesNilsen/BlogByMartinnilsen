@@ -7,7 +7,21 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { TOCModalProps } from "../../types";
-import colorLuminance from "../../utils/colorLuminance";
+
+export function extractHeaders(html: string) {
+  const regex =
+    /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
+  const headings = [];
+  let match;
+  while ((match = regex.exec(html))) {
+    headings.push({
+      type: `h${match[3]}`,
+      id: match[2],
+      text: match[4],
+    });
+  }
+  return headings;
+}
 
 export const TOCModal = (props: TOCModalProps) => {
   const { theme } = useTheme();
@@ -20,7 +34,7 @@ export const TOCModal = (props: TOCModalProps) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: xs ? 350 : 500,
-    maxHeight: "60vh",
+    maxHeight: "70vh",
     bgcolor: "background.paper",
     borderRadius: 2,
     outline: 0,
@@ -33,25 +47,8 @@ export const TOCModal = (props: TOCModalProps) => {
     p: 4,
   };
 
-  function extractHeaders(html: string) {
-    const regex =
-      /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
-    const headings = [];
-    let match;
-    while ((match = regex.exec(html))) {
-      headings.push({
-        type: `h${match[3]}`,
-        id: match[2],
-        text: match[4],
-      });
-    }
-    return headings;
-  }
-
   const TableOfContents = useMemo(() => {
-    if (!props.outputString) return null;
-    const headings: { type: string; id: string | null; text: string }[] =
-      extractHeaders(props.outputString);
+    if (!props.headings) return null;
     const elements: JSX.Element[] = [
       <ButtonBase
         onClick={() => {
@@ -59,31 +56,35 @@ export const TOCModal = (props: TOCModalProps) => {
           window.scrollTo(0, 0);
           router.replace(window.location.pathname + window.location.search);
         }}
-        sx={{ maxWidth: "100%" }}
+        sx={{
+          maxWidth: "100%",
+          color: theme.palette.text.primary,
+          "&:hover": {
+            color: theme.palette.secondary.main,
+          },
+        }}
       >
         <Typography
           sx={{
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
             overflow: "hidden",
-            color: theme.palette.text.primary,
             fontFamily: theme.typography.fontFamily,
             textDecoration: "none",
-            marginLeft: theme.spacing(0),
+            paddingLeft: theme.spacing(1),
             fontWeight: 600,
             fontSize: 14,
-            borderBottom:
-              "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
-            "&:hover": {
-              borderBottom: "2px solid " + theme.palette.secondary.main,
-            },
+            borderLeft:
+              props.postTitle === props.currentSection
+                ? "2px solid " + theme.palette.secondary.main
+                : "2px solid rgba(120, 120, 120, 0.2)",
           }}
         >
           {props.postTitle}
         </Typography>
       </ButtonBase>,
     ];
-    headings.map((heading) =>
+    props.headings.map((heading) => {
       elements.push(
         <ButtonBase
           key={heading.id}
@@ -91,36 +92,53 @@ export const TOCModal = (props: TOCModalProps) => {
             props.handleModalClose();
             router.replace(`#${heading.id}`);
           }}
-          sx={{ maxWidth: "100%" }}
+          sx={{
+            maxWidth: "100%",
+            color: theme.palette.text.primary,
+            "&:hover": {
+              color: theme.palette.secondary.main,
+            },
+          }}
         >
           <Typography
             sx={{
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
               overflow: "hidden",
-              color: theme.palette.text.primary,
               fontFamily: theme.typography.fontFamily,
               textDecoration: "none",
-              marginLeft: theme.spacing(
-                parseInt(heading.type.substring(1)) - 1
-              ),
+              paddingLeft: theme.spacing(parseInt(heading.type.substring(1))),
               fontWeight: 600,
               fontSize: 14,
-              borderBottom:
-                "2px solid " +
-                colorLuminance(theme.palette.secondary.main, 0.15),
-              "&:hover": {
-                borderBottom: "2px solid " + theme.palette.secondary.main,
-              },
+              borderLeft:
+                heading.id === props.currentSection
+                  ? "2px solid " + theme.palette.secondary.main
+                  : "2px solid rgba(120, 120, 120, 0.2)",
             }}
           >
             {heading.text}
           </Typography>
         </ButtonBase>
-      )
+      );
+    });
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        // gap="10px"
+        sx={{
+          overflowY: "scroll",
+          "& p": {
+            py: 0.3,
+          },
+        }}
+      >
+        {elements}
+      </Box>
     );
-    return elements;
-  }, [props.outputString, theme]);
+  }, [props.headings, theme]);
 
   return (
     <Box>
@@ -146,18 +164,7 @@ export const TOCModal = (props: TOCModalProps) => {
           >
             Table of Contents
           </Typography>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            gap="10px"
-            sx={{
-              overflowY: "scroll",
-            }}
-          >
-            {TableOfContents}
-          </Box>
+          {TableOfContents}
         </Box>
       </Modal>
     </Box>

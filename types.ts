@@ -180,7 +180,8 @@ export type TOCModalProps = {
   open: boolean;
   handleModalOpen: () => void;
   handleModalClose: () => void;
-  outputString: string;
+  headings: Headings[];
+  currentSection: string;
   postTitle: string;
 };
 

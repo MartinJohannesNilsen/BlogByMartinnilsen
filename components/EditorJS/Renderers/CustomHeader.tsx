@@ -137,10 +137,12 @@ const HeaderOutput = ({
     >
       <a
         id={parse(data.text).toString().replaceAll(" ", "_")}
+        className={"anchorHeading"}
         style={{
           position: "absolute",
           zIndex: -1,
-          top: isMobile ? -50 : -10,
+          // top: isMobile ? -50 : -10,
+          top: -50,
           visibility: "hidden",
           scrollBehavior: "smooth",
         }}

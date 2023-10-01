@@ -39,7 +39,7 @@ import { style } from "../../components/EditorJS/Style";
 import Footer from "../../components/Footer/Footer";
 import SettingsModal from "../../components/Modals/SettingsModal";
 import ShareModal from "../../components/Modals/ShareModal";
-import TOCModal from "../../components/Modals/TOCModal";
+import TOCModal, { extractHeaders } from "../../components/Modals/TOCModal";
 import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
@@ -49,6 +49,7 @@ import { ReadArticleViewProps } from "../../types";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
+import { useEventListener } from "usehooks-ts";
 
 // EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
@@ -129,6 +130,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const handleNavigate = (path: string) => {
     window.location.href = path;
   };
+  const [currentSection, setCurrentSection] = useState(post.title);
 
   const handleThemeChange = (event: any) => {
     setTheme(
@@ -172,14 +174,29 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 
   useEffect(() => {
     setIsLoading(false);
+  }, [OutputElement]);
+
+  useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash) {
       handleNavigate(window.location.hash);
     }
-  }, [OutputElement]);
+  }, [isLoading]);
 
   const OutputString = useMemo(() => {
     return renderToStaticMarkup(OutputElement);
   }, [OutputElement]);
+
+  useEventListener("scroll", () => {
+    const sectionEls = document.querySelectorAll(".anchorHeading");
+    sectionEls.forEach((sectionEl) => {
+      const { top, bottom } = sectionEl.getBoundingClientRect();
+      // Check if the top of the section is above the viewport's bottom
+      // if (top <= 0 && bottom >= 0) {
+      if (top - 50 <= 0) {
+        setCurrentSection(sectionEl.id);
+      }
+    });
+  });
 
   if (!post.published && !isAuthorized) return <></>;
   return (
@@ -289,7 +306,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       open={openTOCModal}
                       handleModalOpen={() => setOpenTOCModal(true)}
                       handleModalClose={() => setOpenTOCModal(false)}
-                      outputString={OutputString}
+                      headings={extractHeaders(OutputString)}
+                      currentSection={currentSection}
                       postTitle={post.title}
                     />
                   )}
@@ -382,20 +400,24 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 alignItems="center"
-                width={"80%"}
+                width={"100%"}
                 px={3}
                 pt={2}
                 pb={2}
-                position={"relative"}
+                // position={"relative"}
+                position={"sticky"}
                 sx={{
                   top: 0,
-                  backgroundColor: theme.palette.primary.main,
+                  backgroundColor: theme.palette.primary.main + "50",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   zIndex: 1000,
                   marginTop: "0",
                   WebkitTransform: "translateZ(0)",
+                  // boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+                  backdropFilter: "blur(5px)",
+                  WebkitBackdropFilter: "blur(5px)",
                 }}
               >
                 <Link
@@ -419,7 +441,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 <Box display="flex">
                   {OutputString ? (
                     <Tooltip enterDelay={2000} title={"Open table of contents"}>
-                      <ButtonBase onClick={() => setOpenTOCModal(true)}>
+                      <ButtonBase
+                        disableRipple
+                        onClick={() => setOpenTOCModal(true)}
+                      >
                         <MenuBook
                           sx={{
                             color: theme.palette.text.primary,
@@ -441,13 +466,15 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       open={openTOCModal}
                       handleModalOpen={() => setOpenTOCModal(true)}
                       handleModalClose={() => setOpenTOCModal(false)}
-                      outputString={OutputString}
+                      headings={extractHeaders(OutputString)}
+                      currentSection={currentSection}
                       postTitle={post.title}
                     />
                   )}
                   {/* SettingsModal */}
                   <Tooltip enterDelay={2000} title={"Open settings"}>
                     <ButtonBase
+                      disableRipple
                       sx={{ marginTop: 0.42, marginLeft: theme.spacing(1) }}
                       onClick={() => {
                         setOpenSettingsModal(true);
@@ -474,6 +501,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   {/* ShareModal */}
                   <Tooltip enterDelay={2000} title={"Share"}>
                     <ButtonBase
+                      disableRipple
                       disabled={!post.published}
                       onClick={() => {
                         setOpenShareModal(true);
@@ -537,6 +565,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 >
                   {/* Title box */}
                   <Box
+                    id={post.title}
+                    className={"anchorHeading"}
                     display="flex"
                     alignItems="center"
                     mt={isMobile ? 6 : 0}
