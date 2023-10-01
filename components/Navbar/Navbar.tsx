@@ -81,6 +81,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
         }}
       >
+        {/* Home button */}
         <ButtonBase
           onClick={() => handleNavigate("/")}
           disableRipple

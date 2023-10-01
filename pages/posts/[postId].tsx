@@ -50,6 +50,8 @@ import { ReadArticleViewProps } from "../../types";
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
 import { useEventListener } from "usehooks-ts";
+import logo from "public/assets/imgs/terminal.png";
+import Image from "next/image";
 
 // EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
@@ -420,7 +422,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   WebkitBackdropFilter: "blur(5px)",
                 }}
               >
-                <Link
+                {/* <Link
                   fontFamily={theme.typography.fontFamily}
                   variant="body1"
                   fontWeight="900"
@@ -436,7 +438,36 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   href={"/"}
                 >
                   {"← Home"}
-                </Link>
+                </Link> */}
+                {/* Home button */}
+                <ButtonBase
+                  onClick={() => handleNavigate("/")}
+                  disableRipple
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    src={logo.src}
+                    alt=""
+                    width={32}
+                    height={32}
+                    style={{ borderRadius: "0" }}
+                  />
+                  <Typography
+                    variant={"h5"}
+                    fontFamily={theme.typography.fontFamily}
+                    color={theme.palette.text.primary}
+                    fontWeight={700}
+                    textAlign="left"
+                    pl={0.5}
+                  >
+                    Blog
+                  </Typography>
+                </ButtonBase>
                 <Box flexGrow={100} />
                 <Box display="flex">
                   {OutputString ? (
