@@ -192,8 +192,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
   // Width
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const sm = useMediaQuery(theme.breakpoints.only("sm"));
-  const width = xs ? "380px" : sm ? "90vw" : "750px";
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const width = mdDown ? "90vw" : "750px";
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setIsPosted(false);
@@ -465,6 +465,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 alignItems="center"
+                minWidth={"380px"}
                 width={width}
                 py={2}
                 sx={{

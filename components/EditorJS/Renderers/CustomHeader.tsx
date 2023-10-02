@@ -18,6 +18,7 @@ const HeaderOutput = ({
 }: EditorjsRendererProps): JSX.Element => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const smDown = useMediaQuery(theme.breakpoints.down("md"));
   if (!data || !data.text || typeof data.text != "string") return <></>;
   if (!style || typeof style !== "object") style = {};
   if (!config || typeof config !== "object")
@@ -26,89 +27,57 @@ const HeaderOutput = ({
 
   const element =
     data.level === 1 ? (
-      <h1
-        style={{
+      <Typography
+        component={"h1"}
+        variant="h4"
+        color={theme.palette.text.primary}
+        fontFamily={theme.typography.fontFamily}
+        sx={{
           ...defaultStyle,
-          color: theme.palette.text.primary,
-          fontFamily: theme.typography.fontFamily,
         }}
         className={classNames.h1}
-        // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
         {parse(data.text)}
-      </h1>
+      </Typography>
     ) : data.level === 2 ? (
-      <h2
-        style={{
+      <Typography
+        component={"h2"}
+        variant="h5"
+        color={theme.palette.text.primary}
+        fontFamily={theme.typography.fontFamily}
+        sx={{
           ...defaultStyle,
-          color: theme.palette.text.primary,
-          fontFamily: theme.typography.fontFamily,
         }}
         className={classNames.h2}
-        // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
         {parse(data.text)}
-      </h2>
+      </Typography>
     ) : data.level === 3 ? (
-      <h3
-        style={{
+      <Typography
+        component={"h3"}
+        variant="h6"
+        color={theme.palette.text.primary}
+        fontFamily={theme.typography.fontFamily}
+        sx={{
           ...defaultStyle,
-          color: theme.palette.text.primary,
-          fontFamily: theme.typography.fontFamily,
         }}
         className={classNames.h3}
-        // id={parse(data.text).toString().replaceAll(" ", "_")}
       >
         {parse(data.text)}
-      </h3>
-    ) : data.level === 4 ? (
-      <h4
-        style={{
-          ...defaultStyle,
-          color: theme.palette.text.primary,
-          fontFamily: theme.typography.fontFamily,
-        }}
-        className={classNames.h4}
-        // id={parse(data.text).toString().replaceAll(" ", "_")}
-      >
-        {parse(data.text)}
-      </h4>
-    ) : data.level === 5 ? (
-      <h5
-        style={{
-          ...defaultStyle,
-          color: theme.palette.text.primary,
-          fontFamily: theme.typography.fontFamily,
-        }}
-        className={classNames.h5}
-        // id={parse(data.text).toString().replaceAll(" ", "_")}
-      >
-        {parse(data.text)}
-      </h5>
-    ) : data.level === 6 ? (
-      <h6
-        style={{
-          ...defaultStyle,
-          color: theme.palette.text.primary,
-          fontFamily: theme.typography.fontFamily,
-        }}
-        className={classNames.h6}
-        // id={parse(data.text).toString().replaceAll(" ", "_")}
-      >
-        {parse(data.text)}
-      </h6>
+      </Typography>
     ) : (
-      <h4
-        style={{
+      <Typography
+        component={"h4"}
+        variant="h6"
+        color={theme.palette.text.primary}
+        fontFamily={theme.typography.fontFamily}
+        sx={{
           ...defaultStyle,
-          color: theme.palette.text.primary,
-          fontFamily: theme.typography.fontFamily,
         }}
-        className={classNames.h4}
-        // id={parse(data.text).toString().replaceAll(" ", "_")}
+        className={classNames.h3}
       >
         {parse(data.text)}
-      </h4>
+      </Typography>
     );
 
   const [showHash, setShowHash] = useState(false);
@@ -153,7 +122,16 @@ const HeaderOutput = ({
             // disableRipple
             href={"#" + parse(data.text).toString().replaceAll(" ", "_")}
             sx={{
-              mt: data.level === 1 ? 0.75 : data.level === 2 ? 0.9 : 0.95,
+              mt:
+                data.level === 1
+                  ? smDown
+                    ? 0.4
+                    : 0.75
+                  : data.level === 2
+                  ? smDown
+                    ? 0.3
+                    : 0.75
+                  : 0.95,
               position: "absolute",
               left: -1,
               opacity: 0.5,
@@ -174,7 +152,7 @@ const HeaderOutput = ({
                 fontFamily: theme.typography.fontFamily,
               }}
             >
-              {/* {data.level === 1 ? "1" : data.level === 2 ? "2" : "3"} */}#
+              #
             </Typography>
           </Link>
         ) : (

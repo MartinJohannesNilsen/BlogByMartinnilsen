@@ -21,11 +21,35 @@ export const baseTheme = createTheme({
     // Usage:
     h2: {},
     // Usage:
-    h3: { fontWeight: 800 },
+    h3: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "32px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "24px",
+      },
+    },
     // Usage:
-    h4: { fontWeight: 800 },
+    h4: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "24px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "22px",
+      },
+    },
     // Usage:
-    h5: { fontWeight: 800 },
+    h5: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "19px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "17px",
+      },
+    },
     // Usage:
     h6: { fontWeight: 800 },
 
@@ -46,6 +70,12 @@ export const baseTheme = createTheme({
     body1: {
       // fontSize: "125%",
       fontWeight: 500,
+      // [defaultTheme.breakpoints.only("sm")]: {
+      //   fontSize: "15px",
+      // },
+      // [defaultTheme.breakpoints.only("xs")]: {
+      //   fontSize: "15px",
+      // },
     },
     // Usage:
     body2: {

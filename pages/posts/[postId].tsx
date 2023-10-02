@@ -128,6 +128,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const { width, height } = useWindowSize();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
   const handleNavigate = (path: string) => {
     window.location.href = path;
@@ -375,7 +376,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                                   ? window.location.href
                                   : "",
                               title: post.title,
-                              text: "Check out this post!",
+                              text: "",
                               icon: post.image || DEFAULT_OGIMAGE,
                             });
                           }}
@@ -458,10 +459,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     style={{ borderRadius: "0" }}
                   />
                   <Typography
-                    variant={"h5"}
+                    // variant={"h5"}
                     fontFamily={theme.typography.fontFamily}
                     color={theme.palette.text.primary}
                     fontWeight={700}
+                    fontSize={22}
                     textAlign="left"
                     pl={0.5}
                   >
@@ -590,7 +592,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     minHeight: isMobile
                       ? "calc(100vh - 81px - 30px)"
                       : "calc(100vh - 67px - 117px)",
-                    width: xs ? "380px" : sm ? "90vw" : "760px",
+                    minWidth: "380px",
+                    width: xs ? "96vw" : sm ? "90vw" : "760px",
                     position: "relative",
                   }}
                 >
@@ -629,18 +632,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         }}
                       />
                       <Typography
-                        my={xs ? 0.5 : 1}
+                        my={xs ? 0 : 1}
                         textAlign="center"
                         sx={{ color: theme.palette.text.primary }}
                         fontFamily={theme.typography.fontFamily}
-                        variant={xs ? "h4" : "h3"}
+                        variant={"h3"}
                         fontWeight="800"
                       >
                         {post.title}
                       </Typography>
                       <Box
                         display="flex"
-                        mt={2}
+                        mt={mdDown ? 1 : 2}
                         mb={xs ? 0 : 1}
                         justifyContent="center"
                         alignItems="center"

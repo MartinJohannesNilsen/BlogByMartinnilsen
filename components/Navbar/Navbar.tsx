@@ -100,10 +100,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             style={{ borderRadius: "0" }}
           />
           <Typography
-            variant={"h5"}
+            // variant={"h5"}
             fontFamily={theme.typography.fontFamily}
             color={theme.palette.text.primary}
             fontWeight={700}
+            fontSize={22}
             textAlign="left"
             pl={0.5}
           >
