@@ -69,6 +69,7 @@ import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
+import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -578,7 +579,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             )}
 
             {/* Content */}
-            {/* <RevealFromDownOnEnter from_opacity={0} y={"+=10px"}> */}
+            {/* <RevealFromDownOnEnter
+              from_opacity={0}
+              y={xs ? "+=10px" : "+=30px"}
+              duration={2}
+            > */}
             <Grid
               container
               width="100%"
