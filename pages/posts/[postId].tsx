@@ -130,6 +130,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const lg = useMediaQuery(theme.breakpoints.only("lg"));
   const router = useRouter();
   const handleNavigate = (path: string) => {
     window.location.href = path;
@@ -424,23 +426,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   WebkitBackdropFilter: "blur(5px)",
                 }}
               >
-                {/* <Link
-                  fontFamily={theme.typography.fontFamily}
-                  variant="body1"
-                  fontWeight="900"
-                  sx={{
-                    fontSize: theme.typography.body1.fontSize,
-                    textDecoration: "none",
-                    color: theme.palette.text.primary,
-                    "&:hover": {
-                      cursor: "pointer",
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                  href={"/"}
-                >
-                  {"← Home"}
-                </Link> */}
                 {/* Home button */}
                 <ButtonBase
                   onClick={() => handleNavigate("/")}
@@ -577,6 +562,21 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 </Box>
               </Box>
             )}
+
+            {/* TOC on lg xl
+            {lgUp ? (
+              <Box sx={{ position: "fixed", top: 80, right: 10 }}>
+                <TOCModal
+                  open={openTOCModal}
+                  handleModalOpen={() => setOpenTOCModal(true)}
+                  handleModalClose={() => setOpenTOCModal(false)}
+                  headings={extractHeaders(OutputString)}
+                  currentSection={currentSection}
+                  postTitle={post.title}
+                  sidebarMode
+                />
+              </Box>
+            ) : null} */}
 
             {/* Content */}
             {/* <RevealFromDownOnEnter

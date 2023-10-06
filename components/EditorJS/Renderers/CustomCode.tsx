@@ -60,15 +60,15 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
       <Box
         sx={
           {
-            // borderRadius: "15px", // border width + borderradius from before
-            // border: "5px solid" + theme.palette.secondary.main,
+            // borderRadius: "10px", // border width + borderradius from before
+            // border: "4px solid" + theme.palette.secondary.main,
           }
         }
       >
         <Box
           sx={{
-            // backgroundColor: "#363642",
-            backgroundColor: "#66667d",
+            backgroundColor: "#363642",
+            // backgroundColor: "#66667d",
             // height: "35px",
             borderRadius: "10px 10px 0px 0px",
             padding: "5px",
@@ -118,6 +118,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
           style={EDITORTHEME}
           wrapLines={true}
           customStyle={{
+            backgroundColor: "rgb(36, 39, 46)",
+            // backgroundColor: "rgb(31, 34, 41)",
             margin: "0px",
             marginTop: "-1px",
             padding: "15px",

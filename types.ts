@@ -183,6 +183,7 @@ export type TOCModalProps = {
   headings: Headings[];
   currentSection: string;
   postTitle: string;
+  sidebarMode?: boolean;
 };
 
 // View props types

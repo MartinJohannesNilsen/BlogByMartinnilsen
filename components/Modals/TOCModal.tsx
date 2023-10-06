@@ -140,34 +140,37 @@ export const TOCModal = (props: TOCModalProps) => {
     );
   }, [props.headings, theme]);
 
-  return (
-    <Box>
-      <Modal
-        open={props.open}
-        onClose={props.handleModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <IconButton
-            style={{ position: "absolute", top: "5px", right: "5px" }}
-            onClick={() => props.handleModalClose()}
-          >
-            <Close />
-          </IconButton>
-          <Typography
-            fontFamily={theme.typography.fontFamily}
-            variant="h5"
-            fontWeight="800"
-            color={theme.palette.text.primary}
-            mb={1}
-          >
-            Table of Contents
-          </Typography>
-          {TableOfContents}
-        </Box>
-      </Modal>
-    </Box>
-  );
+  if (props.sidebarMode && props.sidebarMode === true)
+    return <Box>{TableOfContents}</Box>;
+  else
+    return (
+      <Box>
+        <Modal
+          open={props.open}
+          onClose={props.handleModalClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <IconButton
+              style={{ position: "absolute", top: "5px", right: "5px" }}
+              onClick={() => props.handleModalClose()}
+            >
+              <Close />
+            </IconButton>
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="h5"
+              fontWeight="800"
+              color={theme.palette.text.primary}
+              mb={1}
+            >
+              Table of Contents
+            </Typography>
+            {TableOfContents}
+          </Box>
+        </Modal>
+      </Box>
+    );
 };
 export default TOCModal;
