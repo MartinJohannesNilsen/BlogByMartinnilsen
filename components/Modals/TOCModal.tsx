@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { TOCModalProps } from "../../types";
+import DOMPurify from "dompurify";
 
 export function extractHeaders(html: string) {
   const regex =
@@ -115,9 +116,10 @@ export const TOCModal = (props: TOCModalProps) => {
                   ? "2px solid " + theme.palette.secondary.main
                   : "2px solid rgba(120, 120, 120, 0.2)",
             }}
-          >
-            {heading.text}
-          </Typography>
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(heading.text),
+            }}
+          />
         </ButtonBase>
       );
     });

@@ -732,45 +732,45 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       />
                       <Box display="flex" sx={{ paddingBottom: "6px" }}>
                         {/* Share */}
-                        {!isMobile ? (
-                          <>
-                            <Tooltip enterDelay={2000} title={"Share"}>
-                              <IconButton
-                                disableRipple
-                                disabled={!post.published}
-                                sx={{ marginLeft: 3 }}
-                                onClick={() => {
-                                  setOpenShareModal(true);
-                                }}
-                              >
-                                <TbShare2
-                                  style={{
-                                    color: theme.palette.text.primary,
-                                    // opacity: 0.5,
-                                    height: "30px",
-                                    width: "30px",
-                                  }}
-                                />
-                              </IconButton>
-                            </Tooltip>
-                            <ShareModal
-                              open={openShareModal}
-                              handleModalOpen={() => setOpenShareModal(true)}
-                              handleModalClose={() => setOpenShareModal(false)}
-                              data={{
-                                title: post.title,
-                                description: post.description,
-                                image:
-                                  post.image && post.image.trim() !== ""
-                                    ? post.image
-                                    : DEFAULT_OGIMAGE,
-                                url: window.location.href,
-                                height: xs ? 100 : 130,
-                                width: xs ? 400 : 500,
+                        {/* {!isMobile ? ( */}
+                        <>
+                          <Tooltip enterDelay={2000} title={"Share"}>
+                            <IconButton
+                              disableRipple
+                              disabled={!post.published}
+                              sx={{ marginLeft: 3 }}
+                              onClick={() => {
+                                setOpenShareModal(true);
                               }}
-                            />
-                          </>
-                        ) : null}
+                            >
+                              <TbShare2
+                                style={{
+                                  color: theme.palette.text.primary,
+                                  // opacity: 0.5,
+                                  height: "30px",
+                                  width: "30px",
+                                }}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                          <ShareModal
+                            open={openShareModal}
+                            handleModalOpen={() => setOpenShareModal(true)}
+                            handleModalClose={() => setOpenShareModal(false)}
+                            data={{
+                              title: post.title,
+                              description: post.description,
+                              image:
+                                post.image && post.image.trim() !== ""
+                                  ? post.image
+                                  : DEFAULT_OGIMAGE,
+                              url: window.location.href,
+                              height: xs ? 100 : 130,
+                              width: xs ? 400 : 500,
+                            }}
+                          />
+                        </>
+                        {/* ) : null} */}
                         {/* Confetti */}
                         <Tooltip enterDelay={2000} title={"Confetti"}>
                           <IconButton
@@ -778,7 +778,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             disabled={isExploding}
                             sx={{
                               "&:disabled": { opacity: "0.5" },
-                              marginLeft: isMobile ? 3 : 0.5,
+                              // marginLeft: isMobile ? 3 : 0.5,
+                              marginLeft: 0.5,
                               marginRight: 0.5,
                             }}
                             onClick={() => {
