@@ -49,13 +49,19 @@ export const TOCModal = (props: TOCModalProps) => {
   };
 
   const TableOfContents = useMemo(() => {
+    function decodeHtml(html) {
+      var txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    }
     if (!props.headings) return null;
     const elements: JSX.Element[] = [
       <ButtonBase
         onClick={() => {
           props.handleModalClose();
           window.scrollTo(0, 0);
-          router.replace(window.location.pathname + window.location.search);
+          // router.replace(window.location.pathname + window.location.search);
+          router.replace(window.location.pathname);
         }}
         sx={{
           maxWidth: "100%",
@@ -91,7 +97,7 @@ export const TOCModal = (props: TOCModalProps) => {
           key={heading.id}
           onClick={() => {
             props.handleModalClose();
-            router.replace(`#${heading.id}`);
+            router.replace("#" + decodeHtml(heading.id));
           }}
           sx={{
             maxWidth: "100%",

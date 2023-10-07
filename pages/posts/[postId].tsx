@@ -117,6 +117,37 @@ export const renderers = {
   iframe: CustomIframe,
 };
 
+// type SharingProps = {
+//   url: string;
+//   title: string;
+//   text: string;
+//   icon: string;
+//   fallback: () => {};
+// };
+
+export const handleSharing = async ({ url, title, text, icon, fallback }) => {
+  const shareDetails = {
+    url, // The URL of the webpage you want to share
+    title, // The title of the shared content
+    text, // The description or text to accompany the shared content
+    icon, // URL of the image for the preview
+  };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareDetails);
+      // .then(() =>
+      // console.log("Hooray! Your content was shared to the world")
+      // );
+    } catch (error) {
+      // console.log(shareDetails);
+      // console.log(`Oops! I couldn't share to the world because: ${error}`);
+    }
+  } else {
+    // fallback code
+    fallback();
+  }
+};
+
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const post = props.post;
   const { isAuthorized, status } = useAuthorized(!post.published);
@@ -143,30 +174,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
       event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark,
       true
     );
-  };
-
-  const handleSharing = async ({ url, title, text, icon }) => {
-    const shareDetails = {
-      url, // The URL of the webpage you want to share
-      title, // The title of the shared content
-      text, // The description or text to accompany the shared content
-      icon, // URL of the image for the preview
-    };
-    if (navigator.share) {
-      try {
-        await navigator
-          .share(shareDetails)
-          .then(() =>
-            console.log("Hooray! Your content was shared to the world")
-          );
-      } catch (error) {
-        console.log(shareDetails);
-        console.log(`Oops! I couldn't share to the world because: ${error}`);
-      }
-    } else {
-      // fallback code
-      setOpenShareModal(true);
-    }
   };
 
   const OutputElement = useMemo(() => {
@@ -370,33 +377,52 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         }}
                       />
                     ) : (
-                      <Tooltip enterDelay={2000} title={"Share"}>
-                        <ButtonBase
-                          onClick={() => {
-                            handleSharing({
-                              url:
-                                typeof window !== "undefined"
-                                  ? window.location.href
-                                  : "",
-                              title: post.title,
-                              text: "",
-                              icon: post.image || DEFAULT_OGIMAGE,
-                            });
-                          }}
-                        >
-                          <IosShareOutlined
-                            sx={{
-                              marginBottom: 0.33,
-                              color: theme.palette.text.primary,
-                              height: "28px",
-                              width: "32px",
-                              "&:hover": {
-                                color: theme.palette.secondary.main,
-                              },
+                      <>
+                        <Tooltip enterDelay={2000} title={"Share"}>
+                          <ButtonBase
+                            onClick={() => {
+                              handleSharing({
+                                url:
+                                  typeof window !== "undefined"
+                                    ? window.location.href
+                                    : "",
+                                title: post.title,
+                                text: "",
+                                icon: post.image || DEFAULT_OGIMAGE,
+                                fallback: () => setOpenShareModal(true),
+                              });
                             }}
-                          />
-                        </ButtonBase>
-                      </Tooltip>
+                          >
+                            <IosShareOutlined
+                              sx={{
+                                marginBottom: 0.33,
+                                color: theme.palette.text.primary,
+                                height: "28px",
+                                width: "32px",
+                                "&:hover": {
+                                  color: theme.palette.secondary.main,
+                                },
+                              }}
+                            />
+                          </ButtonBase>
+                        </Tooltip>
+                        <ShareModal
+                          open={openShareModal}
+                          handleModalOpen={() => setOpenShareModal(true)}
+                          handleModalClose={() => setOpenShareModal(false)}
+                          data={{
+                            title: post.title,
+                            description: post.description,
+                            image:
+                              post.image && post.image.trim() !== ""
+                                ? post.image
+                                : DEFAULT_OGIMAGE,
+                            url: window.location.href,
+                            height: xs ? 100 : 130,
+                            width: xs ? 400 : 500,
+                          }}
+                        />
+                      </>
                     )}
                   </Box>
                 </Box>
@@ -732,45 +758,44 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       />
                       <Box display="flex" sx={{ paddingBottom: "6px" }}>
                         {/* Share */}
-                        {/* {!isMobile ? ( */}
-                        <>
-                          <Tooltip enterDelay={2000} title={"Share"}>
-                            <IconButton
-                              disableRipple
-                              disabled={!post.published}
-                              sx={{ marginLeft: 3 }}
-                              onClick={() => {
-                                setOpenShareModal(true);
+                        <Tooltip enterDelay={2000} title={"Share"}>
+                          <IconButton
+                            disableRipple
+                            disabled={!post.published}
+                            sx={{ marginLeft: 3 }}
+                            onClick={() => {
+                              isMobile
+                                ? handleSharing({
+                                    url:
+                                      typeof window !== "undefined"
+                                        ? window.location.href
+                                        : "",
+                                    title: post.title,
+                                    text: "",
+                                    icon: post.image || DEFAULT_OGIMAGE,
+                                    fallback: () => setOpenShareModal(true),
+                                  })
+                                : setOpenShareModal(true);
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                color: theme.palette.text.primary,
+                                "&:hover": {
+                                  color: theme.palette.secondary.main,
+                                },
                               }}
                             >
                               <TbShare2
                                 style={{
-                                  color: theme.palette.text.primary,
                                   // opacity: 0.5,
                                   height: "30px",
                                   width: "30px",
                                 }}
                               />
-                            </IconButton>
-                          </Tooltip>
-                          <ShareModal
-                            open={openShareModal}
-                            handleModalOpen={() => setOpenShareModal(true)}
-                            handleModalClose={() => setOpenShareModal(false)}
-                            data={{
-                              title: post.title,
-                              description: post.description,
-                              image:
-                                post.image && post.image.trim() !== ""
-                                  ? post.image
-                                  : DEFAULT_OGIMAGE,
-                              url: window.location.href,
-                              height: xs ? 100 : 130,
-                              width: xs ? 400 : 500,
-                            }}
-                          />
-                        </>
-                        {/* ) : null} */}
+                            </Box>
+                          </IconButton>
+                        </Tooltip>
                         {/* Confetti */}
                         <Tooltip enterDelay={2000} title={"Confetti"}>
                           <IconButton
@@ -778,7 +803,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             disabled={isExploding}
                             sx={{
                               "&:disabled": { opacity: "0.5" },
-                              // marginLeft: isMobile ? 3 : 0.5,
                               marginLeft: 0.5,
                               marginRight: 0.5,
                             }}
@@ -789,35 +813,54 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                               }, 3500);
                             }}
                           >
-                            <TbConfetti
-                              style={{
+                            <Box
+                              sx={{
                                 color: theme.palette.text.primary,
-                                // opacity: 0.5,
-                                height: "30px",
-                                width: "30px",
+                                "&:hover": {
+                                  color: theme.palette.secondary.main,
+                                },
                               }}
-                            />
+                            >
+                              <TbConfetti
+                                style={{
+                                  // opacity: 0.5,
+                                  height: "30px",
+                                  width: "30px",
+                                }}
+                              />
+                            </Box>
                           </IconButton>
                         </Tooltip>
                         {/* Paypal */}
                         <Tooltip enterDelay={2000} title={"Buy me a cacao"}>
                           <IconButton
                             disableRipple
-                            sx={{ marginRight: 3, marginLeft: -0.25 }}
+                            sx={{
+                              marginRight: 3,
+                              marginLeft: xs ? -0.3 : -0.25,
+                            }}
                             onClick={() => {
                               handleNavigate(
                                 "https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ"
                               );
                             }}
                           >
-                            <BiCoffeeTogo
-                              style={{
+                            <Box
+                              sx={{
                                 color: theme.palette.text.primary,
-                                // opacity: 0.5,
-                                height: "29px",
-                                width: "30px",
+                                "&:hover": {
+                                  color: theme.palette.secondary.main,
+                                },
                               }}
-                            />
+                            >
+                              <BiCoffeeTogo
+                                style={{
+                                  // opacity: 0.5,
+                                  height: "29px",
+                                  width: "30px",
+                                }}
+                              />
+                            </Box>
                           </IconButton>
                         </Tooltip>
                       </Box>
