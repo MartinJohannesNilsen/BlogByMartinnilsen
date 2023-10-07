@@ -107,9 +107,9 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     setIsLoading(true);
     setCurrentSlide(0);
     setPosts(
-      lgUp || cardLayout !== "grid"
-        ? chunkedPosts[page - 1]
-        : chunkedPosts.flat()
+      !lgUp || cardLayout !== "grid"
+        ? chunkedPosts.flat()
+        : chunkedPosts[page - 1]
     );
     // instanceRef && instanceRef.current?.update;
     return () => {};
