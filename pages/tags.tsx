@@ -234,11 +234,11 @@ const TagsPage: FC<TagsPageProps> = (props) => {
             display="flex"
             flexDirection="column"
             sx={{
-              minHeight: xs ? "100vh" : "calc(100vh - 64px)",
-              height: xs ? "100%" : "calc(100% - 64px)",
+              minHeight: "100vh",
+              height: "100%",
               width: "100%",
               paddingX: lgUp ? "150px" : xs ? "20px" : "80px",
-              paddingTop: isMobile ? "55px" : xs ? "20px" : "40px",
+              paddingTop: isMobile ? "55px" : "80px",
               backgroundColor: theme.palette.primary.main,
             }}
           >

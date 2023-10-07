@@ -107,13 +107,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     setIsLoading(true);
     setCurrentSlide(0);
     setPosts(
-      mdDown || cardLayout !== "grid"
-        ? chunkedPosts.flat()
-        : chunkedPosts[page - 1]
+      lgUp || cardLayout !== "grid"
+        ? chunkedPosts[page - 1]
+        : chunkedPosts.flat()
     );
     // instanceRef && instanceRef.current?.update;
     return () => {};
-  }, [chunkedPosts, cardLayout, mdDown]);
+  }, [chunkedPosts, cardLayout, lgUp]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -193,10 +193,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             display="flex"
             flexDirection="column"
             sx={{
-              minHeight: isMobile ? "100vh" : "calc(100vh - 64px)",
-              height: isMobile ? "100%" : "calc(100% - 64px)",
+              minHeight: "100vh",
+              height: "100%",
               background: theme.palette.primary.main,
-              paddingTop: isMobile ? "50px" : "10px",
+              paddingTop: isMobile ? "50px" : "80px",
               width: "100%",
             }}
           >
@@ -210,7 +210,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               >
                 <Box flexGrow={1} />
                 <Box>
-                  {!mdDown && cardLayout === "grid" ? (
+                  {lgUp && cardLayout === "grid" ? (
                     <ButtonGroup sx={{ paddingRight: 1 }}>
                       <IconButton
                         sx={{
@@ -389,9 +389,9 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     columnSpacing={mdDown ? 0 : xl ? 5 : 3}
                     sx={{
                       width: "100%",
-                      paddingTop: mdDown ? 1 : 2.5,
+                      paddingTop: xs ? 1 : 2.5,
                       paddingX: lgUp ? "150px" : xs ? 2 : "80px",
-                      paddingBottom: lgUp ? "0px" : mdDown ? 5 : "20px",
+                      paddingBottom: lgUp ? "0px" : 5,
                       margin: 0,
                     }}
                   >
