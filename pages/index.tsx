@@ -75,9 +75,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const [page, setPage] = useState(1);
   const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
     splitChunks(
-      isAuthorized
-        ? props.posts
-        : _filterListOfStoredPostsOnPublished(props.posts, "published"),
+      _filterListOfStoredPostsOnPublished(props.posts, "published"),
       Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
     )
   );
@@ -90,18 +88,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-
-  useEffect(() => {
-    setChunkedPosts(
-      splitChunks(
-        isAuthorized
-          ? props.posts
-          : _filterListOfStoredPostsOnPublished(props.posts, "published"),
-        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
-      )
-    );
-    return () => {};
-  }, [isAuthorized]);
 
   useEffect(() => {
     setIsLoading(true);
