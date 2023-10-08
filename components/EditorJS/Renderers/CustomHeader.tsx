@@ -103,6 +103,7 @@ const HeaderOutput = ({
       onMouseLeave={() => {
         setShowHash(false);
       }}
+      sx={{ userSelect: "text" }}
     >
       <a
         id={parse(data.text).toString().replaceAll(" ", "_")}

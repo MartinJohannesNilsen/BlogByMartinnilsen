@@ -150,7 +150,13 @@ export const handleSharing = async ({ url, title, text, icon, fallback }) => {
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const post = props.post;
-  const { isAuthorized, status } = useAuthorized(!post.published);
+  const { isAuthorized, status } =
+    process.env.NEXT_PUBLIC_LOCALHOST === "true"
+      ? {
+          isAuthorized: true,
+          status: "authenticated",
+        }
+      : useAuthorized(!post.published);
   const { theme, setTheme } = useTheme();
   const [openTOCModal, setOpenTOCModal] = useState(false);
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
@@ -614,7 +620,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               container
               width="100%"
               justifyContent="center"
-              sx={{ backgroundColor: theme.palette.primary.main }}
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                userSelect: "text",
+              }}
             >
               <Grid item>
                 <Stack
@@ -626,6 +635,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     minWidth: "380px",
                     width: xs ? "96vw" : sm ? "90vw" : "760px",
                     position: "relative",
+                    userSelect: "none",
                   }}
                 >
                   {/* Title box */}
@@ -637,6 +647,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     mt={isMobile ? 6 : 0}
                     mb={1}
                     pb={2}
+                    sx={{ userSelect: "text" }}
                   >
                     <Box
                       display="flex"
@@ -737,13 +748,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     mb={1}
                     sx={{
                       backgroundColor: "transparent",
+                      userSelect: "text",
                     }}
                   >
                     {OutputElement}
                   </Box>
                   <Box flexGrow={100} />
                   {/* Share and applause section */}
-                  <Box mt={6} py={3}>
+                  <Box mt={6} py={3} sx={{ userSelect: "none" }}>
                     {/* Horizontal lines */}
                     <Box
                       display="flex"

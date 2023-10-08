@@ -21,7 +21,12 @@ import SettingsModal from "../Modals/SettingsModal";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
-  const { isAuthorized } = useAuthorized();
+  const { isAuthorized } =
+    process.env.NEXT_PUBLIC_LOCALHOST === "true"
+      ? {
+          isAuthorized: true,
+        }
+      : useAuthorized();
   // SetingsModal
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);

@@ -77,7 +77,12 @@ export const _filterListOfStoredPostsOnTag = (
 };
 
 const TagsPage: FC<TagsPageProps> = (props) => {
-  const { isAuthorized } = useAuthorized();
+  const { isAuthorized } =
+    process.env.NEXT_PUBLIC_LOCALHOST === "true"
+      ? {
+          isAuthorized: true,
+        }
+      : useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);

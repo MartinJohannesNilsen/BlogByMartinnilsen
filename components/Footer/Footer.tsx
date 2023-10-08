@@ -32,6 +32,7 @@ const Footer: FC<FooterProps> = (props) => {
 
   return (
     <>
+      {/* Scrollbar */}
       {postId ? (
         <Box
           sx={{
@@ -59,6 +60,7 @@ const Footer: FC<FooterProps> = (props) => {
       ) : (
         <></>
       )}
+      {/* Footer */}
       <Box
         display="flex"
         justifyContent="center"
@@ -69,7 +71,7 @@ const Footer: FC<FooterProps> = (props) => {
           position: "relative",
         }}
       >
-        <Box py={5} px={3} textAlign="center">
+        <Box my={5} px={3} textAlign="center">
           <Box pb={1} px={1}>
             <Typography
               fontFamily={theme.typography.fontFamily}
