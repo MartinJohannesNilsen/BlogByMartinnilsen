@@ -90,6 +90,16 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   useEffect(() => {
+    setChunkedPosts(
+      splitChunks(
+        _filterListOfStoredPostsOnPublished(props.posts, "published"),
+        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
+      )
+    );
+    return () => {};
+  }, []);
+
+  useEffect(() => {
     setIsLoading(true);
     setCurrentSlide(0);
     setPosts(
