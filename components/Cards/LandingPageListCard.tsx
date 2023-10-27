@@ -12,7 +12,7 @@ import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
 import React from "react";
-import PageViews from "../PostViews/PostViews";
+import PostViews from "../PostViews/PostViews";
 
 export const LandingPageListCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -204,9 +204,13 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
                 fontWeight="600"
                 sx={{ opacity: 0.6, fontSize: "default" }}
               >
-                <PageViews
+                <PostViews
                   postId={props.id}
-                  fontSize={theme.typography.fontSize}
+                  sx={{
+                    fontSize: theme.typography.fontSize,
+                    color: theme.palette.text.primary,
+                    fontFamily: theme.typography.fontFamily,
+                  }}
                 />
               </Typography>
               {/* Not published icon */}

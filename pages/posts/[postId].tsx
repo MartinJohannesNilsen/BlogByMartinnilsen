@@ -71,7 +71,7 @@ import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
-import PageViews from "../../components/PostViews/PostViews";
+import PostViews from "../../components/PostViews/PostViews";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -703,7 +703,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             color: theme.palette.text.primary,
                             opacity: 0.6,
                             marginRight: "6px",
-                            fontSize: xs ? "12px" : "default",
+                            // fontSize: xs ? "12px" : "default",
+                            fontSize: "default",
                           }}
                         />
                         <Typography
@@ -713,7 +714,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           sx={{
                             color: theme.palette.text.primary,
                             opacity: 0.6,
-                            fontSize: xs ? "12px" : "default",
+                            // fontSize: xs ? "12px" : "default",
+                            fontSize: "default",
                           }}
                         >
                           {new Date(post.timestamp).toLocaleDateString(
@@ -732,7 +734,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             opacity: 0.6,
                             marginLeft: "16px",
                             marginRight: "6px",
-                            fontSize: xs ? "12px" : "default",
+                            // fontSize: xs ? "12px" : "default",
+                            fontSize: "default",
                           }}
                         />
                         <Typography
@@ -742,7 +745,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           sx={{
                             color: theme.palette.text.primary,
                             opacity: 0.6,
-                            fontSize: xs ? "12px" : "default",
+                            // fontSize: xs ? "12px" : "default",
+                            fontSize: "default",
                           }}
                         >
                           {post.readTime ? post.readTime : "⎯"}
@@ -762,9 +766,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           fontWeight="600"
                           sx={{ opacity: 0.6, fontSize: "default" }}
                         >
-                          <PageViews
+                          <PostViews
                             postId={props.postId}
-                            fontSize={theme.typography.fontSize}
+                            sx={{
+                              fontSize: theme.typography.fontSize,
+                              color: theme.palette.text.primary,
+                            }}
                           />
                         </Typography>
                       </Box>

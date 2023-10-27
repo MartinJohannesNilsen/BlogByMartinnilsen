@@ -4,7 +4,7 @@ import { Skeleton } from "@mui/material";
 
 interface PostViewsProps {
   postId: string;
-  fontSize?: number;
+  sx?: {};
 }
 
 const fetcher = async (input: RequestInfo) => {
@@ -12,7 +12,7 @@ const fetcher = async (input: RequestInfo) => {
   return await res.json();
 };
 
-const PageViews: FC<PostViewsProps> = ({ postId, fontSize }) => {
+const PostViews: FC<PostViewsProps> = ({ postId, sx }) => {
   const { data } = useSWR(`/api/views/${postId}`, fetcher);
 
   return (
@@ -20,14 +20,10 @@ const PageViews: FC<PostViewsProps> = ({ postId, fontSize }) => {
       {data?.view_count ? (
         `${data.view_count} view` + (data.view_count !== 1 ? "s" : "")
       ) : (
-        <Skeleton
-          variant="text"
-          sx={{ fontSize: fontSize && "1rem" }}
-          width={60}
-        />
+        <Skeleton variant="text" sx={sx} width={60} />
       )}
     </>
   );
 };
 
-export default PageViews;
+export default PostViews;

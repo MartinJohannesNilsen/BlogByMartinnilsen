@@ -15,7 +15,7 @@ import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
 import React from "react";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
-import PageViews from "../PostViews/PostViews";
+import PostViews from "../PostViews/PostViews";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -154,11 +154,15 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
               fontFamily={theme.typography.fontFamily}
               variant="body2"
               fontWeight="600"
-              sx={{ opacity: 0.6, fontSize: "default" }}
+              sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
             >
-              <PageViews
+              <PostViews
                 postId={props.id}
-                fontSize={theme.typography.fontSize}
+                sx={{
+                  fontSize: theme.typography.fontSize,
+                  color: "white",
+                  fontFamily: theme.typography.fontFamily,
+                }}
               />
             </Typography>
             {/* Not published icon */}

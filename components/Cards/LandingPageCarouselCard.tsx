@@ -17,7 +17,7 @@ import { PostCardProps } from "../../types";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 import { isMobile } from "react-device-detect";
 import React from "react";
-import PageViews from "../PostViews/PostViews";
+import PostViews from "../PostViews/PostViews";
 
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -209,9 +209,13 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 fontWeight="600"
                 sx={{ opacity: 0.6, fontSize: "default" }}
               >
-                <PageViews
+                <PostViews
                   postId={props.id}
-                  fontSize={theme.typography.fontSize}
+                  sx={{
+                    fontSize: theme.typography.fontSize,
+                    color: theme.palette.text.primary,
+                    fontFamily: theme.typography.fontFamily,
+                  }}
                 />
               </Typography>
               {/* Not published icon */}
