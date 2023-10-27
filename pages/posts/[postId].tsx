@@ -8,6 +8,7 @@ import {
   IosShareOutlined,
   MenuBook,
   Tune,
+  Visibility,
 } from "@mui/icons-material";
 import {
   Accordion,
@@ -70,6 +71,7 @@ import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
+import PageViews from "../../components/PostViews/PostViews";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -193,6 +195,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 
   useEffect(() => {
     setIsLoading(false);
+
+    process.env.NEXT_PUBLIC_LOCALHOST === "false"
+      ? fetch(`/api/views/${props.postId}`, {
+          method: "POST",
+        })
+      : null;
   }, [OutputElement]);
 
   useEffect(() => {
@@ -711,7 +719,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           {new Date(post.timestamp).toLocaleDateString(
                             "en-GB",
                             {
-                              weekday: "long",
+                              // weekday: "long",
                               day: "2-digit",
                               month: "short",
                               year: "numeric",
@@ -738,6 +746,26 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           }}
                         >
                           {post.readTime ? post.readTime : "⎯"}
+                        </Typography>
+                        {/* View counts */}
+                        <Visibility
+                          sx={{
+                            opacity: 0.6,
+                            marginLeft: "16px",
+                            marginRight: "6px",
+                            fontSize: "default",
+                          }}
+                        />
+                        <Typography
+                          fontFamily={theme.typography.fontFamily}
+                          variant="body2"
+                          fontWeight="600"
+                          sx={{ opacity: 0.6, fontSize: "default" }}
+                        >
+                          <PageViews
+                            postId={props.postId}
+                            fontSize={theme.typography.fontSize}
+                          />
                         </Typography>
                       </Box>
                     </Box>

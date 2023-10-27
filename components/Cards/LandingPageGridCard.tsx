@@ -1,4 +1,4 @@
-import { AccessTime, CalendarMonth } from "@mui/icons-material";
+import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -15,6 +15,7 @@ import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
 import React from "react";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import PageViews from "../PostViews/PostViews";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -114,10 +115,12 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
               sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
             >
               {new Date(props.timestamp).toLocaleDateString("en-GB", {
-                // weekday: "long",
+                // day: "2-digit",
+                // month: "short",
+                // year: "numeric",
                 day: "2-digit",
-                month: "short",
-                year: "numeric",
+                month: "2-digit",
+                year: "2-digit",
               })}
             </Typography>
             {/* Read time */}
@@ -137,6 +140,26 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
               sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
             >
               {props.readTime ? props.readTime : "⎯"}
+            </Typography>
+            {/* View counts */}
+            <Visibility
+              sx={{
+                opacity: 0.6,
+                marginLeft: "12px",
+                marginRight: "6px",
+                fontSize: "default",
+              }}
+            />
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="body2"
+              fontWeight="600"
+              sx={{ opacity: 0.6, fontSize: "default" }}
+            >
+              <PageViews
+                postId={props.id}
+                fontSize={theme.typography.fontSize}
+              />
             </Typography>
             {/* Not published icon */}
             {!props.published && (

@@ -344,11 +344,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                         })}
                       </Box>
                       <Box mt={xs ? 4 : 7}>
-                        <ButtonGroup sx={{ padding: 1 }}>
+                        <ButtonGroup sx={{ padding: 1, gap: 1 }}>
                           <IconButton
                             sx={{
                               color: "text.primary",
-                              paddingRight: xs ? 2 : 0,
                             }}
                             onClick={(e) =>
                               e.stopPropagation() || instanceRef.current?.prev()

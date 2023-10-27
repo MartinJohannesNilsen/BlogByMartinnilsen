@@ -1,4 +1,4 @@
-import { AccessTime, CalendarMonth } from "@mui/icons-material";
+import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -17,6 +17,7 @@ import { PostCardProps } from "../../types";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 import { isMobile } from "react-device-detect";
 import React from "react";
+import PageViews from "../PostViews/PostViews";
 
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -168,10 +169,12 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 sx={{ opacity: 0.6, fontSize: "default" }}
               >
                 {new Date(props.timestamp).toLocaleDateString("en-GB", {
-                  // weekday: "long",
+                  // day: "2-digit",
+                  // month: "short",
+                  // year: "numeric",
                   day: "2-digit",
-                  month: "short",
-                  year: "numeric",
+                  month: "2-digit",
+                  year: "2-digit",
                 })}
               </Typography>
               {/* Read time */}
@@ -190,6 +193,26 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 sx={{ opacity: 0.6, fontSize: "default" }}
               >
                 {props.readTime ? props.readTime : "⎯"}
+              </Typography>
+              {/* View counts */}
+              <Visibility
+                sx={{
+                  opacity: 0.6,
+                  marginLeft: "12px",
+                  marginRight: "6px",
+                  fontSize: "default",
+                }}
+              />
+              <Typography
+                fontFamily={theme.typography.fontFamily}
+                variant="body2"
+                fontWeight="600"
+                sx={{ opacity: 0.6, fontSize: "default" }}
+              >
+                <PageViews
+                  postId={props.id}
+                  fontSize={theme.typography.fontSize}
+                />
               </Typography>
               {/* Not published icon */}
               {!props.published && (
