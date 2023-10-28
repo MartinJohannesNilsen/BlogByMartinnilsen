@@ -148,6 +148,7 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
                 marginLeft: "12px",
                 marginRight: "6px",
                 fontSize: "default",
+                color: "white",
               }}
             />
             <Typography

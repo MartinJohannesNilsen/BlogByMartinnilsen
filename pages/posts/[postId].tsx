@@ -194,9 +194,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   }, [post]);
 
   useEffect(() => {
+    // When output element, not loading anymore
     setIsLoading(false);
-
-    process.env.NEXT_PUBLIC_LOCALHOST === "false"
+    // Fetch view count from supabase db if not localhost nor unpublished
+    process.env.NEXT_PUBLIC_LOCALHOST === "false" && post.published
       ? fetch(`/api/views/${props.postId}`, {
           method: "POST",
         })
@@ -758,6 +759,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             marginLeft: "16px",
                             marginRight: "6px",
                             fontSize: "default",
+                            color: theme.palette.text.primary,
                           }}
                         />
                         <Typography
@@ -771,6 +773,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             sx={{
                               fontSize: theme.typography.fontSize,
                               color: theme.palette.text.primary,
+                              fontFamily: theme.typography.fontFamily,
                             }}
                           />
                         </Typography>
