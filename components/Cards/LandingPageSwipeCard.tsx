@@ -22,51 +22,47 @@ import PostViews from "../PostViews/PostViews";
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const useStyles = makeStyles({
-    root: {
-      // transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-      width: "100%",
-      "&:hover": {
-        backgroundColor: theme.palette.primary.light,
-      },
-      "&:active": {
-        backgroundColor: theme.palette.primary.light,
-      },
-      backgroundColor: theme.palette.primary.light,
-    },
-  });
-  const classes = useStyles();
 
   return (
     <Card
-      className={classes.root}
       sx={{
         borderRadius: 4,
         boxShadow: "none",
+        height: xs ? (isMobile ? 490 : 540) : 520,
+        maxHeight: xs ? (isMobile ? 490 : 540) : 520,
+        width: "100%",
       }}
     >
-      <CardActionArea
-        // disableTouchRipple
-        href={`/posts/${props.id}`}
+      <Box
         sx={{
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"
+              : "rgb(245, 245, 247)",
           height: xs ? (isMobile ? 490 : 540) : 520,
           maxHeight: xs ? (isMobile ? 490 : 540) : 520,
           width: "100%",
         }}
       >
-        {/* <CardMedia sx={{ height: 210 }}> */}
-        <CardMedia sx={{ height: xs ? 250 : 230 }}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          sx={{ height: xs ? 250 : 230 }}
+        >
           <Image
             src={props.image || DEFAULT_OGIMAGE}
+            draggable={false}
             alt=""
-            fill={true}
+            height={xs ? 250 : 230}
+            width={350}
+            // fill={true}
             style={{
               objectFit: "cover",
-              borderRadius: 0,
               maxHeight: xs ? 250 : 230,
+              userSelect: "none",
             }}
           />
-        </CardMedia>
+        </Box>
         <Box
           display="flex"
           flexDirection="column"
@@ -233,7 +229,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
             </Box>
           </Box>
         </Box>
-      </CardActionArea>
+      </Box>
     </Card>
   );
 };

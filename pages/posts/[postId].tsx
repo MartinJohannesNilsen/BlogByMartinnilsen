@@ -766,7 +766,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           fontFamily={theme.typography.fontFamily}
                           variant="body2"
                           fontWeight="600"
-                          sx={{ opacity: 0.6, fontSize: "default" }}
+                          sx={{
+                            opacity: 0.6,
+                            fontSize: "default",
+                            color: theme.palette.text.primary,
+                          }}
                         >
                           <PostViews
                             postId={props.postId}

@@ -4,6 +4,7 @@ import {
   ArrowForwardIosSharp,
   GridViewSharp,
   TableRowsSharp,
+  ViewCarousel,
   ViewWeekSharp,
 } from "@mui/icons-material";
 import {
@@ -34,6 +35,7 @@ import "keen-slider/keen-slider.min.css";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
 import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
 import LandingPageListCard from "../components/Cards/LandingPageListCard";
+import TinderSwipe from "../components/TinderSwipe/TinderSwipe";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -142,7 +144,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     event: React.MouseEvent<HTMLElement>,
     newView: string | null
   ) => {
-    if (["carousel", "grid", "list"].includes(newView)) setCardLayout(newView);
+    if (["carousel", "swipe", "grid", "list"].includes(newView))
+      setCardLayout(newView);
   };
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -174,8 +177,11 @@ const LandingPage: FC<LandingPageProps> = (props) => {
       ) : (
         <Box
           sx={{
-            height: "100%",
+            height: "100vh",
             width: "100%",
+            maxHeight: cardLayout === "swipe" ? "100vh" : "default",
+            overflow: cardLayout === "swipe" ? "hidden" : "auto",
+            maxWidth: "100vw",
             background: theme.palette.primary.main,
             userSelect: "none",
           }}
@@ -189,8 +195,9 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             display="flex"
             flexDirection="column"
             sx={{
-              minHeight: "100vh",
-              height: "100%",
+              // minHeight: "calc(100vh ",
+              height:
+                xs && isMobile ? "calc(100% - 80px)" : "calc(100% - 40px)",
               background: theme.palette.primary.main,
               paddingTop: isMobile ? "50px" : "80px",
               width: "100%",
@@ -202,10 +209,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                 display="flex"
                 flexDirection="row"
                 px={lgUp ? "150px" : xs ? "10px" : "80px"}
-                height="100%"
               >
                 <Box flexGrow={1} />
                 <Box>
+                  {/* Navigation buttons if large screen grid layout */}
                   {lgUp && cardLayout === "grid" ? (
                     <ButtonGroup sx={{ paddingRight: 1 }}>
                       <IconButton
@@ -249,6 +256,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       </IconButton>
                     </ButtonGroup>
                   ) : null}
+                  {/* Toggle for switching layouts */}
                   <ToggleButtonGroup
                     value={cardLayout}
                     exclusive
@@ -265,6 +273,17 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       /> */}
                       <Tooltip enterDelay={2000} title="Carousel layout">
                         <ViewWeekSharp
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton
+                      value={"swipe"}
+                      selected={cardLayout === "swipe"}
+                      disabled={cardLayout === "swipe"}
+                    >
+                      <Tooltip enterDelay={2000} title="Swipe layout">
+                        <ViewCarousel
                           sx={{ color: theme.palette.text.primary }}
                         />
                       </Tooltip>
@@ -296,86 +315,98 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               </Box>
 
               {/* Content */}
-              <Box>
+              <Box height="100%">
                 {/* Card layouts */}
                 {cardLayout === "carousel" ? (
-                  <Box height="100%">
-                    <Box flexGrow={1} />
-                    <Box
-                      height="100%"
-                      display="flex"
-                      flexDirection="column"
-                      justifyContent="center"
-                      alignItems="center"
-                      sx={{
-                        my: xs ? (isMobile ? 4 : 6) : 0,
-                        paddingX: "0px",
-                        paddingY: xs ? "20px" : 8,
-                      }}
-                    >
-                      <Box ref={sliderRef} className="keen-slider">
-                        {posts.map((data, index) => {
-                          return (
-                            <Box
-                              className="keen-slider__slide"
-                              key={index}
-                              sx={{
-                                minWidth: xs ? "calc(100vw)" : "350px",
-                                paddingX: xs ? "25px" : 0,
-                              }}
-                            >
-                              {data ? (
-                                <LandingPageCarouselCard
-                                  author={data.author}
-                                  readTime={data.readTime}
-                                  id={data.id}
-                                  icon={data.icon}
-                                  image={data.image}
-                                  title={data.title}
-                                  timestamp={data.timestamp}
-                                  description={data.description}
-                                  type={data.type}
-                                  tags={data.tags}
-                                  published={data.published}
-                                />
-                              ) : null}
-                            </Box>
-                          );
-                        })}
-                      </Box>
-                      <Box mt={xs ? 4 : 7}>
-                        <ButtonGroup sx={{ padding: 1, gap: 1 }}>
-                          <IconButton
+                  <Box
+                    height="100%"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      my: xs ? (isMobile ? 4 : 6) : 0,
+                      paddingX: "0px",
+                      paddingY: xs ? "20px" : 8,
+                    }}
+                  >
+                    <Box ref={sliderRef} className="keen-slider">
+                      {posts.map((data, index) => {
+                        return (
+                          <Box
+                            className="keen-slider__slide"
+                            key={index}
                             sx={{
-                              color: "text.primary",
+                              minWidth: xs ? "calc(100vw)" : "350px",
+                              paddingX: xs ? "25px" : 0,
                             }}
-                            onClick={(e) =>
-                              e.stopPropagation() || instanceRef.current?.prev()
-                            }
-                            disabled={currentSlide === 0}
                           >
-                            <ArrowBackIosNewSharp color="inherit" />
-                          </IconButton>
-                          <IconButton
-                            sx={{
-                              color: "text.primary",
-                            }}
-                            onClick={(e) =>
-                              e.stopPropagation() || instanceRef.current?.next()
-                            }
-                            disabled={
-                              xs
-                                ? currentSlide === posts.length - 1
-                                : currentSlide ===
-                                  posts.length - (sm ? 1 : md ? 1 : lg ? 2 : 2)
-                            }
-                          >
-                            <ArrowForwardIosSharp color="inherit" />
-                          </IconButton>
-                        </ButtonGroup>
-                      </Box>
+                            {data ? (
+                              <LandingPageCarouselCard
+                                author={data.author}
+                                readTime={data.readTime}
+                                id={data.id}
+                                icon={data.icon}
+                                image={data.image}
+                                title={data.title}
+                                timestamp={data.timestamp}
+                                description={data.description}
+                                type={data.type}
+                                tags={data.tags}
+                                published={data.published}
+                              />
+                            ) : null}
+                          </Box>
+                        );
+                      })}
                     </Box>
                     <Box flexGrow={1} />
+                    {/* <Box mt={xs ? 4 : 7}> */}
+                    <ButtonGroup sx={{ padding: 1, gap: 1 }}>
+                      <IconButton
+                        sx={{
+                          color: "text.primary",
+                        }}
+                        onClick={(e) =>
+                          e.stopPropagation() || instanceRef.current?.prev()
+                        }
+                        disabled={currentSlide === 0}
+                      >
+                        <ArrowBackIosNewSharp color="inherit" />
+                      </IconButton>
+                      <IconButton
+                        sx={{
+                          color: "text.primary",
+                        }}
+                        onClick={(e) =>
+                          e.stopPropagation() || instanceRef.current?.next()
+                        }
+                        disabled={
+                          xs
+                            ? currentSlide === posts.length - 1
+                            : currentSlide ===
+                              posts.length - (sm ? 1 : md ? 1 : lg ? 2 : 2)
+                        }
+                      >
+                        <ArrowForwardIosSharp color="inherit" />
+                      </IconButton>
+                    </ButtonGroup>
+                    <Box flexGrow={1} />
+                  </Box>
+                ) : cardLayout === "swipe" ? (
+                  <Box
+                    height="100%"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      my: xs ? (isMobile ? 4 : 6) : 0,
+                      paddingX: "0px",
+                      paddingY: xs ? "20px" : 8,
+                    }}
+                  >
+                    <TinderSwipe posts={posts.slice().reverse()} />
                   </Box>
                 ) : cardLayout === "grid" ? (
                   <Grid
