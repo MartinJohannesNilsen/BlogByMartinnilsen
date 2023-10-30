@@ -7,7 +7,6 @@ import {
   IconButton,
   Card,
   CardContent,
-  ButtonGroup,
 } from "@mui/material";
 import TinderCard from "react-tinder-card";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -18,6 +17,8 @@ import { useSnackbar } from "notistack";
 import { useTheme } from "../../ThemeProvider";
 import { StoredPost } from "../../types";
 import LandingPageSwipeCard from "../Cards/LandingPageSwipeCard";
+import { isMobile } from "react-device-detect";
+import copy from "copy-to-clipboard";
 
 export type directionType = "left" | "right" | "up" | "down";
 export type TinderSwipeType = {
@@ -81,44 +82,8 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
   // Snackbar
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  // Copy to clipboard
-  function copyToClipboard(str: string) {
-    var el = document.createElement("textarea");
-    el.value = str;
-    el.setAttribute("readonly", "");
-    document.body.appendChild(el);
-
-    if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
-      // save current contentEditable/readOnly status
-      var editable = el.contentEditable;
-      var readOnly = el.readOnly;
-
-      // convert to editable with readonly to stop iOS keyboard opening
-      // el.contentEditable = true;
-      el.readOnly = true;
-
-      // create a selectable range
-      var range = document.createRange();
-      range.selectNodeContents(el);
-
-      // select the range
-      var selection = window.getSelection();
-      selection!.removeAllRanges();
-      selection!.addRange(range);
-      el.setSelectionRange(0, 999999);
-
-      // restore contentEditable/readOnly to original state
-      el.contentEditable = editable;
-      el.readOnly = readOnly;
-    } else {
-      el.select();
-    }
-    document.execCommand("copy");
-    document.body.removeChild(el);
-  }
-
   // Actions
-  // increase current index and show card
+  // Go back
   const goBack = async () => {
     if (!canGoBack) return;
     const newIndex = currentIndex + 1;
@@ -126,18 +91,37 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
     await childRefs[newIndex].current.restoreCard()!;
   };
 
+  function copyToClipboard(text: string) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      // return navigator.clipboard.writeText(text);
+      return navigator.clipboard.write([
+        new ClipboardItem({
+          "text/plain": Promise.resolve(text),
+        }),
+      ]);
+    } else {
+      // Fallback to popular npm package
+      return copy(text) ? Promise.resolve() : Promise.reject();
+    }
+  }
+
   const handleAction = (dir: directionType, post: StoredPost) => {
     if (dir === "up") {
-      copyToClipboard(window.location.href + "posts/" + post.id);
-      enqueueSnackbar("Link copied to clipboard!", {
-        variant: "default",
-        preventDuplicate: true,
-      });
+      copyToClipboard(process.env.NEXT_PUBLIC_WEBSITE_URL + "/posts/" + post.id)
+        .then(() => {
+          enqueueSnackbar("Link copied to clipboard!", {
+            variant: "default",
+            preventDuplicate: true,
+          });
+        })
+        .catch((error) => {
+          enqueueSnackbar("Unable to copy to clipboard!", {
+            variant: "error",
+            preventDuplicate: true,
+          });
+        });
     } else if (dir === "right") {
-      setTimeout(
-        () => window.open(window.location.href + "posts/" + post.id, "_blank"),
-        250
-      );
+      window.location.href = "/posts/" + post.id;
     }
   };
 
@@ -165,14 +149,20 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
       >
         {props.posts.map((data, index) => (
           <TinderCard
-            swipeThreshold={0.5}
+            preventSwipe={["down", "up"]}
+            flickOnSwipe
+            swipeRequirementType="position"
+            swipeThreshold={100}
             ref={childRefs[index]}
             className={"tinderCard tinderCards"}
             key={index}
             onSwipe={(dir: directionType) => {
-              swiped(dir, index, data);
+              !isMobile
+                ? setTimeout(() => swiped(dir, index, data), 250)
+                : null;
             }}
             onCardLeftScreen={(dir: directionType) => {
+              isMobile ? swiped(dir, index, data) : null;
               outOfFrame(data.title, index);
             }}
           >

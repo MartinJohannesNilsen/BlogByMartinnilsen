@@ -430,7 +430,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                           md={6}
                           // lg={index % 4 === 0 ? 12 : 4}
                           lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
-                          xl={6}
+                          // xl={6}
                           // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
                         >
                           <LandingPageGridCard
