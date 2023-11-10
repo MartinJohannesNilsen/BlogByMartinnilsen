@@ -4,6 +4,10 @@ import { baseTheme } from "./themeDefaults";
 export const dark = createTheme({
   palette: {
     mode: "dark",
+    background: {
+      default: baseTheme.palette.background.default,
+      paper: "#1C1C1C",
+    },
     text: {
       primary: "#FFFFFF",
       secondary: "#000000",

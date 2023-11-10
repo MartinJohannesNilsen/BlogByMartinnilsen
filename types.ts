@@ -64,6 +64,9 @@ export type EditorjsRendererProps = {
     style?: "ordered" | "unordered";
     // Iframe
     frame?: string;
+    // Toggle
+    status?: string;
+    blocks?: any;
   };
   style: {
     h1?: CSSProperties;

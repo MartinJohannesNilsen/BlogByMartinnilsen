@@ -4,6 +4,10 @@ import { baseTheme } from "./themeDefaults";
 export const light = createTheme({
   palette: {
     mode: "light",
+    background: {
+      default: baseTheme.palette.background.default,
+      paper: "#f7faf9",
+    },
     text: {
       primary: "#000000",
       secondary: "#FFFFFF",

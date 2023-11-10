@@ -11,7 +11,6 @@ import {
   Visibility,
 } from "@mui/icons-material";
 import {
-  Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
@@ -72,6 +71,9 @@ import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
 import PostViews from "../../components/PostViews/PostViews";
+import CustomToggle, {
+  Accordion,
+} from "../../components/EditorJS/Renderers/CustomToggle";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -117,15 +119,8 @@ export const renderers = {
   math: CustomMath,
   list: CustomList,
   iframe: CustomIframe,
+  toggle: CustomToggle,
 };
-
-// type SharingProps = {
-//   url: string;
-//   title: string;
-//   text: string;
-//   icon: string;
-//   fallback: () => {};
-// };
 
 export const handleSharing = async ({ url, title, text, icon, fallback }) => {
   const shareDetails = {
@@ -137,18 +132,52 @@ export const handleSharing = async ({ url, title, text, icon, fallback }) => {
   if (navigator.share) {
     try {
       await navigator.share(shareDetails);
-      // .then(() =>
-      // console.log("Hooray! Your content was shared to the world")
-      // );
-    } catch (error) {
-      // console.log(shareDetails);
-      // console.log(`Oops! I couldn't share to the world because: ${error}`);
-    }
+    } catch (error) {}
   } else {
     // fallback code
     fallback();
   }
 };
+
+export function processJsonToggleBlocks(inputJson) {
+  // Deep copy the input JSON object
+  let json = JSON.parse(JSON.stringify(inputJson));
+
+  // Initialize a new array for processed blocks
+  let newBlocks = [];
+
+  // Iterate over the blocks
+  for (let i = 0; i < json.blocks.length; i++) {
+    let block = json.blocks[i];
+
+    // Check if the block is a toggle
+    if (block.type === "toggle") {
+      // Initialize an inner blocks array in the toggle block
+      block.data.blocks = [];
+
+      // Move the specified number of blocks into the toggle block
+      for (
+        let j = 0;
+        j < block.data.items && i + 1 + j < json.blocks.length;
+        j++
+      ) {
+        block.data.blocks.push(json.blocks[i + 1 + j]);
+      }
+
+      // Skip the moved blocks in the main loop
+      i += block.data.items;
+    }
+
+    // Add the processed block to the new blocks array
+    newBlocks.push(block);
+  }
+
+  // Replace the original blocks array with the new one
+  json.blocks = newBlocks;
+
+  // Return the modified JSON
+  return json;
+}
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const post = props.post;
@@ -177,6 +206,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   };
   const [currentSection, setCurrentSection] = useState(post.title);
 
+  // Comment adn reactions section
+  const [openCommentsAndReactionsOpen, setOpenCommentsAndReactions] =
+    useState(false);
+  const handleCommentsAndReactionsChange = (event: React.SyntheticEvent) => {
+    setOpenCommentsAndReactions(!openCommentsAndReactionsOpen);
+  };
+
   const handleThemeChange = (event: any) => {
     setTheme(
       event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark,
@@ -185,12 +221,17 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   };
 
   const OutputElement = useMemo(() => {
-    return (
-      post &&
-      post.data && (
-        <Output renderers={renderers} data={post.data} style={style(theme)} />
-      )
-    );
+    if (post && post.data) {
+      const processedData = processJsonToggleBlocks(post.data);
+      return (
+        <Output
+          renderers={renderers}
+          data={processedData}
+          style={style(theme)}
+        />
+      );
+    }
+    return null;
   }, [post]);
 
   useEffect(() => {
@@ -772,14 +813,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             color: theme.palette.text.primary,
                           }}
                         >
-                          <PostViews
-                            postId={props.postId}
-                            sx={{
-                              fontSize: theme.typography.fontSize,
-                              color: theme.palette.text.primary,
-                              fontFamily: theme.typography.fontFamily,
-                            }}
-                          />
+                          {post.published ? (
+                            <PostViews
+                              postId={props.postId}
+                              sx={{
+                                fontSize: theme.typography.fontSize,
+                                color: theme.palette.text.primary,
+                                fontFamily: theme.typography.fontFamily,
+                              }}
+                            />
+                          ) : (
+                            "———"
+                          )}
                         </Typography>
                       </Box>
                     </Box>
@@ -928,7 +973,15 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   </Box>
                   {/* Comment section */}
                   <Box mb={3}>
-                    <Accordion>
+                    <Accordion
+                      expanded={openCommentsAndReactionsOpen}
+                      onChange={handleCommentsAndReactionsChange}
+                      sx={{
+                        minHeight: openCommentsAndReactionsOpen
+                          ? "280px"
+                          : "default",
+                      }}
+                    >
                       <AccordionSummary expandIcon={<ExpandMore />}>
                         <Typography
                           fontFamily={theme.typography.fontFamily}
