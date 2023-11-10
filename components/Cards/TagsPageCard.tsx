@@ -1,8 +1,10 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
+  Link,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -203,8 +205,10 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
               {/* Not published icon */}
               {!props.published && (
                 <>
-                  <Box flexGrow={100} />{" "}
-                  <Typography sx={{ fontSize: "13px" }}>🖊</Typography>
+                  <Box flexGrow={100} />
+                  <Link href={`/create/${props.id}`} sx={{}}>
+                    <Typography sx={{ fontSize: "13px" }}>🖊</Typography>
+                  </Link>
                 </>
               )}
             </Box>
