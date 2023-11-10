@@ -172,29 +172,34 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
                 {props.readTime ? props.readTime : "⎯"}
               </Typography>
               {/* View counts */}
-              <Visibility
-                sx={{
-                  opacity: 0.6,
-                  marginLeft: "12px",
-                  marginRight: "6px",
-                  fontSize: "default",
-                }}
-              />
-              <Typography
-                fontFamily={theme.typography.fontFamily}
-                variant="body2"
-                fontWeight="600"
-                sx={{ opacity: 0.6, fontSize: "default" }}
-              >
-                <PostViews
-                  postId={props.id}
-                  sx={{
-                    fontSize: theme.typography.fontSize,
-                    color: theme.palette.text.primary,
-                    fontFamily: theme.typography.fontFamily,
-                  }}
-                />
-              </Typography>
+              {props.published ? (
+                <>
+                  <Visibility
+                    sx={{
+                      opacity: 0.6,
+                      marginLeft: "12px",
+                      marginRight: "6px",
+                      fontSize: "default",
+                    }}
+                  />
+                  <Typography
+                    fontFamily={theme.typography.fontFamily}
+                    variant="body2"
+                    fontWeight="600"
+                    sx={{ opacity: 0.6, fontSize: "default" }}
+                  >
+                    <PostViews
+                      postId={props.id}
+                      sx={{
+                        fontSize: theme.typography.fontSize,
+                        color: theme.palette.text.primary,
+                        fontFamily: theme.typography.fontFamily,
+                      }}
+                    />
+                  </Typography>
+                </>
+              ) : null}
+
               {/* Not published icon */}
               {!props.published && (
                 <>
