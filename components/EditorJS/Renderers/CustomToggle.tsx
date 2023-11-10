@@ -17,6 +17,7 @@ import {
   renderers,
 } from "../../../pages/posts/[postId]";
 import { style } from "../Style";
+import CustomParagraph from "./CustomParagraph";
 
 // Accordion styled
 export const Accordion = styled((props: AccordionProps) => (
@@ -69,7 +70,12 @@ const CustomToggle = (props: EditorjsRendererProps) => {
     <Box my={1} display="flex" flexDirection="column" textAlign="center">
       <Accordion expanded={open} onChange={handleChange}>
         <AccordionSummary aria-controls="toggle text">
-          <Typography>{props.data.text}</Typography>
+          <CustomParagraph
+            data={{ text: props.data.text }}
+            style={null}
+            config={null}
+            classNames={null}
+          />
         </AccordionSummary>
         <AccordionDetails>{OutputElement}</AccordionDetails>
       </Accordion>
