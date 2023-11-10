@@ -193,3 +193,7 @@ body::-webkit-scrollbar {
   cursor: grab;
   z-index: 1;
 }
+
+giscus-widget {
+  min-height: 190px;
+}

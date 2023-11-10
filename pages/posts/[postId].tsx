@@ -206,13 +206,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   };
   const [currentSection, setCurrentSection] = useState(post.title);
 
-  // Comment adn reactions section
-  const [openCommentsAndReactionsOpen, setOpenCommentsAndReactions] =
-    useState(false);
-  const handleCommentsAndReactionsChange = (event: React.SyntheticEvent) => {
-    setOpenCommentsAndReactions(!openCommentsAndReactionsOpen);
-  };
-
   const handleThemeChange = (event: any) => {
     setTheme(
       event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark,
@@ -973,15 +966,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   </Box>
                   {/* Comment section */}
                   <Box mb={3}>
-                    <Accordion
-                      expanded={openCommentsAndReactionsOpen}
-                      onChange={handleCommentsAndReactionsChange}
-                      sx={{
-                        minHeight: openCommentsAndReactionsOpen
-                          ? "280px"
-                          : "default",
-                      }}
-                    >
+                    <Accordion>
                       <AccordionSummary expandIcon={<ExpandMore />}>
                         <Typography
                           fontFamily={theme.typography.fontFamily}
