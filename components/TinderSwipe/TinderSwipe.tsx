@@ -115,10 +115,10 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
           });
         })
         .catch((error) => {
-          enqueueSnackbar("Unable to copy to clipboard!", {
-            variant: "error",
-            preventDuplicate: true,
-          });
+          // enqueueSnackbar("Unable to copy to clipboard!", {
+          //   variant: "error",
+          //   preventDuplicate: true,
+          // });
         });
     } else if (dir === "right") {
       window.location.href = "/posts/" + post.id;
@@ -157,12 +157,12 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
             className={"tinderCard tinderCards"}
             key={index}
             onSwipe={(dir: directionType) => {
-              !isMobile
-                ? setTimeout(() => swiped(dir, index, data), 250)
-                : null;
+              // !isMobile
+              //   ? setTimeout(() => swiped(dir, index, data), 250)
+              //   : null;
             }}
             onCardLeftScreen={(dir: directionType) => {
-              isMobile ? swiped(dir, index, data) : null;
+              swiped(dir, index, data);
               outOfFrame(data.title, index);
             }}
           >
