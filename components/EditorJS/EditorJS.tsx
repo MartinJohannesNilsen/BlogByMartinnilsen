@@ -23,6 +23,8 @@ const EditorBlock = ({ data, onChange, holder }: Props) => {
         holder: holder,
         tools: EDITOR_JS_TOOLS,
         data,
+        // @ts-ignore
+        logLevel: "ERROR",
         onReady: () => {
           new Undo({ editor });
           new DragDrop(editor);

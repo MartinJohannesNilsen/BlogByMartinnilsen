@@ -143,40 +143,44 @@ export function processJsonToggleBlocks(inputJson) {
   // Deep copy the input JSON object
   let json = JSON.parse(JSON.stringify(inputJson));
 
-  // Initialize a new array for processed blocks
-  let newBlocks = [];
+  if (Array.isArray(json.blocks)) {
+    // Initialize a new array for processed blocks
+    let newBlocks = [];
 
-  // Iterate over the blocks
-  for (let i = 0; i < json.blocks.length; i++) {
-    let block = json.blocks[i];
+    // Iterate over the blocks
+    for (let i = 0; i < json.blocks.length; i++) {
+      let block = json.blocks[i];
 
-    // Check if the block is a toggle
-    if (block.type === "toggle") {
-      // Initialize an inner blocks array in the toggle block
-      block.data.blocks = [];
+      // Check if the block is a toggle
+      if (block.type === "toggle") {
+        // Initialize an inner blocks array in the toggle block
+        block.data.blocks = [];
 
-      // Move the specified number of blocks into the toggle block
-      for (
-        let j = 0;
-        j < block.data.items && i + 1 + j < json.blocks.length;
-        j++
-      ) {
-        block.data.blocks.push(json.blocks[i + 1 + j]);
+        // Move the specified number of blocks into the toggle block
+        for (
+          let j = 0;
+          j < block.data.items && i + 1 + j < json.blocks.length;
+          j++
+        ) {
+          block.data.blocks.push(json.blocks[i + 1 + j]);
+        }
+
+        // Skip the moved blocks in the main loop
+        i += block.data.items;
       }
 
-      // Skip the moved blocks in the main loop
-      i += block.data.items;
+      // Add the processed block to the new blocks array
+      newBlocks.push(block);
     }
 
-    // Add the processed block to the new blocks array
-    newBlocks.push(block);
+    // Replace the original blocks array with the new one
+    json.blocks = newBlocks;
+
+    // Return the modified JSON
+    return json;
   }
 
-  // Replace the original blocks array with the new one
-  json.blocks = newBlocks;
-
-  // Return the modified JSON
-  return json;
+  return null;
 }
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
@@ -214,7 +218,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   };
 
   const OutputElement = useMemo(() => {
-    if (post && post.data) {
+    if (
+      post &&
+      post.data &&
+      post.data.blocks &&
+      Array.isArray(post.data.blocks)
+    ) {
       const processedData = processJsonToggleBlocks(post.data);
       return (
         <Output

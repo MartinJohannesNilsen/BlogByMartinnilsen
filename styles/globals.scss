@@ -195,5 +195,5 @@ body::-webkit-scrollbar {
 }
 
 giscus-widget::part(iframe) {
-  min-height: 190px;
+  min-height: 250px; // If comment section deactivated, reactions will overflow. 190px without signin, 250px with signin 
 }
