@@ -37,7 +37,6 @@
 		"webpack": "^5.71.0"
 	},
 	"devDependencies": {
-		"@bomdi/codebox": "^2.0.0",
 		"@calumk/editorjs-codeflask": "^1.0.9",
 		"@editorjs/checklist": "^1.4.0",
 		"@editorjs/delimiter": "^1.3.0",
@@ -79,7 +78,7 @@
 		"babel-preset-es2015": "^6.24.1",
 		"babel-preset-react": "^6.24.1",
 		"babel-register": "^6.26.0",
-		"copy-to-clipboard": "^3.3.3",
+		"clipboard": "^2.0.11",
 		"css-loader": "^5.2.6",
 		"dompurify": "^2.4.3",
 		"editorjs-change-case": "^0.0.3",

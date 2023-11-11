@@ -91,19 +91,20 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
     await childRefs[newIndex].current.restoreCard()!;
   };
 
-  function copyToClipboard(text: string) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      // return navigator.clipboard.writeText(text);
-      return navigator.clipboard.write([
-        new ClipboardItem({
-          "text/plain": Promise.resolve(text),
-        }),
-      ]);
-    } else {
-      // Fallback to popular npm package
-      return copy(text) ? Promise.resolve() : Promise.reject();
+  const copyToClipboard = async (link: string) => {
+    if (!navigator.clipboard) {
+      return Promise.reject("Clipboard not supported!");
     }
-  }
+
+    try {
+      // @ts-ignore
+      await navigator.permissions.query({ name: "clipboard-write" });
+      await navigator.clipboard.writeText(link);
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
 
   const handleAction = (dir: directionType, post: StoredPost) => {
     if (dir === "up") {
@@ -115,10 +116,11 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
           });
         })
         .catch((error) => {
-          // enqueueSnackbar("Unable to copy to clipboard!", {
-          //   variant: "error",
-          //   preventDuplicate: true,
-          // });
+          console.log(error);
+          enqueueSnackbar("Unable to copy to clipboard!", {
+            variant: "error",
+            preventDuplicate: true,
+          });
         });
     } else if (dir === "right") {
       window.location.href = "/posts/" + post.id;

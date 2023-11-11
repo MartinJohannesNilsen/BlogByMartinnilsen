@@ -28,7 +28,7 @@ const EJLaTeX = require("editorjs-latex");
 // Iframe
 const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
 
-import ChangeCase from "editorjs-change-case";
+// import ChangeCase from "editorjs-change-case";
 
 export const EDITOR_JS_TOOLS = {
   underline: { class: Underline, shortcut: "CMD+U" },
@@ -170,11 +170,12 @@ export const EDITOR_JS_TOOLS = {
     class: ToggleBlock,
     inlineToolbar: true,
   },
-  changeCase: {
-    class: ChangeCase,
-    config: {
-      showLocaleOption: false, // enable locale case options
-    },
-  },
+  // changeCase: {
+  //   class: ChangeCase,
+  //   config: {
+  //     showLocaleOption: true, // enable locale case options
+  //     locale: "no-GB", // or ['tr', 'TR', 'tr-TR']
+  //   },
+  // },
 };
 export default EDITOR_JS_TOOLS;
