@@ -18,6 +18,7 @@ import Warning from "@editorjs/warning";
 import InlineImage from "editorjs-inline-image";
 import Divider from "./BlockTools/Divider/tool";
 import InlineVideo from "./BlockTools/InlineVideo/tool";
+import ToggleBlock from "editorjs-toggle-block";
 // @ts-ignore
 import editorjsCodeflask from "@calumk/editorjs-codeflask";
 // @ts-ignore
@@ -26,11 +27,8 @@ import Table from "@martinjohannesnilsen/editorjs-table";
 const EJLaTeX = require("editorjs-latex");
 // Iframe
 const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
-// ToggleBlock
-import ToggleBlock from "editorjs-toggle-block";
 
-/* Development */
-// import ChangeCase from "editorjs-change-case";
+import ChangeCase from "editorjs-change-case";
 
 export const EDITOR_JS_TOOLS = {
   underline: { class: Underline, shortcut: "CMD+U" },
@@ -171,6 +169,12 @@ export const EDITOR_JS_TOOLS = {
   toggle: {
     class: ToggleBlock,
     inlineToolbar: true,
+  },
+  changeCase: {
+    class: ChangeCase,
+    config: {
+      showLocaleOption: false, // enable locale case options
+    },
   },
 };
 export default EDITOR_JS_TOOLS;
