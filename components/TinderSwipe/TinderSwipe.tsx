@@ -17,8 +17,6 @@ import { useSnackbar } from "notistack";
 import { useTheme } from "../../ThemeProvider";
 import { StoredPost } from "../../types";
 import LandingPageSwipeCard from "../Cards/LandingPageSwipeCard";
-import { isMobile } from "react-device-detect";
-import copy from "copy-to-clipboard";
 
 export type directionType = "left" | "right" | "up" | "down";
 export type TinderSwipeType = {
@@ -80,7 +78,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
   };
 
   // Snackbar
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   // Actions
   // Go back
@@ -97,8 +95,6 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
     }
 
     try {
-      // @ts-ignore
-      await navigator.permissions.query({ name: "clipboard-write" });
       await navigator.clipboard.writeText(link);
       return Promise.resolve();
     } catch (error) {
@@ -116,7 +112,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
           });
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           enqueueSnackbar("Unable to copy to clipboard!", {
             variant: "error",
             preventDuplicate: true,
@@ -158,11 +154,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
             ref={childRefs[index]}
             className={"tinderCard tinderCards"}
             key={index}
-            onSwipe={(dir: directionType) => {
-              // !isMobile
-              //   ? setTimeout(() => swiped(dir, index, data), 250)
-              //   : null;
-            }}
+            onSwipe={(dir: directionType) => {}}
             onCardLeftScreen={(dir: directionType) => {
               swiped(dir, index, data);
               outOfFrame(data.title, index);
