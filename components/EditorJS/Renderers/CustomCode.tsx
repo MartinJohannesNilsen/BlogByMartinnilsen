@@ -84,7 +84,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
               py={1}
               sx={{ opacity: 0.6 }}
             >
-              {props.data.language}
+              {props.data.language !== "plain" ? props.data.language : null}
             </Typography>
           </Box>
           <Box flexGrow={100} />
@@ -113,7 +113,11 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
           </Box>
         </Box>
         <SyntaxHighlighter
-          language={props.data.language || "text"}
+          language={
+            props.data.language === "plain"
+              ? "plaintext"
+              : props.data.language || "plaintext"
+          }
           // showLineNumbers={true}
           style={EDITORTHEME}
           wrapLines={true}
