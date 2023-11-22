@@ -242,7 +242,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     // Increase view count in supabase db if not on localhost, post is published and user is not authorized
     process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
     post.published &&
-    !isAuthorized
+    status !== "authenticated"
       ? fetch(`/api/views/${props.postId}`, {
           method: "POST",
         })
