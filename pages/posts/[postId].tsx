@@ -239,8 +239,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   useEffect(() => {
     // When output element, not loading anymore
     setIsLoading(false);
-    // Fetch view count from supabase db if not localhost nor unpublished
-    process.env.NEXT_PUBLIC_LOCALHOST === "false" && post.published
+    // Increase view count in supabase db if not on localhost, post is published and user is not authorized
+    process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
+    post.published &&
+    !isAuthorized
       ? fetch(`/api/views/${props.postId}`, {
           method: "POST",
         })
