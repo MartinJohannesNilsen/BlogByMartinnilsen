@@ -56,6 +56,7 @@
 		"@editorjs/warning": "^1.3.0",
 		"@hammaadhrasheedh/editorjs-iframe": "^1.0.21",
 		"@martinjohannesnilsen/editorjs-table": "^2.2.2",
+		"@mui/x-data-grid": "^6.18.1",
 		"@next-auth/firebase-adapter": "^2.0.1",
 		"@react-spring/web": "^9.7.3",
 		"@supabase/supabase-js": "^2.38.4",

@@ -2,6 +2,7 @@ import { Person, PostAdd, Search, Tag, Tune } from "@mui/icons-material";
 import {
   Box,
   ButtonBase,
+  Link,
   Tooltip,
   Typography,
   useMediaQuery,
@@ -60,6 +61,72 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
     );
   };
 
+  if (!props.posts)
+    return (
+      <Box
+        width={"100%"}
+        pt={isMobile ? 4.75 : 2}
+        pb={isMobile ? 0.75 : 2}
+        // position={isMobile ? "fixed" : "relative"}
+        position={"fixed"}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          backgroundColor: isMobile ? props.backgroundColor : "transparent",
+          top: 0,
+          zIndex: 1000,
+          marginTop: isMobile ? "-34px" : 0,
+          WebkitTransform: "translateZ(0)",
+          backdropFilter: "blur(5px)",
+          WebkitBackdropFilter: "blur(5px)",
+        }}
+      >
+        <Box
+          display="flex"
+          alignItems="center"
+          sx={{
+            // width: isMobile || xs ? "95%" : "80%",
+            width: "100%",
+            paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
+          }}
+        >
+          {/* Home button */}
+          <Link
+            // onClick={() => handleNavigate("/")}
+            href="/"
+            // disableRipple
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            underline="none"
+          >
+            <Image
+              src={logo.src}
+              alt=""
+              width={32}
+              height={32}
+              style={{ borderRadius: "0" }}
+            />
+            <Typography
+              // variant={"h5"}
+              fontFamily={theme.typography.fontFamily}
+              color={props.textColor || theme.palette.text.primary}
+              fontWeight={700}
+              fontSize={22}
+              textAlign="left"
+              pl={0.5}
+              sx={{ textDecoration: "none" }}
+            >
+              Blog
+            </Typography>
+          </Link>
+        </Box>
+      </Box>
+    );
   return (
     <Box
       width={"100%"}
@@ -110,7 +177,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           <Typography
             // variant={"h5"}
             fontFamily={theme.typography.fontFamily}
-            color={theme.palette.text.primary}
+            color={props.textColor || theme.palette.text.primary}
             fontWeight={700}
             fontSize={22}
             textAlign="left"
@@ -130,7 +197,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               >
                 <PostAdd
                   sx={{
-                    color: props.textColor,
+                    color: props.textColor || theme.palette.text.primary,
                     height: "30px",
                     width: "30px",
                     "&:hover": {
@@ -161,7 +228,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             >
               <Search
                 sx={{
-                  color: props.textColor,
+                  color: props.textColor || theme.palette.text.primary,
                   height: "30px",
                   width: "30px",
                   "&:hover": {
@@ -177,7 +244,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             <ButtonBase href="/tags">
               <Tag
                 sx={{
-                  color: props.textColor,
+                  color: props.textColor || theme.palette.text.primary,
                   height: "30px",
                   width: "30px",
                   "&:hover": {
@@ -197,7 +264,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             >
               <Tune
                 sx={{
-                  color: props.textColor,
+                  color: props.textColor || theme.palette.text.primary,
                   height: "30px",
                   width: "30px",
                   "&:hover": {
@@ -213,7 +280,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             <ButtonBase href="/account">
               <Person
                 sx={{
-                  color: props.textColor,
+                  color: props.textColor || theme.palette.text.primary,
                   height: "30px",
                   width: "30px",
                   "&:hover": {

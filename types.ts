@@ -125,15 +125,19 @@ export type StoredPost = PostProps & {
   id: string;
 };
 
+export type TablePost = StoredPost & {
+  views: number | string;
+};
+
 export type NavbarSection = {
   name: string;
   path: string;
 };
 
 export type NavbarProps = {
+  posts?: StoredPost[];
+  textColor?: string;
   backgroundColor: string;
-  textColor: string;
-  posts: StoredPost[];
 };
 
 // Component types
@@ -151,24 +155,21 @@ export type RevealProps = {
   delay?: number;
 };
 
-export type SettingsModalProps = {
+export type ModalProps = {
   open: boolean;
   handleModalOpen: () => void;
   handleModalClose: () => void;
+};
+
+export type SettingsModalProps = ModalProps & {
   handleThemeChange: (event: any) => void;
 };
 
-export type ShareModalProps = {
-  open: boolean;
-  handleModalOpen: () => void;
-  handleModalClose: () => void;
+export type ShareModalProps = ModalProps & {
   data: SharePreviewCardProps;
 };
 
-export type SearchModalProps = {
-  open: boolean;
-  handleModalOpen: () => void;
-  handleModalClose: () => void;
+export type SearchModalProps = ModalProps & {
   postsOverview?: StoredPost[];
 };
 

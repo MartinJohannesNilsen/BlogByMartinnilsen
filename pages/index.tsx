@@ -66,7 +66,7 @@ export const getStaticProps = async (context: any) => {
 };
 
 const LandingPage: FC<LandingPageProps> = (props) => {
-  const { isAuthorized } = useAuthorized();
+  // const { isAuthorized } = useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
