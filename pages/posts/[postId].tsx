@@ -202,9 +202,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
-  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-  const lg = useMediaQuery(theme.breakpoints.only("lg"));
-  const router = useRouter();
   const handleNavigate = (path: string) => {
     window.location.href = path;
   };
@@ -237,18 +234,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   }, [post]);
 
   useEffect(() => {
-    // When output element, not loading anymore
+    // // When output element, not loading anymore
+    // When status is updated, not loading anymore
     setIsLoading(false);
     // Increase view count in supabase db if not on localhost, post is published and user is not authorized
     process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
     post.published &&
-    status == "authenticated" &&
-    !isAuthorized
+    status == "unauthenticated"
       ? fetch(`/api/views/${props.postId}`, {
           method: "POST",
         })
       : null;
-  }, [OutputElement]);
+  }, [status]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash) {
