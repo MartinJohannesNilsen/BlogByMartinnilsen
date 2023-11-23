@@ -135,6 +135,9 @@ export const PostTable = (props) => {
       }}
       pageSizeOptions={[5, 10, 15, 20, 25]}
       sx={{
+        "& .MuiDataGrid-virtualScroller::-webkit-scrollbar": {
+          display: "none",
+        },
         backgroundColor: theme.palette.primary.main,
         // "& .MuiDataGrid-cell--textLeft.Mui-selected": {
         //   backgroundColor: "lightblue",

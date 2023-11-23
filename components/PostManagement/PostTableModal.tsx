@@ -1,9 +1,13 @@
 import { FC } from "react";
-import { Box, Modal } from "@mui/material";
+import { Box, Modal, useMediaQuery } from "@mui/material";
 import PostTable from "./PostTable";
 import { ModalProps } from "../../types";
+import { useTheme } from "../../ThemeProvider";
 
 export const PostTableModal: FC<ModalProps> = (props) => {
+  const { theme } = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
+
   const modalStyle = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -19,7 +23,7 @@ export const PostTableModal: FC<ModalProps> = (props) => {
     boxShadow: 24,
     p: 1,
     outline: 0,
-    width: 1220,
+    width: lgUp ? 1220 : "95vw",
     height: 646,
   };
 
