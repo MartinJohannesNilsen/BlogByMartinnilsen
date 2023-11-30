@@ -24,7 +24,7 @@ export const Account = () => {
             },
             expires: new Date(
               Date.now() + 365 * 24 * 60 * 60 * 1000
-            ).toISOString(), //A year ahead
+            ).toISOString(), // A year ahead
           },
           status: "authenticated",
         }

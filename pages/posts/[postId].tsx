@@ -991,20 +991,22 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     >
                       Author: {post.author}
                     </Typography>
-                    <Typography
-                      variant="body1"
-                      fontFamily={theme.typography.fontFamily}
-                      color={theme.palette.text.primary}
-                      sx={{ opacity: 0.6 }}
-                    >
-                      Last updated:{" "}
-                      {new Date(post.updatedAt).toLocaleDateString("en-GB", {
-                        // weekday: "long",
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </Typography>
+                    {post.updatedAt && post.updatedAt !== -1 ? (
+                      <Typography
+                        variant="body1"
+                        fontFamily={theme.typography.fontFamily}
+                        color={theme.palette.text.primary}
+                        sx={{ opacity: 0.6 }}
+                      >
+                        Last updated:{" "}
+                        {new Date(post.updatedAt).toLocaleDateString("en-GB", {
+                          // weekday: "long",
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </Typography>
+                    ) : null}
                   </Box>
                   {/* Comment section */}
                   <Box mb={3}>

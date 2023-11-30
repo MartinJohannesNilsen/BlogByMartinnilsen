@@ -67,7 +67,7 @@ const HeaderOutput = ({
       </Typography>
     ) : (
       <Typography
-        component={"h4"}
+        component={"h3"}
         variant="h6"
         color={theme.palette.text.primary}
         fontFamily={theme.typography.fontFamily}
