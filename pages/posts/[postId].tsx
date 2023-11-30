@@ -844,7 +844,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   </Box>
                   <Box flexGrow={100} />
                   {/* Share and applause section */}
-                  <Box mt={6} py={3} sx={{ userSelect: "none" }}>
+                  <Box mt={6} sx={{ userSelect: "none" }}>
                     {/* Horizontal lines */}
                     <Box
                       display="flex"
@@ -972,6 +972,39 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         }}
                       />
                     </Box>
+                  </Box>
+                  <Box mb={3} display="flex" flexDirection="column">
+                    {/* <Box
+                    mb={3}
+                    display="flex"
+                    gap={5}
+                    width="100%"
+                    textAlign="center"
+                    justifyContent="center"
+                    alignItems="center"
+                  > */}
+                    <Typography
+                      variant="body1"
+                      fontFamily={theme.typography.fontFamily}
+                      color={theme.palette.text.primary}
+                      sx={{ opacity: 0.6 }}
+                    >
+                      Author: {post.author}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      fontFamily={theme.typography.fontFamily}
+                      color={theme.palette.text.primary}
+                      sx={{ opacity: 0.6 }}
+                    >
+                      Last updated:{" "}
+                      {new Date(post.updatedAt).toLocaleDateString("en-GB", {
+                        // weekday: "long",
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </Typography>
                   </Box>
                   {/* Comment section */}
                   <Box mb={3}>
