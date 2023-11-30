@@ -218,26 +218,6 @@ export const SearchModal = (props: SearchModalProps) => {
                         if (isMobile) setActiveItem(-1);
                       }}
                     >
-                      {/* <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            marginRight: "10px",
-                            borderRadius: "5px",
-                            minWidth: "50px",
-                            minHeight: "50px",
-                            background: "transparent",
-                          }}
-                        >
-                          <img
-                            src={post.icon}
-                            style={{
-                              minWidth: "50px",
-                              minHeight: "50px",
-                              objectFit: "cover",
-                            }}
-                          />
-                        </Avatar>
-                      </ListItemAvatar> */}
                       <ListItemAvatar>
                         <Avatar
                           sx={{

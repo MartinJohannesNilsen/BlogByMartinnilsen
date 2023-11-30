@@ -284,7 +284,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
           image: post.image || DEFAULT_OGIMAGE,
           type: "article",
           article: {
-            published: new Date(post.timestamp),
+            published: new Date(post.createdAt),
             keywords: post.tags,
           },
         },
@@ -762,7 +762,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             fontSize: "default",
                           }}
                         >
-                          {new Date(post.timestamp).toLocaleDateString(
+                          {new Date(post.createdAt).toLocaleDateString(
                             "en-GB",
                             {
                               // weekday: "long",

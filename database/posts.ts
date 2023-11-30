@@ -109,12 +109,12 @@ const getPaginatedCollection = async (
             filterOnKeyValue.operator,
             filterOnKeyValue.value
           ),
-          orderBy("timestamp", "desc"),
+          orderBy("createdAt", "desc"),
           limit(numberOfPosts)
         )
       : query(
           collection(db, "posts"),
-          orderBy("timestamp", "desc"),
+          orderBy("createdAt", "desc"),
           limit(numberOfPosts)
         );
     const documentSnapshots = await getDocs(first);
@@ -130,13 +130,13 @@ const getPaginatedCollection = async (
             filterOnKeyValue.operator,
             filterOnKeyValue.value
           ),
-          orderBy("timestamp", "desc"),
+          orderBy("createdAt", "desc"),
           endBefore(lastFetchedPosts[0]),
           limitToLast(numberOfPosts)
         )
       : query(
           collection(db, "posts"),
-          orderBy("timestamp", "desc"),
+          orderBy("createdAt", "desc"),
           endBefore(lastFetchedPosts[0]),
           limitToLast(numberOfPosts)
         );
@@ -152,13 +152,13 @@ const getPaginatedCollection = async (
             filterOnKeyValue.operator,
             filterOnKeyValue.value
           ),
-          orderBy("timestamp", "desc"),
+          orderBy("createdAt", "desc"),
           startAfter(lastFetchedPosts[lastFetchedPosts.length - 1]),
           limit(numberOfPosts)
         )
       : query(
           collection(db, "posts"),
-          orderBy("timestamp", "desc"),
+          orderBy("createdAt", "desc"),
           startAfter(lastFetchedPosts[lastFetchedPosts.length - 1]),
           limit(numberOfPosts)
         );

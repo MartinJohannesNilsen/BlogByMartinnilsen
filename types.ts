@@ -102,15 +102,15 @@ export type PostCardProps = PostProps & {
 
 type PostProps = {
   author: string;
-  icon: string;
-  image: string;
-  readTime: string;
+  createdAt: number;
   description: string;
+  image: string;
+  updatedAt: number;
+  published: boolean;
+  readTime: string;
   tags: string[];
-  timestamp: number;
   title: string;
   type: string;
-  published: boolean;
 };
 
 export type FullPost = PostProps & {

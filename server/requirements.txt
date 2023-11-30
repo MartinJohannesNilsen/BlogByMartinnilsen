@@ -1,8 +1,0 @@
-requests
-flask
-flask_cors
-python-dotenv
-# Link preview
-linkpreview
-lxml
-beautifulsoup4

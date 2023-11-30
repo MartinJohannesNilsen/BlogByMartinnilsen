@@ -52,8 +52,8 @@ export const PostTable = (props) => {
     { field: "title", headerName: "Title", width: 470, align: "left" },
     { field: "views", headerName: "Views", width: 110, align: "center" },
     {
-      field: "timestamp",
-      headerName: "Date",
+      field: "createdAt",
+      headerName: "CreatedAt",
       width: 100,
       align: "center",
       type: "date",

@@ -169,7 +169,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 fontWeight="600"
                 sx={{ opacity: 0.6, fontSize: "default" }}
               >
-                {new Date(props.timestamp).toLocaleDateString("en-GB", {
+                {new Date(props.createdAt).toLocaleDateString("en-GB", {
                   // day: "2-digit",
                   // month: "short",
                   // year: "numeric",

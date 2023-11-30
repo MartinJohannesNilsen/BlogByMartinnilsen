@@ -165,10 +165,10 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
                 author={data.author}
                 readTime={data.readTime}
                 id={data.id}
-                icon={data.icon}
                 image={data.image}
                 title={data.title}
-                timestamp={data.timestamp}
+                createdAt={data.createdAt}
+                updatedAt={data.updatedAt}
                 description={data.description}
                 type={data.type}
                 tags={data.tags}

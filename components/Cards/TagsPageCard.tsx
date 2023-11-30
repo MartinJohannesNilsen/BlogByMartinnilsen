@@ -113,13 +113,6 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
               </Typography>
             </Box>
             <Box flexGrow={1} />
-            {/* <Image
-              src={props.icon}
-              alt=""
-              width={xs ? 70 : 82}
-              height={xs ? 70 : 82}
-              style={{ borderRadius: 2, objectFit: "cover" }}
-            /> */}
             <Image
               src={props.image || DEFAULT_OGIMAGE}
               alt={'OpenGraph image for article titled "' + props.title + '"'}
@@ -146,7 +139,7 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
                 fontWeight="600"
                 sx={{ opacity: 0.6, fontSize: "13px" }}
               >
-                {new Date(props.timestamp).toLocaleDateString("en-GB", {
+                {new Date(props.createdAt).toLocaleDateString("en-GB", {
                   // day: "2-digit",
                   // month: "short",
                   // year: "numeric",

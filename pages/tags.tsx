@@ -382,13 +382,13 @@ const TagsPage: FC<TagsPageProps> = (props) => {
                         <TagsPageCard
                           author={data.author}
                           description={data.description}
-                          icon={data.icon}
                           id={data.id}
                           image={data.image}
                           published={data.published}
                           readTime={data.readTime}
                           tags={data.tags}
-                          timestamp={data.timestamp}
+                          createdAt={data.createdAt}
+                          updatedAt={data.updatedAt}
                           title={data.title}
                           type={data.type}
                         />

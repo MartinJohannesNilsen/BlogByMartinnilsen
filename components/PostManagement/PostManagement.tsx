@@ -147,11 +147,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     tags: [],
     title: "",
     description: "",
-    icon: DEFAULT_ICON,
     image: "",
     data: { blocks: [] },
     author: "Martin Johannes Nilsen",
-    timestamp: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: -1,
     readTime: "",
   });
   const handleNavigate = (path: string) => {
@@ -241,10 +241,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 id: postId,
                 title: newObject.title,
                 description: newObject.description,
-                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
-                timestamp: newObject.timestamp,
+                createdAt: newObject.createdAt,
+                updatedAt: newObject.updatedAt,
                 type: newObject.type,
                 tags: newObject.tags,
                 author: newObject.author,
@@ -276,10 +276,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 id: postId,
                 title: newObject.title,
                 description: newObject.description,
-                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
-                timestamp: newObject.timestamp,
+                createdAt: newObject.createdAt,
+                updatedAt: newObject.updatedAt,
                 type: newObject.type,
                 tags: newObject.tags,
                 author: newObject.author,
@@ -534,20 +534,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                   },
                 }}
                 value={data.description}
-                onChange={handleInputChange}
-              />
-              <StyledTextField
-                label="Icon"
-                name="icon"
-                error={
-                  data.icon &&
-                  data.icon.trim() !== "" &&
-                  !isvalidHTTPUrl(data.icon)
-                }
-                helperText={"Incorrect url format (missing http/https)"}
-                required
-                fullWidth
-                value={data.icon}
                 onChange={handleInputChange}
               />
               <StyledTextField
