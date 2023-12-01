@@ -1,0 +1,377 @@
+import React from "react";
+import {
+  Box,
+  Typography,
+  Checkbox,
+  Autocomplete,
+  TextField,
+  Input,
+  InputAdornment,
+  IconButton,
+  useMediaQuery,
+} from "@mui/material";
+import { Fragment, useEffect, useState } from "react";
+import { useTheme } from "../../../../ThemeProvider";
+import { EDITORTHEME } from "../../Renderers/CustomCode";
+import DOMPurify from "isomorphic-dompurify";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { allowedLanguages } from "./allowedLanguages";
+import { InputElement, TextareaAutosizeElement } from "./styledMuiComponents";
+import { Clear } from "@mui/icons-material";
+
+const allowedLanguagesOptions = allowedLanguages.map((option) => {
+  const firstLetter = option[0].toUpperCase();
+  return {
+    language: option,
+    firstLetter: /[0-9]/.test(firstLetter) ? "0-9" : firstLetter,
+  };
+});
+
+export const CodeBlock = (props: {
+  data: {
+    code: string;
+    language: string;
+    multiline: boolean;
+    linenumbers: boolean;
+    textwrap: boolean;
+    filename: string;
+    caption: string;
+    render: boolean;
+  };
+  onDataChange: (arg0: any) => void;
+  readOnly: boolean;
+}) => {
+  const { theme } = useTheme();
+  const [stateData, setStateData] = useState(
+    props.data || {
+      code: "",
+      language: "plaintext",
+      multiline: true,
+      linenumbers: false,
+      textwrap: false,
+      filename: "",
+      caption: "",
+      render: false,
+    }
+  );
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+
+  useEffect(() => {
+    props.onDataChange(stateData);
+  }, [stateData]);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      // Optionally, you can stop the event propagation as well
+      event.stopPropagation();
+    }
+  };
+
+  return (
+    <Fragment>
+      <Box sx={{ position: "relative", borderRadius: "50px" }} my={2}>
+        <Box
+          sx={{
+            "&.linenumber": {
+              userSelect: "none",
+              WebkitUserSelect: "none",
+            },
+          }}
+        >
+          {/* Header row */}
+          <Box
+            sx={{
+              backgroundColor: "#363642",
+              borderRadius: "10px 10px 0px 0px",
+              padding: "5px",
+            }}
+            display="flex"
+            alignItems="center"
+          >
+            {/* Filename */}
+            <Box ml={1.75} mr={1.75}>
+              <Typography
+                fontFamily={theme.typography.fontFamily}
+                variant="body2"
+                color="white"
+                py={1}
+                sx={{ opacity: 0.6 }}
+              >
+                <Input
+                  value={stateData.filename}
+                  onChange={(e) =>
+                    setStateData({ ...stateData, filename: e.target.value })
+                  }
+                  size="small"
+                  sx={{
+                    width: mdDown ? "100%" : 220,
+                    height: "40px",
+                    "&:hover:before": {
+                      borderBottomColor: "white !important", // Underline color on hover (including when clicked)
+                    },
+                    ":before": { borderBottomColor: "white" },
+                    // underline when selected
+                    ":after": { borderBottomColor: "white" },
+                    "& input": {
+                      color: "white", // Color for the text
+                    },
+                    "& input::placeholder": {
+                      color: "#abb2bf", // Color for the placeholder text
+                    },
+                  }}
+                  placeholder="Filename"
+                />
+              </Typography>
+            </Box>
+            <Box flexGrow={100} />
+            {/* Multiline */}
+            <Box textAlign="center">
+              <Typography
+                fontSize={10}
+                color="#abb2bf"
+                fontFamily={theme.typography.fontFamily}
+              >
+                Rows
+              </Typography>
+              <Checkbox
+                checked={stateData.multiline}
+                sx={{
+                  color: "#abb2bf",
+                  "&.Mui-checked": {
+                    color: "white",
+                  },
+                }}
+                onChange={(e) =>
+                  setStateData({
+                    ...stateData,
+                    multiline: e.target.checked,
+                    textwrap: e.target.checked ? stateData.textwrap : false,
+                    linenumbers: e.target.checked
+                      ? stateData.linenumbers
+                      : false,
+                  })
+                }
+              />
+            </Box>
+            {/* LineNumbers */}
+            <Box textAlign="center">
+              <Typography
+                fontSize={10}
+                color="#abb2bf"
+                fontFamily={theme.typography.fontFamily}
+              >
+                Num
+              </Typography>
+              <Checkbox
+                disabled={!stateData.multiline}
+                checked={stateData.linenumbers}
+                sx={{
+                  color: "#abb2bf",
+                  "&.Mui-checked": {
+                    color: "white",
+                  },
+                }}
+                onChange={(e) =>
+                  setStateData({ ...stateData, linenumbers: e.target.checked })
+                }
+              />
+            </Box>
+            {/* Textwrap */}
+            <Box textAlign="center">
+              <Typography
+                fontSize={10}
+                color="#abb2bf"
+                fontFamily={theme.typography.fontFamily}
+              >
+                Wrap
+              </Typography>
+              <Checkbox
+                sx={{
+                  color: "#abb2bf",
+                  "&.Mui-checked": {
+                    color: "white",
+                  },
+                }}
+                disabled={!stateData.multiline}
+                checked={stateData.textwrap}
+                onChange={(e) =>
+                  setStateData({ ...stateData, textwrap: e.target.checked })
+                }
+              />
+            </Box>
+            {/* Language */}
+            <Box px={1}>
+              <Autocomplete
+                onKeyDown={(e) => {
+                  if (
+                    e.key === "Enter" ||
+                    e.key === "ArrowUp" ||
+                    e.key === "ArrowDown"
+                  ) {
+                    e.preventDefault();
+                    // Optionally, you can stop the event propagation as well
+                    e.stopPropagation();
+                  }
+                }}
+                options={allowedLanguagesOptions.sort(
+                  (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
+                )}
+                groupBy={(option) => option.firstLetter}
+                getOptionLabel={(option) => option.language}
+                sx={{
+                  width: mdDown ? 150 : 200,
+                  ".MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#abb2bf",
+                  },
+                  ".MuiOutlinedInput-root": {
+                    "&:hover fieldset": {
+                      borderColor: "white",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "white",
+                    },
+                  },
+                  ".MuiInputLabel-root": {
+                    color: "#abb2bf",
+                  },
+                  ".MuiInputBase-input": {
+                    color: "#abb2bf",
+                  },
+                  ".MuiAutocomplete-clearIndicator, .MuiAutocomplete-popupIndicator":
+                    {
+                      color: "#abb2bf",
+                      "&:hover": {
+                        color: "white",
+                      },
+                    },
+                }}
+                size="small"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={
+                      {
+                        // Apply white color to text
+                        // color: "white",
+                      }
+                    }
+                    label="Language"
+                    InputLabelProps={
+                      {
+                        // Apply white color to label
+                        // style: { color: "white" },
+                      }
+                    }
+                    // Apply the outlined style
+                    variant="outlined"
+                  />
+                )}
+                value={{
+                  language: stateData.language,
+                  firstLetter:
+                    stateData.language && stateData.language.length > 0
+                      ? stateData.language[0].toUpperCase()
+                      : "0",
+                }}
+                onChange={(_, newValue) => {
+                  setStateData({
+                    ...stateData,
+                    language: newValue ? newValue.language : "",
+                  });
+                }}
+              />
+            </Box>
+            {/* Render */}
+            <Box textAlign="center">
+              <Typography
+                fontSize={10}
+                color="#abb2bf"
+                fontFamily={theme.typography.fontFamily}
+              >
+                Render
+              </Typography>
+              <Checkbox
+                checked={stateData.render}
+                sx={{
+                  color: "#abb2bf",
+                  "&.Mui-checked": {
+                    color: "white",
+                  },
+                }}
+                onChange={(e) =>
+                  setStateData({ ...stateData, render: e.target.checked })
+                }
+              />
+            </Box>
+          </Box>
+          {/* Editor */}
+          <Box
+            sx={{
+              "&.react-syntax-highlighter-line-number": {
+                userSelect: "none",
+                WebkitUserSelect: "none",
+              },
+            }}
+          >
+            {stateData.render ? (
+              <SyntaxHighlighter
+                language={
+                  stateData.language && stateData.language !== ""
+                    ? stateData.language
+                    : "plaintext"
+                }
+                showLineNumbers={stateData.linenumbers}
+                style={EDITORTHEME}
+                wrapLongLines={stateData.textwrap}
+                customStyle={{
+                  backgroundColor: "rgb(36, 39, 46)",
+                  margin: "0px",
+                  // marginTop: "-1px",
+                  padding: "15px",
+                  borderRadius: "0 0 10px 10px",
+                }}
+              >
+                {stateData.multiline
+                  ? stateData.code
+                  : stateData.code.replace(/(\r\n|\n|\r)/gm, "")}
+              </SyntaxHighlighter>
+            ) : stateData.multiline ? (
+              <TextareaAutosizeElement
+                onKeyDown={handleKeyDown}
+                sx={{
+                  color: "#abb2bf",
+                  background: "#282c34",
+                  resize: "none",
+                  padding: "15px",
+                  marginBottom: -0.8,
+                  overflowX: "scroll",
+                  whiteSpace: stateData.textwrap ? "break-spaces" : "pre",
+                }}
+                onChange={(e) => {
+                  setStateData({ ...stateData, code: e.target.value });
+                }}
+                value={stateData.code}
+              />
+            ) : (
+              <InputElement
+                onChange={(e) => {
+                  setStateData({ ...stateData, code: e.target.value });
+                }}
+                value={stateData.code}
+                sx={{
+                  // marginBottom: 3,
+                  color: "#abb2bf",
+                  background: "#282c34",
+                  padding: "15px",
+                }}
+              />
+            )}
+          </Box>
+        </Box>
+        {console.log(props.data)}
+      </Box>
+    </Fragment>
+  );
+};
+export default CodeBlock;

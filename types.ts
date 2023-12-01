@@ -9,9 +9,6 @@ export type EditorjsRendererProps = {
     text?: string;
     // header
     level?: 1 | 2 | 3 | 4 | 5 | 6;
-    // Code
-    language?: string;
-    code?: string;
     // Video
     file?: {
       url?: string;
@@ -67,6 +64,14 @@ export type EditorjsRendererProps = {
     // Toggle
     status?: string;
     blocks?: any;
+    // Code
+    code?: string;
+    language?: string;
+    multiline?: boolean;
+    linenumbers?: boolean;
+    textwrap?: boolean;
+    filename?: string;
+    render?: boolean;
   };
   style: {
     h1?: CSSProperties;
