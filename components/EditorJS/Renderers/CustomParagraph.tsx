@@ -9,17 +9,19 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
   const useStyles = makeStyles(() => ({
     code: {
-      color: "#d9363e",
+      // color: "#d9363e", // red
+      // color: "#abb2bf", // grey
+      color: theme.palette.mode === "dark" ? "#abb2bf" : "black",
+      backgroundColor:
+        // "#25272D",
+        theme.palette.mode === "dark"
+          ? theme.palette.grey[800]
+          : theme.palette.grey[200],
       margin: "0 1px",
       padding: "2px 5px",
-      backgroundColor:
-        theme.palette.mode === "dark"
-          ? // ? theme.palette.primary.dark
-            theme.palette.grey[800]
-          : theme.palette.grey[100],
-      // fontFamily: theme.typography.fontFamily,
-      // borderRadius: "2px",
       borderRadius: "4px",
+      // borderRadius: "2px",
+      // fontFamily: theme.typography.fontFamily,
     },
     mark: {
       margin: "0 1px",

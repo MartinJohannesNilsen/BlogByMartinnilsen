@@ -27,11 +27,10 @@ export const light = createTheme({
           JSON.parse(String(localStorage.getItem("accent")))) ||
         "#29939b",
     },
-    // outline shadow for project images
     grey: {
-      600: "#ccc",
-      700: "#ddd",
-      800: "#eee",
+      600: "#585d63",
+      700: "#3e4347",
+      800: "#25272D",
     },
   },
   breakpoints: baseTheme.breakpoints,
