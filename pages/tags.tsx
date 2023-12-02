@@ -77,7 +77,12 @@ export const _filterListOfStoredPostsOnTag = (
 };
 
 const TagsPage: FC<TagsPageProps> = (props) => {
-  const { isAuthorized } = useAuthorized();
+  const { isAuthorized } =
+    process.env.NEXT_PUBLIC_LOCALHOST === "true"
+      ? {
+          isAuthorized: true,
+        }
+      : useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -224,17 +229,21 @@ const TagsPage: FC<TagsPageProps> = (props) => {
           <Navbar
             backgroundColor={theme.palette.primary.main}
             textColor={theme.palette.text.primary}
-            posts={chunkedPosts.flat()}
+            posts={
+              isAuthorized
+                ? props.posts
+                : _filterListOfStoredPostsOnPublished(props.posts, "published")
+            }
           />
           <Box
             display="flex"
             flexDirection="column"
             sx={{
-              minHeight: xs ? "100vh" : "calc(100vh - 64px)",
-              height: xs ? "100%" : "calc(100% - 64px)",
+              minHeight: "100vh",
+              height: "100%",
               width: "100%",
               paddingX: lgUp ? "150px" : xs ? "20px" : "80px",
-              paddingTop: isMobile ? "55px" : xs ? "20px" : "40px",
+              paddingTop: isMobile ? "55px" : "80px",
               backgroundColor: theme.palette.primary.main,
             }}
           >
@@ -373,13 +382,13 @@ const TagsPage: FC<TagsPageProps> = (props) => {
                         <TagsPageCard
                           author={data.author}
                           description={data.description}
-                          icon={data.icon}
                           id={data.id}
                           image={data.image}
                           published={data.published}
                           readTime={data.readTime}
                           tags={data.tags}
-                          timestamp={data.timestamp}
+                          createdAt={data.createdAt}
+                          updatedAt={data.updatedAt}
                           title={data.title}
                           type={data.type}
                         />

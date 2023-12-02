@@ -1,6 +1,7 @@
-import { AccessTime, CalendarMonth } from "@mui/icons-material";
+import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
   Typography,
@@ -12,40 +13,23 @@ import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
+import React from "react";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import PostViews from "../PostViews/PostViews";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const lg = useMediaQuery(theme.breakpoints.only("lg"));
-  const xl = useMediaQuery(theme.breakpoints.only("xl"));
-  const [state, setState] = useState({
-    raised: false,
-  });
   const useStyles = makeStyles({
     root: {
-      transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-      boxShadow:
-        theme.palette.mode === "light"
-          ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
-          : "",
       width: "100%",
       "&:hover": {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light,
       },
       "&:active": {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light,
       },
-      backgroundColor: theme.palette.primary.main,
-    },
-    cardHovered: {
-      transform: !props.enlargeOnHover
-        ? "none"
-        : xl
-        ? "scale3d(1.02, 1.02, 1)"
-        : lg
-        ? "scale3d(1.03, 1.03, 1)"
-        : "scale3d(1.05, 1.05, 1)",
-      width: "100%",
+      backgroundColor: theme.palette.primary.light,
     },
   });
   const classes = useStyles();
@@ -53,15 +37,12 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
   return (
     <Card
       className={classes.root}
-      classes={{ root: state.raised ? classes.cardHovered : "" }}
-      onMouseOver={() => setState({ raised: true })}
-      onMouseOut={() => setState({ raised: false })}
-      sx={{ width: "100%" }}
+      sx={{ width: "100%", borderRadius: 4, boxShadow: "none" }}
     >
       <CardActionArea
         href={`/posts/${props.id}`}
         sx={{
-          height: "350px",
+          height: xs ? "235px" : "260px",
           width: "100%",
           padding: "20px",
         }}
@@ -70,130 +51,76 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
           {/* Image and type/tag rows */}
           <Box display="flex" flexDirection="row">
             <Image
-              src={props.icon}
+              src={props.image || DEFAULT_OGIMAGE}
               alt=""
-              width={80}
-              height={80}
-              style={{ borderRadius: 2, objectFit: "cover" }}
-            />
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="flex-start"
-              sx={{
-                height: "80px",
-                textAlign: "left",
-                padding: "10px 0px 10px 12px",
-                maxWidth: "500px",
+              fill={true}
+              style={{
+                borderRadius: 4,
+                objectFit: "cover",
               }}
-            >
-              <Typography
-                variant="body1"
-                fontWeight={700}
-                color={theme.palette.secondary.main}
-                fontFamily={theme.typography.fontFamily}
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "webkit-flex",
-                  WebkitLineClamp: 1,
-                  lineClamp: 1,
-                  WebkitBoxOrient: "vertical",
-                }}
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    props.type
-                      ? "//&nbsp;&nbsp;" + props.type + "&nbsp;&nbsp;//"
-                      : ""
-                  ),
-                }}
-              />
-              <Typography
-                variant="body2"
-                color="textPrimary"
-                fontFamily={theme.typography.fontFamily}
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "webkit-flex",
-                  WebkitLineClamp: 2,
-                  lineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                }}
-              >
-                {props.tags.map((tag, index) =>
-                  index != 0 ? ", " + tag : tag
-                )}
-              </Typography>
-            </Box>
+            />
           </Box>
-          {/* Title and summary */}
+          {/* Tags */}
           <Box
             display="flex"
-            flexDirection="column"
-            pt={2}
-            sx={{ maxWidth: "650px" }}
+            flexDirection="row"
+            alignItems="center"
+            pt={0.7}
+            pb={0.6}
           >
-            <Typography
-              variant="h6"
-              fontWeight={700}
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-              sx={{
-                lineHeight: "26px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "webkit-flex",
-                WebkitLineClamp: 2,
-                lineClamp: 2,
-                WebkitBoxOrient: "vertical",
-              }}
-            >
-              {props.title}
-            </Typography>
-            <Typography
-              mt={1}
-              variant="body1"
-              fontWeight={500}
-              color="textPrimary"
-              fontFamily={theme.typography.fontFamily}
-              sx={{
-                lineHeight: "26px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "webkit-flex",
-                WebkitLineClamp: 5,
-                lineClamp: 5,
-                WebkitBoxOrient: "vertical",
-              }}
-            >
-              {props.description}
-            </Typography>
+            {props.tags.map((tag, index) => (
+              <Button
+                key={index}
+                disabled
+                variant="contained"
+                sx={{ marginRight: 1, backgroundColor: "white" }}
+              >
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  color="white"
+                  fontFamily={theme.typography.fontFamily}
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "webkit-flex",
+                    WebkitLineClamp: 2,
+                    lineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    opacity: 0.6,
+                  }}
+                >
+                  {tag}
+                </Typography>
+              </Button>
+            ))}
           </Box>
-          {/*  */}
-          <Box sx={{ flexGrow: 100 }} />
-          {/* Information gutter */}
+          <Box sx={{ flexGrow: 1 }} />
+
+          {/* Date and reading time */}
           <Box display="flex" flexDirection="row" alignItems="center">
             {/* Timestamp */}
             <CalendarMonth
               sx={{
                 opacity: 0.6,
                 marginRight: "6px",
-                // marginBottom: "3px",
                 fontSize: "default",
+                color: "white",
               }}
             />
             <Typography
               fontFamily={theme.typography.fontFamily}
               variant="body2"
               fontWeight="600"
-              sx={{ opacity: 0.6, fontSize: "default" }}
+              sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
             >
-              {new Date(props.timestamp).toLocaleDateString("en-GB", {
-                // weekday: "long",
+              {new Date(props.createdAt).toLocaleDateString("en-GB", {
+                // day: "2-digit",
+                // month: "short",
+                // year: "numeric",
                 day: "2-digit",
-                month: "short",
-                year: "numeric",
+                month: "2-digit",
+                year: "2-digit",
               })}
             </Typography>
             {/* Read time */}
@@ -202,23 +129,54 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
                 opacity: 0.6,
                 marginLeft: "12px",
                 marginRight: "6px",
-                // marginBottom: "3px",
                 fontSize: "default",
+                color: "white",
               }}
             />
             <Typography
               fontFamily={theme.typography.fontFamily}
               variant="body2"
               fontWeight="600"
-              sx={{ opacity: 0.6, fontSize: "default" }}
+              sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
             >
               {props.readTime ? props.readTime : "⎯"}
+            </Typography>
+            {/* View counts */}
+            <Visibility
+              sx={{
+                opacity: 0.6,
+                marginLeft: "12px",
+                marginRight: "6px",
+                fontSize: "default",
+                color: "white",
+              }}
+            />
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="body2"
+              fontWeight="600"
+              sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
+            >
+              <PostViews
+                postId={props.id}
+                sx={{
+                  fontSize: theme.typography.fontSize,
+                  color: "white",
+                  fontFamily: theme.typography.fontFamily,
+                }}
+              />
             </Typography>
             {/* Not published icon */}
             {!props.published && (
               <>
-                <Box flexGrow={100} />{" "}
-                <Typography sx={{ fontSize: "default" }}>🖊</Typography>
+                <Box flexGrow={100} />
+                <Button
+                  disabled
+                  variant="contained"
+                  sx={{ backgroundColor: "white", p: "8px 8px" }}
+                >
+                  <Typography sx={{ fontSize: "default" }}>🖊</Typography>
+                </Button>
               </>
             )}
           </Box>

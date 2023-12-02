@@ -4,9 +4,13 @@ import { baseTheme } from "./themeDefaults";
 export const dark = createTheme({
   palette: {
     mode: "dark",
+    background: {
+      default: baseTheme.palette.background.default,
+      paper: "#1C1C1C",
+    },
     text: {
-      primary: "#FFF",
-      secondary: "#000",
+      primary: "#FFFFFF",
+      secondary: "#000000",
     },
     // background
     primary: {
@@ -23,11 +27,10 @@ export const dark = createTheme({
           JSON.parse(String(localStorage.getItem("accent")))) ||
         "#29939b",
     },
-    // outline shadow for project images
     grey: {
       600: "#585d63",
       700: "#3e4347",
-      800: "#27323b",
+      800: "#25272D",
     },
   },
   breakpoints: baseTheme.breakpoints,

@@ -6,11 +6,34 @@ import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
 import SEO from "../components/SEO/SEO";
+import Navbar from "../components/Navbar/Navbar";
+import { useState } from "react";
+import PostTableModal from "../components/PostManagement/PostTableModal";
 
 export const Account = () => {
-  const { isAuthorized, session, status } = useAuthorized(true);
+  const { isAuthorized, session, status } =
+    process.env.NEXT_PUBLIC_LOCALHOST === "true"
+      ? {
+          isAuthorized: true,
+          session: {
+            user: {
+              name: "Martin the developer",
+              email: "martinjnilsen@gmail.com",
+              image:
+                "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+            },
+            expires: new Date(
+              Date.now() + 365 * 24 * 60 * 60 * 1000
+            ).toISOString(), // A year ahead
+          },
+          status: "authenticated",
+        }
+      : useAuthorized(true);
   const { theme } = useTheme();
   const backgroundBWBreakingPercentage = "45%";
+  const [openPostTableModal, setOpenPostTableModal] = useState(false);
+  const handlePostTableModalOpen = () => setOpenPostTableModal(true);
+  const handlePostTableModalClose = () => setOpenPostTableModal(false);
 
   if (status === "loading") {
     return <></>;
@@ -30,6 +53,10 @@ export const Account = () => {
           background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
         }}
       >
+        <Navbar
+          backgroundColor={theme.palette.primary.contrastText}
+          textColor={theme.palette.primary.main}
+        />
         <Grid
           container
           sx={{ width: "350px" }}
@@ -42,11 +69,19 @@ export const Account = () => {
             <AccountCard session={session} isAuthorized={isAuthorized} />
           </Grid>
           <Grid item xs={3.6}>
-            <TileButtonCard
-              icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
-              text="Posts"
-              href="/"
-            />
+            {isAuthorized ? (
+              <TileButtonCard
+                icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
+                text="Posts"
+                onClick={handlePostTableModalOpen}
+              />
+            ) : (
+              <TileButtonCard
+                icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
+                text="Posts"
+                href="/"
+              />
+            )}
           </Grid>
           <Grid item xs={3.6}>
             <TileButtonCard
@@ -72,6 +107,11 @@ export const Account = () => {
             />
           </Grid>
         </Grid>
+        <PostTableModal
+          open={openPostTableModal}
+          handleModalOpen={handlePostTableModalOpen}
+          handleModalClose={handlePostTableModalClose}
+        />
       </Grid>
     </SEO>
   );

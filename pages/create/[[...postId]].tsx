@@ -7,7 +7,13 @@ import { getPost } from "../../database/posts";
 import { FullPost } from "../../types";
 
 const ManageArticleView: FC = (props) => {
-  const { isAuthorized, session, status } = useAuthorized(true);
+  const { isAuthorized, status } =
+    process.env.NEXT_PUBLIC_LOCALHOST === "true"
+      ? {
+          isAuthorized: true,
+          status: "authenticated",
+        }
+      : useAuthorized(true);
   const [post, setPost] = useState<FullPost>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();

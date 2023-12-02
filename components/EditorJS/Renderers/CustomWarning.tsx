@@ -16,13 +16,14 @@ const CustomWarning = (props: EditorjsRendererProps) => {
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
 
   return (
-    <Box my={1}>
+    <Box my={1} maxWidth={"100vw"}>
       <Card
         sx={{
           display: "flex",
           alignItems: "center",
           padding: xs ? "15px" : "15px",
           boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+          maxWidth: "100vw",
         }}
       >
         <IconButton
@@ -36,15 +37,16 @@ const CustomWarning = (props: EditorjsRendererProps) => {
             alt="Speech balloon icon"
           />
         </IconButton>
-        <Box display="flex" flexDirection="column">
+        <Box display="flex" flexDirection="column" maxWidth={"100vw"}>
           <Typography
             variant="subtitle1"
             fontWeight={800}
             fontFamily={theme.typography.fontFamily}
             sx={{
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
+              // textOverflow: "ellipsis",
+              // whiteSpace: "nowrap",
+              // overflow: "hidden",
+              lineHeight: theme.typography.subtitle2.lineHeight,
             }}
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(props.data.title!),

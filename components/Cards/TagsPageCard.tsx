@@ -1,8 +1,10 @@
-import { AccessTime, CalendarMonth } from "@mui/icons-material";
+import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
+  Link,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -11,6 +13,8 @@ import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import PostViews from "../PostViews/PostViews";
 
 export const TagsPageCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
@@ -110,9 +114,9 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
             </Box>
             <Box flexGrow={1} />
             <Image
-              src={props.icon}
-              alt=""
-              width={xs ? 70 : 82}
+              src={props.image || DEFAULT_OGIMAGE}
+              alt={'OpenGraph image for article titled "' + props.title + '"'}
+              width={xs ? 70 : 125}
               height={xs ? 70 : 82}
               style={{ borderRadius: 2, objectFit: "cover" }}
             />
@@ -135,11 +139,13 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
                 fontWeight="600"
                 sx={{ opacity: 0.6, fontSize: "13px" }}
               >
-                {new Date(props.timestamp).toLocaleDateString("en-GB", {
-                  // weekday: "long",
+                {new Date(props.createdAt).toLocaleDateString("en-GB", {
+                  // day: "2-digit",
+                  // month: "short",
+                  // year: "numeric",
                   day: "2-digit",
-                  month: "short",
-                  year: "numeric",
+                  month: "2-digit",
+                  year: "2-digit",
                 })}
               </Typography>
               {/* Read time */}
@@ -160,11 +166,42 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
               >
                 {props.readTime ? props.readTime : "⎯"}
               </Typography>
+              {/* View counts */}
+              {props.published ? (
+                <>
+                  <Visibility
+                    sx={{
+                      opacity: 0.6,
+                      marginLeft: "12px",
+                      marginRight: "6px",
+                      fontSize: "default",
+                    }}
+                  />
+                  <Typography
+                    fontFamily={theme.typography.fontFamily}
+                    variant="body2"
+                    fontWeight="600"
+                    sx={{ opacity: 0.6, fontSize: "default" }}
+                  >
+                    <PostViews
+                      postId={props.id}
+                      sx={{
+                        fontSize: theme.typography.fontSize,
+                        color: theme.palette.text.primary,
+                        fontFamily: theme.typography.fontFamily,
+                      }}
+                    />
+                  </Typography>
+                </>
+              ) : null}
+
               {/* Not published icon */}
               {!props.published && (
                 <>
-                  <Box flexGrow={100} />{" "}
-                  <Typography sx={{ fontSize: "13px" }}>🖊</Typography>
+                  <Box flexGrow={100} />
+                  <Link href={`/create/${props.id}`} sx={{}}>
+                    <Typography sx={{ fontSize: "13px" }}>🖊</Typography>
+                  </Link>
                 </>
               )}
             </Box>

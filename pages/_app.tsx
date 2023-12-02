@@ -1,11 +1,21 @@
-import { CssBaseline, StyledEngineProvider } from "@mui/material";
+import { CssBaseline, IconButton, StyledEngineProvider } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider, closeSnackbar } from "notistack";
 import ThemeProvider from "../ThemeProvider";
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
+import { Close } from "@mui/icons-material";
 
 function MyApp({ Component, pageProps, session }) {
+  // const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
+  //   '&.notistack-MuiContent-success': {
+  //     backgroundColor: '#2D7738',
+  //   },
+  //   '&.notistack-MuiContent-error': {
+  //     backgroundColor: '#970C0C',
+  //   },
+  // }));
+
   return (
     <SessionProvider session={session}>
       <StyledEngineProvider injectFirst>
@@ -17,6 +27,15 @@ function MyApp({ Component, pageProps, session }) {
               vertical: "top",
               horizontal: "center",
             }}
+            action={(snackbarId) => (
+              <IconButton
+                size="small"
+                disableRipple
+                onClick={() => closeSnackbar(snackbarId)}
+              >
+                <Close fontSize="small" sx={{ color: "white" }} />
+              </IconButton>
+            )}
           >
             <CssBaseline />
             <Component {...pageProps} />

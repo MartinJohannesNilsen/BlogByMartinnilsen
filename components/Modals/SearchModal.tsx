@@ -18,6 +18,7 @@ import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../ThemeProvider";
 import { SearchModalProps, StoredPost } from "../../types";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 
 export const SearchModal = (props: SearchModalProps) => {
   const { theme } = useTheme();
@@ -108,7 +109,7 @@ export const SearchModal = (props: SearchModalProps) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: xs ? 350 : lgUp ? 600 : 500,
+            width: xs ? 370 : lgUp ? 700 : 550,
             height: "450px",
             outline: 0,
           }}
@@ -220,18 +221,23 @@ export const SearchModal = (props: SearchModalProps) => {
                       <ListItemAvatar>
                         <Avatar
                           sx={{
-                            marginRight: "10px",
+                            marginRight: "12px",
                             borderRadius: "5px",
-                            minWidth: "50px",
-                            minHeight: "50px",
+                            minWidth: xs ? "70px" : "124px",
+                            minHeight: xs ? "50px" : "70px",
                             background: "transparent",
                           }}
                         >
                           <img
-                            src={post.icon}
+                            src={post.image || DEFAULT_OGIMAGE}
+                            alt={
+                              'OpenGraph image for article titled "' +
+                              post.title +
+                              '"'
+                            }
                             style={{
-                              minWidth: "50px",
-                              minHeight: "50px",
+                              minWidth: "125px",
+                              minHeight: "82px",
                               objectFit: "cover",
                             }}
                           />

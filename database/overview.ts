@@ -8,9 +8,9 @@ const _sortListOfStoredPostsOnTimestamp = (
   asc?: boolean
 ) => {
   if (asc) {
-    return data.sort((prev, next) => prev.timestamp - next.timestamp); //Ascending, oldest (smallest timestamp) first
+    return data.sort((prev, next) => prev.createdAt - next.createdAt); //Ascending, oldest (smallest createdAt) first
   }
-  return data.sort((prev, next) => next.timestamp - prev.timestamp); //Descending, latest (largest timestamp) first
+  return data.sort((prev, next) => next.createdAt - prev.createdAt); //Descending, latest (largest createdAt) first
 };
 export const _filterListOfStoredPostsOnPublished = (
   data: StoredPost[],

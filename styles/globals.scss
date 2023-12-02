@@ -162,6 +162,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  user-select: text;
 }
 
 /* define height for wrapper's parent div */
@@ -180,10 +181,11 @@ body::-webkit-scrollbar {
   width: 0; /* Remove scrollbar space */
 }
 
-.featuredInCardCssGrid {
+.tinderCard {
   grid-area: card;
-  width: 320px; /* Need a specific value to work */
-  height: 460px;
+  width: 350px; /* Need a specific value to work */
+  z-index: 0;
+  // border-radius: 4;
 }
 
 .tinderCards {
@@ -192,8 +194,6 @@ body::-webkit-scrollbar {
   z-index: 1;
 }
 
-@media (max-width: 1200px) {
-  .featuredInCardCssGrid {
-    height: 370px;
-  }
+giscus-widget::part(iframe) {
+  min-height: 250px; // If comment section deactivated, reactions will overflow. 190px without signin, 250px with signin 
 }

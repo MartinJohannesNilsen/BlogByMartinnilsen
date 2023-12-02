@@ -2,26 +2,26 @@
 import {
   ArrowBackIosNewSharp,
   ArrowForwardIosSharp,
-  GridView,
-  ViewColumnRounded,
+  GridViewSharp,
+  TableRowsSharp,
+  ViewCarousel,
+  ViewWeekSharp,
 } from "@mui/icons-material";
 import {
   Box,
-  Button,
   ButtonGroup,
   Unstable_Grid2 as Grid,
   IconButton,
   Typography,
+  Tooltip,
   useMediaQuery,
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
-import Image from "next/image";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
 import Navbar from "../components/Navbar/Navbar";
 import SEO from "../components/SEO/SEO";
 import {
@@ -29,11 +29,13 @@ import {
   getPostsOverview,
 } from "../database/overview";
 import { LandingPageProps, StoredPost } from "../types";
-// import { Slider } from "../components/Slider/CardSlider";
+import useStickyState from "../utils/useStickyState";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
-import useStickyState from "../utils/useStickyState";
+import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
+import LandingPageListCard from "../components/Cards/LandingPageListCard";
+import TinderSwipe from "../components/TinderSwipe/TinderSwipe";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
   if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -64,55 +66,52 @@ export const getStaticProps = async (context: any) => {
 };
 
 const LandingPage: FC<LandingPageProps> = (props) => {
-  const { isAuthorized } = useAuthorized();
+  // const { isAuthorized } = useAuthorized();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
-  const [gridView, setGridView] = useStickyState<Boolean>("gridView", false);
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const [cardLayout, setCardLayout] = useStickyState<String>(
+    "cardLayout",
+    mdDown ? "grid" : "carousel"
+  );
   const [page, setPage] = useState(1);
   const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
     splitChunks(
-      isAuthorized
-        ? props.posts
-        : _filterListOfStoredPostsOnPublished(props.posts, "published"),
-      Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
+      _filterListOfStoredPostsOnPublished(props.posts, "published"),
+      Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
     )
   );
-  const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const [posts, setPosts] = useState<StoredPost[]>(
-    xs ? chunkedPosts.flat() : !gridView ? chunkedPosts.flat() : chunkedPosts[0]
+    mdDown || cardLayout !== "grid" ? chunkedPosts.flat() : chunkedPosts[0]
   );
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const sm = useMediaQuery(theme.breakpoints.only("sm"));
   const md = useMediaQuery(theme.breakpoints.only("md"));
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
-  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   useEffect(() => {
     setChunkedPosts(
       splitChunks(
-        isAuthorized
-          ? props.posts
-          : _filterListOfStoredPostsOnPublished(props.posts, "published"),
-        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
+        _filterListOfStoredPostsOnPublished(props.posts, "published"),
+        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
       )
     );
     return () => {};
-  }, [isAuthorized]);
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
     setCurrentSlide(0);
     setPosts(
-      xs
-        ? chunkedPosts.flat()
-        : !gridView
+      !lgUp || cardLayout !== "grid"
         ? chunkedPosts.flat()
         : chunkedPosts[page - 1]
     );
     // instanceRef && instanceRef.current?.update;
     return () => {};
-  }, [chunkedPosts, gridView]);
+  }, [chunkedPosts, cardLayout, lgUp]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -123,7 +122,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
   const handleNextPage = () => {
     const endPage = Math.ceil(
       chunkedPosts.flat().length /
-        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE)
+        Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
     );
     if (page < endPage) {
       const newPage = Math.min(page + 1, endPage);
@@ -145,13 +144,11 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     event: React.MouseEvent<HTMLElement>,
     newView: string | null
   ) => {
-    // If toggle between anyways
-    // setGridView(newView);
-    if (newView == true || newView == false) setGridView(newView);
+    if (["carousel", "swipe", "grid", "list"].includes(newView))
+      setCardLayout(newView);
   };
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  // const [loaded, setLoaded] = useState(false);
   const [sliderRef, instanceRef] = useKeenSlider({
     mode: "free-snap",
     slides: {
@@ -164,10 +161,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
     },
-    // created() {
-    //   setLoaded(true);
-    // },
-    // range: { min: 0, max: posts.length, align: true },
     defaultAnimation: {
       duration: 3000,
     },
@@ -184,8 +177,11 @@ const LandingPage: FC<LandingPageProps> = (props) => {
       ) : (
         <Box
           sx={{
-            height: "100%",
+            height: "100vh",
             width: "100%",
+            maxHeight: cardLayout === "swipe" ? "100vh" : "default",
+            overflow: cardLayout === "swipe" ? "hidden" : "auto",
+            maxWidth: "100vw",
             background: theme.palette.primary.main,
             userSelect: "none",
           }}
@@ -199,84 +195,288 @@ const LandingPage: FC<LandingPageProps> = (props) => {
             display="flex"
             flexDirection="column"
             sx={{
-              minHeight: isMobile ? "100vh" : "calc(100vh - 64px)",
-              height: isMobile ? "100%" : "calc(100% - 64px)",
-              //background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
+              // minHeight: "calc(100vh ",
+              height:
+                xs && isMobile ? "calc(100% - 80px)" : "calc(100% - 40px)",
               background: theme.palette.primary.main,
-              paddingTop: isMobile ? "50px" : "10px",
+              paddingTop: isMobile ? "50px" : "80px",
               width: "100%",
             }}
           >
-            {xs ? (
-              <Box height="100%">
-                {/* Toggle line */}
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  px={lgUp ? "150px" : xs ? "10px" : "80px"}
-                  height="100%"
-                >
-                  <Box flexGrow={1} />
-                  {/* Grid View */}
+            <Box height="100%">
+              {/* Toggle line */}
+              <Box
+                display="flex"
+                flexDirection="row"
+                px={lgUp ? "150px" : xs ? "10px" : "80px"}
+              >
+                <Box flexGrow={1} />
+                <Box>
+                  {/* Navigation buttons if large screen grid layout */}
+                  {lgUp && cardLayout === "grid" ? (
+                    <ButtonGroup sx={{ paddingRight: 1 }}>
+                      <IconButton
+                        sx={{
+                          color: "text.primary",
+                        }}
+                        disabled={page <= 1}
+                        onClick={() => handlePreviousPage()}
+                      >
+                        <ArrowBackIosNewSharp color="inherit" />
+                      </IconButton>
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        sx={{ width: "40px" }}
+                      >
+                        <Typography variant="subtitle2" color="textPrimary">
+                          {page}
+                        </Typography>
+                      </Box>
+                      <IconButton
+                        sx={{
+                          color: "text.primary",
+                        }}
+                        disabled={
+                          !(
+                            page <
+                            Math.ceil(
+                              chunkedPosts.flat().length /
+                                Number(
+                                  process.env
+                                    .NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT
+                                )
+                            )
+                          )
+                        }
+                        onClick={() => handleNextPage()}
+                      >
+                        <ArrowForwardIosSharp color="inherit" />
+                      </IconButton>
+                    </ButtonGroup>
+                  ) : null}
+                  {/* Toggle for switching layouts */}
                   <ToggleButtonGroup
-                    value={gridView}
+                    value={cardLayout}
                     exclusive
                     onChange={handleChangeView}
                     size="small"
                   >
                     <ToggleButton
-                      value={false}
-                      selected={!gridView}
-                      disabled={!gridView}
+                      value={"carousel"}
+                      selected={cardLayout === "carousel"}
+                      disabled={cardLayout === "carousel"}
                     >
-                      <ViewColumnRounded
+                      {/* <ViewCarouselSharp
                         sx={{ color: theme.palette.text.primary }}
-                      />
+                      /> */}
+                      <Tooltip enterDelay={2000} title="Carousel layout">
+                        <ViewWeekSharp
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
                     </ToggleButton>
                     <ToggleButton
-                      value={true}
-                      selected={gridView}
-                      disabled={gridView}
+                      value={"swipe"}
+                      selected={cardLayout === "swipe"}
+                      disabled={cardLayout === "swipe"}
                     >
-                      <GridView sx={{ color: theme.palette.text.primary }} />
+                      <Tooltip enterDelay={2000} title="Swipe layout">
+                        <ViewCarousel
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton
+                      value={"grid"}
+                      selected={cardLayout === "grid"}
+                      disabled={cardLayout === "grid"}
+                    >
+                      <Tooltip enterDelay={2000} title="Grid layout">
+                        <GridViewSharp
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton
+                      value={"list"}
+                      selected={cardLayout === "list"}
+                      disabled={cardLayout === "list"}
+                    >
+                      <Tooltip enterDelay={2000} title="List layout">
+                        <TableRowsSharp
+                          sx={{ color: theme.palette.text.primary }}
+                        />
+                      </Tooltip>
                     </ToggleButton>
                   </ToggleButtonGroup>
                 </Box>
-                {/* Content */}
-                <Box>
-                  {/* Grid View */}
-                  {gridView ? (
-                    <Grid
-                      container
-                      rowSpacing={mdDown ? 2 : md ? 3 : 3}
-                      columnSpacing={mdDown ? 0 : xl ? 5 : 3}
-                      sx={{
-                        width: "100%",
-                        paddingX: lgUp ? 18 : xs ? 2 : 10,
-                        paddingTop: xs ? 1 : 0,
-                        paddingBottom: lgUp ? 0 : xs ? 5 : 2.5,
-                        margin: 0,
-                      }}
-                    >
+              </Box>
+
+              {/* Content */}
+              <Box height="100%">
+                {/* Card layouts */}
+                {cardLayout === "carousel" ? (
+                  <Box
+                    height="100%"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      my: xs ? (isMobile ? 4 : 6) : 0,
+                      paddingX: "0px",
+                      paddingY: xs ? "20px" : 8,
+                    }}
+                  >
+                    <Box ref={sliderRef} className="keen-slider">
                       {posts.map((data, index) => {
                         return (
-                          <Grid
-                            item
+                          <Box
+                            className="keen-slider__slide"
                             key={index}
-                            xs={12}
-                            md={6}
-                            lg={index % 4 === 0 ? 12 : 4}
-                            xl={6}
-                            // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
+                            sx={{
+                              minWidth: xs ? "calc(100vw)" : "350px",
+                              paddingX: xs ? "25px" : 0,
+                            }}
                           >
-                            <LandingPageGridCard
+                            {data ? (
+                              <LandingPageCarouselCard
+                                author={data.author}
+                                readTime={data.readTime}
+                                id={data.id}
+                                image={data.image}
+                                title={data.title}
+                                createdAt={data.createdAt}
+                                updatedAt={data.updatedAt}
+                                description={data.description}
+                                type={data.type}
+                                tags={data.tags}
+                                published={data.published}
+                              />
+                            ) : null}
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                    <Box flexGrow={1} />
+                    {/* <Box mt={xs ? 4 : 7}> */}
+                    <ButtonGroup sx={{ padding: 1, gap: 1 }}>
+                      <IconButton
+                        sx={{
+                          color: "text.primary",
+                        }}
+                        onClick={(e) =>
+                          e.stopPropagation() || instanceRef.current?.prev()
+                        }
+                        disabled={currentSlide === 0}
+                      >
+                        <ArrowBackIosNewSharp color="inherit" />
+                      </IconButton>
+                      <IconButton
+                        sx={{
+                          color: "text.primary",
+                        }}
+                        onClick={(e) =>
+                          e.stopPropagation() || instanceRef.current?.next()
+                        }
+                        disabled={
+                          xs
+                            ? currentSlide === posts.length - 1
+                            : currentSlide ===
+                              posts.length - (sm ? 1 : md ? 1 : lg ? 2 : 2)
+                        }
+                      >
+                        <ArrowForwardIosSharp color="inherit" />
+                      </IconButton>
+                    </ButtonGroup>
+                    <Box flexGrow={1} />
+                  </Box>
+                ) : cardLayout === "swipe" ? (
+                  <Box
+                    height="100%"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      my: xs ? (isMobile ? 4 : 6) : 0,
+                      paddingX: "0px",
+                      paddingY: xs ? "20px" : 8,
+                    }}
+                  >
+                    <TinderSwipe posts={posts.slice().reverse()} />
+                  </Box>
+                ) : cardLayout === "grid" ? (
+                  <Grid
+                    container
+                    rowSpacing={xs ? 2 : 3}
+                    columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+                    sx={{
+                      width: "100%",
+                      paddingTop: xs ? 1 : 2.5,
+                      paddingX: lgUp ? "150px" : xs ? 2 : "80px",
+                      paddingBottom: lgUp ? "0px" : 5,
+                      margin: 0,
+                    }}
+                  >
+                    {posts.map((data, index) => {
+                      return (
+                        <Grid
+                          item
+                          key={index}
+                          xs={12}
+                          md={6}
+                          // lg={index % 4 === 0 ? 12 : 4}
+                          lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
+                          // xl={6}
+                          // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
+                        >
+                          <LandingPageGridCard
+                            author={data.author}
+                            readTime={data.readTime}
+                            id={data.id}
+                            image={data.image}
+                            title={data.title}
+                            createdAt={data.createdAt}
+                            updatedAt={data.updatedAt}
+                            description={data.description}
+                            type={data.type}
+                            tags={data.tags}
+                            published={data.published}
+                            enlargeOnHover={false}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                ) : cardLayout === "list" ? (
+                  <Grid
+                    container
+                    rowSpacing={xs ? 2.5 : 3}
+                    columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+                    sx={{
+                      width: "100%",
+                      paddingTop: mdDown ? 1 : 2.5,
+                      paddingX: lgUp ? "150px" : xs ? 2 : "80px",
+                      paddingBottom: xs ? 5 : 7,
+                      margin: 0,
+                    }}
+                  >
+                    {posts.map((data, index) => {
+                      return (
+                        <>
+                          <Grid item key={index} md={2} lg={3} />
+                          <Grid item key={index} xs={12} sm={12} md={8} lg={6}>
+                            <LandingPageListCard
                               author={data.author}
                               readTime={data.readTime}
                               id={data.id}
-                              icon={data.icon}
                               image={data.image}
                               title={data.title}
-                              timestamp={data.timestamp}
+                              createdAt={data.createdAt}
+                              updatedAt={data.updatedAt}
                               description={data.description}
                               type={data.type}
                               tags={data.tags}
@@ -284,302 +484,14 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                               enlargeOnHover={false}
                             />
                           </Grid>
-                        );
-                      })}
-                    </Grid>
-                  ) : (
-                    <Box height="100%">
-                      <Box flexGrow={1} />
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        my={isMobile ? 4 : 6}
-                        sx={{
-                          padding: lgUp ? "0 150px" : xs ? "20px 0" : "0 80px",
-                        }}
-                      >
-                        <Box
-                          ref={sliderRef}
-                          className="keen-slider"
-                          // sx={{ padding: 2 }}
-                        >
-                          {posts.map((data, index) => {
-                            return (
-                              <Box
-                                className="keen-slider__slide"
-                                key={index}
-                                sx={{
-                                  minWidth: xs ? "calc(100vw)" : "350px",
-                                  paddingX: xs ? "25px" : 0,
-                                  // boxShadow:
-                                  //   "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-                                }}
-                              >
-                                {data ? (
-                                  <LandingPageCarouselCard
-                                    author={data.author}
-                                    readTime={data.readTime}
-                                    id={data.id}
-                                    icon={data.icon}
-                                    image={data.image}
-                                    title={data.title}
-                                    timestamp={data.timestamp}
-                                    description={data.description}
-                                    type={data.type}
-                                    tags={data.tags}
-                                    published={data.published}
-                                  />
-                                ) : null}
-                              </Box>
-                            );
-                          })}
-                        </Box>
-                        <Box mt={4}>
-                          <ButtonGroup sx={{ padding: 1 }}>
-                            <IconButton
-                              sx={{
-                                color: "text.primary",
-                                paddingRight: 2,
-                              }}
-                              onClick={(e) =>
-                                e.stopPropagation() ||
-                                instanceRef.current?.prev()
-                              }
-                              disabled={currentSlide === 0}
-                            >
-                              <ArrowBackIosNewSharp color="inherit" />
-                            </IconButton>
-                            <IconButton
-                              sx={{
-                                color: "text.primary",
-                              }}
-                              onClick={(e) =>
-                                e.stopPropagation() ||
-                                instanceRef.current?.next()
-                              }
-                              disabled={currentSlide === posts.length - 1}
-                            >
-                              <ArrowForwardIosSharp color="inherit" />
-                            </IconButton>
-                          </ButtonGroup>
-                        </Box>
-                      </Box>
-                      <Box flexGrow={1} />
-                    </Box>
-                  )}
-                </Box>
+                          <Grid item key={index} md={2} lg={3} />
+                        </>
+                      );
+                    })}
+                  </Grid>
+                ) : null}
               </Box>
-            ) : (
-              <Box height="calc(100%)">
-                {/* Toggle line */}
-                <Box flexGrow={1} />
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  px={lgUp ? "150px" : xs ? "50px" : "80px"}
-                  height="100%"
-                >
-                  <Box flexGrow={1} />
-                  <Box>
-                    {gridView ? (
-                      <ButtonGroup sx={{ paddingRight: 1 }}>
-                        <IconButton
-                          sx={{
-                            color: "text.primary",
-                          }}
-                          disabled={page <= 1}
-                          onClick={() => handlePreviousPage()}
-                        >
-                          <ArrowBackIosNewSharp color="inherit" />
-                        </IconButton>
-                        <Box
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{ width: "40px" }}
-                        >
-                          <Typography variant="subtitle2" color="textPrimary">
-                            {page}
-                          </Typography>
-                        </Box>
-                        <IconButton
-                          sx={{
-                            color: "text.primary",
-                          }}
-                          disabled={
-                            !(
-                              page <
-                              Math.ceil(
-                                chunkedPosts.flat().length /
-                                  Number(
-                                    process.env
-                                      .NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE
-                                  )
-                              )
-                            )
-                          }
-                          onClick={() => handleNextPage()}
-                        >
-                          <ArrowForwardIosSharp color="inherit" />
-                        </IconButton>
-                      </ButtonGroup>
-                    ) : null}
-                    <ToggleButtonGroup
-                      value={gridView}
-                      exclusive
-                      onChange={handleChangeView}
-                      size="small"
-                    >
-                      <ToggleButton
-                        value={false}
-                        selected={!gridView}
-                        disabled={!gridView}
-                      >
-                        <ViewColumnRounded
-                          sx={{ color: theme.palette.text.primary }}
-                        />
-                      </ToggleButton>
-                      <ToggleButton
-                        value={true}
-                        selected={gridView}
-                        disabled={gridView}
-                      >
-                        <GridView sx={{ color: theme.palette.text.primary }} />
-                      </ToggleButton>
-                    </ToggleButtonGroup>
-                  </Box>
-                </Box>
-                <Box flexGrow={1} />
-                {/* Content */}
-                <Box>
-                  {/* Grid View */}
-                  {gridView ? (
-                    <Grid
-                      container
-                      rowSpacing={mdDown ? 3 : md ? 3 : 3}
-                      columnSpacing={mdDown ? 0 : xl ? 5 : 3}
-                      sx={{
-                        width: "100%",
-                        paddingX: lgUp ? "150px" : xs ? "50px" : "80px",
-                        paddingBottom: lgUp ? "0px" : xs ? "30px" : "20px",
-                        margin: 0,
-                      }}
-                    >
-                      {posts.map((data, index) => {
-                        return (
-                          <Grid
-                            item
-                            key={index}
-                            xs={12}
-                            md={6}
-                            lg={index % 4 === 0 ? 12 : 4}
-                            xl={6}
-                            // xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
-                          >
-                            <LandingPageGridCard
-                              author={data.author}
-                              readTime={data.readTime}
-                              id={data.id}
-                              icon={data.icon}
-                              image={data.image}
-                              title={data.title}
-                              timestamp={data.timestamp}
-                              description={data.description}
-                              type={data.type}
-                              tags={data.tags}
-                              published={data.published}
-                            />
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
-                  ) : (
-                    <Box height="100%">
-                      <Box flexGrow={1} />
-                      <Box
-                        height="100%"
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        py={8}
-                        sx={{ paddingX: "0px" }}
-                      >
-                        <Box
-                          ref={sliderRef}
-                          className="keen-slider"
-                          // sx={{ padding: 2 }}
-                        >
-                          {posts.map((data, index) => {
-                            return (
-                              <Box
-                                className="keen-slider__slide"
-                                key={index}
-                                sx={{
-                                  minWidth: "350px",
-                                  // boxShadow:
-                                  //   "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-                                }}
-                              >
-                                {data ? (
-                                  <LandingPageCarouselCard
-                                    author={data.author}
-                                    readTime={data.readTime}
-                                    id={data.id}
-                                    icon={data.icon}
-                                    image={data.image}
-                                    title={data.title}
-                                    timestamp={data.timestamp}
-                                    description={data.description}
-                                    type={data.type}
-                                    tags={data.tags}
-                                    published={data.published}
-                                  />
-                                ) : null}
-                              </Box>
-                            );
-                          })}
-                        </Box>
-                        <Box mt={7}>
-                          <ButtonGroup sx={{ padding: 1 }}>
-                            <IconButton
-                              sx={{
-                                color: "text.primary",
-                              }}
-                              onClick={(e) =>
-                                e.stopPropagation() ||
-                                instanceRef.current?.prev()
-                              }
-                              disabled={currentSlide === 0}
-                            >
-                              <ArrowBackIosNewSharp color="inherit" />
-                            </IconButton>
-                            <IconButton
-                              sx={{
-                                color: "text.primary",
-                              }}
-                              onClick={(e) =>
-                                e.stopPropagation() ||
-                                instanceRef.current?.next()
-                              }
-                              disabled={
-                                currentSlide ===
-                                posts.length - (sm ? 1 : md ? 1 : lg ? 2 : 2)
-                              }
-                            >
-                              <ArrowForwardIosSharp color="inherit" />
-                            </IconButton>
-                          </ButtonGroup>
-                        </Box>
-                      </Box>
-                      <Box flexGrow={1} />
-                    </Box>
-                  )}
-                </Box>
-              </Box>
-            )}
+            </Box>
           </Box>
         </Box>
       )}

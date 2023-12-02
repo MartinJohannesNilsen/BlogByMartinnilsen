@@ -26,6 +26,7 @@ type SEOProps = {
 
 export const DEFAULT_OGIMAGE =
   "https://blog.mjntech.dev/assets/icons/ogimage.png";
+export const DEFAULT_ICON = "https://mjntech.dev/assets/imgs/mjntechdev.png";
 
 export const SEO = ({ children, pageMeta }: SEOProps) => {
   const { theme } = useTheme();

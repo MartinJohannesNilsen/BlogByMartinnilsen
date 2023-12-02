@@ -31,16 +31,31 @@ export default async function handler(
     }
   } else if (req.method === "PUT") {
     // Set field of post
-    const { data } = req.body;
-    if (!data) res.status(400).send("data is required");
+    const { data, ...fields } = req.body;
+    if (Object.keys(fields).length === 0) {
+      return res.status(400).send("Need to have some fields for update!");
+    }
 
     // Fetch post
-    let post = await getDoc(doc(db, "posts", String(postId))).then((data) =>
-      data.data()
-    );
+    let post = await getDoc(doc(db, "posts", String(postId)))
+      .then((docSnapshot) => docSnapshot.data())
+      .catch((error) => {
+        console.error("Error fetching document:", error);
+        return null;
+      });
     if (!post) return res.status(422).send("Id not found!");
+
+    // Check if 'data' is set to be updated and not already a string, then stringify it
+    if (data !== undefined && typeof data !== "string") {
+      fields.data = JSON.stringify(data);
+    }
+
+    // Alter post
+    const updatedPost = { ...post, ...fields };
+
+    // Push updates
     const docRef = doc(db, "posts", String(postId));
-    await updateDoc(docRef, post)
+    await updateDoc(docRef, updatedPost)
       .then((data) => {
         return res.status(200).send("");
       })

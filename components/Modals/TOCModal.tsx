@@ -7,7 +7,22 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { TOCModalProps } from "../../types";
-import colorLuminance from "../../utils/colorLuminance";
+import DOMPurify from "dompurify";
+
+export function extractHeaders(html: string) {
+  const regex =
+    /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
+  const headings = [];
+  let match;
+  while ((match = regex.exec(html))) {
+    headings.push({
+      type: `h${match[3]}`,
+      id: match[2],
+      text: match[4],
+    });
+  }
+  return headings;
+}
 
 export const TOCModal = (props: TOCModalProps) => {
   const { theme } = useTheme();
@@ -19,8 +34,8 @@ export const TOCModal = (props: TOCModalProps) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: xs ? 350 : 500,
-    maxHeight: "60vh",
+    width: xs ? 370 : 500,
+    maxHeight: "70vh",
     bgcolor: "background.paper",
     borderRadius: 2,
     outline: 0,
@@ -33,133 +48,137 @@ export const TOCModal = (props: TOCModalProps) => {
     p: 4,
   };
 
-  function extractHeaders(html: string) {
-    const regex =
-      /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
-    const headings = [];
-    let match;
-    while ((match = regex.exec(html))) {
-      headings.push({
-        type: `h${match[3]}`,
-        id: match[2],
-        text: match[4],
-      });
-    }
-    return headings;
-  }
-
   const TableOfContents = useMemo(() => {
-    if (!props.outputString) return null;
-    const headings: { type: string; id: string | null; text: string }[] =
-      extractHeaders(props.outputString);
+    function decodeHtml(html) {
+      var txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    }
+    if (!props.headings) return null;
     const elements: JSX.Element[] = [
       <ButtonBase
         onClick={() => {
           props.handleModalClose();
           window.scrollTo(0, 0);
-          router.replace(window.location.pathname + window.location.search);
+          // router.replace(window.location.pathname + window.location.search);
+          router.replace(window.location.pathname);
         }}
-        sx={{ maxWidth: "100%" }}
+        sx={{
+          maxWidth: "100%",
+          color: theme.palette.text.primary,
+          "&:hover": {
+            color: theme.palette.secondary.main,
+          },
+        }}
       >
         <Typography
           sx={{
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
             overflow: "hidden",
-            color: theme.palette.text.primary,
             fontFamily: theme.typography.fontFamily,
             textDecoration: "none",
-            marginLeft: theme.spacing(0),
+            paddingLeft: theme.spacing(1),
             fontWeight: 600,
             fontSize: 14,
-            borderBottom:
-              "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
-            "&:hover": {
-              borderBottom: "2px solid " + theme.palette.secondary.main,
-            },
+            borderLeft:
+              props.postTitle === props.currentSection
+                ? "2px solid " + theme.palette.secondary.main
+                : "2px solid rgba(120, 120, 120, 0.2)",
           }}
         >
           {props.postTitle}
         </Typography>
       </ButtonBase>,
     ];
-    headings.map((heading) =>
+    props.headings.map((heading) => {
       elements.push(
         <ButtonBase
+          key={heading.id}
           onClick={() => {
             props.handleModalClose();
-            router.replace(`#${heading.id}`);
+            router.replace("#" + decodeHtml(heading.id));
           }}
-          sx={{ maxWidth: "100%" }}
+          sx={{
+            maxWidth: "100%",
+            color: theme.palette.text.primary,
+            "&:hover": {
+              color: theme.palette.secondary.main,
+            },
+          }}
         >
           <Typography
             sx={{
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
               overflow: "hidden",
-              color: theme.palette.text.primary,
               fontFamily: theme.typography.fontFamily,
               textDecoration: "none",
-              marginLeft: theme.spacing(
-                parseInt(heading.type.substring(1)) - 1
-              ),
+              paddingLeft: theme.spacing(parseInt(heading.type.substring(1))),
               fontWeight: 600,
               fontSize: 14,
-              borderBottom:
-                "2px solid " +
-                colorLuminance(theme.palette.secondary.main, 0.15),
-              "&:hover": {
-                borderBottom: "2px solid " + theme.palette.secondary.main,
-              },
+              borderLeft:
+                heading.id === props.currentSection
+                  ? "2px solid " + theme.palette.secondary.main
+                  : "2px solid rgba(120, 120, 120, 0.2)",
             }}
-          >
-            {heading.text}
-          </Typography>
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(heading.text),
+            }}
+          />
         </ButtonBase>
-      )
-    );
-    return elements;
-  }, [props.outputString, theme]);
-
-  return (
-    <Box>
-      <Modal
-        open={props.open}
-        onClose={props.handleModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+      );
+    });
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        // gap="10px"
+        sx={{
+          overflowY: "scroll",
+          "& p": {
+            py: 0.3,
+          },
+        }}
       >
-        <Box sx={style}>
-          <IconButton
-            style={{ position: "absolute", top: "5px", right: "5px" }}
-            onClick={() => props.handleModalClose()}
-          >
-            <Close />
-          </IconButton>
-          <Typography
-            fontFamily={theme.typography.fontFamily}
-            variant="h5"
-            fontWeight="800"
-            color={theme.palette.text.primary}
-            mb={1}
-          >
-            Table of Contents
-          </Typography>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            gap="10px"
-            sx={{
-              overflowY: "scroll",
-            }}
-          >
+        {elements}
+      </Box>
+    );
+  }, [props.headings, theme]);
+
+  if (props.sidebarMode && props.sidebarMode === true)
+    return <Box>{TableOfContents}</Box>;
+  else
+    return (
+      <Box>
+        <Modal
+          open={props.open}
+          onClose={props.handleModalClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <IconButton
+              style={{ position: "absolute", top: "5px", right: "5px" }}
+              onClick={() => props.handleModalClose()}
+            >
+              <Close />
+            </IconButton>
+            <Typography
+              fontFamily={theme.typography.fontFamily}
+              variant="h5"
+              fontWeight="800"
+              color={theme.palette.text.primary}
+              mb={1}
+            >
+              Table of Contents
+            </Typography>
             {TableOfContents}
           </Box>
-        </Box>
-      </Modal>
-    </Box>
-  );
+        </Modal>
+      </Box>
+    );
 };
 export default TOCModal;

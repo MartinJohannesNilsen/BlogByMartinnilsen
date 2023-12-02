@@ -15,7 +15,7 @@ import { useTheme } from "../../ThemeProvider";
 import { defaultFontFamily } from "../../styles/themes/themeDefaults";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../types";
-import { CustomSwitch as Switch } from "../Switch/Switch";
+import { CustomSwitchNew as Switch } from "../Switch/Switch";
 
 const style = {
   position: "absolute" as "absolute",
@@ -75,7 +75,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
     "#37D67A",
     "#2CCCE4",
     "#555555",
-    "#f5bd3b",
+    "#E9B384",
     "#ff8a65",
     "#ba68c8",
     "#7ca18d",
@@ -121,7 +121,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
               Light Mode:
             </Typography>
             <Box flexGrow="1" />
-            <Box mt={-0.6} mr={-1.8}>
+            <Box mt={-0.2} mr={-1}>
               <Switch
                 checked={theme.palette.mode === "light"}
                 onChange={props.handleThemeChange}

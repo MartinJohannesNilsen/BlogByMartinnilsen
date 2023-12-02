@@ -3,7 +3,8 @@ import { themeCreator } from "./themeMap";
 
 export const defaultFontFamily =
   "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol";
-export const defaultAccentColor = "#29939b";
+// export const defaultAccentColor = "#29939b";
+export const defaultAccentColor = "#e9b384";
 
 // Create base theme
 const defaultTheme = createTheme();
@@ -20,13 +21,45 @@ export const baseTheme = createTheme({
     // Usage:
     h2: {},
     // Usage:
-    h3: { fontWeight: 800 },
+    h3: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "32px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "24px",
+      },
+    },
     // Usage:
-    h4: { fontWeight: 800 },
+    h4: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "24px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "22px",
+      },
+    },
     // Usage:
-    h5: { fontWeight: 800 },
+    h5: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "22px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "20px",
+      },
+    },
     // Usage:
-    h6: { fontWeight: 800 },
+    h6: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "20px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "18px",
+      },
+    },
 
     // Subtitles
     // Usage:
@@ -45,6 +78,12 @@ export const baseTheme = createTheme({
     body1: {
       // fontSize: "125%",
       fontWeight: 500,
+      // [defaultTheme.breakpoints.only("sm")]: {
+      //   fontSize: "15px",
+      // },
+      // [defaultTheme.breakpoints.only("xs")]: {
+      //   fontSize: "15px",
+      // },
     },
     // Usage:
     body2: {

@@ -4,24 +4,24 @@ import {
   Button,
   Card,
   CardActionArea,
-  CardMedia,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import DOMPurify from "isomorphic-dompurify";
-import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../ThemeProvider";
 import { PostCardProps } from "../../types";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
-import { isMobile } from "react-device-detect";
 import React from "react";
 import PostViews from "../PostViews/PostViews";
 
-export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
+export const LandingPageListCard: FC<PostCardProps> = (props) => {
   const { theme } = useTheme();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const lg = useMediaQuery(theme.breakpoints.only("lg"));
+  const xl = useMediaQuery(theme.breakpoints.only("xl"));
+  const [state, setState] = useState({
+    raised: false,
+  });
   const useStyles = makeStyles({
     root: {
       // transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
@@ -33,6 +33,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
         backgroundColor: theme.palette.primary.light,
       },
       backgroundColor: theme.palette.primary.light,
+      // boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px",
     },
   });
   const classes = useStyles();
@@ -40,6 +41,8 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   return (
     <Card
       className={classes.root}
+      // onMouseOver={() => setState({ raised: true })}
+      // onMouseOut={() => setState({ raised: false })}
       sx={{
         borderRadius: 4,
         boxShadow: "none",
@@ -49,29 +52,15 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
         // disableTouchRipple
         href={`/posts/${props.id}`}
         sx={{
-          height: xs ? (isMobile ? 490 : 540) : 520,
-          maxHeight: xs ? (isMobile ? 490 : 540) : 520,
+          // height: 240,
           width: "100%",
         }}
       >
-        {/* <CardMedia sx={{ height: 210 }}> */}
-        <CardMedia sx={{ height: xs ? 250 : 230 }}>
-          <Image
-            src={props.image || DEFAULT_OGIMAGE}
-            alt=""
-            fill={true}
-            style={{
-              objectFit: "cover",
-              borderRadius: 0,
-              maxHeight: xs ? 250 : 230,
-            }}
-          />
-        </CardMedia>
         <Box
           display="flex"
           flexDirection="column"
           sx={{
-            height: xs && isMobile ? "235px" : "285px",
+            height: "235px",
             padding: "10px 20px",
           }}
         >
@@ -88,6 +77,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
               color="textPrimary"
               fontFamily={theme.typography.fontFamily}
               sx={{
+                mt: 1,
                 lineHeight: "26px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -110,8 +100,8 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 display: "webkit-flex",
-                WebkitLineClamp: 5,
-                lineClamp: 5,
+                WebkitLineClamp: 3,
+                lineClamp: 3,
                 WebkitBoxOrient: "vertical",
               }}
             >
@@ -127,8 +117,8 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
               display="flex"
               flexDirection="row"
               alignItems="center"
-              pt={3}
-              pb={1}
+              pt={2}
+              pb={0.6}
             >
               {props.tags.map((tag, index) => (
                 <Button
@@ -238,4 +228,4 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
   );
 };
 
-export default LandingPageCarouselCard;
+export default LandingPageListCard;

@@ -38,6 +38,7 @@ import { addTag, getTags } from "../../database/tags";
 import { renderers } from "../../pages/posts/[postId]";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManageArticleViewProps } from "../../types";
+import { DEFAULT_ICON, DEFAULT_OGIMAGE } from "../SEO/SEO";
 let EditorBlock;
 if (typeof window !== "undefined") {
   EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -146,11 +147,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
     tags: [],
     title: "",
     description: "",
-    icon: "",
     image: "",
     data: { blocks: [] },
     author: "Martin Johannes Nilsen",
-    timestamp: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: -1,
     readTime: "",
   });
   const handleNavigate = (path: string) => {
@@ -191,8 +192,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
   // Width
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
-  const sm = useMediaQuery(theme.breakpoints.only("sm"));
-  const width = xs ? "380px" : sm ? "90vw" : "750px";
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const width = mdDown ? "90vw" : "750px";
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setIsPosted(false);
@@ -230,44 +231,39 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
         // If post exists, then update, or add new
         if (postId !== "") {
+          // Update field 'updatedAt' only when not localhost
+          if (process.env.NEXT_PUBLIC_LOCALHOST === "false") {
+            newObject.updatedAt = Date.now();
+          }
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
-              const key = enqueueSnackbar("Saving changes ...", {
+              enqueueSnackbar("Saving changes ...", {
                 variant: "default",
                 preventDuplicate: true,
-                onClick: () => {
-                  closeSnackbar(key);
-                },
               });
               updatePostsOverview({
                 id: postId,
                 title: newObject.title,
                 description: newObject.description,
-                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
-                timestamp: newObject.timestamp,
+                createdAt: newObject.createdAt,
+                updatedAt: newObject.updatedAt,
                 type: newObject.type,
                 tags: newObject.tags,
                 author: newObject.author,
                 readTime: newObject.readTime,
               }).then((overviewWasUpdated) => {
                 if (overviewWasUpdated) {
-                  const key = enqueueSnackbar("Your changes are saved!", {
+                  enqueueSnackbar("Your changes are saved!", {
                     variant: "success",
                     preventDuplicate: true,
-                    onClick: () => {
-                      closeSnackbar(key);
-                    },
                   });
                   setIsPosted(true);
                 } else {
-                  const key = enqueueSnackbar("An error occurred!", {
+                  enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
-                    onClick: () => {
-                      closeSnackbar(key);
-                    },
                   });
                 }
               });
@@ -276,44 +272,35 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
         } else {
           addPost(newObject).then((postId) => {
             if (postId) {
-              const key = enqueueSnackbar("Creating post ...", {
+              enqueueSnackbar("Creating post ...", {
                 variant: "default",
                 preventDuplicate: true,
-                onClick: () => {
-                  closeSnackbar(key);
-                },
               });
               addPostsOverview({
                 id: postId,
                 title: newObject.title,
                 description: newObject.description,
-                icon: newObject.icon,
                 image: newObject.image,
                 published: newObject.published,
-                timestamp: newObject.timestamp,
+                createdAt: newObject.createdAt,
+                updatedAt: newObject.updatedAt,
                 type: newObject.type,
                 tags: newObject.tags,
                 author: newObject.author,
                 readTime: newObject.readTime,
               }).then((overviewWasAdded) => {
                 if (overviewWasAdded) {
-                  const key = enqueueSnackbar("Successfully created post!", {
+                  enqueueSnackbar("Successfully created post!", {
                     variant: "success",
                     preventDuplicate: true,
-                    onClick: () => {
-                      closeSnackbar(key);
-                    },
                   });
                   setPostId(postId);
                   setIsPosted(true);
                   handleRevalidate(postId);
                 } else {
-                  const key = enqueueSnackbar("An error occurred!", {
+                  enqueueSnackbar("An error occurred!", {
                     variant: "error",
                     preventDuplicate: true,
-                    onClick: () => {
-                      closeSnackbar(key);
-                    },
                   });
                 }
               });
@@ -336,44 +323,32 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
   const handleDeletePost = () => {
     handleDeleteDialogClose();
-    const key = enqueueSnackbar("Deleting post ...", {
+    enqueueSnackbar("Deleting post ...", {
       variant: "default",
       preventDuplicate: true,
-      onClick: () => {
-        closeSnackbar(key);
-      },
     });
     deletePost(postId).then((postWasDeleted) => {
       if (postWasDeleted) {
         deletePostsOverview(postId).then((overviewWasUpdated) => {
           if (overviewWasUpdated) {
-            const key = enqueueSnackbar("Successfully deleted post!", {
+            enqueueSnackbar("Successfully deleted post!", {
               variant: "success",
               preventDuplicate: true,
-              onClick: () => {
-                closeSnackbar(key);
-              },
             });
             revalidatePages(["/", "/posts/" + postId]).then((res) => {
               handleNavigate("/");
             });
           } else {
-            const key = enqueueSnackbar("An error occured ...", {
+            enqueueSnackbar("An error occured ...", {
               variant: "error",
               preventDuplicate: true,
-              onClick: () => {
-                closeSnackbar(key);
-              },
             });
           }
         });
       } else {
-        const key = enqueueSnackbar("An error occured ...", {
+        enqueueSnackbar("An error occured ...", {
           variant: "error",
           preventDuplicate: true,
-          onClick: () => {
-            closeSnackbar(key);
-          },
         });
       }
     });
@@ -397,30 +372,21 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
   };
 
   const handleRevalidate = (postId) => {
-    const key = enqueueSnackbar("Revalidating pages ...", {
+    enqueueSnackbar("Revalidating pages ...", {
       variant: "default",
       preventDuplicate: true,
-      onClick: () => {
-        closeSnackbar(key);
-      },
     });
     revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
       if (res.status === 200) {
-        const key = enqueueSnackbar("Revalidated pages!", {
+        enqueueSnackbar("Revalidated pages!", {
           variant: "success",
           preventDuplicate: true,
-          onClick: () => {
-            closeSnackbar(key);
-          },
         });
         setIsRevalidated(true);
       } else {
-        const key = enqueueSnackbar("Error during revalidation!", {
+        enqueueSnackbar("Error during revalidation!", {
           variant: "error",
           preventDuplicate: true,
-          onClick: () => {
-            closeSnackbar(key);
-          },
         });
       }
     });
@@ -464,6 +430,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               <Box
                 display="flex"
                 alignItems="center"
+                minWidth={"380px"}
                 width={width}
                 py={2}
                 sx={{
@@ -574,20 +541,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 onChange={handleInputChange}
               />
               <StyledTextField
-                label="Icon"
-                name="icon"
-                error={
-                  data.icon &&
-                  data.icon.trim() !== "" &&
-                  !isvalidHTTPUrl(data.icon)
-                }
-                helperText={"Incorrect url format (missing http/https)"}
-                required
-                fullWidth
-                value={data.icon}
-                onChange={handleInputChange}
-              />
-              <StyledTextField
                 label="Open Graph Image"
                 name="image"
                 error={
@@ -649,7 +602,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
                 <Tooltip enterDelay={2000} title="Save changes" placement="top">
                   <Button
                     type="submit"
-                    disabled={isPosted}
+                    disabled={isPosted || editorJSContent.blocks.length === 0}
                     sx={{
                       border: isPosted
                         ? "2px solid green"
