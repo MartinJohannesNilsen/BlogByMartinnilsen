@@ -45,7 +45,7 @@ export const CodeBlock = (props: {
   const [stateData, setStateData] = useState(
     props.data || {
       code: "",
-      language: "plaintext",
+      language: "",
       multiline: true,
       linenumbers: false,
       textwrap: false,
@@ -99,6 +99,7 @@ export const CodeBlock = (props: {
                 sx={{ opacity: 0.6 }}
               >
                 <Input
+                  // disabled={!stateData.multiline}
                   value={stateData.filename}
                   onChange={(e) =>
                     setStateData({ ...stateData, filename: e.target.value })
@@ -325,9 +326,10 @@ export const CodeBlock = (props: {
                 style={EDITORTHEME}
                 wrapLongLines={stateData.textwrap}
                 customStyle={{
+                  height: !stateData.multiline && "54px",
+                  overflowY: "hidden",
                   backgroundColor: "rgb(36, 39, 46)",
                   margin: "0px",
-                  // marginTop: "-1px",
                   padding: "15px",
                   borderRadius: "0 0 10px 10px",
                 }}

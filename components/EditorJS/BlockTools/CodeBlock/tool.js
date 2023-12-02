@@ -11,7 +11,7 @@ export default class Tool extends React.Component{
     this.data = {
       code: data.code || "",
       language: data.language || "",
-      multiline: data.multiline || true,
+      multiline: data.multiline !== "undefined" && data.multiline !== "" ? data.multiline : true,
       linenumbers: data.linenumbers || false,
       textwrap: data.textwrap || false,
       filename: data.filename || "",

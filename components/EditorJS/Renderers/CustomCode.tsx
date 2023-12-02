@@ -66,7 +66,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
   };
 
   return (
-    <Box sx={{ position: "relative", borderRadius: "50px" }} my={1}>
+    <Box sx={{ position: "relative", borderRadius: "50px" }} my={2}>
       {props.data.multiline ? (
         // Multiline codeblock
         <Box>
@@ -137,7 +137,6 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
             customStyle={{
               backgroundColor: "rgb(36, 39, 46)",
               margin: "0px",
-              marginTop: "-1px",
               padding: "15px",
               borderRadius: "0 0 10px 10px",
             }}
@@ -180,9 +179,9 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
             }
             style={EDITORTHEME}
             customStyle={{
+              height: "54px",
+              overflowY: "hidden",
               backgroundColor: "rgb(36, 39, 46)",
-              margin: "0px",
-              marginTop: "-1px",
               padding: "15px",
               borderRadius: "10px 10px",
             }}
