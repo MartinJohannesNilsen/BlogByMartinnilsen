@@ -231,7 +231,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
         // If post exists, then update, or add new
         if (postId !== "") {
-          newObject.updatedAt = Date.now();
+          // Update field 'updatedAt' only when not localhost
+          if (process.env.NEXT_PUBLIC_LOCALHOST === "false") {
+            newObject.updatedAt = Date.now();
+          }
           updatePost(postId, newObject).then((postWasUpdated) => {
             if (postWasUpdated) {
               enqueueSnackbar("Saving changes ...", {
