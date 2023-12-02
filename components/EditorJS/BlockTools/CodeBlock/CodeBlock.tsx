@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { useTheme } from "../../../../ThemeProvider";
+import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import { EDITORTHEME } from "../../Renderers/CustomCode";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { allowedLanguages } from "./allowedLanguages";

@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../ThemeProvider";
+import { useTheme } from "../styles/themes/ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import Navbar from "../components/Navbar/Navbar";
 import SEO from "../components/SEO/SEO";

@@ -1,6 +1,6 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Fragment, useRef, useState } from "react";
-import { useTheme } from "../../../../ThemeProvider";
+import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import CustomVideo from "../../Renderers/CustomVideo";
 import { isvalidHTTPUrl } from "../../../PostManagement/PostManagement";
 

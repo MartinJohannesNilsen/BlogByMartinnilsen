@@ -8,7 +8,7 @@ import {
 import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
 import speechBalloon from "public/assets/imgs/speech-balloon.png";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 
 const CustomWarning = (props: EditorjsRendererProps) => {

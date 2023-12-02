@@ -1,6 +1,6 @@
 // General
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { cloudStorage } from "../../firebaseConfig";
+import { cloudStorage } from "../../lib/firebaseConfig";
 // Tools
 import CheckList from "@editorjs/checklist";
 import Embed from "@editorjs/embed";

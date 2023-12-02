@@ -13,7 +13,7 @@ import logo from "public/assets/imgs/terminal.png";
 import { FC, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { NavbarProps } from "../../types";
 import useAuthorized from "../AuthorizationHook/useAuthorized";

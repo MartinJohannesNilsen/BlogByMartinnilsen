@@ -26,7 +26,7 @@ import {
   RedditShareButton,
   TwitterShareButton,
 } from "react-share";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ShareModalProps } from "../../types";
 import SharePreviewCard from "../Cards/SharePreviewCard";
 

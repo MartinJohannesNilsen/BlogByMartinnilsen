@@ -1,7 +1,7 @@
 import { Create, Lock, Logout, Newspaper } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import { signOut } from "next-auth/react";
-import { useTheme } from "../ThemeProvider";
+import { useTheme } from "../styles/themes/ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";

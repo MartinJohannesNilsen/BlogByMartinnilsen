@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import ReactPlayer from "react-player/lazy";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";

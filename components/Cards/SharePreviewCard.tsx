@@ -1,7 +1,7 @@
 import { Box, Card, Typography } from "@mui/material";
 import Image from "next/image";
 import { FC } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { SharePreviewCardProps } from "../../types";
 
 export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {

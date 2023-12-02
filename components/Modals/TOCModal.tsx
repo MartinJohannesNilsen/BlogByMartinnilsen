@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TOCModalProps } from "../../types";
 import DOMPurify from "dompurify";
 

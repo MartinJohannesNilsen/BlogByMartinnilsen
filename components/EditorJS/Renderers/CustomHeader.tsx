@@ -2,7 +2,7 @@ import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import parse from "html-react-parser";
 import { CSSProperties, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 
 const defaultStyle: CSSProperties = {

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 
 const CustomDivider = () => {
   const { theme } = useTheme();

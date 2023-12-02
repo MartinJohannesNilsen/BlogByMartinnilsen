@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { FC, useState } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import React from "react";
 import PostViews from "../PostViews/PostViews";

@@ -11,7 +11,7 @@ import { makeStyles } from "@mui/styles";
 import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
 import { FC, useState } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import React from "react";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";

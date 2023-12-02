@@ -11,7 +11,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import Image from "next/image";
 import { FC, useState } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 import PostViews from "../PostViews/PostViews";

@@ -27,7 +27,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import {
   addPostsOverview,
   deletePostsOverview,

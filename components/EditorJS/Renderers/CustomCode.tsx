@@ -2,7 +2,7 @@ import { ContentCopy, CopyAll } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import { IoCheckmark, IoCopyOutline } from "react-icons/io5";
 

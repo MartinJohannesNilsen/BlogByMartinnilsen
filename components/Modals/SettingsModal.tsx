@@ -11,7 +11,7 @@ import { withStyles } from "@mui/styles";
 import { useState } from "react";
 import { BlockPicker } from "react-color";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { defaultFontFamily } from "../../styles/themes/themeDefaults";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../types";

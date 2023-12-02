@@ -14,7 +14,7 @@ import { BiCopy } from "react-icons/bi";
 import LaunchIcon from "@mui/icons-material/Launch";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { useSnackbar } from "notistack";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { StoredPost } from "../../types";
 import LandingPageSwipeCard from "../Cards/LandingPageSwipeCard";
 

@@ -2,7 +2,7 @@ import { Button, Link, useMediaQuery } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { makeStyles } from "@mui/styles";
 import { FC, useEffect, useState } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { getPostsOverview } from "../../database/overview";
 import { StoredPost, TablePost } from "../../types";
 import useSWR from "swr";
