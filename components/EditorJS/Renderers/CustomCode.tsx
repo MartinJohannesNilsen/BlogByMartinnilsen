@@ -1,10 +1,10 @@
 import { ContentCopy, CopyAll } from "@mui/icons-material";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
-import { IoCopyOutline } from "react-icons/io5";
+import { IoCheckmark, IoCopyOutline } from "react-icons/io5";
 
 // Themes
 import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
@@ -104,9 +104,6 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
                 }}
                 onClick={() => handleButtonClick(props.data.code!)}
                 startIcon={
-                  // <ContentCopy
-                  //   sx={{ color: "white", width: "15px", marginLeft: "5px" }}
-                  // />
                   <IoCopyOutline
                     size="16px"
                     style={{ margin: "0 -2px 0 2px" }}
@@ -141,7 +138,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
               borderRadius: "0 0 10px 10px",
             }}
           >
-            {props.data.code!}
+            {props.data.code}
           </SyntaxHighlighter>
         </Box>
       ) : (
@@ -151,26 +148,58 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
           onMouseLeave={handleMouseLeave}
           position="relative"
         >
-          {isCopyButtonVisible && (
-            <IconButton
+          {isCopyButtonVisible ? (
+            <Box
               sx={{
                 position: "absolute",
-                right: "8px",
+                right: "0",
                 top: "50%",
                 transform: "translateY(-50%)",
-                borderRadius: 2,
+                backgroundColor: "#25272D",
+                width: "46px",
               }}
-              onClick={() =>
-                copyToClipboard(
-                  props.data.multiline
-                    ? props.data.code
-                    : props.data.code.replace(/(\r\n|\n|\r)/gm, "")
-                )
-              }
             >
-              <IoCopyOutline />
-            </IconButton>
-          )}
+              {copyMessageShown ? (
+                <IconButton
+                  disabled={true}
+                  sx={{
+                    pr: 1,
+                    borderRadius: 2,
+                    "&:disabled": {
+                      color: "white",
+                      backgroundColor: "black",
+                    },
+                  }}
+                >
+                  <IoCheckmark />
+                </IconButton>
+              ) : (
+                <Tooltip title="Copy code" enterDelay={2000}>
+                  <IconButton
+                    sx={{
+                      pr: 1,
+                      borderRadius: 2,
+                      color: "white",
+                      backgroundColor: theme.palette.grey[800], // Change the alpha value for opacity
+                      "&:hover": {
+                        color: "white",
+                        backgroundColor: "black",
+                      },
+                    }}
+                    onClick={() =>
+                      handleButtonClick(
+                        props.data.multiline
+                          ? props.data.code
+                          : props.data.code.replace(/(\r\n|\n|\r)/gm, "")
+                      )
+                    }
+                  >
+                    <IoCopyOutline />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
+          ) : null}
           <SyntaxHighlighter
             language={
               props.data.language && props.data.language !== ""

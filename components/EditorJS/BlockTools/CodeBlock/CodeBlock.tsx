@@ -45,6 +45,7 @@ type CodeBlockProps = {
 export const CodeBlock = (props: CodeBlockProps) => {
   const { theme } = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const [stateData, setStateData] = useState(
     props.data || {
       code: "",
@@ -210,13 +211,17 @@ export const CodeBlock = (props: CodeBlockProps) => {
                     e.stopPropagation();
                   }
                 }}
+                // TODO Might want to further investigate this yielding a warning
+                isOptionEqualToValue={(option, value) =>
+                  option.language === value.language
+                }
                 options={allowedLanguagesOptions.sort(
                   (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
                 )}
                 groupBy={(option) => option.firstLetter}
                 getOptionLabel={(option) => option.language}
                 sx={{
-                  width: mdDown ? 150 : 200,
+                  width: mdDown ? (xs ? "100%" : 150) : 200,
                   ".MuiOutlinedInput-notchedOutline": {
                     borderColor: "#abb2bf",
                   },
