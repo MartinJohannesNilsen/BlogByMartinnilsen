@@ -44,14 +44,22 @@ export const baseTheme = createTheme({
     h5: {
       fontWeight: 800,
       [defaultTheme.breakpoints.only("sm")]: {
-        fontSize: "19px",
+        fontSize: "22px",
       },
       [defaultTheme.breakpoints.only("xs")]: {
-        fontSize: "17px",
+        fontSize: "20px",
       },
     },
     // Usage:
-    h6: { fontWeight: 800 },
+    h6: {
+      fontWeight: 800,
+      [defaultTheme.breakpoints.only("sm")]: {
+        fontSize: "20px",
+      },
+      [defaultTheme.breakpoints.only("xs")]: {
+        fontSize: "18px",
+      },
+    },
 
     // Subtitles
     // Usage:
