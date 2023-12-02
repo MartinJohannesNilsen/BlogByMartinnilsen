@@ -335,7 +335,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
               variant: "success",
               preventDuplicate: true,
             });
-            revalidatePages(["/", "/posts/" + postId]).then((res) => {
+            revalidatePages(["/", "tags", "/posts/" + postId]).then((res) => {
               handleNavigate("/");
             });
           } else {
