@@ -6,19 +6,16 @@ import {
   Autocomplete,
   TextField,
   Input,
-  InputAdornment,
-  IconButton,
   useMediaQuery,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useTheme } from "../../../../ThemeProvider";
 import { EDITORTHEME } from "../../Renderers/CustomCode";
-import DOMPurify from "isomorphic-dompurify";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { allowedLanguages } from "./allowedLanguages";
 import { InputElement, TextareaAutosizeElement } from "./styledMuiComponents";
-import { Clear } from "@mui/icons-material";
 
+// Functions
 const allowedLanguagesOptions = allowedLanguages.map((option) => {
   const firstLetter = option[0].toUpperCase();
   return {
@@ -27,21 +24,27 @@ const allowedLanguagesOptions = allowedLanguages.map((option) => {
   };
 });
 
-export const CodeBlock = (props: {
-  data: {
-    code: string;
-    language: string;
-    multiline: boolean;
-    linenumbers: boolean;
-    textwrap: boolean;
-    filename: string;
-    caption: string;
-    render: boolean;
-  };
+// Types
+type CodeBlockDataProps = {
+  code: string;
+  language: string;
+  multiline: boolean;
+  linenumbers: boolean;
+  textwrap: boolean;
+  filename: string;
+  caption: string;
+  render: boolean;
+};
+type CodeBlockProps = {
+  data: CodeBlockDataProps;
   onDataChange: (arg0: any) => void;
   readOnly: boolean;
-}) => {
+};
+
+// Component
+export const CodeBlock = (props: CodeBlockProps) => {
   const { theme } = useTheme();
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
   const [stateData, setStateData] = useState(
     props.data || {
       code: "",
@@ -54,19 +57,11 @@ export const CodeBlock = (props: {
       render: false,
     }
   );
-  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 
+  // Change Editorjs state on state change
   useEffect(() => {
     props.onDataChange(stateData);
   }, [stateData]);
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      // Optionally, you can stop the event propagation as well
-      event.stopPropagation();
-    }
-  };
 
   return (
     <Fragment>
@@ -236,6 +231,9 @@ export const CodeBlock = (props: {
                   ".MuiInputLabel-root": {
                     color: "#abb2bf",
                   },
+                  "&:focus-within .MuiInputLabel-root": {
+                    color: "white", // Color when focused
+                  },
                   ".MuiInputBase-input": {
                     color: "#abb2bf",
                   },
@@ -251,20 +249,8 @@ export const CodeBlock = (props: {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    sx={
-                      {
-                        // Apply white color to text
-                        // color: "white",
-                      }
-                    }
                     label="Language"
-                    InputLabelProps={
-                      {
-                        // Apply white color to label
-                        // style: { color: "white" },
-                      }
-                    }
-                    // Apply the outlined style
+                    InputLabelProps={null}
                     variant="outlined"
                   />
                 )}
@@ -309,6 +295,7 @@ export const CodeBlock = (props: {
           {/* Editor */}
           <Box
             sx={{
+              // TODO Does not seem to work, I want to be sure that linenumbers are not selected
               "&.react-syntax-highlighter-line-number": {
                 userSelect: "none",
                 WebkitUserSelect: "none",
@@ -340,7 +327,12 @@ export const CodeBlock = (props: {
               </SyntaxHighlighter>
             ) : stateData.multiline ? (
               <TextareaAutosizeElement
-                onKeyDown={handleKeyDown}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }
+                }}
                 sx={{
                   color: "#abb2bf",
                   background: "#282c34",
@@ -360,6 +352,12 @@ export const CodeBlock = (props: {
                 onChange={(e) => {
                   setStateData({ ...stateData, code: e.target.value });
                 }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && event.shiftKey) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }
+                }}
                 value={stateData.code}
                 sx={{
                   // marginBottom: 3,
@@ -371,7 +369,6 @@ export const CodeBlock = (props: {
             )}
           </Box>
         </Box>
-        {console.log(props.data)}
       </Box>
     </Fragment>
   );

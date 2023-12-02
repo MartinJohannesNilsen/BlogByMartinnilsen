@@ -3,20 +3,33 @@ import ReactDOM from 'react-dom';
 import CodeBlock from './CodeBlock';
 import { createRoot } from "react-dom/client";
 
+const dataDefaults = {
+  code: "",
+  language: "",
+  multiline: true,
+  linenumbers: false,
+  textwrap: false,
+  filename: "",
+  caption: "",
+  render: false,
+}
+
 export default class Tool extends React.Component{
   constructor({ data, config, api, readOnly }) {
     super({ data, config, api, readOnly })
     this.api = api;
     this.readOnly = readOnly;
+    this.dataDefaults = {...dataDefaults, ...config.dataDefaults}
     this.data = {
-      code: data.code || "",
-      language: data.language || "",
-      multiline: data.multiline !== "undefined" && data.multiline !== "" ? data.multiline : true,
-      linenumbers: data.linenumbers || false,
-      textwrap: data.textwrap || false,
-      filename: data.filename || "",
-      caption: data.caption || "",
-      render: data.render || false,
+      code: data.code || this.dataDefaults.code,
+      language: data.language || this.dataDefaults.language,
+      multiline: data.multiline !== undefined && data.multiline !== "" ? data.multiline : this.dataDefaults.multiline,
+      linenumbers: data.linenumbers !== undefined && data.linenumbers !== "" ? data.linenumbers : this.dataDefaults.linenumbers,
+      textwrap: data.textwrap !== undefined && data.textwrap !== "" ? data.textwrap : this.dataDefaults.textwrap,
+      filename: data.filename || this.dataDefaults.filename,
+      caption: data.caption || this.dataDefaults.caption,
+      render: data.render !== undefined && data.render !== "" ? data.render : this.dataDefaults.render,
+      ...config.data
     };
 
     this.CSS = {
