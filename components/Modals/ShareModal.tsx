@@ -127,20 +127,19 @@ export const ShareModal = (props: ShareModalProps) => {
                     fontFamily={theme.typography.fontFamily}
                     fontSize="10px"
                   >
-                    Copied link!
+                    Copied link
                   </Typography>
                 }
               >
-                <ButtonBase
+                <IconButton
                   onClick={() => {
                     setOpenCopiedLinkTooltip(true);
                     navigator.clipboard.writeText(window.location.href);
                   }}
                   disableRipple
                   sx={{
-                    width: "40px",
-                    height: "40px",
-                    fontSize: "26px",
+                    width: 40,
+                    height: 40,
                     color: theme.palette.text.primary,
                     "&:hover": {
                       color: theme.palette.secondary.main,
@@ -148,7 +147,7 @@ export const ShareModal = (props: ShareModalProps) => {
                   }}
                 >
                   <FaLink />
-                </ButtonBase>
+                </IconButton>
               </Tooltip>
             </ClickAwayListener>
             <EmailShareButton
@@ -160,7 +159,8 @@ export const ShareModal = (props: ShareModalProps) => {
             >
               <Mail
                 sx={{
-                  fontSize: 40,
+                  height: 40,
+                  width: 40,
                   color: theme.palette.text.primary,
                   "&:hover": {
                     color: theme.palette.secondary.main,
@@ -175,7 +175,8 @@ export const ShareModal = (props: ShareModalProps) => {
             >
               <Facebook
                 sx={{
-                  fontSize: 40,
+                  width: 40,
+                  height: 40,
                   color: theme.palette.text.primary,
                   "&:hover": {
                     color: theme.palette.secondary.main,
@@ -186,7 +187,8 @@ export const ShareModal = (props: ShareModalProps) => {
             <TwitterShareButton url={props.data.url} title={props.data.title}>
               <Twitter
                 sx={{
-                  fontSize: 40,
+                  width: 40,
+                  height: 40,
                   color: theme.palette.text.primary,
                   "&:hover": {
                     color: theme.palette.secondary.main,
@@ -202,7 +204,8 @@ export const ShareModal = (props: ShareModalProps) => {
             >
               <LinkedIn
                 sx={{
-                  fontSize: 40,
+                  width: 40,
+                  height: 40,
                   color: theme.palette.text.primary,
                   "&:hover": {
                     color: theme.palette.secondary.main,
@@ -213,7 +216,8 @@ export const ShareModal = (props: ShareModalProps) => {
             <RedditShareButton url={props.data.url} title={props.data.title}>
               <Reddit
                 sx={{
-                  fontSize: 40,
+                  width: 40,
+                  height: 40,
                   color: theme.palette.text.primary,
                   "&:hover": {
                     color: theme.palette.secondary.main,
