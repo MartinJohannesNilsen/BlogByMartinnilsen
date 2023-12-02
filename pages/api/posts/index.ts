@@ -35,8 +35,6 @@ export default async function handler(
     // Post new post
     return res.status(500).send("Not implemented yet!");
   } else {
-    return res
-      .status(405)
-      .send("Method not allowed, only GET and POST allowed!");
+    return res.status(405).send("Method not allowed, only GET allowed!");
   }
 }
