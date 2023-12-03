@@ -55,7 +55,11 @@ export const ThemeContext = createContext<ThemeContextType>({
 });
 export const useTheme = () => useContext(ThemeContext);
 
-const CustomThemeProvider: React.FC = (props) => {
+type CustomThemeProviderProps = {
+  children: React.ReactNode;
+};
+
+const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
   const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
   const [fontFamily, _setFontFamily] = useState(
     typeof window !== "undefined"
@@ -158,9 +162,7 @@ const CustomThemeProvider: React.FC = (props) => {
         setFontFamily,
       }}
     >
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
-      </StyledEngineProvider>
+      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </ThemeContext.Provider>
   );
 };

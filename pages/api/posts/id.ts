@@ -1,15 +1,54 @@
 import { doc, getDoc } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../lib/firebaseConfig";
+import { validateAuthAPIToken } from "..";
 
+/**
+ * @swagger
+ * /api/posts/id:
+ *   get:
+ *     summary: Get post ids
+ *     description: Retrieve a dictionary of postIds with their title.
+ *     tags:
+ *       - Posts
+ *     parameters:
+ *       - in: query
+ *         name: published
+ *         schema:
+ *           type: boolean
+ *         description: Optional. Filter by published status (true/false).
+ *     responses:
+ *       '200':
+ *         description: Successful response.
+ *         content:
+ *           application/json:
+ *             example:
+ *               postId: "Sample Post"
+ *       '400':
+ *         description: Bad Request. Invalid query parameter provided.
+ *         content:
+ *           application/json:
+ *             example:
+ *               code: 400
+ *               message: "Invalid query parameter provided."
+ *       '500':
+ *         description: Internal Server Error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               code: 500
+ *               reason: "Internal Server Error"
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!req.query.secret) {
-    return res.status(401).json({ message: "Missing token" });
-  } else if (req.query.secret !== process.env.NEXT_PUBLIC_POSTS_AUTH_KEY) {
-    return res.status(401).json({ message: "Invalid token" });
+  // Validate authorized access based on header field 'apikey'
+  const authValidation = validateAuthAPIToken(req);
+  if (!authValidation.isValid) {
+    return res
+      .status(authValidation.code)
+      .json({ code: authValidation.code, reason: authValidation.reason });
   }
 
   if (req.method === "GET") {
@@ -17,13 +56,25 @@ export default async function handler(
       const data = await getDoc(doc(db, "administrative", "overview")).then(
         (data) => data.data().values
       );
+
+      // Return all ids if query param published not present
       let outputJson = {};
-      data.map((post) => (outputJson[post.id] = post.title));
+      if (req.query.published === undefined) {
+        data.map((post) => (outputJson[post.id] = post.title));
+      } else if (req.query.published) {
+        if (req.query.published !== "true" && req.query.published !== "false") {
+          return res.status(400).json({
+            code: 400,
+            reason: "Unvalid boolean value for query parameter 'published'",
+          });
+        }
+        data
+          .filter((post) => post.published === (req.query.published === "true"))
+          .map((post) => (outputJson[post.id] = post.title));
+      }
       return res.status(200).send(outputJson);
     } catch (error) {
-      return res.status(500).json({ error: error });
+      return res.status(500).json({ code: 500, reason: error });
     }
-  } else {
-    return res.status(405).send("Method not allowed, only GET allowed!");
   }
 }

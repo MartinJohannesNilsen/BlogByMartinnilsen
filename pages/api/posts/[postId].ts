@@ -1,22 +1,63 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../lib/firebaseConfig";
+import { validateAuthAPIToken } from "..";
 
+/**
+ * @swagger
+ * /api/posts/{postId}:
+ *   get:
+ *     summary: Get post details by postId
+ *     description: Retrieve details for a specific post by providing the post ID.
+ *     tags:
+ *       - Posts
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The ID of the post.
+ *     responses:
+ *       '200':
+ *         description: Successful response.
+ *         content:
+ *           application/json:
+ *             example:
+ *               postId: "123"
+ *               postTitle: "Sample Post"
+ *       '404':
+ *         description: Post not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               code: 400
+ *               reason: "Post not found"
+ *       '500':
+ *         description: Internal Server Error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               code: 500
+ *               reason: "Internal Server Error"
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!req.query.secret) {
-    return res.status(401).json({ message: "Missing token" });
-  } else if (req.query.secret !== process.env.NEXT_PUBLIC_POSTS_AUTH_KEY) {
-    return res.status(401).json({ message: "Invalid token" });
+  // Validate authorized access based on header field 'apikey'
+  const authValidation = validateAuthAPIToken(req);
+  if (!authValidation.isValid) {
+    return res
+      .status(authValidation.code)
+      .json({ code: authValidation.code, reason: authValidation.reason });
   }
 
   // Check if id is provided
-  if (!req.query) {
-    return res.status(401).json({ message: "Missing id" });
-  }
   const { postId } = req.query;
+  if (!postId || postId == "{postId}" || postId === "") {
+    return res.status(400).json({ code: 400, reason: "Missing postId" });
+  }
 
   if (req.method === "GET") {
     // Get post by id
@@ -24,7 +65,8 @@ export default async function handler(
       const data = await getDoc(doc(db, "posts", String(postId))).then((data) =>
         data.data()
       );
-      if (!data) return res.status(422).send("Id not found!");
+      if (!data)
+        return res.status(404).json({ code: 404, reason: "Post not found" });
       return res.status(200).send(data);
     } catch (error) {
       return res.status(500).json({ error: error });

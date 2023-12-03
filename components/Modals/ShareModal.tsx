@@ -4,11 +4,12 @@ import {
   LinkedIn,
   Mail,
   Reddit,
+  Telegram,
   Twitter,
+  WhatsApp,
 } from "@mui/icons-material";
 import {
   Box,
-  ButtonBase,
   ClickAwayListener,
   IconButton,
   Modal,
@@ -21,20 +22,17 @@ import { useState } from "react";
 import { FaLink } from "react-icons/fa";
 import {
   EmailShareButton,
+  FacebookMessengerShareButton,
   FacebookShareButton,
   LinkedinShareButton,
   RedditShareButton,
+  TelegramShareButton,
   TwitterShareButton,
+  WhatsappShareButton,
 } from "react-share";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ShareModalProps } from "../../types";
 import SharePreviewCard from "../Cards/SharePreviewCard";
-
-const TransparentTooltip = withStyles({
-  tooltip: {
-    backgroundColor: "transparent",
-  },
-})(Tooltip);
 
 export const ShareModal = (props: ShareModalProps) => {
   const { theme } = useTheme();
@@ -99,7 +97,7 @@ export const ShareModal = (props: ShareModalProps) => {
             height={props.data.height}
           />
           {/* Button row */}
-          <Box display="flex" mt={2} columnGap={2}>
+          <Box display="flex" mt={2} columnGap={1.5}>
             <ClickAwayListener
               onClickAway={() => setOpenCopiedLinkTooltip(false)}
             >
@@ -168,34 +166,6 @@ export const ShareModal = (props: ShareModalProps) => {
                 }}
               />
             </EmailShareButton>
-            <FacebookShareButton
-              url={props.data.url}
-              title={props.data.title}
-              quote={props.data.description}
-            >
-              <Facebook
-                sx={{
-                  width: 40,
-                  height: 40,
-                  color: theme.palette.text.primary,
-                  "&:hover": {
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-              />
-            </FacebookShareButton>
-            <TwitterShareButton url={props.data.url} title={props.data.title}>
-              <Twitter
-                sx={{
-                  width: 40,
-                  height: 40,
-                  color: theme.palette.text.primary,
-                  "&:hover": {
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-              />
-            </TwitterShareButton>
             <LinkedinShareButton
               url={props.data.url}
               title={props.data.title}
@@ -213,6 +183,30 @@ export const ShareModal = (props: ShareModalProps) => {
                 }}
               />
             </LinkedinShareButton>
+            <TwitterShareButton url={props.data.url} title={props.data.title}>
+              <Twitter
+                sx={{
+                  width: 40,
+                  height: 40,
+                  color: theme.palette.text.primary,
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              />
+            </TwitterShareButton>
+            <FacebookShareButton url={props.data.url} title={props.data.title}>
+              <Facebook
+                sx={{
+                  width: 40,
+                  height: 40,
+                  color: theme.palette.text.primary,
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              />
+            </FacebookShareButton>
             <RedditShareButton url={props.data.url} title={props.data.title}>
               <Reddit
                 sx={{
@@ -225,6 +219,31 @@ export const ShareModal = (props: ShareModalProps) => {
                 }}
               />
             </RedditShareButton>
+            <WhatsappShareButton url={props.data.url} title={props.data.title}>
+              <WhatsApp
+                sx={{
+                  width: 40,
+                  height: 36,
+                  color: theme.palette.text.primary,
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              />
+            </WhatsappShareButton>
+            <TelegramShareButton url={props.data.url} title={props.data.title}>
+              <Telegram
+                sx={{
+                  marginLeft: -0.8,
+                  width: 40,
+                  height: 40,
+                  color: theme.palette.text.primary,
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              />
+            </TelegramShareButton>
           </Box>
         </Box>
       </Modal>

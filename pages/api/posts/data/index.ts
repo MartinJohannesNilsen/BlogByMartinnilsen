@@ -1,18 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { validateAuthAPIToken } from "../..";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!req.query.secret) {
-    return res.status(401).json({ message: "Missing token" });
-  } else if (req.query.secret !== process.env.NEXT_PUBLIC_POSTS_AUTH_KEY) {
-    return res.status(401).json({ message: "Invalid token" });
+  // Validate authorized access based on header field 'apikey'
+  const authValidation = validateAuthAPIToken(req);
+  if (!authValidation.isValid) {
+    return res
+      .status(authValidation.code)
+      .json({ code: authValidation.code, reason: authValidation.reason });
   }
 
   // Check if id is provided
   if (!req.query) {
-    return res.status(401).json({ message: "Missing id" });
+    return res.status(400).json({ code: 400, reason: "Missing postId" });
   }
 
   if (req.method === "POST") {

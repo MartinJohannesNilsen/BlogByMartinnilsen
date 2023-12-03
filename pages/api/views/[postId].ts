@@ -1,13 +1,34 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SupabaseAdmin } from "../../../lib/supabase-admin";
+import { validateAuthAPIToken } from "..";
 
+/**
+ * @swagger
+ * /api/views/[postId]:
+ *   get:
+ *     summary: Get view counts of post
+ *     description: Fetches view counts of post with id equal to parameter 'postId'.
+ *     responses:
+ *       '200':
+ *         description: Successful response.
+ *     tags:
+ *       - Views
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Validate authorized access based on header field 'apikey'
+  const authValidation = validateAuthAPIToken(req);
+  if (!authValidation.isValid) {
+    return res
+      .status(authValidation.code)
+      .json({ code: authValidation.code, reason: authValidation.reason });
+  }
+
   // Check if id is provided
   if (!req.query) {
-    return res.status(401).json({ message: "Missing id" });
+    return res.status(400).json({ code: 400, reason: "Missing postId" });
   }
   const { postId } = req.query;
 

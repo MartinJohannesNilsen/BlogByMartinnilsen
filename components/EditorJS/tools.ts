@@ -97,7 +97,7 @@ export const EDITOR_JS_TOOLS = {
       },
       unsplash: {
         appName: "tech_blog",
-        clientId: process.env.NEXT_PUBLIC_UNSPLASH_access_key,
+        clientId: process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY,
         maxResults: "12",
       },
     },
@@ -151,7 +151,7 @@ export const EDITOR_JS_TOOLS = {
   linkTool: {
     class: LinkTool,
     config: {
-      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/linkpreview", // Your backend endpoint for url data fetching,
+      endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/linkpreview", // Your backend endpoint for url data fetching,
     },
   },
   table: {

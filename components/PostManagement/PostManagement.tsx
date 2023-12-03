@@ -56,17 +56,12 @@ const revalidatePages = async (pages: string[]) => {
   try {
     const responses = await Promise.all(
       pages.map((page) => {
-        return fetch(
-          "/api/revalidate?secret=" +
-            process.env.NEXT_PUBLIC_REVALIDATION_AUTH_TOKEN +
-            "&path=" +
-            page,
-          {
-            headers: {
-              Accept: "application/json",
-            },
-          }
-        );
+        return fetch("/api/revalidate?path=" + page, {
+          headers: {
+            accept: "application/json",
+            apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
+          },
+        });
       })
     );
     const res: {
