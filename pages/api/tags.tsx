@@ -9,6 +9,8 @@ import { db } from "../../lib/firebaseConfig";
  *   get:
  *     summary: Get all tags
  *     description: Get all available tags.
+ *     tags:
+ *       - Default
  *     responses:
  *       '200':
  *         description: Successful response.
@@ -20,8 +22,8 @@ import { db } from "../../lib/firebaseConfig";
  *         description: Database entry 'tags' not found.
  *       '500':
  *         description: Internal Server Error.
- *     tags:
- *       - Default
+ *       '501':
+ *         description: Method not supported.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -35,14 +37,18 @@ export default async function handler(
       .json({ code: authValidation.code, reason: authValidation.reason });
   }
 
-  // Get tags
-  try {
-    const data = await getDoc(doc(db, "administrative", "tags")).then(
-      (data) => data.data().values
-    );
-    if (!data) return res.status(404).send("Tags not found!");
-    return res.status(200).send(data);
-  } catch (error) {
-    return res.status(500).json({ code: 400, reason: error });
+  if (req.method === "GET") {
+    // Get tags
+    try {
+      const data = await getDoc(doc(db, "administrative", "tags")).then(
+        (data) => data.data().values
+      );
+      if (!data) return res.status(404).send("Tags not found!");
+      return res.status(200).send(data);
+    } catch (error) {
+      return res.status(500).json({ code: 400, reason: error });
+    }
+  } else {
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

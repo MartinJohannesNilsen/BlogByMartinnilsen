@@ -3,6 +3,60 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../lib/firebaseConfig";
 import { validateAuthAPIToken } from "..";
 
+/**
+ * @swagger
+ * /api/posts:
+ *   get:
+ *     summary: Get posts
+ *     description: Retrieve details for all posts.
+ *     tags:
+ *       - Posts
+ *     parameters:
+ *       - in: query
+ *         name: parseData
+ *         required: false
+ *         schema:
+ *           type: boolean
+ *         description: Whether to parse data field of post.
+ *     responses:
+ *       '200':
+ *         description: Successful response.
+ *         content:
+ *           application/json:
+ *             example:
+ *              posts:
+ *               - id: "7FPz65Fkv8sHM3aDIx0r"
+ *                 document:
+ *                 - title: "Post title"
+ *                   description: "Post description"
+ *                   createdAt: 1701103064042
+ *                   type: "Tutorial"
+ *                   data: "{\"time\":1701472725450,\"blocks\":[],\"version\":\"2.28.2\"}"
+ *                   tags: ["Development","Python"]
+ *                   author: "Martin Johannes Nilsen"
+ *                   published: false
+ *                   updatedAt: 1701472730348
+ *                   readTime: "2 min read"
+ *                   image: ""
+ *              overview:
+ *               - id: "7FPz65Fkv8sHM3aDIx0r"
+ *                 title: "Post title"
+ *                 description: "Post description"
+ *                 createdAt: 1701103064042
+ *                 type: "Tutorial"
+ *                 tags: ["Development","Python"]
+ *                 author: "Martin Johannes Nilsen"
+ *                 published: false
+ *                 updatedAt: 1701472730348
+ *                 readTime: "2 min read"
+ *                 image: ""
+ *       '404':
+ *         description: Post not found.
+ *       '500':
+ *         description: Internal Server Error.
+ *       '501':
+ *         description: Method not supported.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -32,12 +86,9 @@ export default async function handler(
       response.overview = postOverviewSnapshot.data().values;
       return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json({ error: error });
+      return res.status(500).json({ code: 500, reason: error });
     }
-  } else if (req.method === "POST") {
-    // Post new post
-    return res.status(500).send("Not implemented yet!");
   } else {
-    return res.status(405).send("Method not allowed, only GET allowed!");
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

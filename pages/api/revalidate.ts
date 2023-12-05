@@ -7,6 +7,8 @@ import { validateAuthAPIToken } from ".";
  *   get:
  *     summary: Revalidate NextJS page
  *     description: Revalidates a Next.js page.
+ *     tags:
+ *       - Default
  *     parameters:
  *       - name: path
  *         in: query
@@ -23,8 +25,10 @@ import { validateAuthAPIToken } from ".";
  *              revalidated: true
  *       '400':
  *         description: Bad request. URL parameter is missing or invalid.
- *     tags:
- *       - Default
+ *       '500':
+ *         description: Internal Server Error.
+ *       '501':
+ *         description: Method not supported.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -45,16 +49,20 @@ export default async function handler(
       .json({ code: 400, reason: "Missing path to revalidate" });
   }
 
-  // Revalidate page
-  try {
-    // this should be the actual path not a rewritten path
-    // e.g. for "/blog/[slug]" this should be "/blog/idOfBlogPost"
-    await res.revalidate(req.query.path as string);
-    return res.json({ revalidated: true });
-  } catch (err) {
-    // If there was an error, Next.js will continue to show the last successfully generated page
-    return res
-      .status(400)
-      .json({ code: 400, reason: "Error during revalidation" });
+  if (req.method === "GET") {
+    // Revalidate page
+    try {
+      // this should be the actual path not a rewritten path
+      // e.g. for "/blog/[slug]" this should be "/blog/idOfBlogPost"
+      await res.revalidate(req.query.path as string);
+      return res.json({ revalidated: true });
+    } catch (err) {
+      // If there was an error, Next.js will continue to show the last successfully generated page
+      return res
+        .status(500)
+        .json({ code: 500, reason: "Error during revalidation" });
+    }
+  } else {
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

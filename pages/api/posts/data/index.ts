@@ -28,8 +28,6 @@ export default async function handler(
       return res.status(200).json({ data: JSON.stringify(data) });
     }
   } else {
-    return res
-      .status(405)
-      .send("Method not allowed, only GET and POST allowed!");
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

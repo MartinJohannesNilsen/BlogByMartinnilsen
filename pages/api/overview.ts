@@ -9,6 +9,8 @@ import { validateAuthAPIToken } from ".";
  *   get:
  *     summary: Get overview of posts
  *     description: Get all posts without data.
+ *     tags:
+ *       - Default
  *     responses:
  *       '200':
  *         description: Successful response.
@@ -34,8 +36,8 @@ import { validateAuthAPIToken } from ".";
  *         description: Database entry 'tags' not found.
  *       '500':
  *         description: Internal Server Error.
- *     tags:
- *       - Default
+ *       '501':
+ *         description: Method not supported.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -60,8 +62,6 @@ export default async function handler(
       return res.status(500).json({ error: error });
     }
   } else {
-    return res
-      .status(405)
-      .send("Method not allowed, only GET and POST allowed!");
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

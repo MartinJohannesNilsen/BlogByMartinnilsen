@@ -8,15 +8,19 @@ import { validateAuthAPIToken } from "..";
  *   get:
  *     summary: Get view counts of all posts
  *     description: Fetches view counts of all posts.
+ *     tags:
+ *       - Views
  *     responses:
  *       '200':
  *         description: Successful response.
  *         content:
  *          application/json:
  *           example:
- *            postId: 1
- *     tags:
- *       - Views
+ *            - postId: 1
+ *       '500':
+ *         description: Internal Server Error.
+ *       '501':
+ *         description: Method not supported.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -43,9 +47,7 @@ export default async function handler(
     } else if (error) {
       console.log("Error:", error);
     }
+  } else {
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
-
-  return res.status(500).json({
-    message: "Unsupported Request",
-  });
 }

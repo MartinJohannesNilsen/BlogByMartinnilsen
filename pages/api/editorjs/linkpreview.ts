@@ -33,6 +33,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *         description: Bad request. URL parameter is missing or invalid.
  *       '500':
  *         description: Internal server error.
+ *       '501':
+ *         description: Method not supported.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -51,19 +53,23 @@ export default async function handler(
     return res.status(400).json({ code: 400, reason: "Missing url" });
   }
 
-  try {
-    const api = await fetch(
-      "http://api.linkpreview.net/?key=" +
-        process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY +
-        "&q=" +
-        req.query.url
-    ).then((data) => data.json());
-    if (api.error === undefined) {
-      return res.json({ success: 1, meta: api });
-    } else {
-      return res.status(400).json({ code: 400, reason: "Invalid url" });
+  if (req.method === "GET") {
+    try {
+      const api = await fetch(
+        "http://api.linkpreview.net/?key=" +
+          process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY +
+          "&q=" +
+          req.query.url
+      ).then((data) => data.json());
+      if (api.error === undefined) {
+        return res.json({ success: 1, meta: api });
+      } else {
+        return res.status(400).json({ code: 400, reason: "Invalid url" });
+      }
+    } catch (err) {
+      return res.status(500).json({ code: 401, reason: err });
     }
-  } catch (err) {
-    return res.status(500).json({ code: 401, reason: err });
+  } else {
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

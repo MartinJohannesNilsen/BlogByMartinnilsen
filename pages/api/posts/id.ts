@@ -23,21 +23,13 @@ import { validateAuthAPIToken } from "..";
  *         content:
  *           application/json:
  *             example:
- *               postId: "Sample Post"
+ *               "qyOqoHY6lzVcUIJW75jI": "Sample Post"
  *       '400':
  *         description: Bad Request. Invalid query parameter provided.
- *         content:
- *           application/json:
- *             example:
- *               code: 400
- *               message: "Invalid query parameter provided."
  *       '500':
  *         description: Internal Server Error.
- *         content:
- *           application/json:
- *             example:
- *               code: 500
- *               reason: "Internal Server Error"
+ *       '501':
+ *         description: Method not supported.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -76,5 +68,7 @@ export default async function handler(
     } catch (error) {
       return res.status(500).json({ code: 500, reason: error });
     }
+  } else {
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

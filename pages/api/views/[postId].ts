@@ -8,11 +8,19 @@ import { validateAuthAPIToken } from "..";
  *   get:
  *     summary: Get view counts of post
  *     description: Fetches view counts of post with id equal to parameter 'postId'.
+ *     tags:
+ *       - Views
  *     responses:
  *       '200':
  *         description: Successful response.
- *     tags:
- *       - Views
+ *         content:
+ *          application/json:
+ *           example:
+ *            postId: 1
+ *       '500':
+ *         description: Internal Server Error.
+ *       '501':
+ *         description: Method not supported.
  */
 export default async function handler(
   req: NextApiRequest,
@@ -52,9 +60,7 @@ export default async function handler(
         view_count: data[0]?.view_count || null,
       });
     }
+  } else {
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
-
-  return res.status(400).json({
-    message: "Unsupported Request",
-  });
 }

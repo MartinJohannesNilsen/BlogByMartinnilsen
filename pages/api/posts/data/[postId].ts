@@ -37,8 +37,6 @@ export default async function handler(
       return res.status(500).json({ error: error });
     }
   } else {
-    return res
-      .status(405)
-      .send("Method not allowed, only GET and POST allowed!");
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }

@@ -31,9 +31,11 @@ export function validateAuthAPIToken(req: NextApiRequest) {
  * @swagger
  * /api:
  *   get:
+ *     security: []
  *     summary: Check if API is running
  *     description: Checking whether API is running.
- *     security: []
+ *     tags:
+ *       - Default
  *     responses:
  *       '200':
  *         description: Successful response.
@@ -43,18 +45,13 @@ export function validateAuthAPIToken(req: NextApiRequest) {
  *             "API is running"
  *       '500':
  *         description: Internal Server Error.
- *         content:
- *          application/json:
- *            example:
- *             code: 500
- *             reason: "Internal Server Error"
- *     tags:
- *       - Default
+ *       '501':
+ *         description: Method not supported.
  */
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     res.status(200).send("API is running");
   } else {
-    res.status(500).send("Internal Server Error");
+    return res.status(501).json({ code: 501, reason: "Method not supported" });
   }
 }
