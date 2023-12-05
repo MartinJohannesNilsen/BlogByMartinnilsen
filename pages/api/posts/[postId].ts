@@ -150,7 +150,7 @@ import { FirestoreFullPost } from "../../../types";
  *         content:
  *           application/plain:
  *             example:
- *              "Successfully deleted post: '7FPz85Fkv8sHN3aAIx0r'"
+ *              "Successfully deleted post '7FPz85Fkv8sHN3aAIx0r' without revalidating pages"
  *       '404':
  *         description: Post not found.
  *       '500':
