@@ -167,7 +167,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
                     borderRadius: 2,
                     "&:disabled": {
                       color: "white",
-                      backgroundColor: "black",
+                      // backgroundColor: "black",
+                      backgroundColor: "#20222A",
                     },
                   }}
                 >
@@ -183,7 +184,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
                       backgroundColor: theme.palette.grey[800], // Change the alpha value for opacity
                       "&:hover": {
                         color: "white",
-                        backgroundColor: "black",
+                        // backgroundColor: "black",
+                        backgroundColor: "#22242A",
                       },
                     }}
                     onClick={() =>

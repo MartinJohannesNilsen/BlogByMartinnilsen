@@ -234,17 +234,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   }, [post]);
 
   useEffect(() => {
-    // // When output element, not loading anymore
     // When status is updated, not loading anymore
     setIsLoading(false);
     // Increase view count in supabase db if not on localhost, post is published and user is not authorized
     process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
-    post.published &&
-    status == "unauthenticated"
-      ? fetch(`/api/views/${props.postId}`, {
-          method: "POST",
-        })
-      : null;
+      post.published &&
+      status === "unauthenticated" &&
+      fetch(`/api/views/${props.postId}`, {
+        method: "PUT",
+        headers: {
+          apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
+        },
+      });
   }, [status]);
 
   useEffect(() => {

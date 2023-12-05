@@ -9,9 +9,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
