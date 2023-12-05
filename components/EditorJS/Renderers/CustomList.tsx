@@ -4,6 +4,7 @@ import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import { makeStyles } from "@mui/styles";
 import colorLuminance from "../../../utils/colorLuminance";
+import CustomParagraph from "./CustomParagraph";
 
 const CustomList = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
@@ -48,18 +49,11 @@ const CustomList = (props: EditorjsRendererProps) => {
   if (props.data.items.length <= 0) return null;
   props.data.items!.map((item: string) => {
     items.push(
-      <Typography
-        variant="body1"
-        color="textPrimary"
-        fontFamily={theme.typography.fontFamily}
-        dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(
-            item
-              .replace(/<code .*?>/gm, code)
-              .replace(/<mark .*?>/gm, mark)
-              .replace(/<a href=/gm, link)
-          ),
-        }}
+      <CustomParagraph
+        data={{ text: item }}
+        style={{ boxMarginY: 0 }}
+        classNames={null}
+        config={null}
       />
     );
   });

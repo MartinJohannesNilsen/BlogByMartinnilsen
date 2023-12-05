@@ -74,6 +74,7 @@ export type EditorjsRendererProps = {
     render?: boolean;
   };
   style: {
+    boxMarginY?: number;
     h1?: CSSProperties;
     h2?: CSSProperties;
     h3?: CSSProperties;
