@@ -185,10 +185,21 @@ export function processJsonToggleBlocks(inputJson) {
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const post = props.post;
-  const { isAuthorized, status } =
+  const { isAuthorized, session, status } =
     process.env.NEXT_PUBLIC_LOCALHOST === "true"
       ? {
           isAuthorized: true,
+          session: {
+            user: {
+              name: "Martin the developer",
+              email: "martinjnilsen@gmail.com",
+              image:
+                "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+            },
+            expires: new Date(
+              Date.now() + 365 * 24 * 60 * 60 * 1000
+            ).toISOString(), // A year ahead
+          },
           status: "authenticated",
         }
       : useAuthorized(!post.published);
@@ -234,19 +245,26 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   }, [post]);
 
   useEffect(() => {
-    // When status is updated, not loading anymore
-    setIsLoading(false);
-    // Increase view count in supabase db if not on localhost, post is published and user is not authorized
+    // Increase view count in supabase db
+    // Esure not on localhost
     process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
+      // Ensure published post
       post.published &&
-      status === "unauthenticated" &&
+      // Ensure either unauthenticated or authenticated without being admin
+      (status === "unauthenticated" ||
+        (status === "authenticated" &&
+          session &&
+          session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
+      // All criterias are met, run PUT request to increment counter
       fetch(`/api/views/${props.postId}`, {
         method: "PUT",
         headers: {
           apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
         },
       });
-  }, [status]);
+    // When session is updated, not loading anymore
+    setIsLoading(false);
+  }, [session]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash) {
