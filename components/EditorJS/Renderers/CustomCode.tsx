@@ -70,7 +70,12 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
       sx={{
         position: "relative",
         borderRadius: "50px",
-        "& .language-plaintext code": { userSelect: "none" },
+        "& .language-plaintext code": {
+          userSelect: "none",
+          margin: "-15px 10px -15px -15px",
+          padding: "15px 0px 15px 15px",
+          backgroundColor: "rgb(30, 30, 30)",
+        },
       }}
       my={2}
     >

@@ -67,14 +67,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
   return (
     <Fragment>
       <Box sx={{ position: "relative", borderRadius: "50px" }} my={2}>
-        <Box
-          sx={{
-            "&.linenumber": {
-              userSelect: "none",
-              WebkitUserSelect: "none",
-            },
-          }}
-        >
+        <Box>
           {/* Header row */}
           <Box
             sx={{
@@ -300,7 +293,12 @@ export const CodeBlock = (props: CodeBlockProps) => {
           {/* Editor */}
           <Box
             sx={{
-              "& .language-plaintext code": { userSelect: "none" },
+              "& .language-plaintext code": {
+                userSelect: "none",
+                margin: "-15px 10px -15px -15px",
+                padding: "15px 0px 15px 15px",
+                backgroundColor: "rgb(30, 30, 30)",
+              },
             }}
           >
             {stateData.render ? (
