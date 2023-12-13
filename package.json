@@ -36,7 +36,6 @@
     "webpack": "^5.89.0"
   },
   "devDependencies": {
-    "@calumk/editorjs-codeflask": "^1.0.9",
     "@editorjs/checklist": "^1.6.0",
     "@editorjs/delimiter": "^1.4.0",
     "@editorjs/editorjs": "^2.28.2",
@@ -87,6 +86,7 @@
     "editorjs-latex": "^1.0.4",
     "editorjs-toggle-block": "^0.3.14",
     "editorjs-undo": "^2.0.26",
+    "emoji-picker-react": "^4.5.16",
     "eslint": "^8.55.0",
     "html-react-parser": "^5.0.6",
     "isomorphic-dompurify": "^1.11.0",

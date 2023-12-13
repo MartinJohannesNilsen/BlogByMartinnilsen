@@ -48,9 +48,6 @@ export type EditorjsRendererProps = {
           checked?: boolean;
         }
     ];
-    // Warning
-    title?: string;
-    message?: string;
     // Video
     autoplay?: boolean;
     controls?: boolean;
@@ -72,6 +69,11 @@ export type EditorjsRendererProps = {
     textwrap?: boolean;
     filename?: string;
     render?: boolean;
+    // Callout
+    icon?: string;
+    type?: string;
+    title?: string;
+    message?: string;
   };
   style: {
     boxMarginY?: number;

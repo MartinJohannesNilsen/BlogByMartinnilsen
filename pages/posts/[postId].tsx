@@ -25,7 +25,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { useRouter } from "next/navigation";
 import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
@@ -69,6 +68,7 @@ import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
+import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
 import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
 import PostViews from "../../components/PostViews/PostViews";
 import CustomToggle, {
@@ -120,6 +120,7 @@ export const renderers = {
   list: CustomList,
   iframe: CustomIframe,
   toggle: CustomToggle,
+  callout: CustomCallout,
 };
 
 export const handleSharing = async ({ url, title, text, icon, fallback }) => {
