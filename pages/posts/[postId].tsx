@@ -18,7 +18,6 @@ import {
   ButtonBase,
   Grid,
   IconButton,
-  Link,
   Stack,
   Tooltip,
   Typography,
@@ -66,7 +65,6 @@ import CustomPersonality from "../../components/EditorJS/Renderers/CustomPersona
 import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
-import CustomWarning from "../../components/EditorJS/Renderers/CustomWarning";
 import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
 import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
@@ -112,7 +110,6 @@ export const renderers = {
   linktool: CustomLinkTool,
   quote: CustomQuote,
   personality: CustomPersonality,
-  warning: CustomWarning,
   video: CustomVideo,
   checklist: CustomChecklist,
   table: CustomTable,
