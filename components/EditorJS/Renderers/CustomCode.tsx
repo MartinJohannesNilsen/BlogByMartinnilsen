@@ -66,13 +66,21 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
   };
 
   return (
-    <Box sx={{ position: "relative", borderRadius: "50px" }} my={2}>
+    <Box
+      sx={{
+        position: "relative",
+        borderRadius: "50px",
+        "& .language-plaintext code": { userSelect: "none" },
+      }}
+      my={2}
+    >
       {props.data.multiline ? (
         // Multiline codeblock
         <Box>
           {/* Header row */}
           <Box
             sx={{
+              userSelect: "none",
               backgroundColor: "#363642",
               borderRadius: "10px 10px 0px 0px",
               padding: "5px",
@@ -101,13 +109,23 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
                 disabled={copyMessageShown}
                 sx={{
                   color: "white",
+                  "&:disabled": {
+                    color: "white",
+                  },
                 }}
                 onClick={() => handleButtonClick(props.data.code!)}
                 startIcon={
-                  <IoCopyOutline
-                    size="16px"
-                    style={{ margin: "0 -2px 0 2px" }}
-                  />
+                  copyMessageShown ? (
+                    <IoCheckmark
+                      size="16px"
+                      style={{ margin: "0 -2px 0 2px" }}
+                    />
+                  ) : (
+                    <IoCopyOutline
+                      size="16px"
+                      style={{ margin: "0 -2px 0 2px" }}
+                    />
+                  )
                 }
               >
                 <Typography
@@ -130,6 +148,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
             }
             style={EDITORTHEME}
             showLineNumbers={props.data.linenumbers}
+            // showInlineLineNumbers={true}
+            showInlineLineNumbers={false}
             wrapLongLines={props.data.textwrap}
             customStyle={{
               backgroundColor: "rgb(36, 39, 46)",

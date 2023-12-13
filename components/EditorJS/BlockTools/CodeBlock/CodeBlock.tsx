@@ -300,11 +300,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
           {/* Editor */}
           <Box
             sx={{
-              // TODO Does not seem to work, I want to be sure that linenumbers are not selected
-              "&.react-syntax-highlighter-line-number": {
-                userSelect: "none",
-                WebkitUserSelect: "none",
-              },
+              "& .language-plaintext code": { userSelect: "none" },
             }}
           >
             {stateData.render ? (
@@ -315,6 +311,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
                     : "plaintext"
                 }
                 showLineNumbers={stateData.linenumbers}
+                showInlineLineNumbers={false}
                 style={EDITORTHEME}
                 wrapLongLines={stateData.textwrap}
                 customStyle={{
