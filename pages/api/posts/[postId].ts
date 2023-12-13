@@ -210,14 +210,15 @@ export default async function handler(
   } else if (req.method === "PUT") {
     // Decide which fields to change
     const { data, ...fields } = req.body;
-    if (Object.keys(fields).length === 0) {
+    console.log(data);
+    console.log(Object.keys(fields));
+    if (!data && Object.keys(fields).length === 0) {
       return res
         .status(400)
         .json({ code: 400, reason: "Missing fields to update" });
     }
 
     // TODO Check that fields provided are all part of type FirestoreFullPost
-
     // Fetch post
     const post = await getDoc(doc(db, "posts", String(postId))).then((data) =>
       data.data()
@@ -232,7 +233,10 @@ export default async function handler(
     }
 
     // Alter post
-    const updatedPost = { ...post, ...fields };
+    const updatedPost = { ...post };
+    Object.keys(post).map((key) => {
+      if (fields.hasOwnProperty(key)) updatedPost[key] = fields[key];
+    });
 
     // Push updates
     const docRef = doc(db, "posts", String(postId));

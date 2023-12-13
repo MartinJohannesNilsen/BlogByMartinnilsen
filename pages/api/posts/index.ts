@@ -69,6 +69,9 @@ export default async function handler(
       .json({ code: authValidation.code, reason: authValidation.reason });
   }
 
+  // Get query parameter if present
+  const parseData = req.query.parseData;
+
   if (req.method === "GET") {
     // Get all posts
     try {
@@ -78,7 +81,20 @@ export default async function handler(
       };
       const querySnapshot = await getDocs(collection(db, "posts"));
       querySnapshot.forEach((doc) => {
-        response.posts.push({ id: doc.id, data: doc.data() });
+        // Get doc data object
+        const docData = doc.data();
+        // Get datafield, parse if parseData is present
+        const dataField =
+          parseData &&
+          typeof parseData === "string" &&
+          parseData.toLowerCase() === "true"
+            ? JSON.parse(docData.data)
+            : docData.data;
+        // Push response
+        response.posts.push({
+          id: doc.id,
+          data: { ...docData, data: dataField },
+        });
       });
       const postOverviewSnapshot = await getDoc(
         doc(db, "administrative", "overview")
