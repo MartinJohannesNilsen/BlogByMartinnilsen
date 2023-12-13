@@ -32,7 +32,7 @@ const CustomCallout = (props: EditorjsRendererProps) => {
             disableRipple
             sx={{ margin: xs ? "0 7.5px 0 -5px" : "0 10px 0 0px" }}
           >
-            <Typography fontSize={30}>{props.data.icon}</Typography>
+            <Typography fontSize={30}>{props.data.icon || "💬"}</Typography>
           </IconButton>
           <Box display="flex" flexDirection="column" maxWidth="100vw">
             {/* Title */}
@@ -42,8 +42,14 @@ const CustomCallout = (props: EditorjsRendererProps) => {
                   ...theme.typography.subtitle1,
                   fontWeight: 800,
                   fontFamily: theme.typography.fontFamily,
-                  width: mdDown ? "85vw" : "700px",
-                  p: "4px 0 5px",
+                  pt: "4px",
+                  pb: "5px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "webkit-flex",
+                  WebkitLineClamp: 1,
+                  lineClamp: 1,
+                  WebkitBoxOrient: "vertical",
                 }}
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(props.data.title),
@@ -55,10 +61,15 @@ const CustomCallout = (props: EditorjsRendererProps) => {
               sx={{
                 ...theme.typography.body1,
                 fontFamily: theme.typography.fontFamily,
-                width: mdDown ? "85vw" : "700px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "webkit-flex",
+                WebkitBoxOrient: "vertical",
               }}
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(props.data.message),
+                __html: DOMPurify.sanitize(
+                  props.data.message.replace(/\n/g, "<br>")
+                ),
               }}
             />
           </Box>
@@ -85,8 +96,14 @@ const CustomCallout = (props: EditorjsRendererProps) => {
                   "&::placeholder": {
                     color: "black", // Set the color of the placeholder
                   },
-                  width: mdDown ? "85vw" : "700px",
-                  p: "4px 0 5px",
+                  pt: "4px",
+                  pb: "5px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "webkit-flex",
+                  WebkitLineClamp: 1,
+                  lineClamp: 1,
+                  WebkitBoxOrient: "vertical",
                 }}
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(props.data.title || "Note"),
@@ -97,11 +114,17 @@ const CustomCallout = (props: EditorjsRendererProps) => {
                 sx={{
                   ...theme.typography.body1,
                   fontFamily: theme.typography.fontFamily,
-                  width: mdDown ? "85vw" : "700px",
-                  p: "0 0 5px",
+                  pt: "0px",
+                  pb: "5px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "webkit-flex",
+                  WebkitBoxOrient: "vertical",
                 }}
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(props.data.message),
+                  __html: DOMPurify.sanitize(
+                    props.data.message.replace(/\n/g, "<br>")
+                  ),
                 }}
               />
             </Box>

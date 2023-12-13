@@ -123,11 +123,23 @@ export const Callout = (props: CalloutProps) => {
                 >
                   <Typography fontSize={30}>{stateData.icon}</Typography>
                 </IconButton>
-                <Box display="flex" flexDirection="column" maxWidth="100vw">
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  sx={{
+                    width: mdDown ? "74vw" : "100vw",
+                    maxWidth: "550px",
+                  }}
+                >
                   {/* Title */}
                   <InputBase
+                    fullWidth
                     onKeyDown={(event) => {
-                      if (event.key === "Enter") {
+                      if (
+                        event.key === "Enter" ||
+                        event.key === "ArrowUp" ||
+                        event.key === "ArrowDown"
+                      ) {
                         event.preventDefault();
                         event.stopPropagation();
                       }
@@ -138,7 +150,6 @@ export const Callout = (props: CalloutProps) => {
                       ...theme.typography.subtitle1,
                       fontWeight: 800,
                       fontFamily: theme.typography.fontFamily,
-                      width: mdDown ? "85vw" : "700px",
                     }}
                     onChange={(e) => {
                       setStateData({
@@ -147,11 +158,16 @@ export const Callout = (props: CalloutProps) => {
                       });
                     }}
                   />
-
                   {/* Message */}
                   <InputBase
+                    fullWidth
+                    multiline
                     onKeyDown={(event) => {
-                      if (event.key === "Enter") {
+                      if (
+                        (event.key === "Enter" && !event.shiftKey) ||
+                        event.key === "ArrowUp" ||
+                        event.key === "ArrowDown"
+                      ) {
                         event.preventDefault();
                         event.stopPropagation();
                       }
@@ -161,7 +177,6 @@ export const Callout = (props: CalloutProps) => {
                     sx={{
                       ...theme.typography.body1,
                       fontFamily: theme.typography.fontFamily,
-                      width: mdDown ? "85vw" : "700px",
                     }}
                     onChange={(e) => {
                       setStateData({
@@ -178,7 +193,6 @@ export const Callout = (props: CalloutProps) => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                maxWidth: "100vw",
                 backgroundColor: "#f7cb2a",
               }}
             >
@@ -190,11 +204,20 @@ export const Callout = (props: CalloutProps) => {
                   flexDirection="column"
                   maxWidth="100vw"
                   p={1.5}
+                  sx={{
+                    width: mdDown ? "85vw" : "100vw",
+                    maxWidth: "625px",
+                  }}
                 >
                   {/* Title */}
                   <InputBase
+                    fullWidth
                     onKeyDown={(event) => {
-                      if (event.key === "Enter") {
+                      if (
+                        event.key === "Enter" ||
+                        event.key === "ArrowUp" ||
+                        event.key === "ArrowDown"
+                      ) {
                         event.preventDefault();
                         event.stopPropagation();
                       }
@@ -208,7 +231,10 @@ export const Callout = (props: CalloutProps) => {
                       "&::placeholder": {
                         color: "black", // Set the color of the placeholder
                       },
-                      width: mdDown ? "85vw" : "700px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "webkit-flex",
+                      WebkitBoxOrient: "vertical",
                     }}
                     onChange={(e) => {
                       setStateData({
@@ -219,8 +245,14 @@ export const Callout = (props: CalloutProps) => {
                   />
                   {/* Message */}
                   <InputBase
+                    fullWidth
+                    multiline
                     onKeyDown={(event) => {
-                      if (event.key === "Enter") {
+                      if (
+                        (event.key === "Enter" && event.shiftKey) ||
+                        event.key === "ArrowUp" ||
+                        event.key === "ArrowDown"
+                      ) {
                         event.preventDefault();
                         event.stopPropagation();
                       }
@@ -230,7 +262,10 @@ export const Callout = (props: CalloutProps) => {
                     sx={{
                       ...theme.typography.body1,
                       fontFamily: theme.typography.fontFamily,
-                      width: mdDown ? "85vw" : "700px",
+                      // overflow: "hidden",
+                      // textOverflow: "ellipsis",
+                      // display: "webkit-flex",
+                      // WebkitBoxOrient: "vertical",
                     }}
                     onChange={(e) => {
                       setStateData({
