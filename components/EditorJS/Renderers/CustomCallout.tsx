@@ -9,6 +9,7 @@ import {
 import DOMPurify from "isomorphic-dompurify";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
+import colorLuminance from "../../../utils/colorLuminance";
 
 const CustomCallout = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
@@ -80,13 +81,27 @@ const CustomCallout = (props: EditorjsRendererProps) => {
             display: "flex",
             alignItems: "center",
             maxWidth: "100vw",
-            backgroundColor: "#f7cb2a",
+            // backgroundColor: "#f7cb2a",
+            backgroundColor: theme.palette.secondary.main,
           }}
         >
           <Box display="flex" flexDirection="row">
             {/* <Box sx={{ backgroundColor: "#575757" }} p={0.5} /> */}
-            <Box sx={{ backgroundColor: "#b89002" }} p={0.5} />
-            <Box display="flex" flexDirection="column" maxWidth="100vw" p={1.5}>
+            {/* <Box sx={{ backgroundColor: "#b89002" }} p={0.5} /> */}
+            {/* <Box
+              sx={{
+                backgroundColor: colorLuminance(
+                  theme.palette.secondary.main,
+                  -0.2
+                ),
+              }}
+              p={0.5}
+            /> */}
+            <Box
+              sx={{ backgroundColor: theme.palette.secondary.dark }}
+              p={0.5}
+            />
+            <Box display="flex" flexDirection="column" maxWidth="100vw" p={2}>
               {/* Title */}
               <Typography
                 sx={{
@@ -94,8 +109,8 @@ const CustomCallout = (props: EditorjsRendererProps) => {
                   fontWeight: 800,
                   fontFamily: theme.typography.fontFamily,
                   color: "black",
-                  pt: "4px",
-                  pb: "5px",
+                  pt: 0.5,
+                  pb: 0.6,
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "webkit-flex",
@@ -113,8 +128,8 @@ const CustomCallout = (props: EditorjsRendererProps) => {
                   ...theme.typography.body1,
                   fontFamily: theme.typography.fontFamily,
                   color: "black",
-                  pt: "0px",
-                  pb: "5px",
+                  pt: 0,
+                  pb: 1,
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "webkit-flex",
