@@ -93,9 +93,7 @@ const CustomCallout = (props: EditorjsRendererProps) => {
                   ...theme.typography.subtitle1,
                   fontWeight: 800,
                   fontFamily: theme.typography.fontFamily,
-                  "&::placeholder": {
-                    color: "black", // Set the color of the placeholder
-                  },
+                  color: "black",
                   pt: "4px",
                   pb: "5px",
                   overflow: "hidden",
@@ -114,6 +112,7 @@ const CustomCallout = (props: EditorjsRendererProps) => {
                 sx={{
                   ...theme.typography.body1,
                   fontFamily: theme.typography.fontFamily,
+                  color: "black",
                   pt: "0px",
                   pb: "5px",
                   overflow: "hidden",
