@@ -92,12 +92,13 @@ export const TOCModal = (props: TOCModalProps) => {
       </ButtonBase>,
     ];
     props.headings.map((heading) => {
+      const id = decodeHtml(heading.id);
       elements.push(
         <ButtonBase
-          key={heading.id}
+          key={id}
           onClick={() => {
             props.handleModalClose();
-            router.replace("#" + decodeHtml(heading.id));
+            router.replace("#" + id);
           }}
           sx={{
             maxWidth: "100%",
@@ -118,7 +119,7 @@ export const TOCModal = (props: TOCModalProps) => {
               fontWeight: 600,
               fontSize: 14,
               borderLeft:
-                heading.id === props.currentSection
+                id === props.currentSection
                   ? "2px solid " + theme.palette.secondary.main
                   : "2px solid rgba(120, 120, 120, 0.2)",
             }}
