@@ -51,7 +51,6 @@
     "@editorjs/raw": "^2.5.0",
     "@editorjs/simple-image": "^1.6.0",
     "@editorjs/table": "^2.3.0",
-    "@editorjs/warning": "^1.4.0",
     "@hammaadhrasheedh/editorjs-iframe": "^1.0.21",
     "@martinjohannesnilsen/editorjs-table": "^2.2.2",
     "@mui/x-data-grid": "^6.18.2",

@@ -87,6 +87,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
             sx={{
               userSelect: "none",
               backgroundColor: "#363642",
+              // backgroundColor: "#343434",
               borderRadius: "10px 10px 0px 0px",
               padding: "5px",
             }}
