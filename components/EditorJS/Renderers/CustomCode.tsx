@@ -8,51 +8,26 @@ import { IoCheckmark, IoCopyOutline } from "react-icons/io5";
 
 // Themes
 import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
-
-function copyToClipboard(str: string) {
-  var el = document.createElement("textarea");
-  el.value = str;
-  el.setAttribute("readonly", "");
-  document.body.appendChild(el);
-
-  if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
-    // save current contentEditable/readOnly status
-    var editable = el.contentEditable;
-    var readOnly = el.readOnly;
-
-    // convert to editable with readonly to stop iOS keyboard opening
-    // el.contentEditable = true;
-    el.readOnly = true;
-
-    // create a selectable range
-    var range = document.createRange();
-    range.selectNodeContents(el);
-
-    // select the range
-    var selection = window.getSelection();
-    selection!.removeAllRanges();
-    selection!.addRange(range);
-    el.setSelectionRange(0, 999999);
-
-    // restore contentEditable/readOnly to original state
-    el.contentEditable = editable;
-    el.readOnly = readOnly;
-  } else {
-    el.select();
-  }
-  document.execCommand("copy");
-  document.body.removeChild(el);
-}
+import { copyToClipboardV2 } from "../../../utils/copyToClipboard";
+import { enqueueSnackbar } from "notistack";
 
 export const EDITORTHEME = atomOneDark;
 const CustomCodebox = (props: EditorjsRendererProps) => {
   const { theme } = useTheme();
   const handleButtonClick = (copyText: string) => {
-    copyToClipboard(copyText);
-    setCopyMessageShown(true);
-    setTimeout(() => {
-      setCopyMessageShown(false);
-    }, 4000);
+    copyToClipboardV2(copyText)
+      .then(() => {
+        setCopyMessageShown(true);
+        setTimeout(() => {
+          setCopyMessageShown(false);
+        }, 4000);
+      })
+      .catch((error) => {
+        enqueueSnackbar("Unable to copy to clipboard!", {
+          variant: "error",
+          preventDuplicate: true,
+        });
+      });
   };
   const [copyMessageShown, setCopyMessageShown] = useState(false);
   const [isCopyButtonVisible, setCopyButtonVisible] = useState(false);
