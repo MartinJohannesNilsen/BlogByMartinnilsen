@@ -1,4 +1,11 @@
-import { Person, PostAdd, Search, Tag, Tune } from "@mui/icons-material";
+import {
+  Logout,
+  Person,
+  PostAdd,
+  Search,
+  Tag,
+  Tune,
+} from "@mui/icons-material";
 import {
   Box,
   ButtonBase,
@@ -146,6 +153,26 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               Blog
             </Typography>
           </Link>
+          <Box flexGrow={100} />
+          <Box>
+            <NavbarButton
+              variant="base"
+              // variant="base"
+              onClick={() => {
+                handleNavigate("/create");
+              }}
+              icon={Logout}
+              tooltip="Sign out"
+              sx={{
+                icon: {
+                  color: theme.palette.text.secondary,
+                  height: "28px",
+                  width: "28px",
+                },
+                // button: { height: "34px", width: "34px" },
+              }}
+            />
+          </Box>
         </Box>
       </Box>
     );
@@ -236,14 +263,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               icon={Search}
               variant="outline"
               onClick={() => handleSearchModalOpen()}
-              tooltip={`Search${
-                isMobile
-                  ? ""
-                  : typeof navigator !== "undefined" &&
-                    navigator.userAgent.indexOf("Mac OS X") != -1
-                  ? " (⌘+K)"
-                  : " (CTRL+K)"
-              }`}
+              tooltip={"Search"}
               sx={{
                 icon: { height: "24px", width: "24px" },
                 button: { height: "34px", width: "34px" },

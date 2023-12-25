@@ -33,17 +33,16 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
         theme.palette.mode === "light"
           ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
           : "",
-      width: "105px",
-      height: "105px",
+      width: "100%",
+      height: "100%",
     },
     cardHovered: {
+      cursor: "pointer",
       transform: xl
         ? "scale3d(1.02, 1.02, 1)"
         : lg
         ? "scale3d(1.04, 1.04, 1)"
         : "scale3d(1.05, 1.05, 1)",
-      width: "105px",
-      height: "105px",
     },
     link: {
       color: theme.palette.text.primary,

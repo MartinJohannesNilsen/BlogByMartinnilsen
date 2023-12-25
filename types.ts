@@ -148,6 +148,7 @@ export type NavbarProps = {
   posts?: StoredPost[];
   textColor?: string;
   backgroundColor: string;
+  accountPage?: boolean;
 };
 
 // Component types

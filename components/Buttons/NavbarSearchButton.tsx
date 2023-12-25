@@ -86,19 +86,19 @@ export const NavbarSearchButton = (props: ButtonProps) => {
             theme.palette.mode === "dark"
               ? theme.palette.grey[900]
               : theme.palette.grey[200],
-          p: "1px 3px",
+          p: "2px 3px 0px 3px",
         }}
       >
         <Typography
-          fontFamily={theme.typography.fontFamily}
-          fontSize={12}
+          fontFamily={"Gotham Pro"}
+          fontSize={10}
           fontWeight={600}
           sx={{ color: "#999" }}
         >
           {`${
             typeof navigator !== "undefined" &&
             navigator.userAgent.indexOf("Mac OS X") != -1
-              ? "⌘+K"
+              ? "⌘K"
               : "CTRL+K"
           }`}
         </Typography>

@@ -120,7 +120,8 @@ export const AccountMenu = (props: ProfileMenuProps) => {
         <Divider />
 
         {/* Notifications */}
-        {props.notifications && (
+        {/* props.notifications */}
+        {false && (
           <MenuItem
             onClick={() => {
               props.notifications.handleModalOpen();

@@ -1,4 +1,11 @@
-import { Create, Lock, Logout, Newspaper } from "@mui/icons-material";
+import {
+  Api,
+  Create,
+  Lock,
+  Logout,
+  Newspaper,
+  Notifications,
+} from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import { signOut } from "next-auth/react";
 import { useTheme } from "../styles/themes/ThemeProvider";
@@ -9,6 +16,7 @@ import SEO from "../components/SEO/SEO";
 import Navbar from "../components/Navbar/Navbar";
 import { useState } from "react";
 import PostTableModal from "../components/PostManagement/PostTableModal";
+import NotificationsModal from "../components/Modals/NotificationsModal";
 
 export const Account = () => {
   const { isAuthorized, session, status } =
@@ -31,9 +39,14 @@ export const Account = () => {
       : useAuthorized(true);
   const { theme } = useTheme();
   const backgroundBWBreakingPercentage = "45%";
+  // Post Table Modal
   const [openPostTableModal, setOpenPostTableModal] = useState(false);
   const handlePostTableModalOpen = () => setOpenPostTableModal(true);
   const handlePostTableModalClose = () => setOpenPostTableModal(false);
+  // Notifications Modal
+  const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
+  const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
+  const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
 
   if (status === "loading") {
     return <></>;
@@ -56,6 +69,7 @@ export const Account = () => {
         <Navbar
           backgroundColor={theme.palette.primary.contrastText}
           textColor={theme.palette.primary.main}
+          accountPage={true}
         />
         <Grid
           container
@@ -68,42 +82,38 @@ export const Account = () => {
           <Grid item xs={12} mb={2}>
             <AccountCard session={session} isAuthorized={isAuthorized} />
           </Grid>
-          <Grid item xs={3.6}>
-            {isAuthorized ? (
-              <TileButtonCard
-                icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
-                text="Posts"
-                onClick={handlePostTableModalOpen}
-              />
-            ) : (
-              <TileButtonCard
-                icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
-                text="Posts"
-                href="/"
-              />
-            )}
-          </Grid>
-          <Grid item xs={3.6}>
+          {isAuthorized && (
+            <>
+              <Grid item xs={5.7} mb={2}>
+                <TileButtonCard
+                  href={"/create"}
+                  icon={<Create sx={{ color: theme.palette.text.primary }} />}
+                  text="Create"
+                />
+              </Grid>
+              <Grid item xs={5.7} mb={2}>
+                <TileButtonCard
+                  href={"/apidoc"}
+                  icon={<Api sx={{ color: theme.palette.text.primary }} />}
+                  text="API-DOC"
+                />
+              </Grid>
+            </>
+          )}
+          <Grid item xs={5.7}>
             <TileButtonCard
-              disabled={!isAuthorized}
-              icon={
-                isAuthorized ? (
-                  <Create sx={{ color: theme.palette.text.primary }} />
-                ) : (
-                  <Lock sx={{ fontSize: 36, opacity: 0.25 }} />
-                )
-              }
-              text="Create"
-              href={isAuthorized ? "/create" : null}
+              icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
+              text="Posts"
+              onClick={handlePostTableModalOpen}
             />
           </Grid>
-          <Grid item xs={3.6}>
+          <Grid item xs={5.7}>
             <TileButtonCard
-              onClick={() => {
-                signOut({ callbackUrl: "/" });
-              }}
-              icon={<Logout sx={{ color: theme.palette.text.primary }} />}
-              text="Sign Out"
+              icon={
+                <Notifications sx={{ color: theme.palette.text.primary }} />
+              }
+              text="Notifications"
+              onClick={handleNotificationsModalOpen}
             />
           </Grid>
         </Grid>
@@ -111,6 +121,11 @@ export const Account = () => {
           open={openPostTableModal}
           handleModalOpen={handlePostTableModalOpen}
           handleModalClose={handlePostTableModalClose}
+        />
+        <NotificationsModal
+          open={openNotificationsModal}
+          handleModalOpen={handleNotificationsModalOpen}
+          handleModalClose={handleNotificationsModalClose}
         />
       </Grid>
     </SEO>
