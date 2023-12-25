@@ -165,6 +165,8 @@ export type RevealProps = {
   delay?: number;
 };
 
+// Menus
+
 export type MenuProps = {
   open: boolean;
   handleMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
@@ -175,9 +177,12 @@ export type MenuProps = {
 
 export type ProfileMenuProps = MenuProps & {
   accountButton: { color?: string };
-  showNotifications: boolean;
-  settings: ModalProps;
+  showNotificationsBadge?: boolean;
+  notifications?: ModalProps;
+  settings?: ModalProps;
 };
+
+// Modals
 
 export type ModalProps = {
   open: boolean;
@@ -203,15 +208,14 @@ export type Headings = {
   text: string;
 };
 
-export type TOCModalProps = {
-  open: boolean;
-  handleModalOpen: () => void;
-  handleModalClose: () => void;
+export type TOCModalProps = ModalProps & {
   headings: Headings[];
   currentSection: string;
   postTitle: string;
   sidebarMode?: boolean;
 };
+
+export type NotificationsModalProps = ModalProps & {};
 
 // Buttons
 export type ButtonProps = {

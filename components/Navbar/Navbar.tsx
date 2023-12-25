@@ -22,6 +22,7 @@ import SettingsModal from "../Modals/SettingsModal";
 import ProfileMenu from "../Modals/ProfileMenu";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { NavbarButton } from "../Buttons/NavbarButton";
+import NotificationsModal from "../Modals/NotificationsModal";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
@@ -43,6 +44,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const handleProfileMenuClose = () => {
     setAnchorElProfileMenu(null);
   };
+  // NotificationsModal
+  const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
+  const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
+  const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
   // SettingsModal
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -277,7 +282,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             accountButton={{
               color: props.textColor || theme.palette.text.primary,
             }}
-            showNotifications={true}
+            showNotificationsBadge={true}
+            notifications={{
+              open: openNotificationsModal,
+              handleModalOpen: handleNotificationsModalOpen,
+              handleModalClose: handleNotificationsModalClose,
+            }}
             settings={{
               open: openSettingsModal,
               handleModalOpen: handleSettingsModalOpen,
@@ -297,6 +307,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         handleModalOpen={handleSettingsModalOpen}
         handleModalClose={handleSettingsModalClose}
         handleThemeChange={handleThemeChange}
+      />
+      <NotificationsModal
+        open={openNotificationsModal}
+        handleModalOpen={handleNotificationsModalOpen}
+        handleModalClose={handleNotificationsModalClose}
       />
     </Box>
   );

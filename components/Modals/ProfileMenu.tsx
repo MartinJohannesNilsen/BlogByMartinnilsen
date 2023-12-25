@@ -8,7 +8,7 @@ import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { Badge, ButtonBase } from "@mui/material";
+import { Badge, ButtonBase, Typography } from "@mui/material";
 import { Notifications, Person } from "@mui/icons-material";
 import { ProfileMenuProps } from "../../types";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -67,10 +67,10 @@ export const AccountMenu = (props: ProfileMenuProps) => {
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
             "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
+              width: 30,
+              height: 30,
+              ml: -0.4,
+              mr: 1.5,
             },
             "&::before": {
               content: '""',
@@ -89,15 +89,18 @@ export const AccountMenu = (props: ProfileMenuProps) => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
+        {/* Account */}
         {status === "authenticated" ? (
           <MenuItem onClick={() => (window.location.href = "/account")}>
             <Avatar
               src={(session.user && session.user.image) || null}
-              sx={{ width: 20, height: 20 }}
+              sx={{ width: 10, height: 10 }}
             >
               {session.user ? session.user.name[0] : null}
             </Avatar>
-            My account
+            <Typography fontFamily={theme.typography.fontFamily}>
+              My account
+            </Typography>
           </MenuItem>
         ) : (
           <MenuItem
@@ -108,37 +111,69 @@ export const AccountMenu = (props: ProfileMenuProps) => {
           >
             <Avatar src={null} sx={{ width: 10, height: 10 }} />
             {/* Log in */}
-            Sign in
+            <Typography fontFamily={theme.typography.fontFamily}>
+              Sign in
+            </Typography>
           </MenuItem>
         )}
+
         <Divider />
+
         {/* Notifications */}
-        {/* <MenuItem onClick={props.handleMenuClose}>
-          <ListItemIcon>
-            <Badge
-              color="secondary"
-              variant="dot"
-              invisible={false}
-              overlap="circular"
-              badgeContent=" "
-            >
-              <Notifications fontSize="small" />
-            </Badge>
-          </ListItemIcon>
-          Notifications
-        </MenuItem> */}
+        {props.notifications && (
+          <MenuItem
+            onClick={() => {
+              props.notifications.handleModalOpen();
+              props.handleMenuClose();
+            }}
+          >
+            <ListItemIcon sx={{ mr: 0.25 }}>
+              {props.showNotificationsBadge ? (
+                <Badge
+                  color="secondary"
+                  variant="dot"
+                  invisible={false}
+                  overlap="circular"
+                  badgeContent=" "
+                >
+                  <Notifications
+                    fontSize="medium"
+                    sx={{ color: theme.palette.text.primary }}
+                  />
+                </Badge>
+              ) : (
+                <Notifications
+                  fontSize="medium"
+                  sx={{ color: theme.palette.text.primary }}
+                />
+              )}
+            </ListItemIcon>
+            <Typography fontFamily={theme.typography.fontFamily}>
+              Notifications
+            </Typography>
+          </MenuItem>
+        )}
+
         {/* Settings */}
-        <MenuItem
-          onClick={() => {
-            props.settings.handleModalOpen();
-            props.handleMenuClose();
-          }}
-        >
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
+        {props.settings && (
+          <MenuItem
+            onClick={() => {
+              props.settings.handleModalOpen();
+              props.handleMenuClose();
+            }}
+          >
+            <ListItemIcon sx={{ mr: 0.25 }}>
+              <Settings
+                fontSize="medium"
+                sx={{ color: theme.palette.text.primary }}
+              />
+            </ListItemIcon>
+            <Typography fontFamily={theme.typography.fontFamily}>
+              Settings
+            </Typography>
+          </MenuItem>
+        )}
+
         {/* Sign out */}
         <MenuItem
           onClick={() => {
@@ -146,11 +181,16 @@ export const AccountMenu = (props: ProfileMenuProps) => {
             props.handleMenuClose();
           }}
         >
-          <ListItemIcon>
-            <Logout fontSize="small" />
+          <ListItemIcon sx={{ mr: 0.25 }}>
+            <Logout
+              fontSize="medium"
+              sx={{ color: theme.palette.text.primary }}
+            />
           </ListItemIcon>
           {/* Logout */}
-          Sign out
+          <Typography fontFamily={theme.typography.fontFamily}>
+            Sign out
+          </Typography>
         </MenuItem>
       </Menu>
     </React.Fragment>

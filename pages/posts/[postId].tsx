@@ -75,6 +75,7 @@ import CustomToggle, {
 } from "../../components/EditorJS/Renderers/CustomToggle";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Modals/ProfileMenu";
+import NotificationsModal from "../../components/Modals/NotificationsModal";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -205,9 +206,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
         }
       : useAuthorized(!post.published);
   const { theme, setTheme } = useTheme();
-  const [openTOCModal, setOpenTOCModal] = useState(false);
-  const [openSettingsModal, setOpenSettingsModal] = useState(false);
-  const [openShareModal, setOpenShareModal] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { width, height } = useWindowSize();
@@ -218,6 +216,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     window.location.href = path;
   };
   const [currentSection, setCurrentSection] = useState(post.title);
+  // Modals
+  const [openTOCModal, setOpenTOCModal] = useState(false);
+  const [openSettingsModal, setOpenSettingsModal] = useState(false);
+  const [openShareModal, setOpenShareModal] = useState(false);
+  const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
   // ProfileMenu
   const [anchorElProfileMenu, setAnchorElProfileMenu] =
     useState<null | HTMLElement>(null);
@@ -340,6 +343,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             sx={{ backgroundColor: theme.palette.primary.main }}
           >
             {/* Modals */}
+            {/* Notifications */}
+            <NotificationsModal
+              open={openNotificationsModal}
+              handleModalOpen={() => setOpenNotificationsModal(true)}
+              handleModalClose={() => setOpenNotificationsModal(false)}
+            />
             {/* Settings */}
             <SettingsModal
               open={openSettingsModal}
@@ -479,7 +488,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       accountButton={{
                         color: theme.palette.text.primary,
                       }}
-                      showNotifications={true}
+                      showNotificationsBadge={false}
+                      notifications={{
+                        open: openNotificationsModal,
+                        handleModalOpen: () => setOpenNotificationsModal(true),
+                        handleModalClose: () =>
+                          setOpenNotificationsModal(false),
+                      }}
                       settings={{
                         open: openSettingsModal,
                         handleModalOpen: () => setOpenSettingsModal(true),
@@ -581,7 +596,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       accountButton={{
                         color: theme.palette.text.primary,
                       }}
-                      showNotifications={false}
+                      showNotificationsBadge={false}
+                      notifications={{
+                        open: openNotificationsModal,
+                        handleModalOpen: () => setOpenNotificationsModal(true),
+                        handleModalClose: () =>
+                          setOpenNotificationsModal(false),
+                      }}
                       settings={{
                         open: openSettingsModal,
                         handleModalOpen: () => setOpenSettingsModal(true),

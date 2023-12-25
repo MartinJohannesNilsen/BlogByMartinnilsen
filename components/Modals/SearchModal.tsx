@@ -120,8 +120,7 @@ export const SearchModal = (props: SearchModalProps) => {
                 variant="filled"
                 fullWidth
                 autoFocus
-                // placeholder="Search..."
-                placeholder="What are you looking for?"
+                placeholder={"What are you looking for?"}
                 size="small"
                 autoComplete="off"
                 value={textFieldValue}
@@ -131,13 +130,13 @@ export const SearchModal = (props: SearchModalProps) => {
                 inputProps={{
                   style: {
                     fontFamily: theme.typography.fontFamily,
-                    fontSize: 30,
+                    fontSize: xs ? 22 : 30,
                     fontWeight: 400,
                     padding: "4px 12px",
                   },
                 }}
                 sx={{ paddingBottom: 0 }}
-                InputLabelProps={{ style: { fontSize: 30 } }}
+                InputLabelProps={{ style: { fontSize: xs ? 22 : 30 } }}
                 onKeyDown={(e) => {
                   if (
                     (e.metaKey && e.key === "k") ||
