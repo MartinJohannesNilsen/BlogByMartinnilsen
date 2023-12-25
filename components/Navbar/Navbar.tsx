@@ -19,6 +19,9 @@ import { NavbarProps } from "../../types";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import SearchModal from "../Modals/SearchModal";
 import SettingsModal from "../Modals/SettingsModal";
+import ProfileMenu from "../Modals/ProfileMenu";
+import NavbarSearchButton from "../Buttons/NavbarSearchButton";
+import { NavbarButton } from "../Buttons/NavbarButton";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
@@ -28,7 +31,19 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           isAuthorized: true,
         }
       : useAuthorized();
-  // SetingsModal
+  // ProfileMenu
+  const [anchorElProfileMenu, setAnchorElProfileMenu] =
+    useState<null | HTMLElement>(null);
+  const openProfileMenu = Boolean(anchorElProfileMenu);
+  const handleProfileMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElProfileMenu(event.currentTarget);
+  };
+  const handleProfileMenuClose = () => {
+    setAnchorElProfileMenu(null);
+  };
+  // SettingsModal
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);
   const handleSettingsModalClose = () => setOpenSettingsModal(false);
@@ -73,7 +88,9 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         alignItems="center"
         justifyContent="center"
         sx={{
-          backgroundColor: isMobile ? props.backgroundColor : "transparent",
+          // backgroundColor: isMobile ? props.backgroundColor : "transparent",
+          backgroundColor: props.backgroundColor,
+          opacity: isMobile ? "100%" : "80%",
           top: 0,
           zIndex: 1000,
           marginTop: isMobile ? "-34px" : 0,
@@ -138,7 +155,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       alignItems="center"
       justifyContent="center"
       sx={{
-        backgroundColor: isMobile ? props.backgroundColor : "transparent",
+        // backgroundColor: isMobile ? props.backgroundColor : "transparent",
+        backgroundColor: isMobile
+          ? props.backgroundColor
+          : props.backgroundColor + "99",
         top: 0,
         zIndex: 1000,
         marginTop: isMobile ? "-34px" : 0,
@@ -188,108 +208,82 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         </ButtonBase>
         <Box flexGrow={100} />
         {isAuthorized ? (
-          <Box mt={isMobile ? 0 : -0.2}>
-            <Tooltip enterDelay={2000} title={"Upload new post"}>
-              <ButtonBase
-                onClick={() => {
-                  handleNavigate("/create");
-                }}
-              >
-                <PostAdd
-                  sx={{
-                    color: props.textColor || theme.palette.text.primary,
-                    height: "30px",
-                    width: "30px",
-                    "&:hover": {
-                      color: theme.palette.secondary.main,
-                    },
-                  }}
-                />
-              </ButtonBase>
-            </Tooltip>
+          // <Box mt={isMobile ? 0 : -0.2}>
+          <Box>
+            <NavbarButton
+              variant="outline"
+              // variant="base"
+              onClick={() => {
+                handleNavigate("/create");
+              }}
+              icon={PostAdd}
+              tooltip="Upload new post"
+              sx={{
+                icon: { height: "24px", width: "24px" },
+                button: { height: "34px", width: "34px" },
+              }}
+            />
           </Box>
         ) : null}
-        <Box mt={isMobile ? 0.25 : 0} mx={isMobile ? 0.25 : 0.5}>
-          <Tooltip
-            enterDelay={2000}
-            title={`Search${
-              isMobile
-                ? ""
-                : typeof navigator !== "undefined" &&
-                  navigator.userAgent.indexOf("Mac OS X") != -1
-                ? " (⌘ + k)"
-                : " (ctrl + k)"
-            }`}
-          >
-            <ButtonBase
-              onClick={() => {
-                handleSearchModalOpen();
+        <Box mx={0.5}>
+          {isMobile || xs ? (
+            <NavbarButton
+              icon={Search}
+              variant="outline"
+              onClick={() => handleSearchModalOpen()}
+              tooltip={`Search${
+                isMobile
+                  ? ""
+                  : typeof navigator !== "undefined" &&
+                    navigator.userAgent.indexOf("Mac OS X") != -1
+                  ? " (⌘+K)"
+                  : " (CTRL+K)"
+              }`}
+              sx={{
+                icon: { height: "24px", width: "24px" },
+                button: { height: "34px", width: "34px" },
               }}
-            >
-              <Search
-                sx={{
-                  color: props.textColor || theme.palette.text.primary,
-                  height: "30px",
-                  width: "30px",
-                  "&:hover": {
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-              />
-            </ButtonBase>
-          </Tooltip>
-        </Box>
-        <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
-          <Tooltip enterDelay={2000} title={"Go to tags"}>
-            <ButtonBase href="/tags">
-              <Tag
-                sx={{
-                  color: props.textColor || theme.palette.text.primary,
-                  height: "30px",
-                  width: "30px",
-                  "&:hover": {
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-              />
-            </ButtonBase>
-          </Tooltip>
-        </Box>
-        <Box mt={isMobile ? 0.37 : 0} mr={isMobile ? 0.25 : 0.5}>
-          <Tooltip enterDelay={2000} title={"Open settings"}>
-            <ButtonBase
-              onClick={() => {
-                handleSettingsModalOpen();
+            />
+          ) : (
+            <NavbarSearchButton
+              variant="outline"
+              onClick={() => handleSearchModalOpen()}
+              tooltip={"Search"}
+              sx={{
+                icon: { height: "24px", width: "24px" },
+                button: { height: "34px", width: "34px" },
               }}
-            >
-              <Tune
-                sx={{
-                  color: props.textColor || theme.palette.text.primary,
-                  height: "30px",
-                  width: "30px",
-                  "&:hover": {
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-              />
-            </ButtonBase>
-          </Tooltip>
+            />
+          )}
         </Box>
-        <Box mt={isMobile ? 0.25 : 0}>
-          <Tooltip enterDelay={2000} title={"Go to account"}>
-            <ButtonBase href="/account">
-              <Person
-                sx={{
-                  color: props.textColor || theme.palette.text.primary,
-                  height: "30px",
-                  width: "30px",
-                  "&:hover": {
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-              />
-            </ButtonBase>
-          </Tooltip>
+        <Box mr={0.5}>
+          <NavbarButton
+            variant="outline"
+            href="/tags"
+            icon={Tag}
+            tooltip="Go to tags"
+            sx={{
+              icon: { height: "24px", width: "24px" },
+              button: { height: "34px", width: "34px" },
+            }}
+          />
+        </Box>
+        <Box>
+          <ProfileMenu
+            anchorEl={anchorElProfileMenu}
+            open={openProfileMenu}
+            handleMenuOpen={handleProfileMenuClick}
+            handleMenuClose={handleProfileMenuClose}
+            accountButton={{
+              color: props.textColor || theme.palette.text.primary,
+            }}
+            showNotifications={true}
+            settings={{
+              open: openSettingsModal,
+              handleModalOpen: handleSettingsModalOpen,
+              handleModalClose: handleSettingsModalClose,
+            }}
+          />
         </Box>
       </Box>
       <SearchModal

@@ -7,6 +7,7 @@ import {
   ExpandMore,
   IosShareOutlined,
   MenuBook,
+  Person,
   Tune,
   Visibility,
 } from "@mui/icons-material";
@@ -72,6 +73,8 @@ import PostViews from "../../components/PostViews/PostViews";
 import CustomToggle, {
   Accordion,
 } from "../../components/EditorJS/Renderers/CustomToggle";
+import { NavbarButton } from "../../components/Buttons/NavbarButton";
+import ProfileMenu from "../../components/Modals/ProfileMenu";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -215,6 +218,18 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     window.location.href = path;
   };
   const [currentSection, setCurrentSection] = useState(post.title);
+  // ProfileMenu
+  const [anchorElProfileMenu, setAnchorElProfileMenu] =
+    useState<null | HTMLElement>(null);
+  const openProfileMenu = Boolean(anchorElProfileMenu);
+  const handleProfileMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElProfileMenu(event.currentTarget);
+  };
+  const handleProfileMenuClose = () => {
+    setAnchorElProfileMenu(null);
+  };
 
   const handleThemeChange = (event: any) => {
     setTheme(
@@ -324,8 +339,44 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             justifyItems="center"
             sx={{ backgroundColor: theme.palette.primary.main }}
           >
+            {/* Modals */}
+            {/* Settings */}
+            <SettingsModal
+              open={openSettingsModal}
+              handleModalOpen={() => setOpenSettingsModal(true)}
+              handleModalClose={() => setOpenSettingsModal(false)}
+              handleThemeChange={handleThemeChange}
+            />
+            {/* TOC */}
+            {OutputString && (
+              <TOCModal
+                open={openTOCModal}
+                handleModalOpen={() => setOpenTOCModal(true)}
+                handleModalClose={() => setOpenTOCModal(false)}
+                headings={extractHeaders(OutputString)}
+                currentSection={currentSection}
+                postTitle={post.title}
+              />
+            )}
+            {/* Share */}
+            <ShareModal
+              open={openShareModal}
+              handleModalOpen={() => setOpenShareModal(true)}
+              handleModalClose={() => setOpenShareModal(false)}
+              data={{
+                title: post.title,
+                description: post.description,
+                image:
+                  post.image && post.image.trim() !== ""
+                    ? post.image
+                    : DEFAULT_OGIMAGE,
+                url: window.location.href,
+                height: xs ? 100 : 130,
+                width: xs ? 400 : 500,
+              }}
+            />
             {/* Header row */}
-            {isMobile ? (
+            {!isMobile ? (
               // Mobile
               <Box
                 width={"100%"}
@@ -352,53 +403,30 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     width: "95%",
                   }}
                 >
-                  <ArrowBack
-                    sx={{
-                      fontFamily: theme.typography.fontFamily,
-                      fontSize: "30px",
-                      color: theme.palette.text.primary,
-                      "&:hover": {
-                        cursor: "pointer",
-                        color: theme.palette.secondary.main,
-                      },
-                    }}
+                  <NavbarButton
+                    variant="outline"
                     onClick={() => handleNavigate("/")}
+                    icon={ArrowBack}
+                    tooltip="Back"
+                    sx={{
+                      icon: { height: "24px", width: "24px" },
+                      button: { height: "34px", width: "34px" },
+                    }}
                   />
-                  {OutputString ? (
-                    <Tooltip enterDelay={2000} title={"Open table of contents"}>
-                      <ButtonBase
+                  <Box ml={0.5}>
+                    {OutputString ? (
+                      <NavbarButton
+                        variant="outline"
                         onClick={() => setOpenTOCModal(true)}
+                        icon={MenuBook}
+                        tooltip="Open table of contents"
                         sx={{
-                          marginTop: -0.4,
-                          marginX: theme.spacing(0.75),
+                          icon: { height: "20px", width: "24px" },
+                          button: { height: "34px", width: "34px" },
                         }}
-                      >
-                        <MenuBook
-                          sx={{
-                            color: theme.palette.text.primary,
-                            height: "32px",
-                            width: "32px",
-                            "&:hover": {
-                              color: theme.palette.secondary.main,
-                            },
-                          }}
-                        />
-                      </ButtonBase>
-                    </Tooltip>
-                  ) : (
-                    <Box sx={{ height: "32px", width: "32px" }} />
-                  )}
-                  {/* TOCModal */}
-                  {OutputString && (
-                    <TOCModal
-                      open={openTOCModal}
-                      handleModalOpen={() => setOpenTOCModal(true)}
-                      handleModalClose={() => setOpenTOCModal(false)}
-                      headings={extractHeaders(OutputString)}
-                      currentSection={currentSection}
-                      postTitle={post.title}
-                    />
-                  )}
+                      />
+                    ) : null}
+                  </Box>
                   <Box flexGrow={100} />
                   <Typography
                     fontFamily={theme.typography.fontFamily}
@@ -417,88 +445,47 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   </Typography>
                   <Box flexGrow={100} />
                   <Box display="flex" ml={1}>
-                    <Tooltip enterDelay={2000} title={"Open settings"}>
-                      <ButtonBase
-                        sx={{ marginBottom: 0 }}
+                    {/* Share */}
+                    <Box mr={0.5}>
+                      <NavbarButton
+                        disabled={!post.published}
+                        variant="outline"
                         onClick={() => {
-                          setOpenSettingsModal(true);
+                          handleSharing({
+                            url:
+                              typeof window !== "undefined"
+                                ? window.location.href
+                                : "",
+                            title: post.title,
+                            text: "",
+                            icon: post.image || DEFAULT_OGIMAGE,
+                            fallback: () => setOpenShareModal(true),
+                          });
                         }}
-                      >
-                        <Tune
-                          sx={{
-                            color: theme.palette.text.primary,
-                            height: "32px",
-                            width: "32px",
-                            "&:hover": {
-                              color: theme.palette.secondary.main,
-                            },
-                          }}
-                        />
-                      </ButtonBase>
-                    </Tooltip>
-                    <SettingsModal
-                      open={openSettingsModal}
-                      handleModalOpen={() => setOpenSettingsModal(true)}
-                      handleModalClose={() => setOpenSettingsModal(false)}
-                      handleThemeChange={handleThemeChange}
-                    />
-                    {!post.published ? (
-                      <IosShareOutlined
+                        icon={IosShareOutlined}
+                        tooltip="Share"
                         sx={{
-                          marginBottom: 0.33,
-                          color: theme.palette.text.primary,
-                          height: "28px",
-                          width: "32px",
+                          icon: { height: "18px", width: "22px" },
+                          button: { height: "34px", width: "34px" },
                         }}
                       />
-                    ) : (
-                      <>
-                        <Tooltip enterDelay={2000} title={"Share"}>
-                          <ButtonBase
-                            onClick={() => {
-                              handleSharing({
-                                url:
-                                  typeof window !== "undefined"
-                                    ? window.location.href
-                                    : "",
-                                title: post.title,
-                                text: "",
-                                icon: post.image || DEFAULT_OGIMAGE,
-                                fallback: () => setOpenShareModal(true),
-                              });
-                            }}
-                          >
-                            <IosShareOutlined
-                              sx={{
-                                marginBottom: 0.33,
-                                color: theme.palette.text.primary,
-                                height: "28px",
-                                width: "32px",
-                                "&:hover": {
-                                  color: theme.palette.secondary.main,
-                                },
-                              }}
-                            />
-                          </ButtonBase>
-                        </Tooltip>
-                        <ShareModal
-                          open={openShareModal}
-                          handleModalOpen={() => setOpenShareModal(true)}
-                          handleModalClose={() => setOpenShareModal(false)}
-                          data={{
-                            title: post.title,
-                            description: post.description,
-                            image:
-                              post.image && post.image.trim() !== ""
-                                ? post.image
-                                : DEFAULT_OGIMAGE,
-                            url: window.location.href,
-                            height: xs ? 100 : 130,
-                            width: xs ? 400 : 500,
-                          }}
-                        />
-                      </>
-                    )}
+                    </Box>
+                    {/* Account */}
+                    <ProfileMenu
+                      anchorEl={anchorElProfileMenu}
+                      open={openProfileMenu}
+                      handleMenuOpen={handleProfileMenuClick}
+                      handleMenuClose={handleProfileMenuClose}
+                      accountButton={{
+                        color: theme.palette.text.primary,
+                      }}
+                      showNotifications={true}
+                      settings={{
+                        open: openSettingsModal,
+                        handleModalOpen: () => setOpenSettingsModal(true),
+                        handleModalClose: () => setOpenSettingsModal(false),
+                      }}
+                    />
                   </Box>
                 </Box>
               </Box>
@@ -515,14 +502,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 position={"sticky"}
                 sx={{
                   top: 0,
-                  backgroundColor: theme.palette.primary.main + "50",
+                  backgroundColor: theme.palette.primary.main + "80",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   zIndex: 1000,
                   marginTop: "0",
                   WebkitTransform: "translateZ(0)",
-                  // boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
                   backdropFilter: "blur(5px)",
                   WebkitBackdropFilter: "blur(5px)",
                 }}
@@ -560,131 +546,53 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 <Box flexGrow={100} />
                 <Box display="flex">
                   {OutputString ? (
-                    <Tooltip enterDelay={2000} title={"Open table of contents"}>
-                      <ButtonBase
-                        disableRipple
-                        onClick={() => setOpenTOCModal(true)}
-                      >
-                        <MenuBook
-                          sx={{
-                            color: theme.palette.text.primary,
-                            height: "32px",
-                            width: "32px",
-                            "&:hover": {
-                              color: theme.palette.secondary.main,
-                            },
-                          }}
-                        />
-                      </ButtonBase>
-                    </Tooltip>
-                  ) : (
-                    <Box sx={{ height: "32px", width: "32px" }} />
-                  )}
-                  {/* TOCModal */}
-                  {OutputString && (
-                    <TOCModal
-                      open={openTOCModal}
-                      handleModalOpen={() => setOpenTOCModal(true)}
-                      handleModalClose={() => setOpenTOCModal(false)}
-                      headings={extractHeaders(OutputString)}
-                      currentSection={currentSection}
-                      postTitle={post.title}
-                    />
-                  )}
-                  {/* SettingsModal */}
-                  <Tooltip enterDelay={2000} title={"Open settings"}>
-                    <ButtonBase
-                      disableRipple
-                      sx={{ marginTop: 0.42, marginLeft: theme.spacing(1) }}
-                      onClick={() => {
-                        setOpenSettingsModal(true);
-                      }}
-                    >
-                      <Tune
-                        sx={{
-                          color: theme.palette.text.primary,
-                          height: "32px",
-                          width: "32px",
-                          "&:hover": {
-                            color: theme.palette.secondary.main,
-                          },
-                        }}
-                      />
-                    </ButtonBase>
-                  </Tooltip>
-                  <SettingsModal
-                    open={openSettingsModal}
-                    handleModalOpen={() => setOpenSettingsModal(true)}
-                    handleModalClose={() => setOpenSettingsModal(false)}
-                    handleThemeChange={handleThemeChange}
-                  />
-                  {/* ShareModal */}
-                  <Tooltip enterDelay={2000} title={"Share"}>
-                    <ButtonBase
-                      disableRipple
-                      disabled={!post.published}
-                      onClick={() => {
-                        setOpenShareModal(true);
-                      }}
+                    <NavbarButton
+                      variant="outline"
+                      onClick={() => setOpenTOCModal(true)}
+                      icon={MenuBook}
+                      tooltip="Open table of contents"
                       sx={{
-                        marginLeft: theme.spacing(0.25),
-                        marginRight: theme.spacing(-0.75),
+                        icon: { height: "20px", width: "24px" },
+                        button: { height: "34px", width: "34px" },
                       }}
-                    >
-                      <IosShareOutlined
-                        sx={{
-                          color: theme.palette.text.primary,
-                          height: "28px",
-                          width: "32px",
-                          alignText: "right",
-                          "&:hover": {
-                            color: theme.palette.secondary.main,
-                          },
-                        }}
-                      />
-                    </ButtonBase>
-                  </Tooltip>
-                  <ShareModal
-                    open={openShareModal}
-                    handleModalOpen={() => setOpenShareModal(true)}
-                    handleModalClose={() => setOpenShareModal(false)}
-                    data={{
-                      title: post.title,
-                      description: post.description,
-                      image:
-                        post.image && post.image.trim() !== ""
-                          ? post.image
-                          : DEFAULT_OGIMAGE,
-                      url: window.location.href,
-                      height: xs ? 100 : 130,
-                      width: xs ? 400 : 500,
-                    }}
-                  />
+                    />
+                  ) : null}
+                  {/* ShareModal */}
+                  <Box ml={0.5}>
+                    <NavbarButton
+                      disabled={!post.published}
+                      variant="outline"
+                      onClick={() => setOpenShareModal(true)}
+                      icon={IosShareOutlined}
+                      tooltip="Share"
+                      sx={{
+                        icon: { height: "18px", width: "22px" },
+                        button: { height: "34px", width: "34px" },
+                      }}
+                    />
+                  </Box>
+                  {/* Profile Menu */}
+                  <Box ml={0.5}>
+                    <ProfileMenu
+                      anchorEl={anchorElProfileMenu}
+                      open={openProfileMenu}
+                      handleMenuOpen={handleProfileMenuClick}
+                      handleMenuClose={handleProfileMenuClose}
+                      accountButton={{
+                        color: theme.palette.text.primary,
+                      }}
+                      showNotifications={false}
+                      settings={{
+                        open: openSettingsModal,
+                        handleModalOpen: () => setOpenSettingsModal(true),
+                        handleModalClose: () => setOpenSettingsModal(false),
+                      }}
+                    />
+                  </Box>
                 </Box>
               </Box>
             )}
 
-            {/* TOC on lg xl
-            {lgUp ? (
-              <Box sx={{ position: "fixed", top: 80, right: 10 }}>
-                <TOCModal
-                  open={openTOCModal}
-                  handleModalOpen={() => setOpenTOCModal(true)}
-                  handleModalClose={() => setOpenTOCModal(false)}
-                  headings={extractHeaders(OutputString)}
-                  currentSection={currentSection}
-                  postTitle={post.title}
-                  sidebarMode
-                />
-              </Box>
-            ) : null} */}
-
-            {/* Content */}
-            {/* <RevealFromDownOnEnter
-              from_opacity={0}
-              y={xs ? "+=10px" : "+=30px"}
-              duration={2}
-            > */}
             <Grid
               container
               width="100%"
@@ -876,6 +784,29 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       />
                       <Box display="flex" sx={{ paddingBottom: "6px" }}>
                         {/* Share */}
+                        {/* <Box ml={3}>
+                          <NavbarButton
+                            disabled={!post.published}
+                            variant="outline"
+                            onClick={() => {
+                              isMobile
+                                ? handleSharing({
+                                    url:
+                                      typeof window !== "undefined"
+                                        ? window.location.href
+                                        : "",
+                                    title: post.title,
+                                    text: "",
+                                    icon: post.image || DEFAULT_OGIMAGE,
+                                    fallback: () => setOpenShareModal(true),
+                                  })
+                                : setOpenShareModal(true);
+                            }}
+                            icon={TbShare2}
+                            tooltip="Share"
+                            iconStyle={{ height: "30px", width: "30px" }}
+                          />
+                        </Box> */}
                         <Tooltip enterDelay={2000} title={"Share"}>
                           <IconButton
                             disableRipple

@@ -120,7 +120,8 @@ export const SearchModal = (props: SearchModalProps) => {
                 variant="filled"
                 fullWidth
                 autoFocus
-                placeholder="Search..."
+                // placeholder="Search..."
+                placeholder="What are you looking for?"
                 size="small"
                 autoComplete="off"
                 value={textFieldValue}
@@ -272,6 +273,7 @@ export const SearchModal = (props: SearchModalProps) => {
                           <ListItemText>
                             <KeyboardReturn
                               sx={{
+                                color: theme.palette.text.primary,
                                 position: "absolute",
                                 top: "55%",
                                 right: "5px",

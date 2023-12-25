@@ -17,7 +17,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { withStyles } from "@mui/styles";
 import { useState } from "react";
 import { FaLink } from "react-icons/fa";
 import {

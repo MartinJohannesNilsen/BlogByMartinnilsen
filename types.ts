@@ -1,6 +1,9 @@
 import { OutputData } from "@editorjs/editorjs";
 import { CSSProperties } from "@emotion/serialize";
+import { SvgIconTypeMap } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { ReactNode } from "react";
+import { IconType } from "react-icons/lib";
 
 // Object types
 
@@ -163,6 +166,20 @@ export type RevealProps = {
   delay?: number;
 };
 
+export type MenuProps = {
+  open: boolean;
+  handleMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  handleMenuClose: () => void;
+  anchorEl?: null | HTMLElement;
+  setAnchorEl?: React.Dispatch<React.SetStateAction<null | HTMLElement>>;
+};
+
+export type ProfileMenuProps = MenuProps & {
+  accountButton: { color?: string };
+  showNotifications: boolean;
+  settings: ModalProps;
+};
+
 export type ModalProps = {
   open: boolean;
   handleModalOpen: () => void;
@@ -196,6 +213,40 @@ export type TOCModalProps = {
   postTitle: string;
   sidebarMode?: boolean;
 };
+
+// Buttons
+export type ButtonProps = {
+  variant: "outline" | "base";
+  icon?:
+    | (OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+        muiName: string;
+      })
+    | IconType;
+  onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
+  href?: string;
+  disabled?: boolean;
+  sx?: {
+    button?: {
+      backgroundColor?: string;
+      backgroundColorHover?: string;
+      height?: string;
+      width?: string;
+    };
+    icon?: {
+      color?: string;
+      colorHover?: string;
+      height?: string;
+      width?: string;
+    };
+  };
+  iconStyle?: CSSProperties;
+  tooltip?: string;
+  ariaControls?: string;
+  ariaHasPopup?: any;
+  ariaExpanded?: any;
+};
+
+// export type SearchButtonProps = ButtonProps;
 
 // View props types
 export type ManageArticleViewProps = {

@@ -264,49 +264,69 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     size="small"
                   >
                     <ToggleButton
+                      sx={{ width: 34, height: 34, borderRadius: "10px" }}
                       value={"carousel"}
                       selected={cardLayout === "carousel"}
                       disabled={cardLayout === "carousel"}
                     >
                       {/* <ViewCarouselSharp
-                        sx={{ color: theme.palette.text.primary }}
+                        sx={{ height: 24, width: 24, color: theme.palette.text.primary }}
                       /> */}
                       <Tooltip enterDelay={2000} title="Carousel layout">
                         <ViewWeekSharp
-                          sx={{ color: theme.palette.text.primary }}
+                          sx={{
+                            height: 24,
+                            width: 24,
+                            color: theme.palette.text.primary,
+                          }}
                         />
                       </Tooltip>
                     </ToggleButton>
                     <ToggleButton
+                      sx={{ width: 34, height: 34 }}
                       value={"swipe"}
                       selected={cardLayout === "swipe"}
                       disabled={cardLayout === "swipe"}
                     >
                       <Tooltip enterDelay={2000} title="Swipe layout">
                         <ViewCarousel
-                          sx={{ color: theme.palette.text.primary }}
+                          sx={{
+                            height: 24,
+                            width: 24,
+                            color: theme.palette.text.primary,
+                          }}
                         />
                       </Tooltip>
                     </ToggleButton>
                     <ToggleButton
+                      sx={{ width: 34, height: 34 }}
                       value={"grid"}
                       selected={cardLayout === "grid"}
                       disabled={cardLayout === "grid"}
                     >
                       <Tooltip enterDelay={2000} title="Grid layout">
                         <GridViewSharp
-                          sx={{ color: theme.palette.text.primary }}
+                          sx={{
+                            height: 24,
+                            width: 24,
+                            color: theme.palette.text.primary,
+                          }}
                         />
                       </Tooltip>
                     </ToggleButton>
                     <ToggleButton
+                      sx={{ width: 34, height: 34, borderRadius: "10px" }}
                       value={"list"}
                       selected={cardLayout === "list"}
                       disabled={cardLayout === "list"}
                     >
                       <Tooltip enterDelay={2000} title="List layout">
                         <TableRowsSharp
-                          sx={{ color: theme.palette.text.primary }}
+                          sx={{
+                            height: 24,
+                            width: 24,
+                            color: theme.palette.text.primary,
+                          }}
                         />
                       </Tooltip>
                     </ToggleButton>
