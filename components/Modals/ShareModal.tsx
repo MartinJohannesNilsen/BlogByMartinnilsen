@@ -8,6 +8,7 @@ import {
   Twitter,
   WhatsApp,
 } from "@mui/icons-material";
+import X from "@mui/icons-material/X";
 import {
   Box,
   ClickAwayListener,
@@ -21,7 +22,6 @@ import { useState } from "react";
 import { FaLink } from "react-icons/fa";
 import {
   EmailShareButton,
-  FacebookMessengerShareButton,
   FacebookShareButton,
   LinkedinShareButton,
   RedditShareButton,
@@ -183,10 +183,20 @@ export const ShareModal = (props: ShareModalProps) => {
               />
             </LinkedinShareButton>
             <TwitterShareButton url={props.data.url} title={props.data.title}>
-              <Twitter
+              {/* <Twitter
                 sx={{
                   width: 40,
                   height: 40,
+                  color: theme.palette.text.primary,
+                  "&:hover": {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+              /> */}
+              <X
+                sx={{
+                  width: 36,
+                  height: 36,
                   color: theme.palette.text.primary,
                   "&:hover": {
                     color: theme.palette.secondary.main,
