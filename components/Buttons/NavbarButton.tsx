@@ -24,6 +24,7 @@ export const NavbarButton = (props: ButtonProps) => {
       href={props.href}
       disabled={props.disabled || false}
       sx={{
+        ...props.sx,
         // backgroundColor: theme.palette.primary.main,
         border:
           "1px solid " +
@@ -61,7 +62,7 @@ export const NavbarButton = (props: ButtonProps) => {
             width: props.sx?.icon?.width || "22px",
             color: "inherit",
           }}
-          style={props.iconStyle && null}
+          style={props.iconStyle}
         />
       )}
     </ButtonBase>

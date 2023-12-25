@@ -376,7 +376,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               }}
             />
             {/* Header row */}
-            {!isMobile ? (
+            {isMobile ? (
               // Mobile
               <Box
                 width={"100%"}
@@ -782,9 +782,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                           borderBottom: "2px solid rgba(100,100,100,0.2)",
                         }}
                       />
-                      <Box display="flex" sx={{ paddingBottom: "6px" }}>
+                      <Box display="flex">
                         {/* Share */}
-                        {/* <Box ml={3}>
+                        <Box ml={3}>
                           <NavbarButton
                             disabled={!post.published}
                             variant="outline"
@@ -804,114 +804,49 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             }}
                             icon={TbShare2}
                             tooltip="Share"
-                            iconStyle={{ height: "30px", width: "30px" }}
-                          />
-                        </Box> */}
-                        <Tooltip enterDelay={2000} title={"Share"}>
-                          <IconButton
-                            disableRipple
-                            disabled={!post.published}
-                            sx={{ marginLeft: 3 }}
-                            onClick={() => {
-                              isMobile
-                                ? handleSharing({
-                                    url:
-                                      typeof window !== "undefined"
-                                        ? window.location.href
-                                        : "",
-                                    title: post.title,
-                                    text: "",
-                                    icon: post.image || DEFAULT_OGIMAGE,
-                                    fallback: () => setOpenShareModal(true),
-                                  })
-                                : setOpenShareModal(true);
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                color: theme.palette.text.primary,
-                                "&:hover": {
-                                  color: theme.palette.secondary.main,
-                                },
-                              }}
-                            >
-                              <TbShare2
-                                style={{
-                                  // opacity: 0.5,
-                                  height: "30px",
-                                  width: "30px",
-                                }}
-                              />
-                            </Box>
-                          </IconButton>
-                        </Tooltip>
-                        {/* Confetti */}
-                        <Tooltip enterDelay={2000} title={"Confetti"}>
-                          <IconButton
-                            disableRipple
-                            disabled={isExploding}
                             sx={{
+                              button: { height: "36px", width: "36px" },
                               "&:disabled": { opacity: "0.5" },
-                              marginLeft: 0.5,
-                              marginRight: 0.5,
                             }}
+                            iconStyle={{ height: "26px", width: "26px" }}
+                          />
+                        </Box>
+
+                        {/* Confetti */}
+                        <Box mx={1}>
+                          <NavbarButton
+                            disabled={isExploding}
+                            variant="outline"
                             onClick={() => {
                               setIsExploding(true);
                               setTimeout(() => {
                                 setIsExploding(false);
                               }, 3500);
                             }}
-                          >
-                            <Box
-                              sx={{
-                                color: theme.palette.text.primary,
-                                "&:hover": {
-                                  color: theme.palette.secondary.main,
-                                },
-                              }}
-                            >
-                              <TbConfetti
-                                style={{
-                                  // opacity: 0.5,
-                                  height: "30px",
-                                  width: "30px",
-                                }}
-                              />
-                            </Box>
-                          </IconButton>
-                        </Tooltip>
-                        {/* Paypal */}
-                        <Tooltip enterDelay={2000} title={"Buy me a cacao"}>
-                          <IconButton
-                            disableRipple
+                            icon={TbConfetti}
+                            tooltip="Celebrate with me"
                             sx={{
-                              marginRight: 3,
-                              marginLeft: xs ? -0.3 : -0.25,
+                              button: { height: "36px", width: "36px" },
+                              "&:disabled": { opacity: "0.5" },
                             }}
-                            onClick={() => {
-                              handleNavigate(
-                                "https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ"
-                              );
+                            iconStyle={{ height: "26px", width: "26px" }}
+                          />
+                        </Box>
+
+                        {/* Paypal */}
+                        <Box mr={3}>
+                          <NavbarButton
+                            variant="outline"
+                            href="https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ"
+                            icon={BiCoffeeTogo}
+                            tooltip="Donate cacao"
+                            sx={{
+                              button: { height: "36px", width: "36px" },
+                              "&:disabled": { opacity: "0.5" },
                             }}
-                          >
-                            <Box
-                              sx={{
-                                color: theme.palette.text.primary,
-                                "&:hover": {
-                                  color: theme.palette.secondary.main,
-                                },
-                              }}
-                            >
-                              <BiCoffeeTogo
-                                style={{
-                                  // opacity: 0.5,
-                                  height: "29px",
-                                  width: "30px",
-                                }}
-                              />
-                            </Box>
-                          </IconButton>
-                        </Tooltip>
+                            iconStyle={{ height: "26px", width: "26px" }}
+                          />
+                        </Box>
                       </Box>
                       <Box
                         style={{

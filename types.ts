@@ -1,8 +1,7 @@
 import { OutputData } from "@editorjs/editorjs";
-import { CSSProperties } from "@emotion/serialize";
-import { SvgIconTypeMap } from "@mui/material";
+import { SvgIconTypeMap, SxProps } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
 
 // Object types
@@ -225,7 +224,7 @@ export type ButtonProps = {
   onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
   href?: string;
   disabled?: boolean;
-  sx?: {
+  sx?: SxProps & {
     button?: {
       backgroundColor?: string;
       backgroundColorHover?: string;
