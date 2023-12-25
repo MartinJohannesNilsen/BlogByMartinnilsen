@@ -15,7 +15,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import logo from "public/assets/imgs/terminal.png";
 import { FC, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -30,6 +30,7 @@ import ProfileMenu from "../Modals/ProfileMenu";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { NavbarButton } from "../Buttons/NavbarButton";
 import NotificationsModal from "../Modals/NotificationsModal";
+import { signOut } from "next-auth/react";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
@@ -157,9 +158,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           <Box>
             <NavbarButton
               variant="base"
-              // variant="base"
               onClick={() => {
-                handleNavigate("/create");
+                signOut();
               }}
               icon={Logout}
               tooltip="Sign out"
@@ -169,7 +169,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                   height: "28px",
                   width: "28px",
                 },
-                // button: { height: "34px", width: "34px" },
               }}
             />
           </Box>

@@ -109,6 +109,7 @@ export const Account = () => {
           </Grid>
           <Grid item xs={5.7}>
             <TileButtonCard
+              disabled
               icon={
                 <Notifications sx={{ color: theme.palette.text.primary }} />
               }
