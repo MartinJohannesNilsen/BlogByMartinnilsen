@@ -68,7 +68,9 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
             justifyContent: "center",
           }}
         >
-          <IconButton disabled>{props.icon}</IconButton>
+          <IconButton disabled sx={{ opacity: 0.5 }}>
+            {props.icon}
+          </IconButton>
         </Box>
       </Card>
     );
@@ -100,7 +102,10 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
             textAlign="center"
             mt={-0.5}
           >
-            <Typography variant="button" sx={{ fontSize: 14 }}>
+            <Typography
+              variant="button"
+              sx={{ fontSize: 14, fontFamily: theme.typography.fontFamily }}
+            >
               {props.text}
             </Typography>
           </Box>

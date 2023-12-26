@@ -3,6 +3,7 @@ import {
   Person,
   PostAdd,
   Search,
+  Settings,
   Tag,
   Tune,
 } from "@mui/icons-material";
@@ -155,22 +156,44 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             </Typography>
           </Link>
           <Box flexGrow={100} />
-          <Box>
-            <NavbarButton
-              variant="base"
-              onClick={() => {
-                signOut();
-              }}
-              icon={Logout}
-              tooltip="Sign out"
-              sxIcon={{
-                color: theme.palette.text.secondary,
-                height: "28px",
-                width: "28px",
-              }}
-            />
+          <Box display="flex" flexDirection="row">
+            <Box mr={1}>
+              <NavbarButton
+                variant="base"
+                onClick={handleSettingsModalOpen}
+                icon={Settings}
+                tooltip="Open settings"
+                sxIcon={{
+                  color: theme.palette.text.secondary,
+                  height: "28px",
+                  width: "28px",
+                }}
+              />
+            </Box>
+            <Box>
+              <NavbarButton
+                variant="base"
+                onClick={() => {
+                  signOut().then(() => (window.location.href = "/"));
+                }}
+                icon={Logout}
+                tooltip="Sign out"
+                sxIcon={{
+                  color: theme.palette.text.secondary,
+                  height: "28px",
+                  width: "28px",
+                }}
+              />
+            </Box>
           </Box>
         </Box>
+        {/* Modals */}
+        <SettingsModal
+          open={openSettingsModal}
+          handleModalOpen={handleSettingsModalOpen}
+          handleModalClose={handleSettingsModalClose}
+          handleThemeChange={handleThemeChange}
+        />
       </Box>
     );
   return (
@@ -263,7 +286,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             <NavbarButton
               icon={Search}
               variant="outline"
-              onClick={() => handleSearchModalOpen()}
+              onClick={handleSearchModalOpen}
               tooltip={"Search"}
               sxButton={{
                 height: "34px",
@@ -277,11 +300,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           ) : (
             <NavbarSearchButton
               variant="outline"
-              onClick={() => handleSearchModalOpen()}
+              onClick={handleSearchModalOpen}
               tooltip={"Search"}
               sxButton={{
                 height: "34px",
-                width: "34px",
               }}
               sxIcon={{
                 height: "24px",

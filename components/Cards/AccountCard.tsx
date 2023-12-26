@@ -118,6 +118,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
             variant="h5"
             gutterBottom
             sx={{
+              fontFamily: theme.typography.fontFamily,
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "webkit-flex",
@@ -131,6 +132,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
           <Typography
             variant="body1"
             sx={{
+              fontFamily: theme.typography.fontFamily,
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "webkit-flex",
@@ -143,7 +145,11 @@ export const AccountCard: FC<AccountCard> = (props) => {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ fontWeight: 800, color: theme.palette.secondary.main }}
+            sx={{
+              fontWeight: 800,
+              color: theme.palette.secondary.main,
+              fontFamily: theme.typography.fontFamily,
+            }}
             mt={4}
             mb={-1}
           >

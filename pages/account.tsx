@@ -101,11 +101,19 @@ export const Account = () => {
             </>
           )}
           <Grid item xs={5.7}>
-            <TileButtonCard
-              icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
-              text="Posts"
-              onClick={handlePostTableModalOpen}
-            />
+            {isAuthorized ? (
+              <TileButtonCard
+                icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
+                text="Post Table"
+                onClick={handlePostTableModalOpen}
+              />
+            ) : (
+              <TileButtonCard
+                icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
+                text="Posts"
+                href="/"
+              />
+            )}
           </Grid>
           <Grid item xs={5.7}>
             <TileButtonCard
