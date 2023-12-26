@@ -417,24 +417,38 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     onClick={() => handleNavigate("/")}
                     icon={ArrowBack}
                     tooltip="Back"
-                    sx={{
-                      icon: { height: "24px", width: "24px" },
-                      button: { height: "34px", width: "34px" },
+                    sxButton={{
+                      minWidth: "34px",
+                      minHeight: "34px",
+                      height: "34px",
+                      width: "34px",
+                    }}
+                    sxIcon={{
+                      height: "24px",
+                      width: "24px",
                     }}
                   />
-                  <Box ml={0.5}>
+                  <Box ml={0.5} mr={0.1}>
                     {OutputString ? (
                       <NavbarButton
                         variant="outline"
                         onClick={() => setOpenTOCModal(true)}
                         icon={MenuBook}
                         tooltip="Open table of contents"
-                        sx={{
-                          icon: { height: "20px", width: "24px" },
-                          button: { height: "34px", width: "34px" },
+                        sxButton={{
+                          minWidth: "34px",
+                          minHeight: "34px",
+                          height: "34px",
+                          width: "34px",
+                        }}
+                        sxIcon={{
+                          height: "20px",
+                          width: "24px",
                         }}
                       />
-                    ) : null}
+                    ) : (
+                      <Box sx={{ width: "34px" }} />
+                    )}
                   </Box>
                   <Box flexGrow={100} />
                   <Typography
@@ -453,7 +467,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                     {post.title}
                   </Typography>
                   <Box flexGrow={100} />
-                  <Box display="flex" ml={1}>
+                  <Box display="flex" ml={0.1}>
                     {/* Share */}
                     <Box mr={0.5}>
                       <NavbarButton
@@ -473,9 +487,15 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                         }}
                         icon={IosShareOutlined}
                         tooltip="Share"
-                        sx={{
-                          icon: { height: "18px", width: "22px" },
-                          button: { height: "34px", width: "34px" },
+                        sxButton={{
+                          minWidth: "34px",
+                          minHeight: "34px",
+                          height: "34px",
+                          width: "34px",
+                        }}
+                        sxIcon={{
+                          height: "18px",
+                          width: "22px",
                         }}
                       />
                     </Box>
@@ -566,9 +586,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       onClick={() => setOpenTOCModal(true)}
                       icon={MenuBook}
                       tooltip="Open table of contents"
-                      sx={{
-                        icon: { height: "20px", width: "24px" },
-                        button: { height: "34px", width: "34px" },
+                      sxButton={{
+                        height: "34px",
+                        width: "34px",
+                      }}
+                      sxIcon={{
+                        height: "20px",
+                        width: "24px",
                       }}
                     />
                   ) : null}
@@ -580,10 +604,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       onClick={() => setOpenShareModal(true)}
                       icon={IosShareOutlined}
                       tooltip="Share"
-                      sx={{
-                        icon: { height: "18px", width: "22px" },
-                        button: { height: "34px", width: "34px" },
+                      sxButton={{
+                        height: "34px",
+                        width: "34px",
                       }}
+                      sxIcon={{ height: "18px", width: "22px" }}
                     />
                   </Box>
                   {/* Profile Menu */}
@@ -825,11 +850,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             }}
                             icon={TbShare2}
                             tooltip="Share"
-                            sx={{
-                              button: { height: "36px", width: "36px" },
+                            sxButton={{
+                              height: "36px",
+                              width: "36px",
                               "&:disabled": { opacity: "0.5" },
                             }}
-                            iconStyle={{ height: "26px", width: "26px" }}
+                            styleIcon={{ height: "26px", width: "26px" }}
                           />
                         </Box>
 
@@ -846,11 +872,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             }}
                             icon={TbConfetti}
                             tooltip="Celebrate with me"
-                            sx={{
-                              button: { height: "36px", width: "36px" },
+                            sxButton={{
+                              height: "36px",
+                              width: "36px",
                               "&:disabled": { opacity: "0.5" },
                             }}
-                            iconStyle={{ height: "26px", width: "26px" }}
+                            styleIcon={{ height: "26px", width: "26px" }}
                           />
                         </Box>
 
@@ -861,11 +888,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                             href="https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ"
                             icon={BiCoffeeTogo}
                             tooltip="Donate cacao"
-                            sx={{
-                              button: { height: "36px", width: "36px" },
+                            sxButton={{
+                              height: "36px",
+                              width: "36px",
                               "&:disabled": { opacity: "0.5" },
                             }}
-                            iconStyle={{ height: "26px", width: "26px" }}
+                            styleIcon={{ height: "26px", width: "26px" }}
                           />
                         </Box>
                       </Box>
@@ -877,16 +905,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       />
                     </Box>
                   </Box>
-                  <Box mb={3} display="flex" flexDirection="column">
-                    {/* <Box
-                    mb={3}
-                    display="flex"
-                    gap={5}
-                    width="100%"
-                    textAlign="center"
-                    justifyContent="center"
-                    alignItems="center"
-                  > */}
+                  <Box mt={3} mb={3} display="flex" flexDirection="column">
                     <Typography
                       variant="body1"
                       fontFamily={theme.typography.fontFamily}

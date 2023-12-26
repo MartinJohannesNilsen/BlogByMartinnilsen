@@ -48,9 +48,15 @@ export const AccountMenu = (props: ProfileMenuProps) => {
           aria-controls={open ? "account-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
-          sx={{
-            icon: { height: "24px", width: "24px" },
-            button: { height: "34px", width: "34px" },
+          sxButton={{
+            minWidth: "34px",
+            minHeight: "34px",
+            height: "34px",
+            width: "34px",
+          }}
+          sxIcon={{
+            height: "24px",
+            width: "24px",
           }}
         />
       </Box>

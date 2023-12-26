@@ -229,21 +229,19 @@ export type ButtonProps = {
   onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
   href?: string;
   disabled?: boolean;
-  sx?: SxProps & {
-    button?: {
-      backgroundColor?: string;
-      backgroundColorHover?: string;
-      height?: string;
-      width?: string;
-    };
-    icon?: {
-      color?: string;
-      colorHover?: string;
-      height?: string;
-      width?: string;
-    };
+  sxButton?: SxProps & {
+    backgroundColor?: string;
+    backgroundColorHover?: string;
+    height?: string;
+    width?: string;
   };
-  iconStyle?: CSSProperties;
+  sxIcon?: SxProps & {
+    color?: string;
+    colorHover?: string;
+    height?: string;
+    width?: string;
+  };
+  styleIcon?: CSSProperties;
   tooltip?: string;
   ariaControls?: string;
   ariaHasPopup?: any;

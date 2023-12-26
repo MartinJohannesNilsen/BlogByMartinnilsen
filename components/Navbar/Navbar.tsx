@@ -163,12 +163,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               }}
               icon={Logout}
               tooltip="Sign out"
-              sx={{
-                icon: {
-                  color: theme.palette.text.secondary,
-                  height: "28px",
-                  width: "28px",
-                },
+              sxIcon={{
+                color: theme.palette.text.secondary,
+                height: "28px",
+                width: "28px",
               }}
             />
           </Box>
@@ -249,9 +247,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               }}
               icon={PostAdd}
               tooltip="Upload new post"
-              sx={{
-                icon: { height: "24px", width: "24px" },
-                button: { height: "34px", width: "34px" },
+              sxButton={{
+                height: "34px",
+                width: "34px",
+              }}
+              sxIcon={{
+                height: "24px",
+                width: "24px",
               }}
             />
           </Box>
@@ -263,9 +265,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               variant="outline"
               onClick={() => handleSearchModalOpen()}
               tooltip={"Search"}
-              sx={{
-                icon: { height: "24px", width: "24px" },
-                button: { height: "34px", width: "34px" },
+              sxButton={{
+                height: "34px",
+                width: "34px",
+              }}
+              sxIcon={{
+                height: "24px",
+                width: "24px",
               }}
             />
           ) : (
@@ -273,9 +279,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               variant="outline"
               onClick={() => handleSearchModalOpen()}
               tooltip={"Search"}
-              sx={{
-                icon: { height: "24px", width: "24px" },
-                button: { height: "34px", width: "34px" },
+              sxButton={{
+                height: "34px",
+                width: "34px",
+              }}
+              sxIcon={{
+                height: "24px",
+                width: "24px",
               }}
             />
           )}
@@ -286,9 +296,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             href="/tags"
             icon={Tag}
             tooltip="Go to tags"
-            sx={{
-              icon: { height: "24px", width: "24px" },
-              button: { height: "34px", width: "34px" },
+            sxButton={{
+              height: "34px",
+              width: "34px",
+            }}
+            sxIcon={{
+              height: "24px",
+              width: "24px",
             }}
           />
         </Box>

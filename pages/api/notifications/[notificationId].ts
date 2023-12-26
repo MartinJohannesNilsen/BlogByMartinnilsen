@@ -4,15 +4,15 @@ import { validateAuthAPIToken } from "..";
 
 /**
  * @swagger
- * /api/views/{postId}:
+ * /api/views/{notificationId}:
  *   get:
  *     summary: Get view counts of post
- *     description: Fetches view counts of post with id equal to parameter 'postId'.
+ *     description: Fetches view counts of post with id equal to parameter 'notificationId'.
  *     tags:
  *       - Views
  *     parameters:
  *       - in: path
- *         name: postId
+ *         name: notificationId
  *         required: true
  *         schema:
  *           type: string
@@ -23,7 +23,7 @@ import { validateAuthAPIToken } from "..";
  *         content:
  *          application/json:
  *           example:
- *            postId: 1
+ *            notificationId: 1
  *       '404':
  *         description: View count not found.
  *       '500':
@@ -32,12 +32,12 @@ import { validateAuthAPIToken } from "..";
  *         description: Method not supported.
  *   put:
  *     summary: Increment view counts of post
- *     description: Increments view counts of post with id equal to parameter 'postId'.
+ *     description: Increments view counts of post with id equal to parameter 'notificationId'.
  *     tags:
  *       - Views
  *     parameters:
  *       - in: path
- *         name: postId
+ *         name: notificationId
  *         required: true
  *         schema:
  *           type: string
@@ -63,25 +63,27 @@ export default async function handler(
   }
 
   // Check if id is provided
-  const { postId } = req.query;
+  const { notificationId } = req.query;
   if (
-    !postId ||
-    postId == "{postId}" ||
-    postId === "" ||
-    typeof postId !== "string"
+    !notificationId ||
+    notificationId == "{notificationId}" ||
+    notificationId === "" ||
+    typeof notificationId !== "string"
   ) {
-    return res.status(400).json({ code: 400, reason: "Missing postId" });
+    return res
+      .status(400)
+      .json({ code: 400, reason: "Missing notificationId" });
   }
 
   if (req.method === "GET") {
     // Query the pages table in the database where slug equals the request params slug.
-    const { data } = await SupabaseAdmin.from("views")
-      .select("view_count")
-      .filter("post_id", "eq", postId);
+    const { data } = await SupabaseAdmin.from("notifications")
+      .select("title")
+      .filter("id", "eq", notificationId);
     // Return
     if (data) {
       return res.status(200).json({
-        view_count: data[0]?.view_count || null,
+        title: data[0]?.title || null,
       });
     } else {
       return res
@@ -91,7 +93,7 @@ export default async function handler(
   } else if (req.method === "PUT") {
     // Call our stored procedure with the post_id set by the request params slug
     await SupabaseAdmin.rpc("increment_post_view_count", {
-      input_id: postId,
+      input_id: notificationId,
     }).then((db_res) => {
       return res.status(db_res.status).json({ statusText: db_res.statusText });
     });
