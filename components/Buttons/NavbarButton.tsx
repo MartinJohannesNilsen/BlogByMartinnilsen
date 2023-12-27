@@ -24,8 +24,6 @@ export const NavbarButton = (props: ButtonProps) => {
       href={props.href}
       disabled={props.disabled || false}
       sx={{
-        ...props.sxButton,
-        // backgroundColor: theme.palette.primary.main,
         border:
           "1px solid " +
           (theme.palette.mode === "dark"
@@ -50,6 +48,7 @@ export const NavbarButton = (props: ButtonProps) => {
               : theme.palette.grey[50]),
           color: props.sxIcon?.colorHover || theme.palette.secondary.main,
         },
+        ...props.sxButton,
       }}
       aria-controls={props.ariaControls || undefined}
       aria-haspopup={props.ariaHasPopup || "false"}
@@ -58,10 +57,10 @@ export const NavbarButton = (props: ButtonProps) => {
       {props.icon && (
         <props.icon
           sx={{
-            ...props.sxIcon,
             height: props.sxIcon?.height || "22px",
             width: props.sxIcon?.width || "22px",
             color: "inherit",
+            ...props.sxIcon,
           }}
           style={props.styleIcon}
         />

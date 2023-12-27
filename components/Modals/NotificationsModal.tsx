@@ -1,14 +1,13 @@
 import { Close } from "@mui/icons-material";
-import { ButtonBase, IconButton, useMediaQuery } from "@mui/material";
+import { ButtonBase, Divider, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { NotificationsModalProps } from "../../types";
-import useStickyState from "../../utils/useStickyState";
-import useSWR from "swr";
-import { useEffect } from "react";
+import { NotificationProps, NotificationsModalProps } from "../../types";
+import { useEffect, useState } from "react";
+import UnstyledSelect from "../Selects/NotificationSelectDays";
 
 export const notificationsApiFetcher = async (url: RequestInfo) => {
   // Add apikey header
@@ -24,47 +23,57 @@ export const notificationsApiFetcher = async (url: RequestInfo) => {
 };
 
 type UnreadFunctionProps = {
-  allNotificationsFilteredOnDate: [];
+  allNotificationsFilteredOnDate: NotificationProps[];
   allNotificationsFilteredOnDateIds: number[];
-  unreadNotifications: [];
+  unreadNotifications: NotificationProps[];
   unreadNotificationsIds: number[];
   unreadNotificationsFilteredOnDateIds: number[];
   hasUnreadNotifications: boolean;
 };
 
 export const checkForUnreadRecentNotifications = (
-  data: any,
+  data: NotificationProps[],
   lastRead: number,
+  notificationsFilterDays: number,
   notificationsRead: number[]
 ): UnreadFunctionProps => {
   if (!data) return;
-  const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000;
-  const allFilteredOnDate = data.filter(
-    // Only show notifications on new past 30 days
-    (notification) =>
-      Date.parse(notification.createdAt) > lastRead - thirtyDaysInMilliseconds
-  );
-  const allFilteredOnDateIds = allFilteredOnDate.map(
+  const notificationDaysInMilliseconds =
+    notificationsFilterDays * 24 * 60 * 60 * 1000;
+  const allFilteredOnDateOrImportant = data
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+    .filter(
+      // Only show notifications on new past 30 days
+      (notification) =>
+        Date.parse(notification.createdAt) >
+          lastRead - notificationDaysInMilliseconds || notification.important
+    );
+  const allFilteredOnDateIds = allFilteredOnDateOrImportant.map(
     (notification) => notification.id
   );
-  const unreadNotifications = data.filter((notification) => {
-    return !notificationsRead.includes(notification.id);
-  });
+  const unreadNotifications = data
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+    .filter((notification) => !notificationsRead.includes(notification.id));
   const unreadNotificationsIds = unreadNotifications.map(
     (notification) => notification.id
   );
-  const unreadFilteredOnDateIds = unreadNotifications.filter(
-    // Only show notifications on new past 30 days
-    (notification) =>
-      Date.parse(notification.createdAt) > lastRead - thirtyDaysInMilliseconds
-  );
+  const unreadFilteredOnDateOrImportantIds = unreadNotifications
+    .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
+    .map(
+      // Only show notifications on new past 30 days
+      (notification) =>
+        Date.parse(notification.createdAt) >
+          lastRead - notificationDaysInMilliseconds || notification.important
+          ? notification.id
+          : null
+    );
   return {
-    allNotificationsFilteredOnDate: allFilteredOnDate,
+    allNotificationsFilteredOnDate: allFilteredOnDateOrImportant,
     allNotificationsFilteredOnDateIds: allFilteredOnDateIds,
     unreadNotifications: unreadNotifications,
     unreadNotificationsIds: unreadNotificationsIds,
-    unreadNotificationsFilteredOnDateIds: unreadFilteredOnDateIds,
-    hasUnreadNotifications: unreadFilteredOnDateIds.length !== 0,
+    unreadNotificationsFilteredOnDateIds: unreadFilteredOnDateOrImportantIds,
+    hasUnreadNotifications: unreadFilteredOnDateOrImportantIds.length !== 0,
   };
 };
 
@@ -79,7 +88,6 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
         ...props.notificationsRead,
         ...props.unreadNotificationsIds,
       ]);
-      console.log(props.unreadNotificationsIds);
     }
     return () => {};
   }, [props.open]);
@@ -112,12 +120,14 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          {/* Close button */}
           <IconButton
             style={{ position: "absolute", top: "5px", right: "5px" }}
             onClick={() => props.handleModalClose()}
           >
             <Close />
           </IconButton>
+          {/* Title */}
           <Typography
             fontFamily={theme.typography.fontFamily}
             variant="h5"
@@ -125,17 +135,73 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
             color={theme.palette.text.primary}
             mb={1}
           >
-            Notifications
+            Notifications{" "}
+            {props.unreadNotificationsIds.length !== 0
+              ? `‎ • ‎ ${props.unreadNotificationsIds.length}`
+              : null}
           </Typography>
-          <Typography
-            fontFamily={theme.typography.fontFamily}
-            variant="body1"
-            fontWeight="600"
-            color={theme.palette.text.primary}
-            mb={1}
+          <UnstyledSelect
+            value={props.notificationsFilterDays}
+            setValue={props.setNotificationsFilterDays}
+          />
+          {/* Content */}
+          <Box
+            sx={{
+              border:
+                "1px solid" +
+                (theme.palette.mode === "dark"
+                  ? theme.palette.grey[800]
+                  : theme.palette.grey[300]),
+              borderRadius: "5px",
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? theme.palette.grey[900]
+                  : theme.palette.grey[200],
+              padding: "5px 15px",
+            }}
           >
-            Something is in the making!
-          </Typography>
+            {props.allNotificationsFilteredOnDate.length > 0 ? (
+              props.allNotificationsFilteredOnDate.map(
+                (notification, index) => (
+                  <>
+                    <Box my={1}>
+                      <Typography
+                        fontFamily={theme.typography.fontFamily}
+                        variant="subtitle1"
+                        fontWeight="800"
+                        color={theme.palette.text.primary}
+                      >
+                        {notification.title}
+                      </Typography>
+                      <Typography
+                        fontFamily={theme.typography.fontFamily}
+                        variant="body1"
+                        fontWeight="600"
+                        color={theme.palette.text.primary}
+                      >
+                        {notification.content}
+                      </Typography>
+                    </Box>
+                    {index !==
+                      props.allNotificationsFilteredOnDate.length - 1 && (
+                      <Divider sx={{ mt: 2, mb: 1.5 }} />
+                    )}
+                  </>
+                )
+              )
+            ) : (
+              <Typography
+                my={1}
+                fontFamily={theme.typography.fontFamily}
+                variant="body1"
+                fontWeight="600"
+                color={theme.palette.text.primary}
+              >
+                No notifications for the past {props.notificationsFilterDays}{" "}
+                days
+              </Typography>
+            )}
+          </Box>
         </Box>
       </Modal>
     </Box>

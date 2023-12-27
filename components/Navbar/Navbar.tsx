@@ -1,22 +1,22 @@
 import {
+  Info,
+  InfoOutlined,
   Logout,
-  Person,
   PostAdd,
   Search,
   Settings,
+  SettingsOutlined,
   Tag,
-  Tune,
 } from "@mui/icons-material";
 import {
   Box,
   ButtonBase,
   Link,
-  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import logo from "public/assets/imgs/terminal.png";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -27,7 +27,7 @@ import { NavbarProps } from "../../types";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import SearchModal from "../Modals/SearchModal";
 import SettingsModal from "../Modals/SettingsModal";
-import ProfileMenu from "../Modals/ProfileMenu";
+import ProfileMenu from "../Menus/ProfileMenu";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { NavbarButton } from "../Buttons/NavbarButton";
 import NotificationsModal, {
@@ -37,6 +37,7 @@ import NotificationsModal, {
 import useSWR from "swr";
 import useStickyState from "../../utils/useStickyState";
 import { userSignOut } from "../../utils/signOut";
+import AboutModal from "../Modals/AboutModal";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
@@ -68,6 +69,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
   const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
+  const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState(
+    "notificationsFilterDays",
+    30
+  );
   const [notificationsRead, setNotificationsRead] = useStickyState(
     "notificationsRead",
     []
@@ -76,6 +81,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);
   const handleSettingsModalClose = () => setOpenSettingsModal(false);
+  // AboutModal
+  const [openAboutModal, setOpenAboutModal] = useState(false);
+  const handleAboutModalOpen = () => setOpenAboutModal(true);
+  const handleAboutModalClose = () => setOpenAboutModal(false);
   // SearchModal
   const [openSearchModal, setOpenSearchModal] = useState(false);
   const handleSearchModalOpen = () => setOpenSearchModal(true);
@@ -109,6 +118,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
     const unreadNotifications = checkForUnreadRecentNotifications(
       data,
       lastRead,
+      notificationsFilterDays,
       notificationsRead
     );
     if (data) {
@@ -117,7 +127,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
     }
     return () => {};
-  }, [data, notificationsRead]);
+  }, [data, notificationsRead, notificationsFilterDays]);
 
   if (!props.posts)
     return (
@@ -190,8 +200,21 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               <NavbarButton
                 variant="base"
                 onClick={handleSettingsModalOpen}
-                icon={Settings}
+                icon={SettingsOutlined}
                 tooltip="Open settings"
+                sxIcon={{
+                  color: theme.palette.text.secondary,
+                  height: "28px",
+                  width: "28px",
+                }}
+              />
+            </Box>
+            <Box mr={1}>
+              <NavbarButton
+                variant="base"
+                onClick={handleAboutModalOpen}
+                icon={InfoOutlined}
+                tooltip="Open about"
                 sxIcon={{
                   color: theme.palette.text.secondary,
                   height: "28px",
@@ -223,6 +246,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           handleModalClose={handleSettingsModalClose}
           handleThemeChange={handleThemeChange}
         />
+        <AboutModal
+          open={openAboutModal}
+          handleModalOpen={handleAboutModalOpen}
+          handleModalClose={handleAboutModalClose}
+        />
         <NotificationsModal
           open={openNotificationsModal}
           handleModalOpen={handleNotificationsModalOpen}
@@ -234,6 +262,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           allNotificationsFilteredOnDate={notifications}
           unreadNotificationsIds={unreadNotificationsIds}
           setVisibleBadgeNotifications={setVisibleBadgeNotifications}
+          notificationsFilterDays={notificationsFilterDays}
+          setNotificationsFilterDays={setNotificationsFilterDays}
         />
       </Box>
     );
@@ -415,6 +445,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         allNotificationsFilteredOnDate={notifications}
         unreadNotificationsIds={unreadNotificationsIds}
         setVisibleBadgeNotifications={setVisibleBadgeNotifications}
+        notificationsFilterDays={notificationsFilterDays}
+        setNotificationsFilterDays={setNotificationsFilterDays}
       />
     </Box>
   );

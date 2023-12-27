@@ -78,7 +78,8 @@ export type EditorjsRendererProps = {
     message?: string;
   };
   style: {
-    boxMarginY?: number;
+    typography?: SxProps;
+    box?: SxProps;
     h1?: CSSProperties;
     h2?: CSSProperties;
     h3?: CSSProperties;
@@ -216,14 +217,28 @@ export type TOCModalProps = ModalProps & {
   sidebarMode?: boolean;
 };
 
+export type NotificationProps = {
+  id: number;
+  createdAt: string;
+  title: string;
+  content: string;
+  action: {
+    href: string;
+    caption: string;
+  };
+  important: boolean;
+};
+
 export type NotificationsModalProps = ModalProps & {
   lastRead: number;
   setLastRead: (date: number) => void;
   notificationsRead: number[];
   setNotificationsRead: (ids: number[]) => void;
-  allNotificationsFilteredOnDate: any[];
+  allNotificationsFilteredOnDate: NotificationProps[];
   unreadNotificationsIds: number[];
   setVisibleBadgeNotifications: (value: boolean) => void;
+  notificationsFilterDays: number;
+  setNotificationsFilterDays: (value: number) => void;
 };
 
 // Buttons

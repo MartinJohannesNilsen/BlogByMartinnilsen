@@ -4,21 +4,15 @@ import {
   ArrowBack,
   CalendarMonth,
   Edit,
-  ExpandMore,
   IosShareOutlined,
   MenuBook,
-  Person,
-  Tune,
   Visibility,
 } from "@mui/icons-material";
 import {
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   ButtonBase,
   Grid,
-  IconButton,
   Stack,
   Tooltip,
   Typography,
@@ -68,19 +62,17 @@ import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
-import { RevealFromDownOnEnter } from "../../components/Animations/Reveal";
 import PostViews from "../../components/PostViews/PostViews";
-import CustomToggle, {
-  Accordion,
-} from "../../components/EditorJS/Renderers/CustomToggle";
+import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
-import ProfileMenu from "../../components/Modals/ProfileMenu";
+import ProfileMenu from "../../components/Menus/ProfileMenu";
 import NotificationsModal, {
   checkForUnreadRecentNotifications,
   notificationsApiFetcher,
 } from "../../components/Modals/NotificationsModal";
 import useSWR from "swr";
 import useStickyState from "../../utils/useStickyState";
+import Toggle, { Accordion } from "../../components/Toggles/Toggle";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -318,6 +310,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
   const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
+  const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState(
+    "notificationsFilterDays",
+    30
+  );
   const [notificationsRead, setNotificationsRead] = useStickyState(
     "notificationsRead",
     []
@@ -327,6 +323,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
     const unreadNotifications = checkForUnreadRecentNotifications(
       data,
       lastRead,
+      notificationsFilterDays,
       notificationsRead
     );
     if (data) {
@@ -335,7 +332,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
       setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
     }
     return () => {};
-  }, [data, notificationsRead]);
+  }, [data, notificationsRead, notificationsFilterDays]);
 
   if (!post.published && !isAuthorized) return <></>;
   return (
@@ -388,6 +385,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
               allNotificationsFilteredOnDate={notifications}
               unreadNotificationsIds={unreadNotificationsIds}
               setVisibleBadgeNotifications={setVisibleBadgeNotifications}
+              notificationsFilterDays={notificationsFilterDays}
+              setNotificationsFilterDays={setNotificationsFilterDays}
             />
             {/* Settings */}
             <SettingsModal
@@ -973,36 +972,26 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   </Box>
                   {/* Comment section */}
                   <Box mb={3}>
-                    <Accordion>
-                      <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography
-                          fontFamily={theme.typography.fontFamily}
-                          color={theme.palette.text.primary}
-                        >
-                          Reactions & Comments
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Giscus
-                          repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
-                          repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
-                          categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
-                          id="comments"
-                          category="Comments"
-                          mapping="url"
-                          term="Welcome to the comment section!"
-                          strict="1"
-                          reactionsEnabled="1"
-                          emitMetadata="0"
-                          inputPosition="top"
-                          theme={
-                            theme.palette.mode === "light" ? "light" : "dark"
-                          }
-                          lang="en"
-                          loading="lazy"
-                        />
-                      </AccordionDetails>
-                    </Accordion>
+                    <Toggle title={"Reactions & Comments"}>
+                      <Giscus
+                        repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
+                        repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
+                        categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
+                        id="comments"
+                        category="Comments"
+                        mapping="url"
+                        term="Welcome to the comment section!"
+                        strict="1"
+                        reactionsEnabled="1"
+                        emitMetadata="0"
+                        inputPosition="top"
+                        theme={
+                          theme.palette.mode === "light" ? "light" : "dark"
+                        }
+                        lang="en"
+                        loading="lazy"
+                      />
+                    </Toggle>
                   </Box>
                 </Stack>
               </Grid>

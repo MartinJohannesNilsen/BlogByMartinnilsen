@@ -53,14 +53,12 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
   // const underline = `<u class=${style.underline}>`;
 
   return (
-    <Box
-      my={(props.style && props.style.boxMarginY) || 1}
-      sx={{ userSelect: "text" }}
-    >
+    <Box sx={{ userSelect: "text", my: 1, ...props.style?.box }}>
       {props.data.text === "" ? (
         <br />
       ) : (
         <Typography
+          sx={{ ...props.style?.typography }}
           variant="body1"
           color="textPrimary"
           fontFamily={theme.typography.fontFamily}

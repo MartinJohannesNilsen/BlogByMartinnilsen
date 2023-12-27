@@ -50,6 +50,10 @@ export const Account = () => {
   const [notifications, setNotifications] = useState([]);
   const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
   const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
+  const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState(
+    "notificationsFilterDays",
+    30
+  );
   const [notificationsRead, setNotificationsRead] = useStickyState(
     "notificationsRead",
     []
@@ -59,6 +63,7 @@ export const Account = () => {
     const unreadNotifications = checkForUnreadRecentNotifications(
       data,
       lastRead,
+      notificationsFilterDays,
       notificationsRead
     );
     if (data) {
@@ -67,7 +72,7 @@ export const Account = () => {
       setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
     }
     return () => {};
-  }, [data, notificationsRead]);
+  }, [data, notificationsRead, notificationsFilterDays]);
 
   if (status === "loading") {
     return <></>;
@@ -164,6 +169,8 @@ export const Account = () => {
           allNotificationsFilteredOnDate={notifications}
           unreadNotificationsIds={unreadNotificationsIds}
           setVisibleBadgeNotifications={setVisibleBadgeNotifications}
+          notificationsFilterDays={notificationsFilterDays}
+          setNotificationsFilterDays={setNotificationsFilterDays}
         />
       </Grid>
     </SEO>

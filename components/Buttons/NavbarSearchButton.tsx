@@ -9,13 +9,13 @@ export const NavbarSearchButton = (props: ButtonProps) => {
     <ButtonBase onClick={props.onClick} href={props.href}>
       <props.icon
         sx={{
-          ...props.sxIcon,
           color: props.sxIcon?.color || theme.palette.text.primary,
           height: props.sxIcon?.height || "30px",
           width: props.sxIcon?.width || "30px",
           "&:hover": {
             color: theme.palette.secondary.main,
           },
+          ...props.sxIcon,
         }}
       />
     </ButtonBase>
@@ -26,8 +26,6 @@ export const NavbarSearchButton = (props: ButtonProps) => {
       href={props.href}
       disabled={props.disabled || false}
       sx={{
-        ...props.sxButton,
-        // backgroundColor: theme.palette.primary.main,
         p: 0.5,
         border:
           "1px solid " +
@@ -53,6 +51,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
               : theme.palette.grey[50]),
           color: props.sxIcon?.colorHover || theme.palette.secondary.main,
         },
+        ...props.sxButton,
       }}
       aria-controls={props.ariaControls || undefined}
       aria-haspopup={props.ariaHasPopup || "false"}
