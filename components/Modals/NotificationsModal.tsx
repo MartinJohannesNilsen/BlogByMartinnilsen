@@ -8,6 +8,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { NotificationProps, NotificationsModalProps } from "../../types";
 import { useEffect, useState } from "react";
 import UnstyledSelect from "../Selects/NotificationSelectDays";
+import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
 
 export const notificationsApiFetcher = async (url: RequestInfo) => {
   // Add apikey header
@@ -165,22 +166,40 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
                 (notification, index) => (
                   <>
                     <Box my={1}>
-                      <Typography
-                        fontFamily={theme.typography.fontFamily}
-                        variant="subtitle1"
-                        fontWeight="800"
-                        color={theme.palette.text.primary}
-                      >
-                        {notification.title}
-                      </Typography>
-                      <Typography
-                        fontFamily={theme.typography.fontFamily}
-                        variant="body1"
-                        fontWeight="600"
-                        color={theme.palette.text.primary}
-                      >
-                        {notification.content}
-                      </Typography>
+                      <CustomParagraph
+                        data={{
+                          text: notification.title,
+                        }}
+                        style={{
+                          typography: {
+                            ...theme.typography.body1,
+                            userSelect: "none",
+                            fontFamily: theme.typography.fontFamily,
+                            fontWeight: 800,
+                            color: theme.palette.text.primary,
+                          },
+                          box: { my: 0, mb: 0.2 },
+                        }}
+                        config={null}
+                        classNames={null}
+                      />
+                      <CustomParagraph
+                        data={{
+                          text: notification.content,
+                        }}
+                        style={{
+                          typography: {
+                            ...theme.typography.body2,
+                            userSelect: "none",
+                            fontFamily: theme.typography.fontFamily,
+                            fontWeight: 400,
+                            color: theme.palette.text.primary,
+                          },
+                          box: { my: 0 },
+                        }}
+                        config={null}
+                        classNames={null}
+                      />
                     </Box>
                     {index !==
                       props.allNotificationsFilteredOnDate.length - 1 && (
@@ -193,8 +212,8 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
               <Typography
                 my={1}
                 fontFamily={theme.typography.fontFamily}
-                variant="body1"
-                fontWeight="600"
+                variant="body2"
+                fontWeight="500"
                 color={theme.palette.text.primary}
               >
                 No notifications for the past {props.notificationsFilterDays}{" "}

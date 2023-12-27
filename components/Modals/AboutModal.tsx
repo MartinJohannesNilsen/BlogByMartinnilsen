@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { IconButton, Link, useMediaQuery } from "@mui/material";
+import { Button, IconButton, Tooltip, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
@@ -8,11 +8,23 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ModalProps } from "../../types";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
 import Toggle from "../Toggles/Toggle";
+import { useEffect, useState } from "react";
 
 export const AboutModal = (props: ModalProps) => {
   const { theme } = useTheme();
   const router = useRouter();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
+  const nToggles = 2;
+  const [openToggles, setOpenToggles] = useState(Array(nToggles).fill(false));
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  const handleClick = (index) => {
+    if (index > nToggles || index < 0) return;
+    let newArray = Array(nToggles).fill(false);
+    newArray[index] = !openToggles[index];
+    setOpenToggles(newArray);
+  };
 
   const style = {
     position: "absolute" as "absolute",
@@ -20,7 +32,7 @@ export const AboutModal = (props: ModalProps) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: xs ? 370 : 500,
-    maxHeight: "90vh",
+    maxHeight: "95vh",
     bgcolor: "background.paper",
     borderRadius: 2,
     outline: 0,
@@ -30,7 +42,7 @@ export const AboutModal = (props: ModalProps) => {
     rowGap: "10px",
     justifyContent: "flex-start",
     boxShadow: 24,
-    overflow: "scroll",
+    // overflow: "scroll",
     p: 4,
   };
 
@@ -82,7 +94,12 @@ export const AboutModal = (props: ModalProps) => {
               config={null}
               classNames={null}
             />
+            {/* Services */}
             <Toggle
+              open={openToggles[0]}
+              handleClick={() => {
+                handleClick(0);
+              }}
               title="Services"
               accordionSx={{
                 backgroundColor:
@@ -157,7 +174,12 @@ export const AboutModal = (props: ModalProps) => {
                 />
               </>
             </Toggle>
+            {/* Local storage */}
             <Toggle
+              open={openToggles[1]}
+              handleClick={() => {
+                handleClick(1);
+              }}
               title="Local storage"
               accordionSx={{
                 backgroundColor:
@@ -173,16 +195,21 @@ export const AboutModal = (props: ModalProps) => {
               boxSx={{
                 mt: 1,
                 my: 0,
+                userSelect: "none",
               }}
             >
               <>
                 <CustomParagraph
                   data={{
-                    text: "Except for view counts, all data is stored entirely on each visitor's machine. Utilizing local storage, these fields are utilized specifically:",
+                    text: "Except for view counts, all data is stored entirely on each visitor's machine. These fields are stored locally:",
                   }}
                   style={{
                     box: { mt: -0.5, my: 0.5 },
-                    typography: { ...theme.typography.body2, fontWeight: 600 },
+                    typography: {
+                      ...theme.typography.body2,
+                      fontWeight: 600,
+                      userSelect: "none",
+                    },
                   }}
                   config={null}
                   classNames={null}
@@ -193,22 +220,67 @@ export const AboutModal = (props: ModalProps) => {
                   }}
                   style={{
                     box: { my: 0.5 },
-                    typography: { ...theme.typography.body2, fontWeight: 600 },
+                    typography: {
+                      ...theme.typography.body2,
+                      fontWeight: 600,
+                      userSelect: "none",
+                    },
                   }}
                   config={null}
                   classNames={null}
                 />
                 <CustomParagraph
                   data={{
-                    text: "These will be cleared if you clear your browsing data. If you want to, you can clear the local storage by pressing this button:",
+                    text: "These will be cleared if you clear your browsing data. Additionally, if you want to clear them right now, you can push the button below:",
                   }}
                   style={{
                     box: { my: 0.5 },
-                    typography: { ...theme.typography.body2, fontWeight: 600 },
+                    typography: {
+                      ...theme.typography.body2,
+                      fontWeight: 600,
+                      userSelect: "none",
+                    },
                   }}
                   config={null}
                   classNames={null}
                 />
+                <Tooltip
+                  title="Cleared! Refresh browser to see changes"
+                  open={tooltipOpen}
+                  placement={xs ? "top-start" : "right"}
+                  disableHoverListener
+                >
+                  <Button
+                    disabled={buttonDisabled}
+                    sx={{
+                      border: "1px solid " + theme.palette.error.main,
+                      backgroundColor: theme.palette.error.dark,
+                      "&:hover": { backgroundColor: theme.palette.error.main },
+                      "&:disabled": { opacity: 0.8 },
+                      borderRadius: "5px",
+                      p: "5px 10px",
+                      mt: 1,
+                    }}
+                    onClick={() => {
+                      localStorage.clear();
+                      setTooltipOpen(true);
+                      setButtonDisabled(true);
+                      setTimeout(() => {
+                        setTooltipOpen(false);
+                      }, 5000);
+                    }}
+                  >
+                    <Typography
+                      fontFamily={theme.typography.fontFamily}
+                      variant="subtitle2"
+                      sx={{ textTransform: "none" }}
+                      fontWeight="600"
+                      color={theme.palette.text.primary}
+                    >
+                      Clear local storage
+                    </Typography>
+                  </Button>
+                </Tooltip>
               </>
             </Toggle>
           </Box>

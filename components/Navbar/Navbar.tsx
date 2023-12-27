@@ -2,10 +2,14 @@ import {
   Info,
   InfoOutlined,
   Logout,
+  LogoutRounded,
+  LogoutSharp,
   PostAdd,
   Search,
   Settings,
   SettingsOutlined,
+  SettingsRounded,
+  SettingsSharp,
   Tag,
 } from "@mui/icons-material";
 import {
@@ -200,7 +204,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               <NavbarButton
                 variant="base"
                 onClick={handleSettingsModalOpen}
-                icon={SettingsOutlined}
+                icon={SettingsRounded}
                 tooltip="Open settings"
                 sxIcon={{
                   color: theme.palette.text.secondary,
@@ -213,7 +217,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               <NavbarButton
                 variant="base"
                 onClick={handleAboutModalOpen}
-                icon={InfoOutlined}
+                icon={Info}
                 tooltip="Open about"
                 sxIcon={{
                   color: theme.palette.text.secondary,
@@ -228,7 +232,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                 onClick={() => {
                   userSignOut();
                 }}
-                icon={Logout}
+                icon={LogoutRounded}
                 tooltip="Sign out"
                 sxIcon={{
                   color: theme.palette.text.secondary,
