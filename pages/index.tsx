@@ -217,6 +217,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                     <ButtonGroup sx={{ paddingRight: 1 }}>
                       <IconButton
                         sx={{
+                          width: "34px",
+                          height: "34px",
                           color: "text.primary",
                         }}
                         disabled={page <= 1}
@@ -236,6 +238,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
                       </Box>
                       <IconButton
                         sx={{
+                          width: "34px",
+                          height: "34px",
                           color: "text.primary",
                         }}
                         disabled={
