@@ -75,7 +75,12 @@ import CustomToggle, {
 } from "../../components/EditorJS/Renderers/CustomToggle";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Modals/ProfileMenu";
-import NotificationsModal from "../../components/Modals/NotificationsModal";
+import NotificationsModal, {
+  checkForUnreadRecentNotifications,
+  notificationsApiFetcher,
+} from "../../components/Modals/NotificationsModal";
+import useSWR from "swr";
+import useStickyState from "../../utils/useStickyState";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -220,7 +225,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
   const [openTOCModal, setOpenTOCModal] = useState(false);
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);
-  const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
   // ProfileMenu
   const [anchorElProfileMenu, setAnchorElProfileMenu] =
     useState<null | HTMLElement>(null);
@@ -271,9 +275,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
         (status === "authenticated" &&
           session &&
           session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
-      // All criterias are met, run PUT request to increment counter
+      // All criterias are met, run POST request to increment counter
       fetch(`/api/views/${props.postId}`, {
-        method: "PUT",
+        method: "POST",
         headers: {
           apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
         },
@@ -303,6 +307,35 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
       }
     });
   });
+
+  // NotificationsModal
+  const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
+  const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
+  const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
+  const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
+  const [visibleBadgeNotifications, setVisibleBadgeNotifications] =
+    useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
+  const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
+  const [notificationsRead, setNotificationsRead] = useStickyState(
+    "notificationsRead",
+    []
+  );
+
+  useEffect(() => {
+    const unreadNotifications = checkForUnreadRecentNotifications(
+      data,
+      lastRead,
+      notificationsRead
+    );
+    if (data) {
+      setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
+      setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+      setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
+    }
+    return () => {};
+  }, [data, notificationsRead]);
 
   if (!post.published && !isAuthorized) return <></>;
   return (
@@ -346,8 +379,15 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
             {/* Notifications */}
             <NotificationsModal
               open={openNotificationsModal}
-              handleModalOpen={() => setOpenNotificationsModal(true)}
-              handleModalClose={() => setOpenNotificationsModal(false)}
+              handleModalOpen={handleNotificationsModalOpen}
+              handleModalClose={handleNotificationsModalClose}
+              lastRead={lastRead}
+              setLastRead={setLastRead}
+              notificationsRead={notificationsRead}
+              setNotificationsRead={setNotificationsRead}
+              allNotificationsFilteredOnDate={notifications}
+              unreadNotificationsIds={unreadNotificationsIds}
+              setVisibleBadgeNotifications={setVisibleBadgeNotifications}
             />
             {/* Settings */}
             <SettingsModal
@@ -508,7 +548,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       accountButton={{
                         color: theme.palette.text.primary,
                       }}
-                      showNotificationsBadge={false}
+                      showNotificationsBadge={visibleBadgeNotifications}
                       notifications={{
                         open: openNotificationsModal,
                         handleModalOpen: () => setOpenNotificationsModal(true),
@@ -621,7 +661,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       accountButton={{
                         color: theme.palette.text.primary,
                       }}
-                      showNotificationsBadge={false}
+                      showNotificationsBadge={visibleBadgeNotifications}
                       notifications={{
                         open: openNotificationsModal,
                         handleModalOpen: () => setOpenNotificationsModal(true),

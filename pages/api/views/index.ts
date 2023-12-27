@@ -16,7 +16,7 @@ import { validateAuthAPIToken } from "..";
  *         content:
  *          application/json:
  *           example:
- *            - postId: 1
+ *            2vl7PgaUvfwe3T9R4l3a: 1
  *       '500':
  *         description: Internal Server Error.
  *       '501':
@@ -37,13 +37,13 @@ export default async function handler(
   if (req.method === "GET") {
     // Query the pages table in the database where slug equals the request params slug.
     const { data, error } = await SupabaseAdmin.from("views").select(
-      "post_id, view_count"
+      "postId, viewCount"
     );
 
     if (data) {
-      let view_counts = {};
-      data.map((row) => (view_counts[row.post_id] = row.view_count));
-      return res.status(200).json(view_counts || null);
+      let viewCounts = {};
+      data.map((row) => (viewCounts[row.postId] = row.viewCount));
+      return res.status(200).json(viewCounts || null);
     } else if (error) {
       console.log("Error:", error);
     }

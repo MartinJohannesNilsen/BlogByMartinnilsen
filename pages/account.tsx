@@ -1,22 +1,19 @@
-import {
-  Api,
-  Create,
-  Lock,
-  Logout,
-  Newspaper,
-  Notifications,
-} from "@mui/icons-material";
+import { Api, Create, Newspaper, Notifications } from "@mui/icons-material";
 import { Grid } from "@mui/material";
-import { signOut } from "next-auth/react";
 import { useTheme } from "../styles/themes/ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
 import SEO from "../components/SEO/SEO";
 import Navbar from "../components/Navbar/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostTableModal from "../components/PostManagement/PostTableModal";
-import NotificationsModal from "../components/Modals/NotificationsModal";
+import NotificationsModal, {
+  checkForUnreadRecentNotifications,
+  notificationsApiFetcher,
+} from "../components/Modals/NotificationsModal";
+import useStickyState from "../utils/useStickyState";
+import useSWR from "swr";
 
 export const Account = () => {
   const { isAuthorized, session, status } =
@@ -43,10 +40,34 @@ export const Account = () => {
   const [openPostTableModal, setOpenPostTableModal] = useState(false);
   const handlePostTableModalOpen = () => setOpenPostTableModal(true);
   const handlePostTableModalClose = () => setOpenPostTableModal(false);
-  // Notifications Modal
+  // NotificationsModal
   const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
   const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
   const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
+  const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
+  const [visibleBadgeNotifications, setVisibleBadgeNotifications] =
+    useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
+  const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
+  const [notificationsRead, setNotificationsRead] = useStickyState(
+    "notificationsRead",
+    []
+  );
+
+  useEffect(() => {
+    const unreadNotifications = checkForUnreadRecentNotifications(
+      data,
+      lastRead,
+      notificationsRead
+    );
+    if (data) {
+      setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
+      setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+      setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
+    }
+    return () => {};
+  }, [data, notificationsRead]);
 
   if (status === "loading") {
     return <></>;
@@ -117,7 +138,8 @@ export const Account = () => {
           </Grid>
           <Grid item xs={5.7}>
             <TileButtonCard
-              disabled
+              showBadge={visibleBadgeNotifications}
+              // disabled
               icon={
                 <Notifications sx={{ color: theme.palette.text.primary }} />
               }
@@ -135,6 +157,13 @@ export const Account = () => {
           open={openNotificationsModal}
           handleModalOpen={handleNotificationsModalOpen}
           handleModalClose={handleNotificationsModalClose}
+          lastRead={lastRead}
+          setLastRead={setLastRead}
+          notificationsRead={notificationsRead}
+          setNotificationsRead={setNotificationsRead}
+          allNotificationsFilteredOnDate={notifications}
+          unreadNotificationsIds={unreadNotificationsIds}
+          setVisibleBadgeNotifications={setVisibleBadgeNotifications}
         />
       </Grid>
     </SEO>

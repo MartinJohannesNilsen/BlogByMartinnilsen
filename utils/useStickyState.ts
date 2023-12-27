@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export const useStickyState = (
   key: string,
-  defaultValue: number | boolean | string
+  defaultValue: number | boolean | string | number[] | string[] | Date
 ) => {
   const [value, setValue] = useState(() => {
     if (typeof window !== "undefined") {

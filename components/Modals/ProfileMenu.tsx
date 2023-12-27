@@ -12,9 +12,10 @@ import { Badge, ButtonBase, Typography } from "@mui/material";
 import { Notifications, Person } from "@mui/icons-material";
 import { ProfileMenuProps } from "../../types";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../Buttons/NavbarButton";
+import { userSignOut } from "../../utils/signOut";
 
 export const AccountMenu = (props: ProfileMenuProps) => {
   const { theme } = useTheme();
@@ -126,8 +127,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
         <Divider />
 
         {/* Notifications */}
-        {/* props.notifications */}
-        {false && (
+        {props.notifications && (
           <MenuItem
             onClick={() => {
               props.notifications.handleModalOpen();
@@ -184,7 +184,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
         {/* Sign out */}
         <MenuItem
           onClick={() => {
-            signOut({ callbackUrl: "/" });
+            userSignOut();
             props.handleMenuClose();
           }}
         >

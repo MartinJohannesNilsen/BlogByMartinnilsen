@@ -18,7 +18,7 @@ import {
 import Image from "next/image";
 import { redirect, useRouter } from "next/navigation";
 import logo from "public/assets/imgs/terminal.png";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -30,8 +30,13 @@ import SettingsModal from "../Modals/SettingsModal";
 import ProfileMenu from "../Modals/ProfileMenu";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { NavbarButton } from "../Buttons/NavbarButton";
-import NotificationsModal from "../Modals/NotificationsModal";
-import { signOut } from "next-auth/react";
+import NotificationsModal, {
+  checkForUnreadRecentNotifications,
+  notificationsApiFetcher,
+} from "../Modals/NotificationsModal";
+import useSWR from "swr";
+import useStickyState from "../../utils/useStickyState";
+import { userSignOut } from "../../utils/signOut";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
@@ -57,6 +62,16 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
   const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
   const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
+  const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
+  const [visibleBadgeNotifications, setVisibleBadgeNotifications] =
+    useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
+  const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
+  const [notificationsRead, setNotificationsRead] = useStickyState(
+    "notificationsRead",
+    []
+  );
   // SettingsModal
   const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -89,6 +104,20 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       true
     );
   };
+
+  useEffect(() => {
+    const unreadNotifications = checkForUnreadRecentNotifications(
+      data,
+      lastRead,
+      notificationsRead
+    );
+    if (data) {
+      setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
+      setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+      setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
+    }
+    return () => {};
+  }, [data, notificationsRead]);
 
   if (!props.posts)
     return (
@@ -174,7 +203,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               <NavbarButton
                 variant="base"
                 onClick={() => {
-                  signOut().then(() => (window.location.href = "/"));
+                  userSignOut();
                 }}
                 icon={Logout}
                 tooltip="Sign out"
@@ -193,6 +222,18 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
           handleModalOpen={handleSettingsModalOpen}
           handleModalClose={handleSettingsModalClose}
           handleThemeChange={handleThemeChange}
+        />
+        <NotificationsModal
+          open={openNotificationsModal}
+          handleModalOpen={handleNotificationsModalOpen}
+          handleModalClose={handleNotificationsModalClose}
+          lastRead={lastRead}
+          setLastRead={setLastRead}
+          notificationsRead={notificationsRead}
+          setNotificationsRead={setNotificationsRead}
+          allNotificationsFilteredOnDate={notifications}
+          unreadNotificationsIds={unreadNotificationsIds}
+          setVisibleBadgeNotifications={setVisibleBadgeNotifications}
         />
       </Box>
     );
@@ -337,7 +378,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             accountButton={{
               color: props.textColor || theme.palette.text.primary,
             }}
-            showNotificationsBadge={true}
+            showNotificationsBadge={visibleBadgeNotifications}
             notifications={{
               open: openNotificationsModal,
               handleModalOpen: handleNotificationsModalOpen,
@@ -367,6 +408,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         open={openNotificationsModal}
         handleModalOpen={handleNotificationsModalOpen}
         handleModalClose={handleNotificationsModalClose}
+        lastRead={lastRead}
+        setLastRead={setLastRead}
+        notificationsRead={notificationsRead}
+        setNotificationsRead={setNotificationsRead}
+        allNotificationsFilteredOnDate={notifications}
+        unreadNotificationsIds={unreadNotificationsIds}
+        setVisibleBadgeNotifications={setVisibleBadgeNotifications}
       />
     </Box>
   );

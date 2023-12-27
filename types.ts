@@ -216,7 +216,15 @@ export type TOCModalProps = ModalProps & {
   sidebarMode?: boolean;
 };
 
-export type NotificationsModalProps = ModalProps & {};
+export type NotificationsModalProps = ModalProps & {
+  lastRead: number;
+  setLastRead: (date: number) => void;
+  notificationsRead: number[];
+  setNotificationsRead: (ids: number[]) => void;
+  allNotificationsFilteredOnDate: any[];
+  unreadNotificationsIds: number[];
+  setVisibleBadgeNotifications: (value: boolean) => void;
+};
 
 // Buttons
 export type ButtonProps = {

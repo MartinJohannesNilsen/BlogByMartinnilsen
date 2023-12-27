@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -67,6 +67,15 @@ export const SettingsModal = (props: SettingsModalProps) => {
     setFontFamily,
   } = useTheme();
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
+  const [themeUserConfigurationExist, setThemeUserConfugurationExist] =
+    useState(null);
+
+  useEffect(() => {
+    // Check if localStorage is defined (only in the browser environment)
+    if (typeof window !== "undefined" && window.localStorage) {
+      setThemeUserConfugurationExist(localStorage.getItem("theme") !== null);
+    }
+  }, []);
 
   const blockPickerColors = [
     "#D9E3F0",
@@ -130,7 +139,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
             <Box mt={-0.2}>
               <Tooltip enterDelay={2000} title="Use system settings">
                 <IconButton
-                  disabled={localStorage.getItem("theme") === null}
+                  disabled={!themeUserConfigurationExist}
                   aria-label="delete"
                   size="small"
                   onClick={() => {

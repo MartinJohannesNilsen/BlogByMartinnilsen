@@ -25,8 +25,8 @@ const PostViews: FC<PostViewsProps> = ({ postId, sx }) => {
 
   return (
     <>
-      {data?.view_count ? (
-        `${data.view_count} view` + (data.view_count !== 1 ? "s" : "")
+      {data?.viewCount ? (
+        `${data.viewCount} view` + (data.viewCount !== 1 ? "s" : "")
       ) : (
         <Skeleton variant="text" sx={sx} width={60} />
       )}

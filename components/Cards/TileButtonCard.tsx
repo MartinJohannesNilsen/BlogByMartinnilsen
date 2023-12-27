@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Card,
   CardActionArea,
@@ -17,6 +18,7 @@ type TileButtonCard = {
   href?: string;
   onClick?: () => void;
   disabled?: boolean;
+  showBadge?: boolean;
 };
 
 export const TileButtonCard: FC<TileButtonCard> = (props) => {
@@ -90,7 +92,33 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
         }}
       >
         <Box display="flex" justifyContent="center" alignItems="center" pt={2}>
-          <IconButton disabled>{props.icon}</IconButton>
+          {props.showBadge ? (
+            <Badge
+              color="secondary"
+              variant="dot"
+              invisible={false}
+              overlap="circular"
+              badgeContent=" "
+              sx={{
+                position: "relative", // Use relative positioning
+                left: "-6px", // Adjust left position as needed
+                top: "5px",
+              }}
+            >
+              <IconButton
+                disabled
+                sx={{
+                  position: "relative", // Use relative positioning
+                  right: "-6px", // Adjust left position as needed
+                  bottom: "5px",
+                }}
+              >
+                {props.icon}
+              </IconButton>
+            </Badge>
+          ) : (
+            <IconButton disabled>{props.icon}</IconButton>
+          )}
         </Box>
         <CardContent>
           <Box
