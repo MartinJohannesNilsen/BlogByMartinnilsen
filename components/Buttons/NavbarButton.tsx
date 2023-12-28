@@ -8,12 +8,13 @@ export const NavbarButton = (props: ButtonProps) => {
     <ButtonBase onClick={props.onClick} href={props.href}>
       <props.icon
         sx={{
-          color: props.sxIcon?.color || theme.palette.text.primary,
-          height: props.sxIcon?.height || "30px",
-          width: props.sxIcon?.width || "30px",
+          color: theme.palette.text.primary,
+          height: "30px",
+          width: "30px",
           "&:hover": {
             color: theme.palette.secondary.main,
           },
+          ...props.sxIcon,
         }}
       />
     </ButtonBase>
@@ -30,11 +31,10 @@ export const NavbarButton = (props: ButtonProps) => {
             ? theme.palette.grey[700]
             : theme.palette.grey[400]),
         borderRadius: "10px",
-        height: props.sxButton?.height || "32px",
-        width: props.sxButton?.width || "32px",
-        backgroundColor:
-          props.sxButton?.backgroundColor || theme.palette.primary.main,
-        color: props.sxIcon?.color || theme.palette.text.primary,
+        height: "32px",
+        width: "32px",
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.text.primary,
         "&:hover": {
           border:
             "1px solid " +
@@ -42,11 +42,10 @@ export const NavbarButton = (props: ButtonProps) => {
               ? theme.palette.grey[600]
               : theme.palette.grey[300]),
           backgroundColor:
-            props.sxButton?.backgroundColorHover ||
-            (theme.palette.mode === "dark"
+            theme.palette.mode === "dark"
               ? theme.palette.grey[800]
-              : theme.palette.grey[50]),
-          color: props.sxIcon?.colorHover || theme.palette.secondary.main,
+              : theme.palette.grey[50],
+          color: theme.palette.secondary.main,
         },
         ...props.sxButton,
       }}
@@ -57,8 +56,8 @@ export const NavbarButton = (props: ButtonProps) => {
       {props.icon && (
         <props.icon
           sx={{
-            height: props.sxIcon?.height || "22px",
-            width: props.sxIcon?.width || "22px",
+            height: "22px",
+            width: "22px",
             color: "inherit",
             ...props.sxIcon,
           }}
