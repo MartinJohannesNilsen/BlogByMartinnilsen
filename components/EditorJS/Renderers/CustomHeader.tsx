@@ -112,7 +112,7 @@ const HeaderOutput = ({
           position: "absolute",
           zIndex: -1,
           // top: isMobile ? -50 : -10,
-          top: -50,
+          top: isMobile ? -48 : -65,
           visibility: "hidden",
           scrollBehavior: "smooth",
         }}
@@ -126,13 +126,13 @@ const HeaderOutput = ({
               mt:
                 data.level === 1
                   ? smDown
-                    ? 0.4
+                    ? 0.9
                     : 0.75
                   : data.level === 2
                   ? smDown
-                    ? 0.3
+                    ? 1
                     : 0.75
-                  : 0.95,
+                  : 0.9,
               position: "absolute",
               left: -1,
               opacity: 0.5,

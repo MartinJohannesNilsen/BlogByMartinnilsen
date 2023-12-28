@@ -199,7 +199,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
               height:
                 xs && isMobile ? "calc(100% - 80px)" : "calc(100% - 40px)",
               background: theme.palette.primary.main,
-              paddingTop: isMobile ? "50px" : "80px",
+              paddingTop: isMobile ? "54px" : "80px",
               width: "100%",
             }}
           >
