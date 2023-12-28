@@ -48,6 +48,7 @@ export const SearchModal = (props: SearchModalProps) => {
       );
       setMatchedItems(bestMatch.slice(0, min));
       setMaxNumberOfItems(min);
+      if (!isMobile) setActiveItem(-1);
     }
     return () => {};
   }, [textFieldValue]);
@@ -182,7 +183,7 @@ export const SearchModal = (props: SearchModalProps) => {
                             activeItem === index
                               ? theme.palette.mode === "dark"
                                 ? "#2B2B2B"
-                                : "#F6F6F6"
+                                : theme.palette.grey[300]
                               : "transparent",
                         },
                         "&.Mui-selected:hover": {
@@ -190,7 +191,7 @@ export const SearchModal = (props: SearchModalProps) => {
                             activeItem === index
                               ? theme.palette.mode === "dark"
                                 ? "#2B2B2B"
-                                : "#F6F6F6"
+                                : theme.palette.grey[300]
                               : "transparent",
                         },
                         "&.Mui-focusVisible": {
@@ -198,7 +199,7 @@ export const SearchModal = (props: SearchModalProps) => {
                             activeItem === index
                               ? theme.palette.mode === "dark"
                                 ? "#2B2B2B"
-                                : "#F6F6F6"
+                                : theme.palette.grey[300]
                               : "transparent",
                         },
                         ":hover": {
@@ -206,7 +207,7 @@ export const SearchModal = (props: SearchModalProps) => {
                             activeItem === index
                               ? theme.palette.mode === "dark"
                                 ? "#2B2B2B"
-                                : "#F6F6F6"
+                                : theme.palette.grey[300]
                               : "transparent",
                         },
                       }}
