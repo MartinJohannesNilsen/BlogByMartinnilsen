@@ -34,7 +34,23 @@ const CustomToggle = (props: EditorjsRendererProps) => {
 
   return (
     <Box my={1} display="flex" flexDirection="column" textAlign="center">
-      <Toggle title={props.data.text} open={open} handleClick={handleChange}>
+      <Toggle
+        title={props.data.text}
+        open={open}
+        handleClick={handleChange}
+        boxSx={{ my: 0 }}
+        accordionSx={{
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? theme.palette.grey[900]
+              : theme.palette.grey[200],
+          border:
+            "1px solid" +
+            (theme.palette.mode === "dark"
+              ? theme.palette.grey[900]
+              : theme.palette.grey[300]),
+        }}
+      >
         {OutputElement}
       </Toggle>
     </Box>

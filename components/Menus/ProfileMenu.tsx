@@ -54,10 +54,12 @@ export const AccountMenu = (props: ProfileMenuProps) => {
             minHeight: "34px",
             height: "34px",
             width: "34px",
+            ...props.accountButtonSx,
           }}
           sxIcon={{
             height: "24px",
             width: "24px",
+            color: "inherit",
           }}
         />
       </Box>

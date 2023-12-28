@@ -544,8 +544,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       open={openProfileMenu}
                       handleMenuOpen={handleProfileMenuClick}
                       handleMenuClose={handleProfileMenuClose}
-                      accountButton={{
-                        color: theme.palette.text.primary,
+                      accountButtonSx={{
+                        backgroundColor: theme.palette.primary.main + "99",
                       }}
                       showNotificationsBadge={visibleBadgeNotifications}
                       notifications={{
@@ -576,7 +576,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 position={"sticky"}
                 sx={{
                   top: 0,
-                  backgroundColor: theme.palette.primary.main + "80",
+                  // backgroundColor: theme.palette.primary.main + "80",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -628,6 +628,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       sxButton={{
                         height: "34px",
                         width: "34px",
+                        backgroundColor: theme.palette.primary.main + "99",
                       }}
                       sxIcon={{
                         height: "20px",
@@ -646,6 +647,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       sxButton={{
                         height: "34px",
                         width: "34px",
+                        backgroundColor: theme.palette.primary.main + "99",
                       }}
                       sxIcon={{ height: "18px", width: "22px" }}
                     />
@@ -657,8 +659,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                       open={openProfileMenu}
                       handleMenuOpen={handleProfileMenuClick}
                       handleMenuClose={handleProfileMenuClose}
-                      accountButton={{
-                        color: theme.palette.text.primary,
+                      accountButtonSx={{
+                        backgroundColor: theme.palette.primary.main + "99",
                       }}
                       showNotificationsBadge={visibleBadgeNotifications}
                       notifications={{

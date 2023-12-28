@@ -23,13 +23,27 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
       textAlign="center"
     >
       <Card
+        elevation={0}
         sx={{
           display: "flex",
           height: props.data.link! ? "150px" : "120px",
-          boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+          boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 8px",
+          border:
+            "1px solid" +
+            (theme.palette.mode === "dark"
+              ? theme.palette.grey[700]
+              : theme.palette.grey[200]),
         }}
       >
-        <CardActionArea href={props.data.link!}>
+        <CardActionArea
+          href={props.data.link!}
+          sx={{
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? theme.palette.grey[900]
+                : theme.palette.grey[0],
+          }}
+        >
           <Box display="flex" alignItems="center">
             <Box
               display="flex"

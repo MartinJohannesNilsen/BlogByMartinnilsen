@@ -178,7 +178,7 @@ export type MenuProps = {
 };
 
 export type ProfileMenuProps = MenuProps & {
-  accountButton: { color?: string };
+  accountButtonSx?: SxProps;
   showNotificationsBadge?: boolean;
   notifications?: ModalProps;
   settings?: ModalProps;
@@ -253,16 +253,16 @@ export type ButtonProps = {
   href?: string;
   disabled?: boolean;
   sxButton?: SxProps & {
-    backgroundColor?: string;
-    backgroundColorHover?: string;
-    height?: string;
-    width?: string;
+    // backgroundColor?: string;
+    // backgroundColorHover?: string;
+    // height?: string;
+    // width?: string;
   };
   sxIcon?: SxProps & {
-    color?: string;
-    colorHover?: string;
-    height?: string;
-    width?: string;
+    // color?: string;
+    // colorHover?: string;
+    // height?: string;
+    // width?: string;
   };
   styleIcon?: CSSProperties;
   tooltip?: string;

@@ -406,8 +406,9 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             open={openProfileMenu}
             handleMenuOpen={handleProfileMenuClick}
             handleMenuClose={handleProfileMenuClose}
-            accountButton={{
+            accountButtonSx={{
               color: props.textColor || theme.palette.text.primary,
+              backgroundColor: theme.palette.primary.main + "99",
             }}
             showNotificationsBadge={visibleBadgeNotifications}
             notifications={{
