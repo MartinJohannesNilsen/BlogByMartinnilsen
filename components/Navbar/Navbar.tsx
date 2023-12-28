@@ -6,10 +6,7 @@ import {
   LogoutSharp,
   PostAdd,
   Search,
-  Settings,
-  SettingsOutlined,
   SettingsRounded,
-  SettingsSharp,
   Tag,
 } from "@mui/icons-material";
 import {

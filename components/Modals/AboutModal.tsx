@@ -119,7 +119,7 @@ export const AboutModal = (props: ModalProps) => {
               <>
                 <CustomParagraph
                   data={{
-                    text: "<a href='https://firebase.google.com'>Firebase</a>, a product by Google, is used for storing posts. These are fetched during NextJS revalidation, only happening when the blog is built or the author create or updates a post. ",
+                    text: "<a href='https://firebase.google.com'>Firebase</a>, a Google product, stores posts that are retrieved only when the author creates or updates a post, using NextJS revalidation. ",
                   }}
                   style={{
                     box: { mt: -0.5, my: 0.5 },
@@ -141,18 +141,7 @@ export const AboutModal = (props: ModalProps) => {
                 />
                 <CustomParagraph
                   data={{
-                    text: "<a href='https://github.com'>GitHub</a> is used only for authenticating users. Only the elements 'email', 'name' and 'icon' will be accessed.",
-                  }}
-                  style={{
-                    box: { my: 0.5 },
-                    typography: { ...theme.typography.body2, fontWeight: 600 },
-                  }}
-                  config={null}
-                  classNames={null}
-                />
-                <CustomParagraph
-                  data={{
-                    text: "<a href='https://www.google.com/'>Google</a> is used only for authenticating users. Only the elements 'email', 'name' and 'icon' will be accessed.",
+                    text: "<a href='https://github.com'>GitHub</a> and <a href='https://www.google.com/'>Google</a> are used for authenticating users. Only the elements 'email', 'name' and 'icon' will be accessed.",
                   }}
                   style={{
                     box: { my: 0.5 },
@@ -231,7 +220,7 @@ export const AboutModal = (props: ModalProps) => {
                 />
                 <CustomParagraph
                   data={{
-                    text: "These will be cleared if you clear your browsing data. Additionally, if you want to clear them right now, you can push the button below:",
+                    text: "These will be cleared if you clear your browsing data, or by pressing the button below:",
                   }}
                   style={{
                     box: { my: 0.5 },
