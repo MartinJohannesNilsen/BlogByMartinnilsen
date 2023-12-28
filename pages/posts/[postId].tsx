@@ -45,6 +45,15 @@ import Output from "editorjs-react-renderer";
 import { useEventListener } from "usehooks-ts";
 import logo from "public/assets/imgs/terminal.png";
 import Image from "next/image";
+import { NavbarButton } from "../../components/Buttons/NavbarButton";
+import ProfileMenu from "../../components/Menus/ProfileMenu";
+import NotificationsModal, {
+  checkForUnreadRecentNotifications,
+  notificationsApiFetcher,
+} from "../../components/Modals/NotificationsModal";
+import useSWR from "swr";
+import useStickyState from "../../utils/useStickyState";
+import Toggle from "../../components/Toggles/Toggle";
 
 // EditorJS renderers
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
@@ -56,7 +65,6 @@ import CustomLinkTool from "../../components/EditorJS/Renderers/CustomLinkTool";
 import CustomList from "../../components/EditorJS/Renderers/CustomList";
 import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
 import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
-import CustomPersonality from "../../components/EditorJS/Renderers/CustomPersonality";
 import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
@@ -64,15 +72,7 @@ import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
 import PostViews from "../../components/PostViews/PostViews";
 import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
-import { NavbarButton } from "../../components/Buttons/NavbarButton";
-import ProfileMenu from "../../components/Menus/ProfileMenu";
-import NotificationsModal, {
-  checkForUnreadRecentNotifications,
-  notificationsApiFetcher,
-} from "../../components/Modals/NotificationsModal";
-import useSWR from "swr";
-import useStickyState from "../../utils/useStickyState";
-import Toggle, { Accordion } from "../../components/Toggles/Toggle";
+// import CustomPersonality from "../../components/EditorJS/Renderers/_CustomPersonality";
 
 export async function getStaticPaths() {
   const idList = await getAllPostIds(false); // Not filter on visibility
@@ -101,6 +101,7 @@ export const getStaticProps = async (context: any) => {
 
 // Pass your custom renderers to Output
 export const renderers = {
+  // personality: CustomPersonality,
   paragraph: CustomParagraph,
   header: CustomHeader,
   code: CustomCode,
@@ -110,7 +111,6 @@ export const renderers = {
   urlimage: CustomImage,
   linktool: CustomLinkTool,
   quote: CustomQuote,
-  personality: CustomPersonality,
   video: CustomVideo,
   checklist: CustomChecklist,
   table: CustomTable,
@@ -435,6 +435,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 justifyContent={"center"}
                 sx={{
                   backgroundColor: theme.palette.primary.dark,
+                  borderBottom:
+                    "1px solid" +
+                    (theme.palette.mode === "dark"
+                      ? theme.palette.grey[900]
+                      : theme.palette.grey[200]),
                   top: 0,
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -577,13 +582,21 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 sx={{
                   top: 0,
                   // backgroundColor: theme.palette.primary.main + "80",
+                  backgroundColor: isMobile
+                    ? theme.palette.primary.main
+                    : theme.palette.primary.main + "EE",
+                  borderBottom:
+                    "1px solid" +
+                    (theme.palette.mode === "dark"
+                      ? theme.palette.grey[900]
+                      : theme.palette.grey[200]),
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   zIndex: 1000,
                   marginTop: "0",
                   WebkitTransform: "translateZ(0)",
-                  backdropFilter: "blur(5px)",
+                  backdropFilter: "blur(1px)",
                   WebkitBackdropFilter: "blur(5px)",
                 }}
               >

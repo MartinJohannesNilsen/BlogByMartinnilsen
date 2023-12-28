@@ -11,9 +11,6 @@ export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
     <Card
       sx={{
         boxShadow: 0,
-        // boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-        // boxShadow:
-        // "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
         height: `${props.height}px`,
         width: `${props.width}px`,
         padding: 0,
@@ -22,10 +19,9 @@ export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
             ? theme.palette.grey[900]
             : theme.palette.grey[200],
         border:
-          "1px solid" +
-          (theme.palette.mode === "dark"
-            ? theme.palette.grey[700]
-            : theme.palette.grey[300]),
+          theme.palette.mode === "dark"
+            ? "none"
+            : "1px solid" + theme.palette.grey[300],
       }}
     >
       <Box display="flex" width="100%" height="100%">

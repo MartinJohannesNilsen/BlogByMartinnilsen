@@ -29,10 +29,9 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
           height: props.data.link! ? "150px" : "120px",
           boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 8px",
           border:
-            "1px solid" +
-            (theme.palette.mode === "dark"
-              ? theme.palette.grey[700]
-              : theme.palette.grey[200]),
+            theme.palette.mode === "dark"
+              ? "none"
+              : "1px solid" + theme.palette.grey[300],
         }}
       >
         <CardActionArea

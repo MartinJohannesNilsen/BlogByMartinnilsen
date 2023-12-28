@@ -281,8 +281,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       sx={{
         // backgroundColor: isMobile ? props.backgroundColor : "transparent",
         backgroundColor: isMobile
-          ? props.backgroundColor
-          : props.backgroundColor + "99",
+          ? theme.palette.primary.main
+          : theme.palette.primary.main + "EE",
+        borderBottom:
+          "1px solid" +
+          (theme.palette.mode === "dark"
+            ? theme.palette.grey[900]
+            : theme.palette.grey[200]),
         top: 0,
         zIndex: 1000,
         marginTop: isMobile ? "-34px" : 0,
@@ -345,6 +350,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               sxButton={{
                 height: "34px",
                 width: "34px",
+                backgroundColor: theme.palette.primary.main + "50",
               }}
               sxIcon={{
                 height: "24px",
@@ -363,6 +369,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               sxButton={{
                 height: "34px",
                 width: "34px",
+                backgroundColor: theme.palette.primary.main + "50",
               }}
               sxIcon={{
                 height: "24px",
@@ -376,6 +383,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               tooltip={"Search"}
               sxButton={{
                 height: "34px",
+                backgroundColor: theme.palette.primary.main + "50",
               }}
               sxIcon={{
                 height: "24px",
@@ -393,6 +401,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             sxButton={{
               height: "34px",
               width: "34px",
+              backgroundColor: theme.palette.primary.main + "50",
             }}
             sxIcon={{
               height: "24px",
@@ -408,7 +417,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             handleMenuClose={handleProfileMenuClose}
             accountButtonSx={{
               color: props.textColor || theme.palette.text.primary,
-              backgroundColor: theme.palette.primary.main + "99",
+              backgroundColor: theme.palette.primary.main + "50",
             }}
             showNotificationsBadge={visibleBadgeNotifications}
             notifications={{

@@ -45,10 +45,9 @@ const CustomToggle = (props: EditorjsRendererProps) => {
               ? theme.palette.grey[900]
               : theme.palette.grey[200],
           border:
-            "1px solid" +
-            (theme.palette.mode === "dark"
-              ? theme.palette.grey[900]
-              : theme.palette.grey[300]),
+            theme.palette.mode === "dark"
+              ? "none"
+              : "1px solid" + theme.palette.grey[300],
         }}
       >
         {OutputElement}
