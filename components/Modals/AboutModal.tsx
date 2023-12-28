@@ -42,8 +42,7 @@ export const AboutModal = (props: ModalProps) => {
     rowGap: "10px",
     justifyContent: "flex-start",
     boxShadow: 24,
-    // overflow: "scroll",
-    p: 4,
+    p: xs ? 2 : 4,
   };
 
   return (

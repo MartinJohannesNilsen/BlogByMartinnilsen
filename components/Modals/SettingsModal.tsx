@@ -6,6 +6,7 @@ import {
   Modal,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
@@ -16,24 +17,6 @@ import { defaultFontFamily } from "../../styles/themes/themeDefaults";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../types";
 import { CustomSwitchNew as Switch } from "../Switch/Switch";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 370,
-  bgcolor: "background.paper",
-  borderRadius: 2,
-  outline: 0,
-  display: "flex",
-  textAlign: "left",
-  flexDirection: "column",
-  rowGap: "10px",
-  justifyContent: "flex-start",
-  boxShadow: 24,
-  p: 4,
-};
 
 const defaultFonts = [
   { title: "System font", font: defaultFontFamily },
@@ -66,9 +49,28 @@ export const SettingsModal = (props: SettingsModalProps) => {
     fontFamily,
     setFontFamily,
   } = useTheme();
+  const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const [themeUserConfigurationExist, setThemeUserConfugurationExist] =
     useState(null);
+
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 370,
+    bgcolor: "background.paper",
+    borderRadius: 2,
+    outline: 0,
+    display: "flex",
+    textAlign: "left",
+    flexDirection: "column",
+    rowGap: "10px",
+    justifyContent: "flex-start",
+    boxShadow: 24,
+    p: xs ? 2.5 : 4,
+  };
 
   useEffect(() => {
     // Check if localStorage is defined (only in the browser environment)

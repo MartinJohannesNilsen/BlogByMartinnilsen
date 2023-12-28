@@ -186,7 +186,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
         {/* Sign out */}
         <MenuItem
           onClick={() => {
-            userSignOut();
+            userSignOut(null, true);
             props.handleMenuClose();
           }}
         >

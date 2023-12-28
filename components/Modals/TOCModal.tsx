@@ -45,7 +45,7 @@ export const TOCModal = (props: TOCModalProps) => {
     rowGap: "10px",
     justifyContent: "flex-start",
     boxShadow: 24,
-    p: 4,
+    p: xs ? 2 : 4,
   };
 
   const TableOfContents = useMemo(() => {

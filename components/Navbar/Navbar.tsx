@@ -227,7 +227,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
               <NavbarButton
                 variant="base"
                 onClick={() => {
-                  userSignOut();
+                  userSignOut("/", true);
                 }}
                 icon={LogoutRounded}
                 tooltip="Sign out"

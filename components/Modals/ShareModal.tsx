@@ -53,7 +53,7 @@ export const ShareModal = (props: ShareModalProps) => {
     rowGap: "10px",
     justifyContent: "flex-start",
     boxShadow: 24,
-    p: 4,
+    p: xs ? 2 : 4,
   };
 
   return (
