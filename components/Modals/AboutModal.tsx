@@ -3,16 +3,14 @@ import { Button, IconButton, Tooltip, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ModalProps } from "../../types";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
 import Toggle from "../Toggles/Toggle";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const AboutModal = (props: ModalProps) => {
   const { theme } = useTheme();
-  const router = useRouter();
   const xs = useMediaQuery(theme.breakpoints.only("xs"));
   const nToggles = 2;
   const [openToggles, setOpenToggles] = useState(Array(nToggles).fill(false));

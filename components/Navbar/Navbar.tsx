@@ -136,37 +136,29 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         width={"100%"}
         pt={isMobile ? 4.75 : 2}
         pb={isMobile ? 0.75 : 2}
-        // position={isMobile ? "fixed" : "relative"}
         position={"fixed"}
         display="flex"
         alignItems="center"
         justifyContent="center"
         sx={{
-          // backgroundColor: isMobile ? props.backgroundColor : "transparent",
           backgroundColor: props.backgroundColor,
-          opacity: isMobile ? "100%" : "80%",
           top: 0,
           zIndex: 1000,
           marginTop: isMobile ? "-34px" : 0,
           WebkitTransform: "translateZ(0)",
-          backdropFilter: "blur(5px)",
-          WebkitBackdropFilter: "blur(5px)",
         }}
       >
         <Box
           display="flex"
           alignItems="center"
           sx={{
-            // width: isMobile || xs ? "95%" : "80%",
             width: "100%",
             paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
           }}
         >
           {/* Home button */}
           <Link
-            // onClick={() => handleNavigate("/")}
             href="/"
-            // disableRipple
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -273,13 +265,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
       width={"100%"}
       pt={isMobile ? 4.75 : 2}
       pb={isMobile ? 0.75 : 2}
-      // position={isMobile ? "fixed" : "relative"}
       position={"fixed"}
       display="flex"
       alignItems="center"
       justifyContent="center"
       sx={{
-        // backgroundColor: isMobile ? props.backgroundColor : "transparent",
         backgroundColor: isMobile
           ? theme.palette.primary.main
           : theme.palette.primary.main + "EE",
@@ -292,15 +282,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         zIndex: 1000,
         marginTop: isMobile ? "-34px" : 0,
         WebkitTransform: "translateZ(0)",
-        backdropFilter: "blur(5px)",
-        WebkitBackdropFilter: "blur(5px)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
       }}
     >
       <Box
         display="flex"
         alignItems="center"
         sx={{
-          // width: isMobile || xs ? "95%" : "80%",
           width: "100%",
           paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
         }}
@@ -324,7 +313,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
             style={{ borderRadius: "0" }}
           />
           <Typography
-            // variant={"h5"}
             fontFamily={theme.typography.fontFamily}
             color={props.textColor || theme.palette.text.primary}
             fontWeight={700}
@@ -337,7 +325,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
         </ButtonBase>
         <Box flexGrow={100} />
         {isAuthorized ? (
-          // <Box mt={isMobile ? 0 : -0.2}>
           <Box>
             <NavbarButton
               variant="outline"

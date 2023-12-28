@@ -577,14 +577,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                 px={3}
                 pt={2}
                 pb={2}
-                // position={"relative"}
                 position={"sticky"}
                 sx={{
                   top: 0,
-                  // backgroundColor: theme.palette.primary.main + "80",
                   backgroundColor: isMobile
                     ? theme.palette.primary.main
-                    : theme.palette.primary.main + "EE",
+                    : theme.palette.primary.main + "CC",
                   borderBottom:
                     "1px solid" +
                     (theme.palette.mode === "dark"
@@ -596,8 +594,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
                   zIndex: 1000,
                   marginTop: "0",
                   WebkitTransform: "translateZ(0)",
-                  backdropFilter: "blur(1px)",
-                  WebkitBackdropFilter: "blur(5px)",
+                  backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)",
                 }}
               >
                 {/* Home button */}
