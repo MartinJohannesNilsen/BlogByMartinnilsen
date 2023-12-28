@@ -158,7 +158,8 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
                 theme.palette.mode === "dark"
                   ? theme.palette.grey[900]
                   : theme.palette.grey[200],
-              padding: "5px 15px",
+              padding: "5px 15px 8px 15px",
+              overflowY: "scroll",
             }}
           >
             {props.allNotificationsFilteredOnDate.length > 0 ? (
@@ -173,7 +174,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
                         style={{
                           typography: {
                             ...theme.typography.body1,
-                            userSelect: "none",
+                            // userSelect: "none",
                             fontFamily: theme.typography.fontFamily,
                             fontWeight: 800,
                             color: theme.palette.text.primary,
@@ -190,7 +191,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
                         style={{
                           typography: {
                             ...theme.typography.body2,
-                            userSelect: "none",
+                            // userSelect: "none",
                             fontFamily: theme.typography.fontFamily,
                             fontWeight: 400,
                             color: theme.palette.text.primary,
