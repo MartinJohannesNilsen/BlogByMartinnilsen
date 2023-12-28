@@ -183,16 +183,6 @@ export const ShareModal = (props: ShareModalProps) => {
               />
             </LinkedinShareButton>
             <TwitterShareButton url={props.data.url} title={props.data.title}>
-              {/* <Twitter
-                sx={{
-                  width: 40,
-                  height: 40,
-                  color: theme.palette.text.primary,
-                  "&:hover": {
-                    color: theme.palette.secondary.main,
-                  },
-                }}
-              /> */}
               <X
                 sx={{
                   width: 36,
