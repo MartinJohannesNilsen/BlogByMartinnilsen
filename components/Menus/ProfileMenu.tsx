@@ -184,23 +184,25 @@ export const AccountMenu = (props: ProfileMenuProps) => {
         )}
 
         {/* Sign out */}
-        <MenuItem
-          onClick={() => {
-            userSignOut(null, true);
-            props.handleMenuClose();
-          }}
-        >
-          <ListItemIcon sx={{ mr: 0.25 }}>
-            <Logout
-              fontSize="medium"
-              sx={{ color: theme.palette.text.primary }}
-            />
-          </ListItemIcon>
-          {/* Logout */}
-          <Typography fontFamily={theme.typography.fontFamily}>
-            Sign out
-          </Typography>
-        </MenuItem>
+        {status === "authenticated" && (
+          <MenuItem
+            onClick={() => {
+              userSignOut(null, true);
+              props.handleMenuClose();
+            }}
+          >
+            <ListItemIcon sx={{ mr: 0.25 }}>
+              <Logout
+                fontSize="medium"
+                sx={{ color: theme.palette.text.primary }}
+              />
+            </ListItemIcon>
+            {/* Logout */}
+            <Typography fontFamily={theme.typography.fontFamily}>
+              Sign out
+            </Typography>
+          </MenuItem>
+        )}
       </Menu>
     </React.Fragment>
   );

@@ -42,10 +42,11 @@ import AboutModal from "../Modals/AboutModal";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
   const { theme, setTheme } = useTheme();
-  const { isAuthorized } =
+  const { isAuthorized, status } =
     process.env.NEXT_PUBLIC_LOCALHOST === "true"
       ? {
           isAuthorized: true,
+          status: "authenticated",
         }
       : useAuthorized();
   // ProfileMenu
@@ -215,21 +216,23 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
                 }}
               />
             </Box>
-            <Box>
-              <NavbarButton
-                variant="base"
-                onClick={() => {
-                  userSignOut("/", true);
-                }}
-                icon={LogoutRounded}
-                tooltip="Sign out"
-                sxIcon={{
-                  color: theme.palette.text.secondary,
-                  height: "28px",
-                  width: "28px",
-                }}
-              />
-            </Box>
+            {status === "authenticated" && (
+              <Box>
+                <NavbarButton
+                  variant="base"
+                  onClick={() => {
+                    userSignOut("/", true);
+                  }}
+                  icon={LogoutRounded}
+                  tooltip="Sign out"
+                  sxIcon={{
+                    color: theme.palette.text.secondary,
+                    height: "28px",
+                    width: "28px",
+                  }}
+                />
+              </Box>
+            )}
           </Box>
         </Box>
         {/* Modals */}
