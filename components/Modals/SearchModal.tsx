@@ -442,7 +442,14 @@ export const SearchModal = (props: SearchModalProps) => {
 														border: "1px solid rgba( 255, 255, 255, 0.18 )",
 													}}
 													onClick={() => {
-														handleEnterClickActions();
+														if (textFieldRef.current) {
+															textFieldRef.current.focus();
+														}
+														if (!isPulsating) {
+															handlePulsate();
+															setIsActions(!isActions);
+															setTextFieldValue("");
+														}
 													}}
 												>
 													<Typography
@@ -463,7 +470,7 @@ export const SearchModal = (props: SearchModalProps) => {
 											padding: "4px 12px",
 										},
 									}}
-									sx={{ paddingBottom: 0 }}
+									sx={{ paddingBottom: 0, borderColor: "transparent" }}
 									InputLabelProps={{ style: { fontSize: xs ? 20 : 26 } }}
 									onKeyDown={e => {
 										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
