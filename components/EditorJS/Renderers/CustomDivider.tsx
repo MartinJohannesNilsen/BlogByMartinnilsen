@@ -10,8 +10,7 @@ const CustomDivider = () => {
         width: "80%",
         marginLeft: "10%",
         marginY: "60px",
-        // borderBottom: "3px solid " + theme.palette.secondary.main,
-        borderBottom: "2px solid " + theme.palette.text.primary,
+        borderBottom: "3px solid " + theme.palette.secondary.main,
         opacity: 0.6,
         borderRadius: 5,
       }}
