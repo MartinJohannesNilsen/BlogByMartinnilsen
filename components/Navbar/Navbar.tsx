@@ -395,6 +395,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				handleNotificationsModalOpen={handleNotificationsModalOpen}
 				notificationsBadgeVisible={visibleBadgeNotifications}
 				setCardLayout={props.setCardLayout}
+				onOpen={() => {
+					handleSettingsModalClose();
+					handleNotificationsModalClose();
+					handleProfileMenuClose();
+					// handleAboutModalClose();
+				}}
 			/>
 			<SettingsModal
 				open={openSettingsModal}

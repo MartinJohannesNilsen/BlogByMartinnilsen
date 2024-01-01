@@ -208,6 +208,7 @@ export type SearchModalProps = ModalProps & {
   handleNotificationsModalOpen?: () => void;
   notificationsBadgeVisible?: boolean;
   setCardLayout?: (layout: string) => void;
+  onOpen?: () => void;
 };
 
 export type Headings = {

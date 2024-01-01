@@ -38,7 +38,7 @@ import {
 	Badge,
 } from "@mui/material";
 import { matchSorter } from "match-sorter";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -67,6 +67,7 @@ export const SearchModal = (props: SearchModalProps) => {
 	const handleNavigate = (path: string) => {
 		window.location.href = path;
 	};
+	const textFieldRef = useRef(null);
 	const [textFieldValue, setTextFieldValue] = useState("");
 	const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);
 	const [activeItem, setActiveItem] = useState(isMobile ? -1 : 0);
@@ -152,6 +153,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			title: "Remove locally stored data",
 			onClick: () => {
 				localStorage.clear();
+				window.location.reload();
 			},
 			iconElement: <Clear sx={{ color: theme.palette.text.primary }} />,
 		},
@@ -293,6 +295,15 @@ export const SearchModal = (props: SearchModalProps) => {
 		return () => {};
 	}, [textFieldValue]);
 
+	props.onOpen &&
+		useEffect(() => {
+			if (props.open) props.onOpen();
+			if (textFieldRef.current) {
+				textFieldRef.current.focus();
+			}
+			return () => {};
+		}, [props.open, isActions]);
+
 	// Hotkeys
 	useHotkeys(["Control+k", "Meta+k"], event => {
 		event.preventDefault();
@@ -366,7 +377,7 @@ export const SearchModal = (props: SearchModalProps) => {
 						top: "50%",
 						left: "50%",
 						transform: "translate(-50%, -50%)",
-						width: xs ? 380 : lgUp ? 700 : 550,
+						width: xs ? 370 : lgUp ? 700 : 550,
 						height: "450px",
 						outline: 0,
 						".pulsate": {
@@ -404,6 +415,7 @@ export const SearchModal = (props: SearchModalProps) => {
 									size="small"
 									autoComplete="off"
 									value={textFieldValue}
+									inputRef={textFieldRef}
 									InputProps={{
 										disableUnderline: true,
 										endAdornment: (
