@@ -35,6 +35,7 @@ import {
 	ButtonBase,
 	Typography,
 	Button,
+	Badge,
 } from "@mui/material";
 import { matchSorter } from "match-sorter";
 import { useEffect, useState } from "react";
@@ -48,15 +49,14 @@ import useAuthorized from "../AuthorizationHook/useAuthorized";
 import { signIn } from "next-auth/react";
 import { userSignOut } from "../../utils/signOut";
 import { ThemeEnum } from "../../styles/themes/themeMap";
+import { motion } from "framer-motion";
 
 type ActionProps = {
 	title: string;
+	iconElement: JSX.Element;
 	onClick?: () => void;
 	href?: string;
 	requirement?: () => boolean;
-	icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
-		muiName: string;
-	};
 	id?: string;
 };
 
@@ -80,46 +80,70 @@ export const SearchModal = (props: SearchModalProps) => {
 			  }
 			: useAuthorized(false);
 	const [isActions, setIsActions] = useState<boolean>(false);
-
 	const actions: ActionProps[] = [
-		{ title: "Go to landing page", href: "/", icon: Home },
-		{ title: "Go to tag page", href: "/tags", icon: Tag },
+		{
+			title: "Go to landing page",
+			// href: "/",
+			iconElement: <Home sx={{ color: theme.palette.text.primary }} />,
+			requirement: () => {
+				console.log(window.location.pathname);
+				return !window.location.pathname.includes("/");
+			},
+		},
+		{
+			title: "Go to tags page",
+			href: "/tags",
+			iconElement: <Tag sx={{ color: theme.palette.text.primary }} />,
+			requirement: () => {
+				return !window.location.pathname.includes("/tags");
+			},
+		},
 		{
 			title: "Go to account page",
 			href: "/account",
-			icon: Person,
+			iconElement: <Person sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return status === "authenticated";
+				return status === "authenticated" && !window.location.pathname.includes("/account");
 			},
 		},
 		{
 			title: "Create post",
 			href: "/create",
-			icon: PostAdd,
+			iconElement: <PostAdd sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return isAuthorized;
+				return isAuthorized && !window.location.pathname.includes("/create");
 			},
 		},
 		{
 			title: "Go to API documentation",
 			href: "/apidoc",
-			icon: Api,
+			iconElement: <Api sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return isAuthorized;
 			},
 		},
 		{
 			title: "Open settings",
-			onClick: () => {},
-			icon: Settings,
+			onClick: () => {
+				props.handleSettingsModalOpen();
+			},
+			iconElement: <Settings sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.handleSettingsModalOpen != null;
 			},
 		},
 		{
 			title: "Open notifications",
-			onClick: () => {},
-			icon: Notifications,
+			onClick: () => {
+				props.handleNotificationsModalOpen();
+			},
+			iconElement: props.notificationsBadgeVisible ? (
+				<Badge color="secondary" variant="dot" invisible={false} overlap="circular" badgeContent=" ">
+					<Notifications sx={{ color: theme.palette.text.primary }} />
+				</Badge>
+			) : (
+				<Notifications sx={{ color: theme.palette.text.primary }} />
+			),
 			requirement: () => {
 				return props.handleNotificationsModalOpen != null;
 			},
@@ -129,14 +153,14 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				localStorage.clear();
 			},
-			icon: Clear,
+			iconElement: <Clear sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
 			title: "Sign in",
 			onClick: () => {
 				signIn();
 			},
-			icon: Login,
+			iconElement: <Login sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status === "authenticated";
 			},
@@ -146,7 +170,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				userSignOut(window.location.pathname === "/account" ? "/" : null, true);
 			},
-			icon: Logout,
+			iconElement: <Logout sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status !== "authenticated";
 			},
@@ -156,28 +180,28 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				setTheme(ThemeEnum.Light, true);
 			},
-			icon: LightMode,
+			iconElement: <LightMode sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
 			title: "Theme: Set to dark",
 			onClick: () => {
 				setTheme(ThemeEnum.Dark, true);
 			},
-			icon: DarkMode,
+			iconElement: <DarkMode sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
 			title: "Theme: Set to system default",
 			onClick: () => {
 				setDefaultTheme();
 			},
-			icon: SettingsBrightness,
+			iconElement: <SettingsBrightness sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
 			title: "Layout: Switch to carousel view",
 			onClick: () => {
 				props.setCardLayout("carousel");
 			},
-			icon: ViewWeekSharp,
+			iconElement: <ViewWeekSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
 			},
@@ -187,7 +211,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("swipe");
 			},
-			icon: ViewCarousel,
+			iconElement: <ViewCarousel sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
 			},
@@ -197,7 +221,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("grid");
 			},
-			icon: GridViewSharp,
+			iconElement: <GridViewSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
 			},
@@ -207,12 +231,21 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("list");
 			},
-			icon: TableRowsSharp,
+			iconElement: <TableRowsSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
 			},
 		},
 	];
+
+	// Animation
+	const [isPulsating, setIsPulsating] = useState(false);
+	const handlePulsate = () => {
+		setIsPulsating(true);
+		setTimeout(() => {
+			setIsPulsating(false);
+		}, 1500);
+	};
 
 	// Actions on enter
 	const handleEnterClickPosts = (post: StoredPost) => {
@@ -223,6 +256,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			action.onClick();
 		}
 		if (action.href) handleNavigate(action.href);
+		setIsActions(false);
 	};
 
 	// Filter/search
@@ -292,15 +326,16 @@ export const SearchModal = (props: SearchModalProps) => {
 	useHotkeys(
 		"Tab",
 		() => {
-			setTextFieldValue("");
+			handlePulsate();
 			setIsActions(!isActions);
+			setTextFieldValue("");
 		},
 		[]
 	);
 
 	const modalStyle = {
 		bgcolor: "background.paper",
-		border: "1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[600]),
+		// border: "1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[600]),
 		borderRadius: 2,
 		display: "flex",
 		textAlign: "left",
@@ -330,206 +365,120 @@ export const SearchModal = (props: SearchModalProps) => {
 						width: xs ? 370 : lgUp ? 700 : 550,
 						height: "450px",
 						outline: 0,
+						".pulsate": {
+							animation: "pulse 2s linear",
+							borderRadius: "4px",
+						},
+						"@keyframes pulse": {
+							"0%": {
+								transform: "scale(1)",
+								MozBoxShadow: "0 0 0 0 " + (theme.palette.secondary.main + "40"),
+								boxShadow: "0 0 0 0 " + (theme.palette.secondary.main + "40"),
+							},
+							"5%": { transform: "scale(0.95)" },
+							"10%": { transform: "scale(1)" },
+							"60%": {
+								MozBoxShadow: "0 0 0 40px " + (theme.palette.secondary.main + "00"),
+								boxShadow: "0 0 0 40px " + (theme.palette.secondary.main + "00"),
+							},
+							"100%": {
+								MozBoxShadow: "0 0 0 0 " + (theme.palette.secondary.main + "00"),
+								boxShadow: "0 0 0 0 " + (theme.palette.secondary.main + "00"),
+							},
+						},
 					}}
 				>
-					<Box sx={modalStyle}>
-						{/* Search bar */}
-						<Box>
-							<TextField
-								variant="filled"
-								fullWidth
-								autoFocus
-								placeholder={isActions ? "Search for actions" : "What are you looking for?"}
-								size="small"
-								autoComplete="off"
-								value={textFieldValue}
-								InputProps={{
-									disableUnderline: true,
-									endAdornment: (
-										<InputAdornment position="end">
-											<ButtonBase
-												disabled
-												sx={{
-													color: theme.palette.grey[800],
-													backgroundColor: theme.palette.secondary.main,
-													p: "2px 8px",
-													opacity: 0.9,
-													borderRadius: 1,
-													border:
-														"1px solid " +
-														(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
-												}}
-												// aria-label="toggle password visibility"
-												// onClick={() => {
-												// 	setIsActions(!isActions);
-												// 	setTextFieldValue("");
-												// }}
-											>
-												<Typography variant="body1" sx={{ fontWeight: 600 }}>
-													⇥ {isActions ? "Posts" : "Actions"}
-												</Typography>
-											</ButtonBase>
-										</InputAdornment>
-									),
-								}}
-								inputProps={{
-									style: {
-										fontFamily: theme.typography.fontFamily,
-										fontSize: xs ? 22 : 28,
-										fontWeight: 400,
-										padding: "4px 12px",
-									},
-								}}
-								sx={{ paddingBottom: 0 }}
-								InputLabelProps={{ style: { fontSize: xs ? 22 : 28 } }}
-								onKeyDown={e => {
-									if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
-										e.preventDefault();
-										props.handleModalClose();
-									} else if (e.key === "ArrowUp") {
-										e.preventDefault();
-										setActiveItem(Math.max(0, activeItem - 1));
-									} else if (e.key === "ArrowDown") {
-										e.preventDefault();
-										setActiveItem(Math.min(maxNumberOfItems - 1, activeItem + 1));
-									} else if (e.key === "Enter") {
-										props.handleModalClose();
-										setTextFieldValue("");
-										if (isActions) {
-											handleEnterClickActions(matchedActions![activeItem]);
-										} else {
-											handleEnterClickPosts(matchedPosts![activeItem]);
-										}
-									} else if (e.key === "Tab") {
-										setIsActions(!isActions);
-										setTextFieldValue("");
-									}
-								}}
-								onChange={e => {
-									setTextFieldValue(e.target.value);
-								}}
-							/>
-						</Box>
-						{/* Posts option */}
-						{isActions ? (
-							<List sx={{ paddingY: 0, maxHeight: 297, overflowY: "scroll" }}>
-								{matchedActions!.map((action: ActionProps, index: number) => (
-									<ListItem
-										key={index}
-										sx={{
-											padding: "2px 0px 2px 0px",
-										}}
-									>
-										<ListItemButton
-											selected={activeItem === index}
-											onMouseOver={() => {
-												setActiveItem(index);
-											}}
-											sx={{
-												paddingLeft: "8px",
-												"&.Mui-selected": {
-													backgroundColor:
-														activeItem === index
-															? theme.palette.mode === "dark"
-																? "#2B2B2B"
-																: theme.palette.grey[300]
-															: "transparent",
-												},
-												"&.Mui-selected:hover": {
-													backgroundColor:
-														activeItem === index
-															? theme.palette.mode === "dark"
-																? "#2B2B2B"
-																: theme.palette.grey[300]
-															: "transparent",
-												},
-												"&.Mui-focusVisible": {
-													backgroundColor:
-														activeItem === index
-															? theme.palette.mode === "dark"
-																? "#2B2B2B"
-																: theme.palette.grey[300]
-															: "transparent",
-												},
-												":hover": {
-													backgroundColor:
-														activeItem === index
-															? theme.palette.mode === "dark"
-																? "#2B2B2B"
-																: theme.palette.grey[300]
-															: "transparent",
-												},
-											}}
-											component="a"
-											href={action.href}
-											onClick={() => {
-												props.handleModalClose();
-												setTextFieldValue("");
-												if (isMobile) setActiveItem(-1);
-												if (action.onClick) action.onClick();
-											}}
-										>
-											<ListItemAvatar>
-												<Avatar
+					<motion.div className={`${isPulsating ? "pulsate" : ""}`}>
+						<Box sx={modalStyle}>
+							{/* Search bar */}
+							<Box>
+								<TextField
+									variant="filled"
+									fullWidth
+									autoFocus
+									placeholder={isActions ? "Search for actions" : "What are you looking for?"}
+									size="small"
+									autoComplete="off"
+									value={textFieldValue}
+									InputProps={{
+										disableUnderline: true,
+										endAdornment: (
+											<InputAdornment position="end">
+												<ButtonBase
+													disabled
 													sx={{
-														marginRight: "12px",
-														borderRadius: "5px",
-														// minWidth: xs ? "70px" : "124px",
-														// minHeight: xs ? "50px" : "70px",
-														background: "transparent",
+														color: theme.palette.grey[800],
+														backgroundColor:
+															theme.palette.secondary.main + (theme.palette.mode === "dark" ? "95" : "65"),
+														p: "2px 8px",
+														// opacity: 0.9,
+														borderRadius: 1,
+														"& :hover": { cursor: "default" },
+														// border:
+														// 	"1px solid " +
+														// 	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
+														boxShadow: "0 4px 10px 4px " + theme.palette.secondary.main + "37",
+														backdropFilter: "blur(20px)",
+														WebkitBackdropFilter: "blur( 20px )",
+														border: "1px solid rgba( 255, 255, 255, 0.18 )",
 													}}
+													// aria-label="toggle password visibility"
+													// onClick={() => {
+													// 	setIsActions(!isActions);
+													// 	setTextFieldValue("");
+													// }}
 												>
-													<action.icon sx={{ color: theme.palette.text.primary }} />
-												</Avatar>
-											</ListItemAvatar>
-											<ListItemText
-												primary={action.title}
-												primaryTypographyProps={{
-													color: theme.palette.text.primary,
-													fontFamily: theme.typography.fontFamily,
-													fontWeight: "600",
-													whiteSpace: "nowrap",
-													textOverflow: "ellipsis",
-													overflow: "hidden",
-												}}
-												// secondary={post.description}
-												// secondaryTypographyProps={{
-												// 	color: theme.palette.text.primary,
-												// 	fontFamily: theme.typography.fontFamily,
-												// 	whiteSpace: "nowrap",
-												// 	textOverflow: "ellipsis",
-												// 	overflow: "hidden",
-												// }}
-												sx={{
-													width: "100%",
-													marginRight: isMobile ? 0 : 5,
-												}}
-											/>
-											{!isMobile ? (
-												<>
-													<Box flexGrow={100} />
-													<ListItemText>
-														<KeyboardReturn
-															sx={{
-																color: theme.palette.text.primary,
-																position: "absolute",
-																top: "55%",
-																right: "5px",
-																transform: "translate(-50%, -50%)",
-																display: activeItem === index ? "inline-block" : "none",
-															}}
-														/>
-													</ListItemText>
-												</>
-											) : null}
-										</ListItemButton>
-									</ListItem>
-								))}
-							</List>
-						) : (
-							props.postsOverview && (
+													<Typography variant="body1" sx={{ fontWeight: 600 }}>
+														⇥ {isActions ? "Posts" : "Actions"}
+													</Typography>
+												</ButtonBase>
+											</InputAdornment>
+										),
+									}}
+									inputProps={{
+										style: {
+											fontFamily: theme.typography.fontFamily,
+											fontSize: xs ? 22 : 28,
+											fontWeight: 400,
+											padding: "4px 12px",
+										},
+									}}
+									sx={{ paddingBottom: 0 }}
+									InputLabelProps={{ style: { fontSize: xs ? 22 : 28 } }}
+									onKeyDown={e => {
+										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
+											e.preventDefault();
+											props.handleModalClose();
+										} else if (e.key === "ArrowUp") {
+											e.preventDefault();
+											setActiveItem(Math.max(0, activeItem - 1));
+										} else if (e.key === "ArrowDown") {
+											e.preventDefault();
+											setActiveItem(Math.min(maxNumberOfItems - 1, activeItem + 1));
+										} else if (e.key === "Enter") {
+											props.handleModalClose();
+											setTextFieldValue("");
+											if (isActions) {
+												handleEnterClickActions(matchedActions![activeItem]);
+											} else {
+												handleEnterClickPosts(matchedPosts![activeItem]);
+											}
+										} else if (e.key === "Tab") {
+											handlePulsate();
+											setIsActions(!isActions);
+											setTextFieldValue("");
+										}
+									}}
+									onChange={e => {
+										setTextFieldValue(e.target.value);
+									}}
+								/>
+							</Box>
+							{/* Posts option */}
+							{isActions ? (
+								// <List sx={{ paddingY: 0, maxHeight: 297, overflowY: "scroll" }}>
 								<List sx={{ paddingY: 0 }}>
-									{matchedPosts!.map((post: StoredPost, index: number) => (
+									{matchedActions!.map((action: ActionProps, index: number) => (
 										<ListItem
 											key={index}
 											sx={{
@@ -577,11 +526,12 @@ export const SearchModal = (props: SearchModalProps) => {
 													},
 												}}
 												component="a"
-												href={`/posts/${post.id}`}
+												href={action.href}
 												onClick={() => {
 													props.handleModalClose();
 													setTextFieldValue("");
 													if (isMobile) setActiveItem(-1);
+													if (action.onClick) action.onClick();
 												}}
 											>
 												<ListItemAvatar>
@@ -589,24 +539,16 @@ export const SearchModal = (props: SearchModalProps) => {
 														sx={{
 															marginRight: "12px",
 															borderRadius: "5px",
-															minWidth: xs ? "70px" : "124px",
-															minHeight: xs ? "50px" : "70px",
+															// minWidth: xs ? "70px" : "124px",
+															// minHeight: xs ? "50px" : "70px",
 															background: "transparent",
 														}}
 													>
-														<img
-															src={post.image || DEFAULT_OGIMAGE}
-															alt={'OpenGraph image for article titled "' + post.title + '"'}
-															style={{
-																minWidth: "125px",
-																minHeight: "82px",
-																objectFit: "cover",
-															}}
-														/>
+														{action.iconElement}
 													</Avatar>
 												</ListItemAvatar>
 												<ListItemText
-													primary={post.title}
+													primary={action.title}
 													primaryTypographyProps={{
 														color: theme.palette.text.primary,
 														fontFamily: theme.typography.fontFamily,
@@ -615,14 +557,14 @@ export const SearchModal = (props: SearchModalProps) => {
 														textOverflow: "ellipsis",
 														overflow: "hidden",
 													}}
-													secondary={post.description}
-													secondaryTypographyProps={{
-														color: theme.palette.text.primary,
-														fontFamily: theme.typography.fontFamily,
-														whiteSpace: "nowrap",
-														textOverflow: "ellipsis",
-														overflow: "hidden",
-													}}
+													// secondary={post.description}
+													// secondaryTypographyProps={{
+													// 	color: theme.palette.text.primary,
+													// 	fontFamily: theme.typography.fontFamily,
+													// 	whiteSpace: "nowrap",
+													// 	textOverflow: "ellipsis",
+													// 	overflow: "hidden",
+													// }}
 													sx={{
 														width: "100%",
 														marginRight: isMobile ? 0 : 5,
@@ -649,9 +591,133 @@ export const SearchModal = (props: SearchModalProps) => {
 										</ListItem>
 									))}
 								</List>
-							)
-						)}
-					</Box>
+							) : (
+								props.postsOverview && (
+									<List sx={{ paddingY: 0 }}>
+										{matchedPosts!.map((post: StoredPost, index: number) => (
+											<ListItem
+												key={index}
+												sx={{
+													padding: "2px 0px 2px 0px",
+												}}
+											>
+												<ListItemButton
+													selected={activeItem === index}
+													onMouseOver={() => {
+														setActiveItem(index);
+													}}
+													sx={{
+														paddingLeft: "8px",
+														"&.Mui-selected": {
+															backgroundColor:
+																activeItem === index
+																	? theme.palette.mode === "dark"
+																		? "#2B2B2B"
+																		: theme.palette.grey[300]
+																	: "transparent",
+														},
+														"&.Mui-selected:hover": {
+															backgroundColor:
+																activeItem === index
+																	? theme.palette.mode === "dark"
+																		? "#2B2B2B"
+																		: theme.palette.grey[300]
+																	: "transparent",
+														},
+														"&.Mui-focusVisible": {
+															backgroundColor:
+																activeItem === index
+																	? theme.palette.mode === "dark"
+																		? "#2B2B2B"
+																		: theme.palette.grey[300]
+																	: "transparent",
+														},
+														":hover": {
+															backgroundColor:
+																activeItem === index
+																	? theme.palette.mode === "dark"
+																		? "#2B2B2B"
+																		: theme.palette.grey[300]
+																	: "transparent",
+														},
+													}}
+													component="a"
+													href={`/posts/${post.id}`}
+													onClick={() => {
+														props.handleModalClose();
+														setTextFieldValue("");
+														if (isMobile) setActiveItem(-1);
+													}}
+												>
+													<ListItemAvatar>
+														<Avatar
+															sx={{
+																marginRight: "12px",
+																borderRadius: "5px",
+																minWidth: xs ? "70px" : "124px",
+																minHeight: xs ? "50px" : "70px",
+																background: "transparent",
+															}}
+														>
+															<img
+																src={post.image || DEFAULT_OGIMAGE}
+																alt={'OpenGraph image for article titled "' + post.title + '"'}
+																style={{
+																	minWidth: "125px",
+																	minHeight: "82px",
+																	objectFit: "cover",
+																}}
+															/>
+														</Avatar>
+													</ListItemAvatar>
+													<ListItemText
+														primary={post.title}
+														primaryTypographyProps={{
+															color: theme.palette.text.primary,
+															fontFamily: theme.typography.fontFamily,
+															fontWeight: "600",
+															whiteSpace: "nowrap",
+															textOverflow: "ellipsis",
+															overflow: "hidden",
+														}}
+														secondary={post.description}
+														secondaryTypographyProps={{
+															color: theme.palette.text.primary,
+															fontFamily: theme.typography.fontFamily,
+															whiteSpace: "nowrap",
+															textOverflow: "ellipsis",
+															overflow: "hidden",
+														}}
+														sx={{
+															width: "100%",
+															marginRight: isMobile ? 0 : 5,
+														}}
+													/>
+													{!isMobile ? (
+														<>
+															<Box flexGrow={100} />
+															<ListItemText>
+																<KeyboardReturn
+																	sx={{
+																		color: theme.palette.text.primary,
+																		position: "absolute",
+																		top: "55%",
+																		right: "5px",
+																		transform: "translate(-50%, -50%)",
+																		display: activeItem === index ? "inline-block" : "none",
+																	}}
+																/>
+															</ListItemText>
+														</>
+													) : null}
+												</ListItemButton>
+											</ListItem>
+										))}
+									</List>
+								)
+							)}
+						</Box>
+					</motion.div>
 				</Box>
 			</Modal>
 		</Box>

@@ -393,6 +393,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				postsOverview={props.posts}
 				handleSettingsModalOpen={handleSettingsModalOpen}
 				handleNotificationsModalOpen={handleNotificationsModalOpen}
+				notificationsBadgeVisible={visibleBadgeNotifications}
 				setCardLayout={props.setCardLayout}
 			/>
 			<SettingsModal

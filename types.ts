@@ -206,6 +206,7 @@ export type SearchModalProps = ModalProps & {
   postsOverview?: StoredPost[];
   handleSettingsModalOpen?: () => void;
   handleNotificationsModalOpen?: () => void;
+  notificationsBadgeVisible?: boolean;
   setCardLayout?: (layout: string) => void;
 };
 
