@@ -248,10 +248,12 @@ export const SearchModal = (props: SearchModalProps) => {
 	};
 
 	// Actions on enter
-	const handleEnterClickPosts = (post: StoredPost) => {
+	const handleEnterClickPosts = () => {
+		const post = matchedPosts![activeItem];
 		handleNavigate(`/posts/${post.id}`);
 	};
-	const handleEnterClickActions = (action: ActionProps) => {
+	const handleEnterClickActions = () => {
+		const action = matchedActions![activeItem];
 		if (action.onClick) {
 			action.onClick();
 		}
@@ -316,9 +318,9 @@ export const SearchModal = (props: SearchModalProps) => {
 			props.handleModalClose();
 			setTextFieldValue("");
 			if (isActions) {
-				handleEnterClickActions(matchedActions![activeItem]);
+				handleEnterClickActions();
 			} else {
-				handleEnterClickPosts(matchedPosts![activeItem]);
+				handleEnterClickPosts();
 			}
 		},
 		[activeItem]
@@ -326,9 +328,11 @@ export const SearchModal = (props: SearchModalProps) => {
 	useHotkeys(
 		"Tab",
 		() => {
-			handlePulsate();
-			setIsActions(!isActions);
-			setTextFieldValue("");
+			if (!isPulsating) {
+				handlePulsate();
+				setIsActions(!isActions);
+				setTextFieldValue("");
+			}
 		},
 		[]
 	);
@@ -362,11 +366,11 @@ export const SearchModal = (props: SearchModalProps) => {
 						top: "50%",
 						left: "50%",
 						transform: "translate(-50%, -50%)",
-						width: xs ? 370 : lgUp ? 700 : 550,
+						width: xs ? 380 : lgUp ? 700 : 550,
 						height: "450px",
 						outline: 0,
 						".pulsate": {
-							animation: "pulse 2s linear",
+							animation: "pulse 1.4s linear",
 							borderRadius: "4px",
 						},
 						"@keyframes pulse": {
@@ -405,7 +409,7 @@ export const SearchModal = (props: SearchModalProps) => {
 										endAdornment: (
 											<InputAdornment position="end">
 												<ButtonBase
-													disabled
+													disabled={!isMobile}
 													sx={{
 														color: theme.palette.grey[800],
 														backgroundColor:
@@ -422,14 +426,15 @@ export const SearchModal = (props: SearchModalProps) => {
 														WebkitBackdropFilter: "blur( 20px )",
 														border: "1px solid rgba( 255, 255, 255, 0.18 )",
 													}}
-													// aria-label="toggle password visibility"
-													// onClick={() => {
-													// 	setIsActions(!isActions);
-													// 	setTextFieldValue("");
-													// }}
+													onClick={() => {
+														handleEnterClickActions();
+													}}
 												>
-													<Typography variant="body1" sx={{ fontWeight: 600 }}>
-														⇥ {isActions ? "Posts" : "Actions"}
+													<Typography
+														variant="body1"
+														sx={{ fontWeight: 600, fontSize: xs ? 12 : theme.typography.body1 }}
+													>
+														{!isMobile && "⇥"} {isActions ? "Posts" : "Actions"}
 													</Typography>
 												</ButtonBase>
 											</InputAdornment>
@@ -438,13 +443,13 @@ export const SearchModal = (props: SearchModalProps) => {
 									inputProps={{
 										style: {
 											fontFamily: theme.typography.fontFamily,
-											fontSize: xs ? 22 : 28,
+											fontSize: xs ? 20 : 26,
 											fontWeight: 400,
 											padding: "4px 12px",
 										},
 									}}
 									sx={{ paddingBottom: 0 }}
-									InputLabelProps={{ style: { fontSize: xs ? 22 : 28 } }}
+									InputLabelProps={{ style: { fontSize: xs ? 20 : 26 } }}
 									onKeyDown={e => {
 										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
 											e.preventDefault();
@@ -459,14 +464,16 @@ export const SearchModal = (props: SearchModalProps) => {
 											props.handleModalClose();
 											setTextFieldValue("");
 											if (isActions) {
-												handleEnterClickActions(matchedActions![activeItem]);
+												handleEnterClickActions();
 											} else {
-												handleEnterClickPosts(matchedPosts![activeItem]);
+												handleEnterClickPosts();
 											}
 										} else if (e.key === "Tab") {
-											handlePulsate();
-											setIsActions(!isActions);
-											setTextFieldValue("");
+											if (!isPulsating) {
+												handlePulsate();
+												setIsActions(!isActions);
+												setTextFieldValue("");
+											}
 										}
 									}}
 									onChange={e => {
