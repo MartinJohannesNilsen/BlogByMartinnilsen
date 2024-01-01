@@ -339,6 +339,9 @@ export const SearchModal = (props: SearchModalProps) => {
 	useHotkeys(
 		"Tab",
 		() => {
+			if (textFieldRef.current) {
+				textFieldRef.current.focus();
+			}
 			if (!isPulsating) {
 				handlePulsate();
 				setIsActions(!isActions);
@@ -481,6 +484,10 @@ export const SearchModal = (props: SearchModalProps) => {
 												handleEnterClickPosts();
 											}
 										} else if (e.key === "Tab") {
+											e.preventDefault();
+											if (textFieldRef.current) {
+												textFieldRef.current.focus();
+											}
 											if (!isPulsating) {
 												handlePulsate();
 												setIsActions(!isActions);
