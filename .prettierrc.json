@@ -1,9 +1,9 @@
 {
   "overrides": [
     {
-      "files": ["src/**/*.tsx", "src/**/*.jsx"],
+      "files": ["**/*.tsx", "**/*.jsx"],
       "options": {
-        "printWidth": 160,
+        "printWidth": 120,
         "useTabs": true,
         "arrowParens": "avoid",
         "tabWidth": 2,
@@ -11,9 +11,9 @@
       }
     },
     {
-      "files": ["src/**/*.json"],
+      "files": ["**/*.json"],
       "options": {
-        "printWidth": 160,
+        "printWidth": 120,
         "useTabs": true,
         "tabWidth": 2,
         "trailingComma": "es5",

@@ -3,6 +3,7 @@ import { SvgIconTypeMap, SxProps } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { CSSProperties, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
+import { ThemeEnum } from "./styles/themes/themeMap";
 
 // Object types
 
@@ -150,6 +151,7 @@ export type NavbarProps = {
   textColor?: string;
   backgroundColor: string;
   accountPage?: boolean;
+  setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
 };
 
 // Component types
@@ -202,6 +204,9 @@ export type ShareModalProps = ModalProps & {
 
 export type SearchModalProps = ModalProps & {
   postsOverview?: StoredPost[];
+  handleSettingsModalOpen?: () => void;
+  handleNotificationsModalOpen?: () => void;
+  setCardLayout?: (layout: string) => void;
 };
 
 export type Headings = {

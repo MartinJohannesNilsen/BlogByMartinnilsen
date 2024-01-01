@@ -87,6 +87,7 @@
     "editorjs-undo": "^2.0.26",
     "emoji-picker-react": "^4.5.16",
     "eslint": "^8.55.0",
+    "framer-motion": "^10.16.16",
     "html-react-parser": "^5.0.6",
     "isomorphic-dompurify": "^1.11.0",
     "jquery": "^3.7.1",
