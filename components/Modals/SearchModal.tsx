@@ -353,8 +353,8 @@ export const SearchModal = (props: SearchModalProps) => {
 
 	const modalStyle = {
 		bgcolor: "background.paper",
-		// border: "1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[600]),
 		borderRadius: 2,
+		outline: "1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.primary.main),
 		display: "flex",
 		textAlign: "left",
 		flexDirection: "column",
@@ -362,7 +362,6 @@ export const SearchModal = (props: SearchModalProps) => {
 		justifyContent: "flex-start",
 		boxShadow: 24,
 		p: 1,
-		outline: 0,
 	};
 
 	return (
@@ -430,12 +429,7 @@ export const SearchModal = (props: SearchModalProps) => {
 														backgroundColor:
 															theme.palette.secondary.main + (theme.palette.mode === "dark" ? "95" : "65"),
 														p: "2px 8px",
-														// opacity: 0.9,
 														borderRadius: 1,
-														"& :hover": { cursor: "default" },
-														// border:
-														// 	"1px solid " +
-														// 	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
 														boxShadow: "0 4px 10px 4px " + theme.palette.secondary.main + "37",
 														backdropFilter: "blur(20px)",
 														WebkitBackdropFilter: "blur( 20px )",
@@ -447,7 +441,11 @@ export const SearchModal = (props: SearchModalProps) => {
 												>
 													<Typography
 														variant="body1"
-														sx={{ fontWeight: 600, fontSize: xs ? 12 : theme.typography.body1 }}
+														sx={{
+															fontWeight: 600,
+															fontSize: xs ? 12 : theme.typography.body1,
+															fontFamily: theme.typography.fontFamily,
+														}}
 													>
 														{!isMobile && "⇥"} {isActions ? "Posts" : "Actions"}
 													</Typography>
