@@ -1,6 +1,9 @@
 import { OutputData } from "@editorjs/editorjs";
-import { CSSProperties } from "@emotion/serialize";
-import { ReactNode } from "react";
+import { SvgIconTypeMap, SxProps } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { CSSProperties, ReactNode } from "react";
+import { IconType } from "react-icons/lib";
+import { ThemeEnum } from "./styles/themes/themeMap";
 
 // Object types
 
@@ -48,9 +51,6 @@ export type EditorjsRendererProps = {
           checked?: boolean;
         }
     ];
-    // Warning
-    title?: string;
-    message?: string;
     // Video
     autoplay?: boolean;
     controls?: boolean;
@@ -72,8 +72,15 @@ export type EditorjsRendererProps = {
     textwrap?: boolean;
     filename?: string;
     render?: boolean;
+    // Callout
+    icon?: string;
+    type?: string;
+    title?: string;
+    message?: string;
   };
   style: {
+    typography?: SxProps;
+    box?: SxProps;
     h1?: CSSProperties;
     h2?: CSSProperties;
     h3?: CSSProperties;
@@ -143,6 +150,8 @@ export type NavbarProps = {
   posts?: StoredPost[];
   textColor?: string;
   backgroundColor: string;
+  accountPage?: boolean;
+  setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
 };
 
 // Component types
@@ -160,6 +169,25 @@ export type RevealProps = {
   delay?: number;
 };
 
+// Menus
+
+export type MenuProps = {
+  open: boolean;
+  handleMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  handleMenuClose: () => void;
+  anchorEl?: null | HTMLElement;
+  setAnchorEl?: React.Dispatch<React.SetStateAction<null | HTMLElement>>;
+};
+
+export type ProfileMenuProps = MenuProps & {
+  accountButtonSx?: SxProps;
+  showNotificationsBadge?: boolean;
+  notifications?: ModalProps;
+  settings?: ModalProps;
+};
+
+// Modals
+
 export type ModalProps = {
   open: boolean;
   handleModalOpen: () => void;
@@ -176,6 +204,11 @@ export type ShareModalProps = ModalProps & {
 
 export type SearchModalProps = ModalProps & {
   postsOverview?: StoredPost[];
+  handleSettingsModalOpen?: () => void;
+  handleNotificationsModalOpen?: () => void;
+  notificationsBadgeVisible?: boolean;
+  setCardLayout?: (layout: string) => void;
+  onOpen?: () => void;
 };
 
 export type Headings = {
@@ -184,15 +217,69 @@ export type Headings = {
   text: string;
 };
 
-export type TOCModalProps = {
-  open: boolean;
-  handleModalOpen: () => void;
-  handleModalClose: () => void;
+export type TOCModalProps = ModalProps & {
   headings: Headings[];
   currentSection: string;
   postTitle: string;
   sidebarMode?: boolean;
 };
+
+export type NotificationProps = {
+  id: number;
+  createdAt: string;
+  title: string;
+  content: string;
+  action: {
+    href: string;
+    caption: string;
+  };
+  important: boolean;
+};
+
+export type NotificationsModalProps = ModalProps & {
+  lastRead: number;
+  setLastRead: (date: number) => void;
+  notificationsRead: number[];
+  setNotificationsRead: (ids: number[]) => void;
+  allNotificationsFilteredOnDate: NotificationProps[];
+  unreadNotificationsIds: number[];
+  setVisibleBadgeNotifications: (value: boolean) => void;
+  notificationsFilterDays: number;
+  setNotificationsFilterDays: (value: number) => void;
+};
+
+// Buttons
+export type ButtonProps = {
+  variant: "outline" | "base";
+  icon?:
+    | (OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+        muiName: string;
+      })
+    | IconType;
+  onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
+  href?: string;
+  disabled?: boolean;
+  sxButton?: SxProps & {
+    // backgroundColor?: string;
+    // backgroundColorHover?: string;
+    // height?: string;
+    // width?: string;
+  };
+  sxIcon?: SxProps & {
+    // color?: string;
+    // colorHover?: string;
+    // height?: string;
+    // width?: string;
+  };
+  styleIcon?: CSSProperties;
+  tooltip?: string;
+  ariaControls?: string;
+  ariaHasPopup?: any;
+  ariaExpanded?: any;
+  type?: "button" | "submit" | "reset";
+};
+
+// export type SearchButtonProps = ButtonProps;
 
 // View props types
 export type ManageArticleViewProps = {

@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Box, Modal, useMediaQuery } from "@mui/material";
 import PostTable from "./PostTable";
 import { ModalProps } from "../../types";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 
 export const PostTableModal: FC<ModalProps> = (props) => {
   const { theme } = useTheme();

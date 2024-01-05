@@ -1,7 +1,7 @@
 import { CssBaseline, IconButton, StyledEngineProvider } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import { SnackbarProvider, closeSnackbar } from "notistack";
-import ThemeProvider from "../ThemeProvider";
+import ThemeProvider from "../styles/themes/ThemeProvider";
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
 import { Close } from "@mui/icons-material";

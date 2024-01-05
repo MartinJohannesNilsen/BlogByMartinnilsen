@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import DOMPurify from "isomorphic-dompurify";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import colorLuminance from "../../../utils/colorLuminance";
 
@@ -53,11 +53,12 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
   // const underline = `<u class=${style.underline}>`;
 
   return (
-    <Box my={1} sx={{ userSelect: "text" }}>
+    <Box sx={{ userSelect: "text", my: 1, ...props.style?.box }}>
       {props.data.text === "" ? (
         <br />
       ) : (
         <Typography
+          sx={{ ...props.style?.typography }}
           variant="body1"
           color="textPrimary"
           fontFamily={theme.typography.fontFamily}

@@ -2,7 +2,7 @@ import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import parse from "html-react-parser";
 import { CSSProperties, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 
 const defaultStyle: CSSProperties = {
@@ -112,7 +112,7 @@ const HeaderOutput = ({
           position: "absolute",
           zIndex: -1,
           // top: isMobile ? -50 : -10,
-          top: -50,
+          top: isMobile ? -48 : -65,
           visibility: "hidden",
           scrollBehavior: "smooth",
         }}
@@ -126,13 +126,13 @@ const HeaderOutput = ({
               mt:
                 data.level === 1
                   ? smDown
-                    ? 0.4
+                    ? 0.9
                     : 0.75
                   : data.level === 2
                   ? smDown
-                    ? 0.3
+                    ? 1
                     : 0.75
-                  : 0.95,
+                  : 0.9,
               position: "absolute",
               left: -1,
               opacity: 0.5,

@@ -2,6 +2,7 @@
 User-agent: *
 Disallow: /create
 Disallow: /create/
+Disallow: /apidoc
 Disallow: /api
 Disallow: /api/
 Disallow: /account

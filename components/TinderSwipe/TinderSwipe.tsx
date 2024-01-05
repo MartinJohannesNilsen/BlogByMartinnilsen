@@ -14,9 +14,13 @@ import { BiCopy } from "react-icons/bi";
 import LaunchIcon from "@mui/icons-material/Launch";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { useSnackbar } from "notistack";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { StoredPost } from "../../types";
 import LandingPageSwipeCard from "../Cards/LandingPageSwipeCard";
+import copyToClipboard, {
+  copyToClipboardV2,
+} from "../../utils/copyToClipboard";
+import { isMobile } from "react-device-detect";
 
 export type directionType = "left" | "right" | "up" | "down";
 export type TinderSwipeType = {
@@ -65,12 +69,6 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
     updateCurrentIndex(index - 1);
   };
 
-  const outOfFrame = (name: string, idx: number) => {
-    // console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current);
-    // handle the case in which go back is pressed before card goes outOfFrame
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard()!;
-  };
-
   const swipe = async (dir: directionType) => {
     if (canSwipe && currentIndex < props.posts.length) {
       await childRefs[currentIndex].current.swipe(dir); // Swipe the card!
@@ -89,38 +87,28 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
     await childRefs[newIndex].current.restoreCard()!;
   };
 
-  const copyToClipboard = async (link: string) => {
-    if (!navigator.clipboard) {
-      return Promise.reject("Clipboard not supported!");
-    }
-
-    try {
-      await navigator.clipboard.writeText(link);
-      return Promise.resolve();
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  };
-
   const handleAction = (dir: directionType, post: StoredPost) => {
-    if (dir === "up") {
-      copyToClipboard(process.env.NEXT_PUBLIC_WEBSITE_URL + "/posts/" + post.id)
-        .then(() => {
-          enqueueSnackbar("Link copied to clipboard!", {
-            variant: "default",
-            preventDuplicate: true,
+    setTimeout(() => {
+      if (dir === "up") {
+        copyToClipboardV2(
+          process.env.NEXT_PUBLIC_WEBSITE_URL + "/posts/" + post.id
+        )
+          .then(() => {
+            enqueueSnackbar("Link copied to clipboard!", {
+              variant: "default",
+              preventDuplicate: true,
+            });
+          })
+          .catch((error) => {
+            enqueueSnackbar("Unable to copy to clipboard!", {
+              variant: "error",
+              preventDuplicate: true,
+            });
           });
-        })
-        .catch((error) => {
-          console.error(error);
-          enqueueSnackbar("Unable to copy to clipboard!", {
-            variant: "error",
-            preventDuplicate: true,
-          });
-        });
-    } else if (dir === "right") {
-      window.location.href = "/posts/" + post.id;
-    }
+      } else if (dir === "right") {
+        window.location.href = "/posts/" + post.id;
+      }
+    }, 250);
   };
 
   return (
@@ -132,7 +120,6 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        // overflow: "hidden",
       }}
     >
       <Box
@@ -147,17 +134,15 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
       >
         {props.posts.map((data, index) => (
           <TinderCard
-            preventSwipe={["down", "up"]}
+            preventSwipe={isMobile ? ["down", "up"] : ["down"]}
             flickOnSwipe
             swipeRequirementType="position"
             swipeThreshold={100}
             ref={childRefs[index]}
             className={"tinderCard tinderCards"}
             key={index}
-            onSwipe={(dir: directionType) => {}}
-            onCardLeftScreen={(dir: directionType) => {
+            onSwipe={(dir: directionType) => {
               swiped(dir, index, data);
-              outOfFrame(data.title, index);
             }}
           >
             {data ? (

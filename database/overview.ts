@@ -1,5 +1,5 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../lib/firebaseConfig";
 import { StoredPost } from "../types";
 const db_document = "overview";
 

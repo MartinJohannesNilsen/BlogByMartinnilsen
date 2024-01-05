@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { useTheme } from "../../../../ThemeProvider";
+import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import { EDITORTHEME } from "../../Renderers/CustomCode";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { allowedLanguages } from "./allowedLanguages";
@@ -67,14 +67,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
   return (
     <Fragment>
       <Box sx={{ position: "relative", borderRadius: "50px" }} my={2}>
-        <Box
-          sx={{
-            "&.linenumber": {
-              userSelect: "none",
-              WebkitUserSelect: "none",
-            },
-          }}
-        >
+        <Box>
           {/* Header row */}
           <Box
             sx={{
@@ -300,10 +293,11 @@ export const CodeBlock = (props: CodeBlockProps) => {
           {/* Editor */}
           <Box
             sx={{
-              // TODO Does not seem to work, I want to be sure that linenumbers are not selected
-              "&.react-syntax-highlighter-line-number": {
+              "& .language-plaintext code": {
                 userSelect: "none",
-                WebkitUserSelect: "none",
+                margin: "-15px 10px -15px -15px",
+                padding: "15px 0px 15px 15px",
+                backgroundColor: "rgb(30, 30, 30)",
               },
             }}
           >
@@ -315,6 +309,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
                     : "plaintext"
                 }
                 showLineNumbers={stateData.linenumbers}
+                showInlineLineNumbers={false}
                 style={EDITORTHEME}
                 wrapLongLines={stateData.textwrap}
                 customStyle={{

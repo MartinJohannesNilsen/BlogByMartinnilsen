@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import DOMPurify from "isomorphic-dompurify";
-import { useTheme } from "../../../ThemeProvider";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

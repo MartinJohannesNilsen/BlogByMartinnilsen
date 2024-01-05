@@ -181,19 +181,20 @@ body::-webkit-scrollbar {
   width: 0; /* Remove scrollbar space */
 }
 
+// Tinder cards
 .tinderCard {
   grid-area: card;
   width: 350px; /* Need a specific value to work */
   z-index: 0;
   // border-radius: 4;
 }
-
 .tinderCards {
   user-select: none;
   cursor: grab;
   z-index: 1;
 }
 
+// Giscus
 giscus-widget::part(iframe) {
   min-height: 250px; // If comment section deactivated, reactions will overflow. 190px without signin, 250px with signin 
 }

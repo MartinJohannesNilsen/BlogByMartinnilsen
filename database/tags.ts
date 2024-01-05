@@ -1,5 +1,5 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../lib/firebaseConfig";
 
 const getTags = async (): Promise<string[]> => {
   const tagsSnapshot = await getDoc(doc(db, "administrative", "tags"));

@@ -11,7 +11,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import { Session } from "next-auth";
 import { FC, useState } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 
 type AccountCard = {
   session: Session;
@@ -39,7 +39,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
         ? "scale3d(1.02, 1.02, 1)"
         : lg
         ? "scale3d(1.04, 1.04, 1)"
-        : "scale3d(1.05, 1.05, 1)",
+        : "scale3d(1.03, 1.03, 1)",
       width: "350px",
     },
     link: {
@@ -118,6 +118,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
             variant="h5"
             gutterBottom
             sx={{
+              fontFamily: theme.typography.fontFamily,
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "webkit-flex",
@@ -131,6 +132,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
           <Typography
             variant="body1"
             sx={{
+              fontFamily: theme.typography.fontFamily,
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "webkit-flex",
@@ -143,7 +145,11 @@ export const AccountCard: FC<AccountCard> = (props) => {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ fontWeight: 800, color: theme.palette.secondary.main }}
+            sx={{
+              fontWeight: 800,
+              color: theme.palette.secondary.main,
+              fontFamily: theme.typography.fontFamily,
+            }}
             mt={4}
             mb={-1}
           >

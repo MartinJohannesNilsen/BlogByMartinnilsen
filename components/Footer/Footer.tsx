@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { FC } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { FooterProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";

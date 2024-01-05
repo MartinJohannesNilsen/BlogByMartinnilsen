@@ -25,7 +25,7 @@
     "**/*.tsx", 
     "lib/*", 
     "lib/supabase-admin"
-  ],
+, "components/Buttons/SearchNavbarButtontsx"  ],
   "exclude": [
     "node_modules"
   ]

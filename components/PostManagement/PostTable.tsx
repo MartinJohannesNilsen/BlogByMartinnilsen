@@ -2,7 +2,7 @@ import { Button, Link, useMediaQuery } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { makeStyles } from "@mui/styles";
 import { FC, useEffect, useState } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { getPostsOverview } from "../../database/overview";
 import { StoredPost, TablePost } from "../../types";
 import useSWR from "swr";
@@ -24,8 +24,16 @@ const fetchPosts = async () => {
   return db_posts;
 };
 
-const fetcher = async (input: RequestInfo) => {
-  const res: Response = await fetch(input);
+const apiFetcher = async (url: RequestInfo) => {
+  // Add apikey header
+  const headers = new Headers();
+  headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+
+  // Fetch and return
+  const res: Response = await fetch(url, {
+    method: "GET", // or 'POST', 'PUT', etc.
+    headers: headers,
+  });
   return await res.json();
 };
 
@@ -34,7 +42,7 @@ export const PostTable = (props) => {
   const lg = useMediaQuery(theme.breakpoints.only("lg"));
   const xl = useMediaQuery(theme.breakpoints.only("xl"));
   const [posts, setPosts] = useState<TablePost[]>([]);
-  const { data } = useSWR(`/api/views`, fetcher);
+  const { data } = useSWR(`/api/views`, apiFetcher);
 
   useEffect(() => {
     fetchPosts().then((db_posts) => {

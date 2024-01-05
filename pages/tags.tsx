@@ -14,7 +14,7 @@ import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../ThemeProvider";
+import { useTheme } from "../styles/themes/ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import TagsPageCard from "../components/Cards/TagsPageCard";
 import Navbar from "../components/Navbar/Navbar";

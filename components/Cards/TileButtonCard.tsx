@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Card,
   CardActionArea,
@@ -9,7 +10,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { FC, useState } from "react";
-import { useTheme } from "../../ThemeProvider";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 
 type TileButtonCard = {
   icon: any;
@@ -17,6 +18,7 @@ type TileButtonCard = {
   href?: string;
   onClick?: () => void;
   disabled?: boolean;
+  showBadge?: boolean;
 };
 
 export const TileButtonCard: FC<TileButtonCard> = (props) => {
@@ -33,17 +35,16 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
         theme.palette.mode === "light"
           ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
           : "",
-      width: "105px",
-      height: "105px",
+      width: "100%",
+      height: "100%",
     },
     cardHovered: {
+      cursor: "pointer",
       transform: xl
         ? "scale3d(1.02, 1.02, 1)"
         : lg
         ? "scale3d(1.04, 1.04, 1)"
         : "scale3d(1.05, 1.05, 1)",
-      width: "105px",
-      height: "105px",
     },
     link: {
       color: theme.palette.text.primary,
@@ -69,7 +70,9 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
             justifyContent: "center",
           }}
         >
-          <IconButton disabled>{props.icon}</IconButton>
+          <IconButton disabled sx={{ opacity: 0.5 }}>
+            {props.icon}
+          </IconButton>
         </Box>
       </Card>
     );
@@ -89,7 +92,33 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
         }}
       >
         <Box display="flex" justifyContent="center" alignItems="center" pt={2}>
-          <IconButton disabled>{props.icon}</IconButton>
+          {props.showBadge ? (
+            <Badge
+              color="secondary"
+              variant="dot"
+              invisible={false}
+              overlap="circular"
+              badgeContent=" "
+              sx={{
+                position: "relative", // Use relative positioning
+                left: "-6px", // Adjust left position as needed
+                top: "5px",
+              }}
+            >
+              <IconButton
+                disabled
+                sx={{
+                  position: "relative", // Use relative positioning
+                  right: "-6px", // Adjust left position as needed
+                  bottom: "5px",
+                }}
+              >
+                {props.icon}
+              </IconButton>
+            </Badge>
+          ) : (
+            <IconButton disabled>{props.icon}</IconButton>
+          )}
         </Box>
         <CardContent>
           <Box
@@ -101,7 +130,10 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
             textAlign="center"
             mt={-0.5}
           >
-            <Typography variant="button" sx={{ fontSize: 14 }}>
+            <Typography
+              variant="button"
+              sx={{ fontSize: 14, fontFamily: theme.typography.fontFamily }}
+            >
               {props.text}
             </Typography>
           </Box>
