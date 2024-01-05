@@ -1,6 +1,7 @@
 // @ts-nocheck
 import {
 	ArrowBackIosNewSharp,
+	ArrowBackIosSharp,
 	ArrowForwardIosSharp,
 	GridViewSharp,
 	TableRowsSharp,
@@ -192,31 +193,60 @@ const LandingPage: FC<LandingPageProps> = props => {
 							{/* Toggle line */}
 							<Box display="flex" flexDirection="row" px={lgUp ? "150px" : xs ? "10px" : "80px"}>
 								<Box flexGrow={1} />
-								<Box>
+								<Box display="flex" justifyContent="center">
 									{/* Navigation buttons if large screen grid layout */}
-									{lgUp && cardLayout === "grid" ? (
-										<ButtonGroup sx={{ paddingRight: 1 }}>
-											<IconButton
+									{lgUp && cardLayout === "grid" && (
+										<ToggleButtonGroup size="small" sx={{ paddingRight: 1, paddingTop: -20 }}>
+											<ToggleButton
+												value
 												sx={{
-													width: "34px",
-													height: "34px",
-													color: "text.primary",
+													width: 30,
+													height: 34,
+													borderRadius: "10px",
+													color: theme.palette.text.primary,
+													"&:disabled": {
+														color: theme.palette.text.primary + "50",
+													},
 												}}
 												disabled={page <= 1}
 												onClick={() => handlePreviousPage()}
 											>
-												<ArrowBackIosNewSharp color="inherit" />
-											</IconButton>
-											<Box display="flex" justifyContent="center" alignItems="center" sx={{ width: "40px" }}>
+												<Tooltip enterDelay={2000} title="Previous page">
+													<ArrowBackIosSharp
+														sx={{
+															height: 16,
+															width: 16,
+															color: "inherit",
+														}}
+													/>
+												</Tooltip>
+											</ToggleButton>
+											<ToggleButton
+												value
+												sx={{
+													width: 30,
+													height: 34,
+													borderRadius: "10px",
+													display: "flex",
+													justifyContent: "center",
+													alignItems: "center",
+												}}
+												disabled
+											>
 												<Typography variant="subtitle2" color="textPrimary">
 													{page}
 												</Typography>
-											</Box>
-											<IconButton
+											</ToggleButton>
+											<ToggleButton
+												value
 												sx={{
-													width: "34px",
-													height: "34px",
-													color: "text.primary",
+													width: 30,
+													height: 34,
+													borderRadius: "10px",
+													color: theme.palette.text.primary,
+													"&:disabled": {
+														color: theme.palette.text.primary + "50",
+													},
 												}}
 												disabled={
 													!(
@@ -229,10 +259,18 @@ const LandingPage: FC<LandingPageProps> = props => {
 												}
 												onClick={() => handleNextPage()}
 											>
-												<ArrowForwardIosSharp color="inherit" />
-											</IconButton>
-										</ButtonGroup>
-									) : null}
+												<Tooltip enterDelay={2000} title="Next page">
+													<ArrowForwardIosSharp
+														sx={{
+															height: 16,
+															width: 16,
+															color: "inherit",
+														}}
+													/>
+												</Tooltip>
+											</ToggleButton>
+										</ToggleButtonGroup>
+									)}
 									{/* Toggle for switching layouts */}
 									<ToggleButtonGroup value={cardLayout} exclusive onChange={handleChangeView} size="small">
 										<ToggleButton
@@ -261,8 +299,8 @@ const LandingPage: FC<LandingPageProps> = props => {
 											<Tooltip enterDelay={2000} title="Swipe layout">
 												<ViewCarousel
 													sx={{
-														height: 22,
-														width: 22,
+														height: 26,
+														width: 26,
 														color: theme.palette.text.primary,
 													}}
 												/>
@@ -277,8 +315,9 @@ const LandingPage: FC<LandingPageProps> = props => {
 											<Tooltip enterDelay={2000} title="Grid layout">
 												<GridViewSharp
 													sx={{
-														height: 22,
-														width: 22,
+														pb: 0.1,
+														height: 21,
+														width: 21,
 														color: theme.palette.text.primary,
 													}}
 												/>
