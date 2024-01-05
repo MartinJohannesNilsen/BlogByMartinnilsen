@@ -241,14 +241,12 @@ const LandingPage: FC<LandingPageProps> = props => {
 											selected={cardLayout === "carousel"}
 											disabled={cardLayout === "carousel"}
 										>
-											{/* <ViewCarouselSharp
-                        sx={{ height: 24, width: 24, color: theme.palette.text.primary }}
-                      /> */}
+											{/* <ViewCarouselSharp sx={{ height: 24, width: 24, color: theme.palette.text.primary }} /> */}
 											<Tooltip enterDelay={2000} title="Carousel layout">
 												<ViewWeekSharp
 													sx={{
-														height: 24,
-														width: 24,
+														height: 22,
+														width: 22,
 														color: theme.palette.text.primary,
 													}}
 												/>
@@ -263,8 +261,8 @@ const LandingPage: FC<LandingPageProps> = props => {
 											<Tooltip enterDelay={2000} title="Swipe layout">
 												<ViewCarousel
 													sx={{
-														height: 24,
-														width: 24,
+														height: 22,
+														width: 22,
 														color: theme.palette.text.primary,
 													}}
 												/>
@@ -279,8 +277,8 @@ const LandingPage: FC<LandingPageProps> = props => {
 											<Tooltip enterDelay={2000} title="Grid layout">
 												<GridViewSharp
 													sx={{
-														height: 24,
-														width: 24,
+														height: 22,
+														width: 22,
 														color: theme.palette.text.primary,
 													}}
 												/>
@@ -295,8 +293,8 @@ const LandingPage: FC<LandingPageProps> = props => {
 											<Tooltip enterDelay={2000} title="List layout">
 												<TableRowsSharp
 													sx={{
-														height: 24,
-														width: 24,
+														height: 22,
+														width: 22,
 														color: theme.palette.text.primary,
 													}}
 												/>

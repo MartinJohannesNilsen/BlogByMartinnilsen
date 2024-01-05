@@ -276,6 +276,7 @@ export type ButtonProps = {
   ariaControls?: string;
   ariaHasPopup?: any;
   ariaExpanded?: any;
+  type?: "button" | "submit" | "reset";
 };
 
 // export type SearchButtonProps = ButtonProps;
