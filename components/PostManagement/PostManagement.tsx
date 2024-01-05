@@ -409,6 +409,8 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 						<Box my={1}>
 							{/* Button row */}
 							<Box display="flex" alignItems="center" minWidth={"380px"} width={width} py={2} columnGap={1}>
+								{xs && <Box sx={{ width: "40px" }} />}
+								{xs && <Box sx={{ width: "40px" }} />}
 								{/* Home */}
 								<NavbarButton
 									variant="outline"
@@ -618,10 +620,10 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 							)}
 							<Box
 								display="flex"
-								gap="10px"
+								columnGap={1}
 								sx={
 									xs
-										? { position: "fixed", left: 25, top: 25, zIndex: 100 }
+										? { position: "fixed", left: 22, top: 24, zIndex: 100 }
 										: { position: "fixed", left: 25, bottom: 25, zIndex: 100 }
 								}
 							>

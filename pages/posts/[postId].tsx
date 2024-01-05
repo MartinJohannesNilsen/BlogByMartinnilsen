@@ -956,8 +956,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 									height: "40px",
 									width: "40px",
 									position: "fixed",
-									left: 26,
-									bottom: 26,
+									left: xs ? 12 : 26,
+									bottom: xs ? 15 : 26,
 									zIndex: 10,
 								}}
 								sxIcon={{
