@@ -462,34 +462,54 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 									</Typography>
 									<Box flexGrow={100} />
 									<Box display="flex" ml={0.1}>
-										{/* Share */}
+										{/* Edit / Share */}
 										<Box mr={0.5}>
-											<NavbarButton
-												disabled={!post.published}
-												variant="outline"
-												onClick={() => {
-													handleSharing({
-														url: typeof window !== "undefined" ? window.location.href : "",
-														title: post.title,
-														text: "",
-														icon: post.image || DEFAULT_OGIMAGE,
-														fallback: () => setOpenShareModal(true),
-													});
-												}}
-												icon={IosShareOutlined}
-												tooltip="Share"
-												sxButton={{
-													minWidth: "34px",
-													minHeight: "34px",
-													height: "34px",
-													width: "34px",
-													"&:disabled": { opacity: "0.5" },
-												}}
-												sxIcon={{
-													height: "18px",
-													width: "22px",
-												}}
-											/>
+											{isAuthorized ? (
+												<NavbarButton
+													variant="outline"
+													href={`/create/${props.postId}`}
+													icon={Edit}
+													tooltip="Edit post"
+													sxButton={{
+														minWidth: "34px",
+														minHeight: "34px",
+														height: "34px",
+														width: "34px",
+													}}
+													sxIcon={{
+														height: "20px",
+														width: "22px",
+														color: "inherit",
+													}}
+												/>
+											) : (
+												<NavbarButton
+													disabled={!post.published}
+													variant="outline"
+													onClick={() => {
+														handleSharing({
+															url: typeof window !== "undefined" ? window.location.href : "",
+															title: post.title,
+															text: "",
+															icon: post.image || DEFAULT_OGIMAGE,
+															fallback: () => setOpenShareModal(true),
+														});
+													}}
+													icon={IosShareOutlined}
+													tooltip="Share"
+													sxButton={{
+														minWidth: "34px",
+														minHeight: "34px",
+														height: "34px",
+														width: "34px",
+														"&:disabled": { opacity: "0.5" },
+													}}
+													sxIcon={{
+														height: "18px",
+														width: "22px",
+													}}
+												/>
+											)}
 										</Box>
 										{/* Account */}
 										<ProfileMenu
@@ -566,7 +586,26 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 								</ButtonBase>
 								<Box flexGrow={100} />
 								<Box display="flex">
-									{OutputString ? (
+									{isAuthorized && (
+										<NavbarButton
+											variant="outline"
+											href={`/create/${props.postId}`}
+											icon={Edit}
+											tooltip="Edit post"
+											sxButton={{
+												height: "34px",
+												width: "34px",
+												backgroundColor: theme.palette.primary.main + "99",
+												mr: 0.5,
+											}}
+											sxIcon={{
+												height: "20px",
+												width: "22px",
+												color: "inherit",
+											}}
+										/>
+									)}
+									{OutputString && (
 										<NavbarButton
 											variant="outline"
 											onClick={() => setOpenTOCModal(true)}
@@ -582,7 +621,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 												width: "24px",
 											}}
 										/>
-									) : null}
+									)}
 									{/* ShareModal */}
 									<Box ml={0.5}>
 										<NavbarButton
@@ -921,7 +960,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 							</Grid>
 						</Grid>
 						{/* </RevealFromDownOnEnter> */}
-						{isExploding ? (
+						{isExploding && (
 							<Box
 								sx={{
 									position: "fixed",
@@ -941,32 +980,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 									width={xs ? width + 200 : width - 100}
 								/>
 							</Box>
-						) : null}
-						<Footer />
-						{/* Buttons for administration */}
-						{isAuthorized && (
-							<NavbarButton
-								variant="outline"
-								href={`/create/${props.postId}`}
-								icon={Edit}
-								tooltip="Edit post"
-								sxButton={{
-									minWidth: "40px",
-									minHeight: "40px",
-									height: "40px",
-									width: "40px",
-									position: "fixed",
-									left: xs ? 12 : 26,
-									bottom: xs ? 15 : 26,
-									zIndex: 10,
-								}}
-								sxIcon={{
-									height: "22px",
-									width: "22px",
-									color: "inherit",
-								}}
-							/>
 						)}
+						<Footer />
 					</Box>
 				)}
 			</Box>
