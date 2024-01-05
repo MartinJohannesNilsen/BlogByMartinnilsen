@@ -428,23 +428,25 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 									}}
 								/>
 								{/* Launch */}
-								<NavbarButton
-									variant="outline"
-									href={`/posts/${postId}`}
-									icon={Launch}
-									tooltip="View post"
-									sxButton={{
-										minWidth: "40px",
-										minHeight: "40px",
-										height: "40px",
-										width: "40px",
-									}}
-									sxIcon={{
-										height: "22px",
-										width: "22px",
-										color: "inherit",
-									}}
-								/>
+								{postId && (
+									<NavbarButton
+										variant="outline"
+										href={`/posts/${postId}`}
+										icon={Launch}
+										tooltip="View post"
+										sxButton={{
+											minWidth: "40px",
+											minHeight: "40px",
+											height: "40px",
+											width: "40px",
+										}}
+										sxIcon={{
+											height: "22px",
+											width: "22px",
+											color: "inherit",
+										}}
+									/>
+								)}
 								<Box flexGrow={1} />
 								{/* Delete */}
 								{props.post ? (
