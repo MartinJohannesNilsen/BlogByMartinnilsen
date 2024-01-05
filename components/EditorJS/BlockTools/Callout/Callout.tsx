@@ -39,6 +39,17 @@ export const Callout = (props: CalloutProps) => {
 	//   if (componentType === "note") setStateData({ ...stateData, title: "" });
 	// }, [componentType]);
 
+	// Set message value on render
+	// useEffect(() => {
+	// 	messageRef.current.innerHTML = props.data.message;
+	// 	return () => {};
+	// }, []);
+
+	// Set message value on stateData.type change
+	useEffect(() => {
+		messageRef.current.innerHTML = stateData.message;
+	}, [stateData.type]);
+
 	// Change Editorjs state on state change
 	useEffect(() => {
 		props.onDataChange(stateData);
@@ -152,22 +163,18 @@ export const Callout = (props: CalloutProps) => {
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
 										}}
-										onInputCapture={() => {
+										onInputCapture={e => {
 											const currentDiv = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;
 											}
-										}}
-										onChangeCapture={e => {
 											setStateData({
 												...stateData,
 												message: e.currentTarget.textContent,
 											});
 										}}
-									>
-										{stateData.message}
-									</div>
+									/>
 								</Box>
 							</Card>
 						</>
@@ -238,22 +245,18 @@ export const Callout = (props: CalloutProps) => {
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
 										}}
-										onInputCapture={() => {
+										onInputCapture={e => {
 											const currentDiv = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;
 											}
-										}}
-										onChange={e => {
 											setStateData({
 												...stateData,
 												message: e.currentTarget.textContent,
 											});
 										}}
-									>
-										{stateData.message}
-									</div>
+									/>
 								</Box>
 							</Box>
 						</Card>

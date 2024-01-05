@@ -87,7 +87,6 @@ export const SearchModal = (props: SearchModalProps) => {
 			// href: "/",
 			iconElement: <Home sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				console.log(window.location.pathname);
 				return !window.location.pathname.includes("/");
 			},
 		},
