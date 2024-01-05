@@ -463,7 +463,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 												minHeight: "40px",
 												height: "40px",
 												width: "40px",
-												border: "2px solid red",
+												border: "1px solid red",
 												index: 2,
 												backgroundColor: theme.palette.primary.main,
 												"&:hover": {
@@ -640,7 +640,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 										height: "40px",
 										width: "40px",
 										border: isSaved
-											? "2px solid green"
+											? "1px solid green"
 											: "1px solid " +
 											  (theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
 										color: isSaved ? "green" : theme.palette.text.primary,
@@ -667,7 +667,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 											height: "40px",
 											width: "40px",
 											border: isRevalidated
-												? "2px solid green"
+												? "1px solid green"
 												: "1px solid " +
 												  (theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
 											color: isRevalidated ? "green" : theme.palette.text.primary,
