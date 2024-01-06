@@ -129,7 +129,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 							swiped(dir, index, data);
 						}}
 					>
-						{data ? (
+						{data && (
 							<LandingPageSwipeCard
 								author={data.author}
 								readTime={data.readTime}
@@ -143,7 +143,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 								tags={data.tags}
 								published={data.published}
 							/>
-						) : null}
+						)}
 					</TinderCard>
 				))}
 				{/* Final message */}

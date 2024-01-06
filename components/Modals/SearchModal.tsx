@@ -596,7 +596,7 @@ export const SearchModal = (props: SearchModalProps) => {
 														marginRight: isMobile ? 0 : 5,
 													}}
 												/>
-												{!isMobile ? (
+												{!isMobile && (
 													<>
 														<Box flexGrow={100} />
 														<ListItemText>
@@ -612,7 +612,7 @@ export const SearchModal = (props: SearchModalProps) => {
 															/>
 														</ListItemText>
 													</>
-												) : null}
+												)}
 											</ListItemButton>
 										</ListItem>
 									))}
@@ -719,7 +719,7 @@ export const SearchModal = (props: SearchModalProps) => {
 															marginRight: isMobile ? 0 : 5,
 														}}
 													/>
-													{!isMobile ? (
+													{!isMobile && (
 														<>
 															<Box flexGrow={100} />
 															<ListItemText>
@@ -735,7 +735,7 @@ export const SearchModal = (props: SearchModalProps) => {
 																/>
 															</ListItemText>
 														</>
-													) : null}
+													)}
 												</ListItemButton>
 											</ListItem>
 										))}

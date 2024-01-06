@@ -7,11 +7,11 @@ const CustomMath = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
 	return (
 		<Box my={1}>
-			{props.data.math ? (
+			{props.data.math && (
 				<Box sx={{ color: theme.palette.text.primary }}>
 					<BlockMath math={props.data.math} />
 				</Box>
-			) : null}
+			)}
 		</Box>
 	);
 };

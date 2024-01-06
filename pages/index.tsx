@@ -368,7 +368,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 															paddingX: xs ? "25px" : 0,
 														}}
 													>
-														{data ? (
+														{data && (
 															<LandingPageCarouselCard
 																author={data.author}
 																readTime={data.readTime}
@@ -382,7 +382,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 																tags={data.tags}
 																published={data.published}
 															/>
-														) : null}
+														)}
 													</Box>
 												);
 											})}

@@ -2,6 +2,7 @@ import { Box, Card, IconButton, Typography, useMediaQuery } from "@mui/material"
 import DOMPurify from "isomorphic-dompurify";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
+import CustomParagraph from "./CustomParagraph";
 
 const CustomCallout = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
@@ -45,18 +46,23 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 							/>
 						)}
 						{/* Message */}
-						<Typography
-							sx={{
-								...theme.typography.body1,
-								fontFamily: theme.typography.fontFamily,
-								overflow: "hidden",
-								textOverflow: "ellipsis",
-								display: "webkit-flex",
-								WebkitBoxOrient: "vertical",
+						<CustomParagraph
+							// data={{ text: props.data.message.replace(/\n/g, "<br>") }}
+							data={{ text: props.data.message }}
+							style={{
+								box: { my: 0 },
+								typography: {
+									...theme.typography.body1,
+									pt: 0,
+									pb: 1,
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									display: "webkit-flex",
+									WebkitBoxOrient: "vertical",
+								},
 							}}
-							dangerouslySetInnerHTML={{
-								__html: DOMPurify.sanitize(props.data.message.replace(/\n/g, "<br>")),
-							}}
+							classNames={null}
+							config={null}
 						/>
 					</Box>
 				</Card>
@@ -66,23 +72,17 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 						display: "flex",
 						alignItems: "center",
 						maxWidth: "100vw",
-						// backgroundColor: "#f7cb2a",
-						backgroundColor: theme.palette.secondary.main,
+						backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[300],
+						boxShadow: "none",
 					}}
 				>
 					<Box display="flex" flexDirection="row">
-						{/* <Box sx={{ backgroundColor: "#575757" }} p={0.5} /> */}
-						{/* <Box sx={{ backgroundColor: "#b89002" }} p={0.5} /> */}
-						{/* <Box
-              sx={{
-                backgroundColor: colorLuminance(
-                  theme.palette.secondary.main,
-                  -0.2
-                ),
-              }}
-              p={0.5}
-            /> */}
-						<Box sx={{ backgroundColor: theme.palette.secondary.dark }} p={0.5} />
+						<Box
+							sx={{
+								backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[400],
+							}}
+							p={0.5}
+						/>
 						<Box display="flex" flexDirection="column" maxWidth="100vw" p={2}>
 							{/* Title */}
 							<Typography
@@ -90,7 +90,7 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 									...theme.typography.subtitle1,
 									fontWeight: 800,
 									fontFamily: theme.typography.fontFamily,
-									color: "black",
+									// color: "black",
 									pt: 0.5,
 									pb: 0.6,
 									overflow: "hidden",
@@ -105,21 +105,23 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 								}}
 							/>
 							{/* Message */}
-							<Typography
-								sx={{
-									...theme.typography.body1,
-									fontFamily: theme.typography.fontFamily,
-									color: "black",
-									pt: 0,
-									pb: 1,
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									display: "webkit-flex",
-									WebkitBoxOrient: "vertical",
+							<CustomParagraph
+								// data={{ text: props.data.message.replace(/\n/g, "<br>") }}
+								data={{ text: props.data.message }}
+								style={{
+									box: { my: 0 },
+									typography: {
+										...theme.typography.body1,
+										pt: 0,
+										pb: 1,
+										overflow: "hidden",
+										textOverflow: "ellipsis",
+										display: "webkit-flex",
+										WebkitBoxOrient: "vertical",
+									},
 								}}
-								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(props.data.message.replace(/\n/g, "<br>")),
-								}}
+								classNames={null}
+								config={null}
 							/>
 						</Box>
 					</Box>

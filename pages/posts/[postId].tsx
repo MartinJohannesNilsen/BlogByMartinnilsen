@@ -918,7 +918,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 										>
 											Author: {post.author}
 										</Typography>
-										{post.updatedAt && post.updatedAt !== -1 ? (
+										{post.updatedAt && post.updatedAt !== -1 && (
 											<Typography
 												variant="body1"
 												fontFamily={theme.typography.fontFamily}
@@ -933,7 +933,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 													year: "numeric",
 												})}
 											</Typography>
-										) : null}
+										)}
 									</Box>
 									{/* Comment section */}
 									<Box mb={3}>

@@ -53,7 +53,7 @@ const CustomTable = (props: EditorjsRendererProps) => {
 		<Box my={1}>
 			<TableContainer component={Paper}>
 				<Table sx={{ minWidth: "100%" }} aria-label="table">
-					{props.data.withHeadings ? (
+					{props.data.withHeadings && (
 						<TableHead>
 							<TableRow>
 								{heading.map((cell, j) => (
@@ -68,7 +68,7 @@ const CustomTable = (props: EditorjsRendererProps) => {
 								))}
 							</TableRow>
 						</TableHead>
-					) : null}
+					)}
 					<TableBody>
 						{content.map((row, i) => (
 							<StyledTableRow key={i}>

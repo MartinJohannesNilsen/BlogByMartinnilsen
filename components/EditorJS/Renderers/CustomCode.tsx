@@ -134,7 +134,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 			) : (
 				// Singleline codeblock
 				<Box onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} position="relative">
-					{isCopyButtonVisible ? (
+					{isCopyButtonVisible && (
 						<Box
 							sx={{
 								position: "absolute",
@@ -185,7 +185,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 								</Tooltip>
 							)}
 						</Box>
-					) : null}
+					)}
 					<SyntaxHighlighter
 						language={props.data.language && props.data.language !== "" ? props.data.language : "plaintext"}
 						style={EDITORTHEME}

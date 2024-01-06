@@ -171,7 +171,7 @@ export const Callout = (props: CalloutProps) => {
 											}
 											setStateData({
 												...stateData,
-												message: e.currentTarget.textContent,
+												message: e.currentTarget.innerHTML,
 											});
 										}}
 									/>
@@ -253,7 +253,7 @@ export const Callout = (props: CalloutProps) => {
 											}
 											setStateData({
 												...stateData,
-												message: e.currentTarget.textContent,
+												message: e.currentTarget.innerHTML,
 											});
 										}}
 									/>

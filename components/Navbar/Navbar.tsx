@@ -280,7 +280,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					</Typography>
 				</ButtonBase>
 				<Box flexGrow={100} />
-				{isAuthorized ? (
+				{isAuthorized && (
 					<Box>
 						<NavbarButton
 							variant="outline"
@@ -301,7 +301,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							}}
 						/>
 					</Box>
-				) : null}
+				)}
 				<Box mx={0.5}>
 					{isMobile || xs ? (
 						<NavbarButton
