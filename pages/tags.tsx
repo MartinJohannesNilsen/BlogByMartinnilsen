@@ -75,46 +75,27 @@ const TagsPage: FC<TagsPageProps> = props => {
 	const router = useRouter();
 	const [tag, setTag] = useState<string>("loading");
 	const { query, isReady } = useRouter();
-	const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>([[]]);
-	const [posts, setPosts] = useState<StoredPost[]>(chunkedPosts[0]);
+	const [posts, setPosts] = useState<StoredPost[]>(props.posts);
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
 	const updateData = () => {
 		if (!tag) {
-			setChunkedPosts(
-				splitChunks(
-					isAuthorized ? props.posts : _filterListOfStoredPostsOnPublished(props.posts, "published"),
-					Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
-				)
-			);
+			setPosts(isAuthorized ? props.posts : _filterListOfStoredPostsOnPublished(props.posts, "published"));
 		} else if (tag.toLowerCase() === "published") {
-			setChunkedPosts(
-				splitChunks(
-					_filterListOfStoredPostsOnPublished(props.posts, "published"),
-					Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
-				)
-			);
+			setPosts(_filterListOfStoredPostsOnPublished(props.posts, "published"));
 		} else if (tag.toLowerCase() === "unpublished") {
 			if (isAuthorized) {
-				setChunkedPosts(
-					splitChunks(
-						_filterListOfStoredPostsOnPublished(props.posts, "unpublished"),
-						Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
-					)
-				);
+				setPosts(_filterListOfStoredPostsOnPublished(props.posts, "unpublished"));
 			}
 		} else {
-			setChunkedPosts(
-				splitChunks(
-					isAuthorized
-						? _filterListOfStoredPostsOnTag(props.posts, _getCaseInsensitiveElement(props.tags, tag))
-						: _filterListOfStoredPostsOnTag(
-								_filterListOfStoredPostsOnPublished(props.posts, "published"),
-								_getCaseInsensitiveElement(props.tags, tag)
-						  ),
-					Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE)
-				)
+			setPosts(
+				isAuthorized
+					? _filterListOfStoredPostsOnTag(props.posts, _getCaseInsensitiveElement(props.tags, tag))
+					: _filterListOfStoredPostsOnTag(
+							_filterListOfStoredPostsOnPublished(props.posts, "published"),
+							_getCaseInsensitiveElement(props.tags, tag)
+					  )
 			);
 		}
 	};
@@ -142,28 +123,9 @@ const TagsPage: FC<TagsPageProps> = props => {
 	}, [tag]);
 
 	useEffect(() => {
-		setPosts(chunkedPosts[page - 1]);
 		setIsLoading(false);
 		return () => {};
-	}, [chunkedPosts]);
-
-	const handleNextPage = () => {
-		const endPage = Math.ceil(chunkedPosts.flat().length / Number(process.env.NEXT_PUBLIC_TAGS_PAGE_POSTS_PER_PAGE));
-		if (page < endPage) {
-			const newPage = Math.min(page + 1, endPage);
-			setPage(newPage);
-			setPosts(chunkedPosts[newPage - 1]);
-		}
-	};
-
-	const handlePreviousPage = () => {
-		const startPage = 1;
-		if (page > startPage) {
-			const newPage = Math.max(page - 1, startPage);
-			setPage(newPage);
-			setPosts(chunkedPosts[newPage - 1]);
-		}
-	};
+	}, [posts]);
 
 	// Check if single tag is provided or if tag not in allowed list
 	if (tag === "loading") return <></>;
@@ -232,20 +194,28 @@ const TagsPage: FC<TagsPageProps> = props => {
 							</Typography>
 						</Box>
 						{/* Grid of tags and posts */}
-						<Grid container py={xs ? 2 : 4} rowSpacing={xs ? 2 : 4}>
+						<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={4} rowSpacing={xs ? 2 : 4}>
 							{/* Tags */}
-							<Grid item xs={12} lg={4} order={{ lg: 3, xl: 3 }}>
+							<Grid item xs={12} lg={3} order={{ lg: 3, xl: 3 }} sx={lgUp && { position: "fixed", right: 30, mt: -10 }}>
+								{/* <Box display={lgUp && "flex"} flexDirection={"column"}> */}
 								<Box>
 									<Button
+										size="small"
 										disabled={!tag}
 										sx={{
-											border: "2px solid " + theme.palette.secondary.main,
+											width: "fit-content",
+											border: "1px solid " + theme.palette.secondary.main,
 											backgroundColor: !tag ? theme.palette.secondary.main : "",
 											"&:hover": {
-												border: "2px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
-												backgroundColor: !tag ? theme.palette.secondary.main : "",
+												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+												backgroundColor: !tag
+													? theme.palette.secondary.main
+													: theme.palette.mode == "dark"
+													? theme.palette.grey[900]
+													: theme.palette.grey[100],
 											},
 											margin: 0.5,
+											padding: "5px 6px",
 										}}
 										onClick={() => {
 											router.replace("/tags");
@@ -256,30 +226,35 @@ const TagsPage: FC<TagsPageProps> = props => {
 											fontFamily={theme.typography.fontFamily}
 											color={theme.palette.text.primary}
 											variant="body2"
-											fontSize={xs ? "11px" : ""}
+											fontSize={xs ? "11px" : "13px"}
 											textTransform="none"
 											fontWeight={600}
 										>
 											All posts
 										</Typography>
 									</Button>
-									{(isAuthorized ? ["Published", "Unpublished"] : []).concat(props.tags).map(element => (
+									{(isAuthorized ? ["Published", "Unpublished"] : []).concat(props.tags.sort()).map(element => (
 										<Button
+											size="small"
 											disabled={tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")}
 											sx={{
-												border: "2px solid " + theme.palette.secondary.main,
+												width: "fit-content",
+												border: "1px solid " + theme.palette.secondary.main,
 												backgroundColor:
 													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
 														? theme.palette.secondary.main
 														: "",
 												"&:hover": {
-													border: "2px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+													border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 													backgroundColor:
 														tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
 															? theme.palette.secondary.main
-															: "",
+															: theme.palette.mode == "dark"
+															? theme.palette.grey[900]
+															: theme.palette.grey[100],
 												},
 												margin: 0.5,
+												padding: "5px 6px",
 											}}
 											onClick={() => {
 												router.replace("/tags?name=" + element.replace(" ", ""));
@@ -290,7 +265,7 @@ const TagsPage: FC<TagsPageProps> = props => {
 												fontFamily={theme.typography.fontFamily}
 												color={theme.palette.text.primary}
 												variant="body2"
-												fontSize={xs ? "11px" : ""}
+												fontSize={xs ? "11px" : "13px"}
 												textTransform="none"
 												fontWeight={600}
 											>
@@ -307,7 +282,7 @@ const TagsPage: FC<TagsPageProps> = props => {
 							{/* Cards and pagination */}
 							<Grid item container xs={12} lg={7} order={{ lg: 1, xl: 1 }} rowSpacing={2.5}>
 								{/* Cards */}
-								{posts ? (
+								{posts && posts.length > 0 ? (
 									posts.map((data, index) => {
 										return (
 											<Grid item key={index} xs={12}>
@@ -344,84 +319,6 @@ const TagsPage: FC<TagsPageProps> = props => {
 								<Grid item xs={12} />
 							</Grid>
 						</Grid>
-						{/* Pagination */}
-						<Box flexGrow={1} />
-						<Box display="flex" alignItems="center" justifyContent="center" pt={xs ? 3 : 5} pb={xs ? 5 : 10}>
-							<ToggleButtonGroup size="small" sx={{ paddingRight: 1, paddingTop: -20 }}>
-								<ToggleButton
-									value
-									sx={{
-										width: 30,
-										height: 34,
-										borderRadius: "10px",
-										color: theme.palette.text.primary,
-										"&:disabled": {
-											color: theme.palette.text.primary + "50",
-										},
-									}}
-									disabled={page <= 1}
-									onClick={() => handlePreviousPage()}
-								>
-									<Tooltip enterDelay={2000} title="Previous page">
-										<ArrowBackIosSharp
-											sx={{
-												height: 16,
-												width: 16,
-												color: "inherit",
-											}}
-										/>
-									</Tooltip>
-								</ToggleButton>
-								<ToggleButton
-									value
-									sx={{
-										width: 30,
-										height: 34,
-										borderRadius: "10px",
-										display: "flex",
-										justifyContent: "center",
-										alignItems: "center",
-									}}
-									disabled
-								>
-									<Typography variant="subtitle2" color="textPrimary">
-										{page}
-									</Typography>
-								</ToggleButton>
-								<ToggleButton
-									value
-									sx={{
-										width: 30,
-										height: 34,
-										borderRadius: "10px",
-										color: theme.palette.text.primary,
-										"&:disabled": {
-											color: theme.palette.text.primary + "50",
-										},
-									}}
-									disabled={
-										!(
-											page <
-											Math.ceil(
-												chunkedPosts.flat().length /
-													Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
-											)
-										)
-									}
-									onClick={() => handleNextPage()}
-								>
-									<Tooltip enterDelay={2000} title="Next page">
-										<ArrowForwardIosSharp
-											sx={{
-												height: 16,
-												width: 16,
-												color: "inherit",
-											}}
-										/>
-									</Tooltip>
-								</ToggleButton>
-							</ToggleButtonGroup>
-						</Box>
 					</Box>
 				</Box>
 			)}

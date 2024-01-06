@@ -279,7 +279,6 @@ const LandingPage: FC<LandingPageProps> = props => {
 											selected={cardLayout === "carousel"}
 											disabled={cardLayout === "carousel"}
 										>
-											{/* <ViewCarouselSharp sx={{ height: 24, width: 24, color: theme.palette.text.primary }} /> */}
 											<Tooltip enterDelay={2000} title="Carousel layout">
 												<ViewWeekSharp
 													sx={{
