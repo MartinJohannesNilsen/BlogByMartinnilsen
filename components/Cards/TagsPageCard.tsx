@@ -131,7 +131,7 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 								{props.readTime ? props.readTime : "⎯"}
 							</Typography>
 							{/* View counts */}
-							{props.published ? (
+							{props.published && (
 								<>
 									<Visibility
 										sx={{
@@ -157,7 +157,7 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 										/>
 									</Typography>
 								</>
-							) : null}
+							)}
 
 							{/* Not published icon */}
 							{!props.published && (
