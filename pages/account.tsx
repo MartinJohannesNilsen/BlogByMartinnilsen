@@ -1,20 +1,19 @@
 import { Api, Create, Newspaper, Notifications } from "@mui/icons-material";
 import { Grid } from "@mui/material";
-import { useTheme } from "../styles/themes/ThemeProvider";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
-import SEO from "../components/SEO/SEO";
-import Navbar from "../components/Navbar/Navbar";
-import { useEffect, useState } from "react";
-import PostTableModal from "../components/PostManagement/PostTableModal";
 import NotificationsModal, {
 	checkForUnreadRecentNotifications,
 	notificationsApiFetcher,
 } from "../components/Modals/NotificationsModal";
+import Navbar from "../components/Navbar/Navbar";
+import PostTableModal from "../components/PostManagement/PostTableModal";
+import SEO from "../components/SEO/SEO";
+import { useTheme } from "../styles/themes/ThemeProvider";
 import useStickyState from "../utils/useStickyState";
-import useSWR from "swr";
-import SearchModal from "../components/Modals/SearchModal";
 
 export const Account = () => {
 	const { isAuthorized, session, status } =

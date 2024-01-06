@@ -2,7 +2,7 @@ import { styled } from "@mui/material";
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 
 export const TextareaAutosizeElement = styled(BaseTextareaAutosize)(
-  ({ theme }) => `
+	({ theme }) => `
     width: 100%;
     font-family: ${theme.typography.fontFamily};
     font-size: ${theme.typography.body1.fontSize};
@@ -34,7 +34,7 @@ export const TextareaAutosizeElement = styled(BaseTextareaAutosize)(
 );
 
 export const InputElement = styled("input")(
-  ({ theme }) => `
+	({ theme }) => `
     width: 100%;
     resize: vertical;
     font-family: ${theme.typography.fontFamily};

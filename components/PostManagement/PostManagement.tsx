@@ -9,11 +9,9 @@ import {
 	DialogTitle,
 	Divider,
 	FormControlLabel,
-	Link,
 	Radio,
 	RadioGroup,
 	TextField,
-	Tooltip,
 	Typography,
 	useMediaQuery,
 } from "@mui/material";
@@ -27,14 +25,13 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
-import { useTheme } from "../../styles/themes/ThemeProvider";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../database/overview";
 import { addPost, deletePost, updatePost } from "../../database/posts";
 import { addTag, getTags } from "../../database/tags";
 import { renderers } from "../../pages/posts/[postId]";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManageArticleViewProps } from "../../types";
-import { DEFAULT_ICON, DEFAULT_OGIMAGE } from "../SEO/SEO";
 import { NavbarButton } from "../Buttons/NavbarButton";
 let EditorBlock;
 if (typeof window !== "undefined") {
@@ -52,7 +49,7 @@ const OGDEFAULTS = {
 const revalidatePages = async (pages: string[]) => {
 	try {
 		const responses = await Promise.all(
-			pages.map(page => {
+			pages.map((page) => {
 				return fetch("/api/revalidate?path=" + page, {
 					headers: {
 						accept: "application/json",
@@ -69,7 +66,7 @@ const revalidatePages = async (pages: string[]) => {
 				revalidated: boolean;
 			}[];
 		} = { status: 200, requests: [] };
-		responses.map(response => {
+		responses.map((response) => {
 			if (response.status !== 200) {
 				res.status = response.status;
 			}
@@ -85,7 +82,7 @@ const revalidatePages = async (pages: string[]) => {
 	}
 };
 
-const StyledTextField = withStyles(theme => ({
+const StyledTextField = withStyles((theme) => ({
 	root: {
 		"& label": {
 			color: "#808080",
@@ -118,7 +115,7 @@ export function isvalidHTTPUrl(string: string) {
 	return url.protocol === "http:" || url.protocol === "https:";
 }
 
-const CreatePost: FC<ManageArticleViewProps> = props => {
+const CreatePost: FC<ManageArticleViewProps> = (props) => {
 	const { theme, setTheme } = useTheme();
 	const [isSaved, setIsSaved] = useState<boolean>(false);
 	const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
@@ -148,14 +145,14 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 	useEffect(() => {
 		setTheme(ThemeEnum.Light);
 		getTags()
-			.then(val => {
-				const array: { value: string; label: string }[] = val.map(item => ({
+			.then((val) => {
+				const array: { value: string; label: string }[] = val.map((item) => ({
 					value: item,
 					label: item,
 				}));
 				setTagOptions(array);
 			})
-			.catch(error => {
+			.catch((error) => {
 				console.log(error);
 			});
 	}, []);
@@ -218,7 +215,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 					if (process.env.NEXT_PUBLIC_LOCALHOST === "false") {
 						newObject.updatedAt = Date.now();
 					}
-					updatePost(postId, newObject).then(postWasUpdated => {
+					updatePost(postId, newObject).then((postWasUpdated) => {
 						if (postWasUpdated) {
 							enqueueSnackbar("Saving changes ...", {
 								variant: "default",
@@ -236,7 +233,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 								tags: newObject.tags,
 								author: newObject.author,
 								readTime: newObject.readTime,
-							}).then(overviewWasUpdated => {
+							}).then((overviewWasUpdated) => {
 								if (overviewWasUpdated) {
 									enqueueSnackbar("Your changes are saved!", {
 										variant: "success",
@@ -253,7 +250,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 						}
 					});
 				} else {
-					addPost(newObject).then(postId => {
+					addPost(newObject).then((postId) => {
 						if (postId) {
 							enqueueSnackbar("Creating post ...", {
 								variant: "default",
@@ -271,7 +268,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 								tags: newObject.tags,
 								author: newObject.author,
 								readTime: newObject.readTime,
-							}).then(overviewWasAdded => {
+							}).then((overviewWasAdded) => {
 								if (overviewWasAdded) {
 									enqueueSnackbar("Successfully created post!", {
 										variant: "success",
@@ -310,9 +307,9 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 			variant: "default",
 			preventDuplicate: true,
 		});
-		deletePost(postId).then(postWasDeleted => {
+		deletePost(postId).then((postWasDeleted) => {
 			if (postWasDeleted) {
-				deletePostsOverview(postId).then(overviewWasUpdated => {
+				deletePostsOverview(postId).then((overviewWasUpdated) => {
 					if (overviewWasUpdated) {
 						enqueueSnackbar("Successfully deleted post!", {
 							variant: "success",
@@ -339,14 +336,14 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 
 	const handleCreateTagOption = (inputValue: string) => {
 		addTag(inputValue)
-			.then(val => {
+			.then((val) => {
 				if (val) {
 					const newOption = { value: inputValue, label: inputValue };
-					setTagOptions(prev => [...prev, newOption]);
+					setTagOptions((prev) => [...prev, newOption]);
 					setData({ ...data, tags: data.tags.concat(newOption.value) });
 				}
 			})
-			.catch(error => console.log(error));
+			.catch((error) => console.log(error));
 	};
 
 	const handlePublishedRadioChange = (event: { target: { value: any } }) => {
@@ -354,12 +351,12 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 		setData({ ...data, published: event.target.value === "true" });
 	};
 
-	const handleRevalidate = postId => {
+	const handleRevalidate = (postId) => {
 		enqueueSnackbar("Revalidating pages ...", {
 			variant: "default",
 			preventDuplicate: true,
 		});
-		revalidatePages(["/", "/tags", "/posts/" + postId]).then(res => {
+		revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
 			if (res.status === 200) {
 				enqueueSnackbar("Revalidated pages!", {
 					variant: "success",
@@ -375,7 +372,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 		});
 	};
 
-	useHotkeys(["Control+s", "Meta+s"], event => {
+	useHotkeys(["Control+s", "Meta+s"], (event) => {
 		event.preventDefault();
 		// handleSubmit(event);
 	});
@@ -397,7 +394,7 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 				>
 					<form
 						onSubmit={handleSubmit}
-						onKeyDown={e => {
+						onKeyDown={(e) => {
 							if ((e.metaKey && e.key === "s") || (e.ctrlKey && e.key === "s")) {
 								e.preventDefault();
 								handleSubmit(e);
@@ -537,9 +534,9 @@ const CreatePost: FC<ManageArticleViewProps> = props => {
 									isMulti
 									isClearable
 									isSearchable
-									value={data.tags.map(tag => ({ value: tag, label: tag }))}
-									onChange={array => {
-										setData({ ...data, tags: array.map(item => item.value) });
+									value={data.tags.map((tag) => ({ value: tag, label: tag }))}
+									onChange={(array) => {
+										setData({ ...data, tags: array.map((item) => item.value) });
 									}}
 									onCreateOption={handleCreateTagOption}
 									options={tagOptions}

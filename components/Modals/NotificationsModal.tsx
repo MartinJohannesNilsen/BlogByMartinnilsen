@@ -1,14 +1,13 @@
 import { Close } from "@mui/icons-material";
-import { ButtonBase, Divider, IconButton, useMediaQuery } from "@mui/material";
+import { Divider, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { NotificationProps, NotificationsModalProps } from "../../types";
-import { useEffect, useState } from "react";
-import UnstyledSelect from "../Selects/NotificationSelectDays";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
+import UnstyledSelect from "../Selects/NotificationSelectDays";
 
 export const notificationsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header
@@ -44,19 +43,19 @@ export const checkForUnreadRecentNotifications = (
 		.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
 		.filter(
 			// Only show notifications on new past 30 days
-			notification =>
+			(notification) =>
 				Date.parse(notification.createdAt) > lastRead - notificationDaysInMilliseconds || notification.important
 		);
-	const allFilteredOnDateIds = allFilteredOnDateOrImportant.map(notification => notification.id);
+	const allFilteredOnDateIds = allFilteredOnDateOrImportant.map((notification) => notification.id);
 	const unreadNotifications = data
 		.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
-		.filter(notification => !notificationsRead.includes(notification.id));
-	const unreadNotificationsIds = unreadNotifications.map(notification => notification.id);
+		.filter((notification) => !notificationsRead.includes(notification.id));
+	const unreadNotificationsIds = unreadNotifications.map((notification) => notification.id);
 	const unreadFilteredOnDateOrImportantIds = unreadNotifications
 		.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
 		.map(
 			// Only show notifications on new past 30 days
-			notification =>
+			(notification) =>
 				Date.parse(notification.createdAt) > lastRead - notificationDaysInMilliseconds || notification.important
 					? notification.id
 					: null

@@ -13,27 +13,26 @@ import {
 	ButtonGroup,
 	Unstable_Grid2 as Grid,
 	IconButton,
-	Typography,
-	Tooltip,
-	useMediaQuery,
-	ToggleButtonGroup,
 	ToggleButton,
+	ToggleButtonGroup,
+	Tooltip,
+	Typography,
+	useMediaQuery,
 } from "@mui/material";
+import "keen-slider/keen-slider.min.css";
+import { useKeenSlider } from "keen-slider/react";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../styles/themes/ThemeProvider";
-import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import Navbar from "../components/Navbar/Navbar";
-import SEO from "../components/SEO/SEO";
-import { _filterListOfStoredPostsOnPublished, getPostsOverview } from "../database/overview";
-import { LandingPageProps, StoredPost } from "../types";
-import useStickyState from "../utils/useStickyState";
-import { useKeenSlider } from "keen-slider/react";
-import "keen-slider/keen-slider.min.css";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
 import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
 import LandingPageListCard from "../components/Cards/LandingPageListCard";
+import Navbar from "../components/Navbar/Navbar";
+import SEO from "../components/SEO/SEO";
 import TinderSwipe from "../components/TinderSwipe/TinderSwipe";
+import { _filterListOfStoredPostsOnPublished, getPostsOverview } from "../database/overview";
+import { useTheme } from "../styles/themes/ThemeProvider";
+import { LandingPageProps, StoredPost } from "../types";
+import useStickyState from "../utils/useStickyState";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
 	if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -63,7 +62,7 @@ export const getStaticProps = async (context: any) => {
 	};
 };
 
-const LandingPage: FC<LandingPageProps> = props => {
+const LandingPage: FC<LandingPageProps> = (props) => {
 	// const { isAuthorized } = useAuthorized();
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState(true);
@@ -395,7 +394,7 @@ const LandingPage: FC<LandingPageProps> = props => {
 												sx={{
 													color: "text.primary",
 												}}
-												onClick={e => e.stopPropagation() || instanceRef.current?.prev()}
+												onClick={(e) => e.stopPropagation() || instanceRef.current?.prev()}
 												disabled={currentSlide === 0}
 											>
 												<ArrowBackIosNewSharp color="inherit" />
@@ -404,7 +403,7 @@ const LandingPage: FC<LandingPageProps> = props => {
 												sx={{
 													color: "text.primary",
 												}}
-												onClick={e => e.stopPropagation() || instanceRef.current?.next()}
+												onClick={(e) => e.stopPropagation() || instanceRef.current?.next()}
 												disabled={
 													xs
 														? currentSlide === posts.length - 1

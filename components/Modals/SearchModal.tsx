@@ -20,36 +20,32 @@ import {
 } from "@mui/icons-material";
 import {
 	Avatar,
+	Badge,
 	Box,
-	Modal,
+	ButtonBase,
+	InputAdornment,
 	List,
 	ListItem,
 	ListItemAvatar,
 	ListItemButton,
 	ListItemText,
-	SvgIconTypeMap,
+	Modal,
 	TextField,
-	useMediaQuery,
-	InputAdornment,
-	IconButton,
-	ButtonBase,
 	Typography,
-	Button,
-	Badge,
+	useMediaQuery,
 } from "@mui/material";
+import { motion } from "framer-motion";
 import { matchSorter } from "match-sorter";
+import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { SearchModalProps, StoredPost } from "../../types";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import useAuthorized from "../AuthorizationHook/useAuthorized";
-import { signIn } from "next-auth/react";
-import { userSignOut } from "../../utils/signOut";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { motion } from "framer-motion";
+import { SearchModalProps, StoredPost } from "../../types";
+import { userSignOut } from "../../utils/signOut";
+import useAuthorized from "../AuthorizationHook/useAuthorized";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 
 type ActionProps = {
 	title: string;
@@ -266,7 +262,7 @@ export const SearchModal = (props: SearchModalProps) => {
 	useEffect(() => {
 		if (isActions) {
 			const bestMatch = matchSorter(
-				actions.filter(action => action.requirement == null || action.requirement() === true),
+				actions.filter((action) => action.requirement == null || action.requirement() === true),
 				textFieldValue,
 				{
 					keys: ["title"],
@@ -304,7 +300,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		}, [props.open, isActions]);
 
 	// Hotkeys
-	useHotkeys(["Control+k", "Meta+k"], event => {
+	useHotkeys(["Control+k", "Meta+k"], (event) => {
 		event.preventDefault();
 		props.handleModalClose();
 	});
@@ -469,7 +465,7 @@ export const SearchModal = (props: SearchModalProps) => {
 									}}
 									sx={{ paddingBottom: 0, borderColor: "transparent" }}
 									InputLabelProps={{ style: { fontSize: xs ? 20 : 26 } }}
-									onKeyDown={e => {
+									onKeyDown={(e) => {
 										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
 											e.preventDefault();
 											props.handleModalClose();
@@ -499,7 +495,7 @@ export const SearchModal = (props: SearchModalProps) => {
 											}
 										}
 									}}
-									onChange={e => {
+									onChange={(e) => {
 										setTextFieldValue(e.target.value);
 									}}
 								/>

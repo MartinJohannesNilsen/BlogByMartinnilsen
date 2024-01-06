@@ -8,7 +8,7 @@ import { PostCardProps } from "../../types";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 import PostViews from "../PostViews/PostViews";
 
-export const TagsPageCard: FC<PostCardProps> = props => {
+export const TagsPageCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lg = useMediaQuery(theme.breakpoints.only("lg"));

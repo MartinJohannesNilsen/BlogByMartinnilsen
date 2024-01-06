@@ -1,29 +1,17 @@
-import { ArrowBackIosNewSharp, ArrowBackIosSharp, ArrowForwardIosSharp } from "@mui/icons-material";
-import {
-	Box,
-	Button,
-	Grid,
-	IconButton,
-	ToggleButton,
-	ToggleButtonGroup,
-	Tooltip,
-	Typography,
-	useMediaQuery,
-} from "@mui/material";
+import { Box, Button, Grid, Typography, useMediaQuery } from "@mui/material";
 import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../styles/themes/ThemeProvider";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import TagsPageCard from "../components/Cards/TagsPageCard";
 import Navbar from "../components/Navbar/Navbar";
 import SEO from "../components/SEO/SEO";
 import { _filterListOfStoredPostsOnPublished, getPostsOverview } from "../database/overview";
 import { getTags } from "../database/tags";
+import { useTheme } from "../styles/themes/ThemeProvider";
 import { StoredPost, TagsPageProps } from "../types";
 import colorLumincance from "../utils/colorLuminance";
-import { splitChunks } from "./index";
 
 // Next.js functions
 // On-demand Revalidation, thus no defined revalidation interval
@@ -47,22 +35,24 @@ export const getStaticProps = async (context: any) => {
 };
 
 export const _caseInsensitiveIncludes = (list: string[], word: string, removeSpace?: boolean) => {
-	const lowerCaseList = list.map(e => e.toLowerCase());
+	const lowerCaseList = list.map((e) => e.toLowerCase());
 	if (!removeSpace) return lowerCaseList.includes(word.toLowerCase());
-	return lowerCaseList.map(e => e.replace(" ", ""));
+	return lowerCaseList.map((e) => e.replace(" ", ""));
 };
 
 const _getCaseInsensitiveElement = (list: string[], element: string) => {
-	const index = list.findIndex(item => element.toLowerCase().replace(" ", "") === item.toLowerCase().replace(" ", ""));
+	const index = list.findIndex(
+		(item) => element.toLowerCase().replace(" ", "") === item.toLowerCase().replace(" ", "")
+	);
 	if (index === -1) return null;
 	return list[index];
 };
 
 export const _filterListOfStoredPostsOnTag = (data: StoredPost[], tag: string) => {
-	return data.filter(post => post.tags.includes(tag));
+	return data.filter((post) => post.tags.includes(tag));
 };
 
-const TagsPage: FC<TagsPageProps> = props => {
+const TagsPage: FC<TagsPageProps> = (props) => {
 	const { isAuthorized } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
 			? {
@@ -137,7 +127,7 @@ const TagsPage: FC<TagsPageProps> = props => {
 		tag &&
 		!["all", "published", "unpublished"]
 			.concat(props.tags)
-			.find(item => tag.toLowerCase().replace(" ", "") === item.toLowerCase().replace(" ", ""))
+			.find((item) => tag.toLowerCase().replace(" ", "") === item.toLowerCase().replace(" ", ""))
 	) {
 		return <ErrorPage statusCode={404} title="This tag could not be found" />;
 	}
@@ -233,7 +223,7 @@ const TagsPage: FC<TagsPageProps> = props => {
 											All posts
 										</Typography>
 									</Button>
-									{(isAuthorized ? ["Published", "Unpublished"] : []).concat(props.tags.sort()).map(element => (
+									{(isAuthorized ? ["Published", "Unpublished"] : []).concat(props.tags.sort()).map((element) => (
 										<Button
 											size="small"
 											disabled={tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")}

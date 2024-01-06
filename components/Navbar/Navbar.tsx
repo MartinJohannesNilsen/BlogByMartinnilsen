@@ -1,14 +1,4 @@
-import {
-	Info,
-	InfoOutlined,
-	Logout,
-	LogoutRounded,
-	LogoutSharp,
-	PostAdd,
-	Search,
-	SettingsRounded,
-	Tag,
-} from "@mui/icons-material";
+import { Info, LogoutRounded, PostAdd, Search, SettingsRounded, Tag } from "@mui/icons-material";
 import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,23 +6,23 @@ import logo from "public/assets/imgs/terminal.png";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
+import useSWR from "swr";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { NavbarProps } from "../../types";
+import { userSignOut } from "../../utils/signOut";
+import useStickyState from "../../utils/useStickyState";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
-import SearchModal from "../Modals/SearchModal";
-import SettingsModal from "../Modals/SettingsModal";
-import ProfileMenu from "../Menus/ProfileMenu";
-import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { NavbarButton } from "../Buttons/NavbarButton";
+import NavbarSearchButton from "../Buttons/NavbarSearchButton";
+import ProfileMenu from "../Menus/ProfileMenu";
+import AboutModal from "../Modals/AboutModal";
 import NotificationsModal, {
 	checkForUnreadRecentNotifications,
 	notificationsApiFetcher,
 } from "../Modals/NotificationsModal";
-import useSWR from "swr";
-import useStickyState from "../../utils/useStickyState";
-import { userSignOut } from "../../utils/signOut";
-import AboutModal from "../Modals/AboutModal";
+import SearchModal from "../Modals/SearchModal";
+import SettingsModal from "../Modals/SettingsModal";
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const { theme, setTheme } = useTheme();
@@ -75,7 +65,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const [openSearchModal, setOpenSearchModal] = useState(false);
 	const handleSearchModalOpen = () => setOpenSearchModal(true);
 	const handleSearchModalClose = () => setOpenSearchModal(false);
-	useHotkeys(["Control+k", "Meta+k"], event => {
+	useHotkeys(["Control+k", "Meta+k"], (event) => {
 		event.preventDefault();
 		handleSearchModalOpen();
 	});

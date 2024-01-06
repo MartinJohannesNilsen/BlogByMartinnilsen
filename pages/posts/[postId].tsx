@@ -8,7 +8,7 @@ import {
 	MenuBook,
 	Visibility,
 } from "@mui/icons-material";
-import { Box, Button, ButtonBase, Grid, Stack, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Box, ButtonBase, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
@@ -17,7 +17,6 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
-import { useTheme } from "../../styles/themes/ThemeProvider";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/Style";
 import Footer from "../../components/Footer/Footer";
@@ -27,30 +26,33 @@ import TOCModal, { extractHeaders } from "../../components/Modals/TOCModal";
 import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
 // import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
-import { useEventListener } from "usehooks-ts";
-import logo from "public/assets/imgs/terminal.png";
 import Image from "next/image";
+import logo from "public/assets/imgs/terminal.png";
+import useSWR from "swr";
+import { useEventListener } from "usehooks-ts";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Menus/ProfileMenu";
 import NotificationsModal, {
 	checkForUnreadRecentNotifications,
 	notificationsApiFetcher,
 } from "../../components/Modals/NotificationsModal";
-import useSWR from "swr";
-import useStickyState from "../../utils/useStickyState";
 import Toggle from "../../components/Toggles/Toggle";
+import useStickyState from "../../utils/useStickyState";
 
 // EditorJS renderers
+import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../../components/EditorJS/Renderers/CustomCode";
 import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
 import CustomHeader from "../../components/EditorJS/Renderers/CustomHeader";
+import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import CustomImage from "../../components/EditorJS/Renderers/CustomImage";
 import CustomLinkTool from "../../components/EditorJS/Renderers/CustomLinkTool";
 import CustomList from "../../components/EditorJS/Renderers/CustomList";
@@ -58,17 +60,15 @@ import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
 import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
 import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
-import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
-import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
-import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
-import PostViews from "../../components/PostViews/PostViews";
 import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
+import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
+import PostViews from "../../components/PostViews/PostViews";
 // import CustomPersonality from "../../components/EditorJS/Renderers/_CustomPersonality";
 
 export async function getStaticPaths() {
 	const idList = await getAllPostIds(false); // Not filter on visibility
 	const paths: string[] = [];
-	idList.forEach(id => {
+	idList.forEach((id) => {
 		paths.push(`/posts/${id}`);
 	});
 	return { paths, fallback: "blocking" };
@@ -169,7 +169,7 @@ export function processJsonToggleBlocks(inputJson) {
 	return null;
 }
 
-export const ReadArticleView: FC<ReadArticleViewProps> = props => {
+export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const post = props.post;
 	const { isAuthorized, session, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
@@ -255,7 +255,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 
 	useEventListener("scroll", () => {
 		const sectionEls = document.querySelectorAll(".anchorHeading");
-		sectionEls.forEach(sectionEl => {
+		sectionEls.forEach((sectionEl) => {
 			const { top, bottom } = sectionEl.getBoundingClientRect();
 			// Check if the top of the section is above the viewport's bottom
 			// if (top <= 0 && bottom >= 0) {

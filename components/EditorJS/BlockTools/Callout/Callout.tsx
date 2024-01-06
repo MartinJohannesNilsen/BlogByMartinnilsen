@@ -64,7 +64,7 @@ export const Callout = (props: CalloutProps) => {
 						sx={{ width: "150px" }}
 						size="small"
 						value={stateData.type}
-						onChange={e => setStateData({ ...stateData, type: e.target.value })}
+						onChange={(e) => setStateData({ ...stateData, type: e.target.value })}
 					>
 						<MenuItem value={"message"}>Message</MenuItem>
 						<MenuItem value={"note"}>Note</MenuItem>
@@ -127,7 +127,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Title */}
 									<InputBase
 										fullWidth
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" || event.key === "ArrowUp" || event.key === "ArrowDown") {
 												event.preventDefault();
 												event.stopPropagation();
@@ -140,7 +140,7 @@ export const Callout = (props: CalloutProps) => {
 											fontWeight: 800,
 											fontFamily: theme.typography.fontFamily,
 										}}
-										onChange={e => {
+										onChange={(e) => {
 											setStateData({
 												...stateData,
 												title: e.target.value,
@@ -150,7 +150,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Message */}
 									<div
 										contentEditable
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" && !event.shiftKey) {
 												event.preventDefault();
 												event.stopPropagation();
@@ -163,7 +163,7 @@ export const Callout = (props: CalloutProps) => {
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
 										}}
-										onInputCapture={e => {
+										onInputCapture={(e) => {
 											const currentDiv = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
@@ -202,7 +202,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Title */}
 									<InputBase
 										fullWidth
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" || event.key === "ArrowUp" || event.key === "ArrowDown") {
 												event.preventDefault();
 												event.stopPropagation();
@@ -222,7 +222,7 @@ export const Callout = (props: CalloutProps) => {
 											display: "webkit-flex",
 											WebkitBoxOrient: "vertical",
 										}}
-										onChange={e => {
+										onChange={(e) => {
 											setStateData({
 												...stateData,
 												title: e.target.value,
@@ -232,7 +232,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Message */}
 									<div
 										contentEditable
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" && !event.shiftKey) {
 												event.preventDefault();
 												event.stopPropagation();
@@ -245,7 +245,7 @@ export const Callout = (props: CalloutProps) => {
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
 										}}
-										onInputCapture={e => {
+										onInputCapture={(e) => {
 											const currentDiv = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
