@@ -50,6 +50,7 @@ import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 type ActionProps = {
 	title: string;
 	iconElement: JSX.Element;
+	keywords: string[];
 	onClick?: () => void;
 	href?: string;
 	requirement?: () => boolean;
@@ -81,6 +82,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Go to landing page",
 			// href: "/",
+			keywords: ["home", "return", "back", "posts"],
 			iconElement: <Home sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return !window.location.pathname.includes("/");
@@ -89,6 +91,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Go to tags page",
 			href: "/tags",
+			keywords: ["hashtags", "tags", "keywords", "categories"],
 			iconElement: <Tag sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return !window.location.pathname.includes("/tags");
@@ -97,6 +100,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Go to account page",
 			href: "/account",
+			keywords: ["account", "profile", "login", "settings"],
 			iconElement: <Person sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status === "authenticated" && !window.location.pathname.includes("/account");
@@ -105,6 +109,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Create post",
 			href: "/create",
+			keywords: ["create", "add", "write", "new", "post"],
 			iconElement: <PostAdd sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return isAuthorized && !window.location.pathname.includes("/create");
@@ -113,6 +118,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Go to API documentation",
 			href: "/apidoc",
+			keywords: ["api", "docs", "documentation"],
 			iconElement: <Api sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return isAuthorized;
@@ -123,6 +129,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.handleSettingsModalOpen();
 			},
+			keywords: ["settings", "configure", "tune"],
 			iconElement: <Settings sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.handleSettingsModalOpen != null;
@@ -133,6 +140,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.handleNotificationsModalOpen();
 			},
+			keywords: ["notifications", "messages"],
 			iconElement: props.notificationsBadgeVisible ? (
 				<Badge color="secondary" variant="dot" invisible={false} overlap="circular" badgeContent=" ">
 					<Notifications sx={{ color: theme.palette.text.primary }} />
@@ -150,6 +158,7 @@ export const SearchModal = (props: SearchModalProps) => {
 				localStorage.clear();
 				window.location.reload();
 			},
+			keywords: ["clear", "local", "storage", "data"],
 			iconElement: <Clear sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -157,6 +166,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				signIn();
 			},
+			keywords: ["login", "log", "in"],
 			iconElement: <Login sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status === "authenticated";
@@ -167,6 +177,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				userSignOut(window.location.pathname === "/account" ? "/" : null, true);
 			},
+			keywords: ["logout", "log", "out"],
 			iconElement: <Logout sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status !== "authenticated";
@@ -177,6 +188,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				setTheme(ThemeEnum.Light, true);
 			},
+			keywords: ["light", "mode", "theme"],
 			iconElement: <LightMode sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -184,6 +196,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				setTheme(ThemeEnum.Dark, true);
 			},
+			keywords: ["dark", "mode", "theme"],
 			iconElement: <DarkMode sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -191,6 +204,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				setDefaultTheme();
 			},
+			keywords: ["system", "mode", "theme", "default"],
 			iconElement: <SettingsBrightness sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -198,6 +212,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("carousel");
 			},
+			keywords: ["layout", "carousel", "view", "cards"],
 			iconElement: <ViewWeekSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -208,6 +223,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("swipe");
 			},
+			keywords: ["layout", "swipe", "view", "cards"],
 			iconElement: <ViewCarousel sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -218,6 +234,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("grid");
 			},
+			keywords: ["layout", "grid", "view", "cards"],
 			iconElement: <GridViewSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -228,6 +245,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("list");
 			},
+			keywords: ["layout", "list", "view", "cards"],
 			iconElement: <TableRowsSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -265,7 +283,7 @@ export const SearchModal = (props: SearchModalProps) => {
 				actions.filter((action) => action.requirement == null || action.requirement() === true),
 				textFieldValue,
 				{
-					keys: ["title"],
+					keys: [(item) => item.title, (item) => item.keywords],
 				}
 			);
 			// const min = Math.min(bestMatch.length, actions.length);
