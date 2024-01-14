@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../lib/firebaseConfig";
 import { validateAuthAPIToken } from "..";
+import { db } from "../../../lib/firebaseConfig";
 
 /**
  * @swagger
@@ -33,6 +33,7 @@ import { validateAuthAPIToken } from "..";
  *                   type: "Tutorial"
  *                   data: "{\"time\":1701472725450,\"blocks\":[],\"version\":\"2.28.2\"}"
  *                   tags: ["Development","Python"]
+ *                   keywords: ["Keyword"]
  *                   author: "Martin Johannes Nilsen"
  *                   published: false
  *                   updatedAt: 1701472730348
@@ -45,6 +46,7 @@ import { validateAuthAPIToken } from "..";
  *                 createdAt: 1701103064042
  *                 type: "Tutorial"
  *                 tags: ["Development","Python"]
+ *                 keywords: ["Keyword"]
  *                 author: "Martin Johannes Nilsen"
  *                 published: false
  *                 updatedAt: 1701472730348

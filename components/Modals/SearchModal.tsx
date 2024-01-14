@@ -297,7 +297,7 @@ export const SearchModal = (props: SearchModalProps) => {
 				setMaxNumberOfItems(0);
 			} else {
 				const bestMatch = matchSorter(props.postsOverview!, textFieldValue, {
-					keys: ["title", "description"],
+					keys: ["title", "description", "type", "keywords", "tags"],
 				});
 				const min = Math.min(bestMatch.length, Number(process.env.NEXT_PUBLIC_SEARCH_MAX_RESULTS));
 				setMatchedPosts(bestMatch.slice(0, min));

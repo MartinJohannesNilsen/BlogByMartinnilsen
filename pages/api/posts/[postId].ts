@@ -1,10 +1,9 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../lib/firebaseConfig";
 import { validateAuthAPIToken } from "..";
-import { deletePost } from "../../../database/posts";
 import { deletePostsOverview } from "../../../database/overview";
-import { FirestoreFullPost } from "../../../types";
+import { deletePost } from "../../../database/posts";
+import { db } from "../../../lib/firebaseConfig";
 
 /**
  * @swagger
@@ -39,6 +38,7 @@ import { FirestoreFullPost } from "../../../types";
  *               type: "Tutorial"
  *               data: "{\"time\":1701472725450,\"blocks\":[],\"version\":\"2.28.2\"}"
  *               tags: ["Development","Python"]
+ *               keywords: ["Keyword"]
  *               author: "Martin Johannes Nilsen"
  *               published: false
  *               updatedAt: 1701472730348
@@ -80,6 +80,8 @@ import { FirestoreFullPost } from "../../../types";
  *                type string
  *               tags:
  *                type list
+ *               keywords:
+ *                type list
  *               author:
  *                type string
  *               published:
@@ -97,6 +99,7 @@ import { FirestoreFullPost } from "../../../types";
  *               type: ""
  *               data: ""
  *               tags: []
+ *               keywords: []
  *               author: ""
  *               published: false
  *               updatedAt: 0
@@ -114,6 +117,7 @@ import { FirestoreFullPost } from "../../../types";
  *               type: "Tutorial"
  *               data: "{\"time\":1701472725450,\"blocks\":[],\"version\":\"2.28.2\"}"
  *               tags: ["Development","Python"]
+ *               keywords: ["Keyword"]
  *               author: "Martin Johannes Nilsen"
  *               published: false
  *               updatedAt: 1701472730348

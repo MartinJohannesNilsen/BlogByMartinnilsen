@@ -137,12 +137,6 @@ export const Account = () => {
 						/>
 					</Grid>
 				</Grid>
-				{/* TODO */}
-				{/* <SearchModal
-          open={openPostTableModal}
-          handleModalOpen={handlePostTableModalOpen}
-          handleModalClose={handlePostTableModalClose}
-        /> */}
 				<PostTableModal
 					open={openPostTableModal}
 					handleModalOpen={handlePostTableModalOpen}

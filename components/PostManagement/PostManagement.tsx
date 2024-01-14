@@ -1,21 +1,19 @@
 import { OutputData } from "@editorjs/editorjs";
-import { Delete, Home, Launch, Save, Update } from "@mui/icons-material";
+import { Clear, Delete, Home, Launch, Save, Update } from "@mui/icons-material";
 import {
+	Autocomplete,
 	Box,
 	Button,
+	ButtonBase,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	Divider,
 	FormControlLabel,
-	Radio,
 	RadioGroup,
-	TextField,
 	Typography,
 	useMediaQuery,
 } from "@mui/material";
-import { withStyles } from "@mui/styles";
 import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -33,6 +31,9 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManageArticleViewProps } from "../../types";
 import { NavbarButton } from "../Buttons/NavbarButton";
+import { BpRadio } from "../StyledMUI/RadioButton";
+import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
+import { StyledTextField } from "../StyledMUI/TextInput";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -82,29 +83,6 @@ const revalidatePages = async (pages: string[]) => {
 	}
 };
 
-const StyledTextField = withStyles((theme) => ({
-	root: {
-		"& label": {
-			color: "#808080",
-		},
-		"& label.Mui-focused": {
-			color: "#2684FF",
-		},
-		"& .MuiOutlinedInput-root": {
-			borderColor: "#CCCCCC",
-			"& fieldset": {
-				borderColor: "#CCCCCC",
-			},
-			"&:hover fieldset": {
-				borderColor: "#B3B3B3",
-			},
-			"&.Mui-focused fieldset": {
-				borderColor: "#2684FF",
-			},
-		},
-	},
-}))(TextField);
-
 export function isvalidHTTPUrl(string: string) {
 	let url;
 	try {
@@ -128,6 +106,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		published: false,
 		type: "",
 		tags: [],
+		keywords: [],
 		title: "",
 		description: "",
 		image: "",
@@ -140,7 +119,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 	const handleNavigate = (path: string) => {
 		window.location.href = path;
 	};
-	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+	const { enqueueSnackbar } = useSnackbar();
+	const [openTab, setOpenTab] = useState(postId ? 1 : 0);
 
 	useEffect(() => {
 		setTheme(ThemeEnum.Light);
@@ -231,6 +211,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								updatedAt: newObject.updatedAt,
 								type: newObject.type,
 								tags: newObject.tags,
+								keywords: newObject.keywords,
 								author: newObject.author,
 								readTime: newObject.readTime,
 							}).then((overviewWasUpdated) => {
@@ -266,6 +247,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								updatedAt: newObject.updatedAt,
 								type: newObject.type,
 								tags: newObject.tags,
+								keywords: newObject.keywords,
 								author: newObject.author,
 								readTime: newObject.readTime,
 							}).then((overviewWasAdded) => {
@@ -379,9 +361,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 
 	return (
 		<>
-			{isLoading ? (
-				<></>
-			) : (
+			{!isLoading && (
 				<Box
 					display="flex"
 					flexDirection="column"
@@ -448,7 +428,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								)}
 								<Box flexGrow={1} />
 								{/* Delete */}
-								{props.post ? (
+								{props.post && (
 									<>
 										<NavbarButton
 											variant="outline"
@@ -518,129 +498,300 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 											</DialogActions>
 										</Dialog>
 									</>
-								) : (
-									<></>
 								)}
 							</Box>
-							<Divider />
-							<Typography my={2.5} variant="h4" color="textPrimary" fontFamily={theme.typography.fontFamily}>
-								Information
-							</Typography>
-							<Divider />
 						</Box>
-						<Box display="flex" flexDirection="column" sx={{ width: width }} rowGap={3}>
-							<Box sx={{ zIndex: 5 }}>
-								<CreatableSelect
-									isMulti
-									isClearable
-									isSearchable
-									value={data.tags.map((tag) => ({ value: tag, label: tag }))}
-									onChange={(array) => {
-										setData({ ...data, tags: array.map((item) => item.value) });
-									}}
-									onCreateOption={handleCreateTagOption}
-									options={tagOptions}
+
+						<Tabs
+							defaultValue={openTab}
+							onChange={(event, value) => {
+								setOpenTab(Number(value));
+							}}
+						>
+							{/* {mdDown ? (
+								<TabsListHorizontal>
+									<Tab>Info</Tab>
+									<Tab>Content</Tab>
+								</TabsListHorizontal>
+							) : (
+								<TabsListVertical>
+									<Tab>Info</Tab>
+									<Tab>Content</Tab>
+								</TabsListVertical>
+							)} */}
+							<TabsListHorizontal>
+								<Tab>Info</Tab>
+								<Tab>Content</Tab>
+							</TabsListHorizontal>
+						</Tabs>
+
+						{/* Information */}
+						{openTab === 0 && (
+							<Box display="flex" flexDirection="column" sx={{ width: width }} rowGap={2}>
+								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
+									Required
+								</Typography>
+								<StyledTextField
+									InputLabelProps={{ shrink: false }}
+									placeholder="Type"
+									inputProps={{ style: { padding: 10 } }}
+									name="type"
+									required
+									fullWidth
+									value={data.type}
+									onChange={handleInputChange}
 								/>
+								<StyledTextField
+									InputLabelProps={{ shrink: false }}
+									placeholder="Title"
+									name="title"
+									required
+									fullWidth
+									inputProps={{
+										style: { padding: 10 },
+										maxlength: OGDEFAULTS.titleMax,
+									}}
+									InputProps={{
+										endAdornment: (
+											<Typography
+												fontFamily={theme.typography.fontFamily}
+												fontSize={12}
+												fontWeight={400}
+												sx={{
+													ml: 1,
+													color: data.title.length <= OGDEFAULTS.titleOptimal ? "green" : "#cfa602",
+												}}
+											>
+												{`${data.title.length}/${OGDEFAULTS.titleMax}`}
+											</Typography>
+										),
+									}}
+									value={data.title}
+									onChange={handleInputChange}
+								/>
+								<StyledTextField
+									InputLabelProps={{ shrink: false }}
+									placeholder="Description"
+									name="description"
+									fullWidth
+									multiline
+									size="small"
+									onKeyPress={(e) => {
+										if (e.key === "Enter") {
+											event.preventDefault();
+										}
+									}}
+									inputProps={{
+										maxlength: OGDEFAULTS.descriptionMax,
+										style: { padding: "0px" },
+									}}
+									InputProps={{
+										endAdornment: (
+											<Typography
+												fontFamily={theme.typography.fontFamily}
+												fontSize={12}
+												fontWeight={400}
+												sx={{
+													ml: 1,
+													color:
+														data.description.length <= OGDEFAULTS.descriptionOptimal
+															? "green"
+															: data.description.length <= OGDEFAULTS.descriptionWarning
+															? theme.palette.text.primary
+															: "#cfa602",
+												}}
+											>
+												{`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
+											</Typography>
+										),
+									}}
+									value={data.description}
+									onChange={handleInputChange}
+								/>
+								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
+									Optional
+								</Typography>
+								<StyledTextField
+									InputLabelProps={{ shrink: false }}
+									placeholder="Open Graph Image"
+									inputProps={{ style: { padding: 10 } }}
+									name="image"
+									error={data.image && data.image.trim() !== "" && !isvalidHTTPUrl(data.image)}
+									InputProps={{
+										endAdornment: data.image && data.image.trim() !== "" && !isvalidHTTPUrl(data.image) && (
+											<Typography
+												fontFamily={theme.typography.fontFamily}
+												fontSize={12}
+												fontWeight={400}
+												sx={{
+													ml: 1,
+													color: "red",
+												}}
+											>
+												URL
+											</Typography>
+										),
+									}}
+									fullWidth
+									value={data.image}
+									onChange={handleInputChange}
+								/>
+
+								<Autocomplete
+									freeSolo
+									multiple
+									options={[]}
+									value={data.keywords}
+									onChange={(event, newValue) => {
+										setData({ ...data, keywords: newValue });
+									}}
+									renderInput={(params) => (
+										<StyledTextField
+											{...params}
+											InputLabelProps={{ shrink: false }}
+											placeholder={data.keywords && data.keywords.length !== 0 ? "" : "Keywords"}
+											variant="outlined"
+											InputProps={{
+												style: { padding: 3 },
+												startAdornment: (
+													<Box marginLeft={0.5} display="flex" flexWrap="wrap">
+														{data.keywords?.map((value, index) => (
+															<Box
+																key={index}
+																display="flex"
+																sx={{
+																	backgroundColor: "#E6E6E6",
+																	borderRadius: 0.5,
+																	padding: "2px 4px",
+																	marginLeft: 0.5,
+																	marginY: 0.25,
+																}}
+															>
+																<Typography sx={{ color: "#333333", fontWeight: 500, fontSize: 14 }}>
+																	{value}
+																</Typography>
+																<ButtonBase
+																	sx={{
+																		"&: hover": { backgroundColor: "#F5C0B0", color: "#CC4525" },
+																		margin: "-2px -4px -2px 3px",
+																		padding: 0.5,
+																		borderRadius: 0.25,
+																	}}
+																	onClick={() => {
+																		console.log(value);
+																		setData({
+																			...data,
+																			keywords: data.keywords.filter((keyword) => keyword !== value),
+																		});
+																	}}
+																>
+																	<Clear sx={{ width: 12, height: 12, fontWeight: 1000 }} />
+																</ButtonBase>
+															</Box>
+														))}
+													</Box>
+												),
+											}}
+										/>
+									)}
+								/>
+								<Box sx={{ zIndex: 5 }}>
+									<CreatableSelect
+										isMulti
+										isClearable
+										isSearchable
+										placeholder="Tags"
+										value={data.tags.map((tag) => ({ value: tag, label: tag }))}
+										onChange={(array) => {
+											setData({ ...data, tags: array.map((item) => item.value) });
+										}}
+										onCreateOption={handleCreateTagOption}
+										options={tagOptions}
+									/>
+								</Box>
+								<Box mt={3} mb={10}>
+									<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mb={0.5}>
+										Published
+									</Typography>
+									<RadioGroup
+										// sx={{ marginTop: theme.spacing(-2) }}
+										row
+										value={data.published}
+										name="published-radio-buttons-group"
+										onChange={handlePublishedRadioChange}
+									>
+										<FormControlLabel value={true} control={<BpRadio />} label="Yes" />
+										<FormControlLabel value={false} control={<BpRadio />} label="No" />
+									</RadioGroup>
+								</Box>
 							</Box>
-							<StyledTextField
-								label="Type"
-								name="type"
-								required
-								fullWidth
-								value={data.type}
-								onChange={handleInputChange}
-							/>
-							<StyledTextField
-								label="Title"
-								name="title"
-								required
-								fullWidth
-								inputProps={{
-									maxlength: OGDEFAULTS.titleMax,
+						)}
+
+						{/* Content */}
+						{openTab === 1 && (
+							<Box display="flex" flexDirection="column" sx={{ width: width }}>
+								{EditorBlock && !isLoading && (
+									<Box mt={3}>
+										<EditorBlock data={editorJSContent} onChange={setEditorJSContent} holder="editorjs-container" />
+									</Box>
+								)}
+							</Box>
+						)}
+
+						{/* Button row */}
+						<Box
+							display="flex"
+							columnGap={1}
+							sx={
+								xs
+									? { position: "fixed", left: 22, top: 24, zIndex: 100 }
+									: { position: "fixed", left: 25, bottom: 25, zIndex: 100 }
+							}
+						>
+							{/* Submit button */}
+							<NavbarButton
+								type="submit"
+								variant="outline"
+								icon={Save}
+								tooltip="Save changes"
+								disabled={isSaved || editorJSContent.blocks.length === 0}
+								sxButton={{
+									minWidth: "40px",
+									minHeight: "40px",
+									height: "40px",
+									width: "40px",
+									border: isSaved
+										? "1px solid green"
+										: "1px solid " +
+										  (theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+									color: isSaved ? "green" : theme.palette.text.primary,
 								}}
-								helperText={`${data.title.length}/${OGDEFAULTS.titleMax}`}
-								sx={{
-									".MuiFormHelperText-root": {
-										color: data.title.length <= OGDEFAULTS.titleOptimal ? "green" : "#cfa602",
-									},
+								sxIcon={{
+									height: "24px",
+									width: "24px",
+									color: "inherit",
 								}}
-								value={data.title}
-								onChange={handleInputChange}
 							/>
-							<StyledTextField
-								label="Description"
-								name="description"
-								fullWidth
-								inputProps={{
-									maxlength: OGDEFAULTS.descriptionMax,
-								}}
-								helperText={`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
-								sx={{
-									".MuiFormHelperText-root": {
-										color:
-											data.description.length <= OGDEFAULTS.descriptionOptimal
-												? "green"
-												: data.description.length <= OGDEFAULTS.descriptionWarning
-												? theme.palette.text.primary
-												: "#cfa602",
-									},
-								}}
-								value={data.description}
-								onChange={handleInputChange}
-							/>
-							<StyledTextField
-								label="Open Graph Image"
-								name="image"
-								error={data.image && data.image.trim() !== "" && !isvalidHTTPUrl(data.image)}
-								helperText={"Incorrect url format (missing http/https)"}
-								fullWidth
-								value={data.image}
-								onChange={handleInputChange}
-							/>
-							<RadioGroup
-								sx={{ marginTop: theme.spacing(-2) }}
-								row
-								value={data.published}
-								name="published-radio-buttons-group"
-								onChange={handlePublishedRadioChange}
-							>
-								<FormControlLabel value={true} control={<Radio />} label="Published" />
-								<FormControlLabel value={false} control={<Radio />} label="Not published" />
-							</RadioGroup>
-							<Divider />
-							<Typography variant="h4" color="textPrimary" fontFamily={theme.typography.fontFamily}>
-								Content
-							</Typography>
-							<Divider />
-							{EditorBlock && !isLoading && (
-								<EditorBlock data={editorJSContent} onChange={setEditorJSContent} holder="editorjs-container" />
-							)}
-							<Box
-								display="flex"
-								columnGap={1}
-								sx={
-									xs
-										? { position: "fixed", left: 22, top: 24, zIndex: 100 }
-										: { position: "fixed", left: 25, bottom: 25, zIndex: 100 }
-								}
-							>
-								{/* Submit button */}
+							{/* Revalidate button */}
+							{isSaved && (
 								<NavbarButton
-									type="submit"
 									variant="outline"
-									icon={Save}
-									tooltip="Save changes"
-									disabled={isSaved || editorJSContent.blocks.length === 0}
+									onClick={() => {
+										handleRevalidate(postId);
+									}}
+									icon={Update}
+									tooltip="Revalidate pages"
+									disabled={isRevalidated}
 									sxButton={{
 										minWidth: "40px",
 										minHeight: "40px",
 										height: "40px",
 										width: "40px",
-										border: isSaved
+										border: isRevalidated
 											? "1px solid green"
 											: "1px solid " +
 											  (theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-										color: isSaved ? "green" : theme.palette.text.primary,
+										color: isRevalidated ? "green" : theme.palette.text.primary,
 									}}
 									sxIcon={{
 										height: "24px",
@@ -648,35 +799,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										color: "inherit",
 									}}
 								/>
-								{/* Revalidate button */}
-								{isSaved && (
-									<NavbarButton
-										variant="outline"
-										onClick={() => {
-											handleRevalidate(postId);
-										}}
-										icon={Update}
-										tooltip="Revalidate pages"
-										disabled={isRevalidated}
-										sxButton={{
-											minWidth: "40px",
-											minHeight: "40px",
-											height: "40px",
-											width: "40px",
-											border: isRevalidated
-												? "1px solid green"
-												: "1px solid " +
-												  (theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-											color: isRevalidated ? "green" : theme.palette.text.primary,
-										}}
-										sxIcon={{
-											height: "24px",
-											width: "24px",
-											color: "inherit",
-										}}
-									/>
-								)}
-							</Box>
+							)}
 						</Box>
 					</form>
 				</Box>

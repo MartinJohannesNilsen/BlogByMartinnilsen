@@ -141,6 +141,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 								description={data.description}
 								type={data.type}
 								tags={data.tags}
+								keywords={data.keywords}
 								published={data.published}
 							/>
 						)}

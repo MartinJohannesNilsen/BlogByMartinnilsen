@@ -3,7 +3,6 @@ import { SvgIconTypeMap, SxProps } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { CSSProperties, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
-import { ThemeEnum } from "./styles/themes/themeMap";
 
 // Object types
 
@@ -121,6 +120,7 @@ type PostProps = {
   published: boolean;
   readTime: string;
   tags: string[];
+  keywords: string[];
   title: string;
   type: string;
 };

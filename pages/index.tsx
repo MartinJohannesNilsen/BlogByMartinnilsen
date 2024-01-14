@@ -381,6 +381,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 															description={data.description}
 															type={data.type}
 															tags={data.tags}
+															keywords={data.keywords}
 															published={data.published}
 														/>
 													)}
@@ -465,6 +466,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 													description={data.description}
 													type={data.type}
 													tags={data.tags}
+													keywords={data.keywords}
 													published={data.published}
 													enlargeOnHover={false}
 												/>
@@ -501,6 +503,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 														description={data.description}
 														type={data.type}
 														tags={data.tags}
+														keywords={data.keywords}
 														published={data.published}
 														enlargeOnHover={false}
 													/>
