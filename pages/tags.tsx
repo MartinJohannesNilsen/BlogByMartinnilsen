@@ -307,7 +307,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 									</Box>
 								)}
 								{/* Push items down */}
-								<Grid item xs={12} />
+								{/* <Grid item xs={12} /> */}
 							</Grid>
 						</Grid>
 					</Box>

@@ -160,7 +160,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 			{!isLoading && (
 				<Box
 					sx={{
-						minHeight: xs ? "none" : "100vh",
 						width: "100vw",
 						// maxHeight: cardLayout === "swipe" ? "100vh" : "default",
 						overflow: cardLayout === "swipe" ? "hidden" : "auto",
@@ -182,7 +181,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							background: theme.palette.primary.main,
 							marginTop: isMobile ? "54px" : "80px",
 							width: "100%",
-							paddingY: -20,
 							// overflowY: "scroll",
 						}}
 					>
@@ -340,12 +338,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 						</Box>
 
 						{/* Content */}
-						<Box height="100%" paddingY={-40}>
+						<Box height="100%">
 							{/* Card layouts */}
 							{cardLayout === "carousel" ? (
 								<Box
-									// height="100%"
-									height={xs && isMobile ? "calc(100vh - 170px)" : "calc(100vh - 130px)"}
+									// TODO Weird, 170px safari but not chrome. Need to figure out more dynamic approach
+									// height={xs && isMobile ? "calc(100vh - 170px)" : "calc(100vh - 114px)"}
+									height={xs && isMobile ? "calc(100vh - 88px)" : "calc(100vh - 114px)"}
 									display="flex"
 									flexDirection="column"
 									justifyContent="center"
@@ -415,7 +414,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							) : cardLayout === "swipe" ? (
 								<Box
 									// height="100%"
-									height={xs && isMobile ? "calc(100vh - 234px)" : "calc(100vh - 210px)"}
+									// height={xs && isMobile ? "calc(100vh - 234px)" : "calc(100vh - 210px)"}
+									height={xs && isMobile ? "calc(100vh - 152px)" : "calc(100vh - 210px)"}
 									display="flex"
 									flexDirection="column"
 									justifyContent="center"

@@ -7,15 +7,6 @@ import "../styles/globals.scss";
 import ThemeProvider from "../styles/themes/ThemeProvider";
 
 function MyApp({ Component, pageProps, session }) {
-	// const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
-	//   '&.notistack-MuiContent-success': {
-	//     backgroundColor: '#2D7738',
-	//   },
-	//   '&.notistack-MuiContent-error': {
-	//     backgroundColor: '#970C0C',
-	//   },
-	// }));
-
 	return (
 		<SessionProvider session={session}>
 			<StyledEngineProvider injectFirst>
@@ -35,9 +26,6 @@ function MyApp({ Component, pageProps, session }) {
 					>
 						<CssBaseline />
 						<Component {...pageProps} />
-						{/* {process.env.NEXT_PUBLIC_SHOW_MUI_SIZE === "true"
-            ? showMuiSize()
-            : ""} */}
 					</SnackbarProvider>
 				</ThemeProvider>
 			</StyledEngineProvider>
