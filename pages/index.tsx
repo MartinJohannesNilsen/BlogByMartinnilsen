@@ -157,14 +157,12 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 				themeColor: theme.palette.primary.main,
 			}}
 		>
-			{isLoading ? (
-				<></>
-			) : (
+			{!isLoading && (
 				<Box
 					sx={{
-						height: "100vh",
-						width: "100%",
-						maxHeight: cardLayout === "swipe" ? "100vh" : "default",
+						minHeight: xs ? "none" : "100vh",
+						width: "100vw",
+						// maxHeight: cardLayout === "swipe" ? "100vh" : "default",
 						overflow: cardLayout === "swipe" ? "hidden" : "auto",
 						maxWidth: "100vw",
 						background: theme.palette.primary.main,
@@ -181,281 +179,318 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 						display="flex"
 						flexDirection="column"
 						sx={{
-							// minHeight: "calc(100vh ",
-							height: xs && isMobile ? "calc(100% - 80px)" : "calc(100% - 40px)",
 							background: theme.palette.primary.main,
-							paddingTop: isMobile ? "54px" : "80px",
+							marginTop: isMobile ? "54px" : "80px",
 							width: "100%",
+							paddingY: -20,
+							// overflowY: "scroll",
 						}}
 					>
-						<Box height="100%">
-							{/* Toggle line */}
-							<Box display="flex" flexDirection="row" px={lgUp ? "150px" : xs ? "10px" : "80px"}>
-								<Box flexGrow={1} />
-								<Box display="flex" justifyContent="center">
-									{/* Navigation buttons if large screen grid layout */}
-									{lgUp && cardLayout === "grid" && (
-										<ToggleButtonGroup size="small" sx={{ paddingRight: 1, paddingTop: -20 }}>
-											<ToggleButton
-												value
-												sx={{
-													width: 30,
-													height: 34,
-													borderRadius: "10px",
-													color: theme.palette.text.primary,
-													"&:disabled": {
-														color: theme.palette.text.primary + "50",
-													},
-												}}
-												disabled={page <= 1}
-												onClick={() => handlePreviousPage()}
-											>
-												<Tooltip enterDelay={2000} title="Previous page">
-													<ArrowBackIosSharp
-														sx={{
-															height: 16,
-															width: 16,
-															color: "inherit",
-														}}
-													/>
-												</Tooltip>
-											</ToggleButton>
-											<ToggleButton
-												value
-												sx={{
-													width: 30,
-													height: 34,
-													borderRadius: "10px",
-													display: "flex",
-													justifyContent: "center",
-													alignItems: "center",
-												}}
-												disabled
-											>
-												<Typography variant="subtitle2" color="textPrimary">
-													{page}
-												</Typography>
-											</ToggleButton>
-											<ToggleButton
-												value
-												sx={{
-													width: 30,
-													height: 34,
-													borderRadius: "10px",
-													color: theme.palette.text.primary,
-													"&:disabled": {
-														color: theme.palette.text.primary + "50",
-													},
-												}}
-												disabled={
-													!(
-														page <
-														Math.ceil(
-															chunkedPosts.flat().length /
-																Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
-														)
+						{/* <Box height="100%"> */}
+						{/* Toggle line */}
+						<Box display="flex" flexDirection="row" px={lgUp ? "150px" : xs ? "10px" : "80px"}>
+							<Box flexGrow={1} />
+							<Box display="flex" justifyContent="center">
+								{/* Navigation buttons if large screen grid layout */}
+								{lgUp && cardLayout === "grid" && (
+									<ToggleButtonGroup size="small" sx={{ paddingRight: 1 }}>
+										<ToggleButton
+											value
+											sx={{
+												width: 30,
+												height: 34,
+												borderRadius: "10px",
+												color: theme.palette.text.primary,
+												"&:disabled": {
+													color: theme.palette.text.primary + "50",
+												},
+											}}
+											disabled={page <= 1}
+											onClick={() => handlePreviousPage()}
+										>
+											<Tooltip enterDelay={2000} title="Previous page">
+												<ArrowBackIosSharp
+													sx={{
+														height: 16,
+														width: 16,
+														color: "inherit",
+													}}
+												/>
+											</Tooltip>
+										</ToggleButton>
+										<ToggleButton
+											value
+											sx={{
+												width: 30,
+												height: 34,
+												borderRadius: "10px",
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+											}}
+											disabled
+										>
+											<Typography variant="subtitle2" color="textPrimary">
+												{page}
+											</Typography>
+										</ToggleButton>
+										<ToggleButton
+											value
+											sx={{
+												width: 30,
+												height: 34,
+												borderRadius: "10px",
+												color: theme.palette.text.primary,
+												"&:disabled": {
+													color: theme.palette.text.primary + "50",
+												},
+											}}
+											disabled={
+												!(
+													page <
+													Math.ceil(
+														chunkedPosts.flat().length /
+															Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
 													)
-												}
-												onClick={() => handleNextPage()}
-											>
-												<Tooltip enterDelay={2000} title="Next page">
-													<ArrowForwardIosSharp
-														sx={{
-															height: 16,
-															width: 16,
-															color: "inherit",
-														}}
-													/>
-												</Tooltip>
-											</ToggleButton>
-										</ToggleButtonGroup>
-									)}
-									{/* Toggle for switching layouts */}
-									<ToggleButtonGroup value={cardLayout} exclusive onChange={handleChangeView} size="small">
-										<ToggleButton
-											sx={{ width: 34, height: 34, borderRadius: "10px" }}
-											value={"carousel"}
-											selected={cardLayout === "carousel"}
-											disabled={cardLayout === "carousel"}
+												)
+											}
+											onClick={() => handleNextPage()}
 										>
-											<Tooltip enterDelay={2000} title="Carousel layout">
-												<ViewWeekSharp
+											<Tooltip enterDelay={2000} title="Next page">
+												<ArrowForwardIosSharp
 													sx={{
-														height: 22,
-														width: 22,
-														color: theme.palette.text.primary,
-													}}
-												/>
-											</Tooltip>
-										</ToggleButton>
-										<ToggleButton
-											sx={{ width: 34, height: 34 }}
-											value={"swipe"}
-											selected={cardLayout === "swipe"}
-											disabled={cardLayout === "swipe"}
-										>
-											<Tooltip enterDelay={2000} title="Swipe layout">
-												<ViewCarousel
-													sx={{
-														height: 26,
-														width: 26,
-														color: theme.palette.text.primary,
-													}}
-												/>
-											</Tooltip>
-										</ToggleButton>
-										<ToggleButton
-											sx={{ width: 34, height: 34 }}
-											value={"grid"}
-											selected={cardLayout === "grid"}
-											disabled={cardLayout === "grid"}
-										>
-											<Tooltip enterDelay={2000} title="Grid layout">
-												<GridViewSharp
-													sx={{
-														pb: 0.1,
-														height: 21,
-														width: 21,
-														color: theme.palette.text.primary,
-													}}
-												/>
-											</Tooltip>
-										</ToggleButton>
-										<ToggleButton
-											sx={{ width: 34, height: 34, borderRadius: "10px" }}
-											value={"list"}
-											selected={cardLayout === "list"}
-											disabled={cardLayout === "list"}
-										>
-											<Tooltip enterDelay={2000} title="List layout">
-												<TableRowsSharp
-													sx={{
-														height: 22,
-														width: 22,
-														color: theme.palette.text.primary,
+														height: 16,
+														width: 16,
+														color: "inherit",
 													}}
 												/>
 											</Tooltip>
 										</ToggleButton>
 									</ToggleButtonGroup>
-								</Box>
+								)}
+								{/* Toggle for switching layouts */}
+								<ToggleButtonGroup value={cardLayout} exclusive onChange={handleChangeView} size="small">
+									<ToggleButton
+										sx={{ width: 34, height: 34, borderRadius: "10px" }}
+										value={"carousel"}
+										selected={cardLayout === "carousel"}
+										disabled={cardLayout === "carousel"}
+									>
+										<Tooltip enterDelay={2000} title="Carousel layout">
+											<ViewWeekSharp
+												sx={{
+													height: 22,
+													width: 22,
+													color: theme.palette.text.primary,
+												}}
+											/>
+										</Tooltip>
+									</ToggleButton>
+									<ToggleButton
+										sx={{ width: 34, height: 34 }}
+										value={"swipe"}
+										selected={cardLayout === "swipe"}
+										disabled={cardLayout === "swipe"}
+									>
+										<Tooltip enterDelay={2000} title="Swipe layout">
+											<ViewCarousel
+												sx={{
+													height: 26,
+													width: 26,
+													color: theme.palette.text.primary,
+												}}
+											/>
+										</Tooltip>
+									</ToggleButton>
+									<ToggleButton
+										sx={{ width: 34, height: 34 }}
+										value={"grid"}
+										selected={cardLayout === "grid"}
+										disabled={cardLayout === "grid"}
+									>
+										<Tooltip enterDelay={2000} title="Grid layout">
+											<GridViewSharp
+												sx={{
+													pb: 0.1,
+													height: 21,
+													width: 21,
+													color: theme.palette.text.primary,
+												}}
+											/>
+										</Tooltip>
+									</ToggleButton>
+									<ToggleButton
+										sx={{ width: 34, height: 34, borderRadius: "10px" }}
+										value={"list"}
+										selected={cardLayout === "list"}
+										disabled={cardLayout === "list"}
+									>
+										<Tooltip enterDelay={2000} title="List layout">
+											<TableRowsSharp
+												sx={{
+													height: 22,
+													width: 22,
+													color: theme.palette.text.primary,
+												}}
+											/>
+										</Tooltip>
+									</ToggleButton>
+								</ToggleButtonGroup>
 							</Box>
+						</Box>
 
-							{/* Content */}
-							<Box height="100%">
-								{/* Card layouts */}
-								{cardLayout === "carousel" ? (
-									<Box
-										height="100%"
-										display="flex"
-										flexDirection="column"
-										justifyContent="center"
-										alignItems="center"
-										sx={{
-											my: xs ? (isMobile ? 4 : 6) : 0,
-											paddingX: "0px",
-											paddingY: xs ? "20px" : 8,
-										}}
-									>
-										<Box ref={sliderRef} className="keen-slider">
-											{posts.map((data, index) => {
-												return (
-													<Box
-														className="keen-slider__slide"
-														key={index}
-														sx={{
-															minWidth: xs ? "calc(100vw)" : "350px",
-															paddingX: xs ? "25px" : 0,
-														}}
-													>
-														{data && (
-															<LandingPageCarouselCard
-																author={data.author}
-																readTime={data.readTime}
-																id={data.id}
-																image={data.image}
-																title={data.title}
-																createdAt={data.createdAt}
-																updatedAt={data.updatedAt}
-																description={data.description}
-																type={data.type}
-																tags={data.tags}
-																published={data.published}
-															/>
-														)}
-													</Box>
-												);
-											})}
-										</Box>
-										<Box flexGrow={1} />
-										{/* <Box mt={xs ? 4 : 7}> */}
-										<ButtonGroup sx={{ padding: 1, gap: 1 }}>
-											<IconButton
-												sx={{
-													color: "text.primary",
-												}}
-												onClick={(e) => e.stopPropagation() || instanceRef.current?.prev()}
-												disabled={currentSlide === 0}
-											>
-												<ArrowBackIosNewSharp color="inherit" />
-											</IconButton>
-											<IconButton
-												sx={{
-													color: "text.primary",
-												}}
-												onClick={(e) => e.stopPropagation() || instanceRef.current?.next()}
-												disabled={
-													xs
-														? currentSlide === posts.length - 1
-														: currentSlide === posts.length - (sm ? 1 : md ? 1 : lg ? 2 : 2)
-												}
-											>
-												<ArrowForwardIosSharp color="inherit" />
-											</IconButton>
-										</ButtonGroup>
-										<Box flexGrow={1} />
-									</Box>
-								) : cardLayout === "swipe" ? (
-									<Box
-										height="100%"
-										display="flex"
-										flexDirection="column"
-										justifyContent="center"
-										alignItems="center"
-										sx={{
-											my: xs ? (isMobile ? 4 : 6) : 0,
-											paddingX: "0px",
-											paddingY: xs ? "20px" : 8,
-										}}
-									>
-										<TinderSwipe posts={posts.slice().reverse()} />
-									</Box>
-								) : cardLayout === "grid" ? (
-									<Grid
-										container
-										rowSpacing={xs ? 2 : 3}
-										columnSpacing={mdDown ? 0 : xl ? 5 : 3}
-										sx={{
-											width: "100%",
-											paddingTop: xs ? 1 : 2.5,
-											paddingX: lgUp ? "150px" : xs ? 2 : "80px",
-											paddingBottom: lgUp ? "0px" : 5,
-											margin: 0,
-										}}
-									>
+						{/* Content */}
+						<Box height="100%" paddingY={-40}>
+							{/* Card layouts */}
+							{cardLayout === "carousel" ? (
+								<Box
+									// height="100%"
+									height={xs && isMobile ? "calc(100vh - 150px)" : "calc(100vh - 130px)"}
+									display="flex"
+									flexDirection="column"
+									justifyContent="center"
+									alignItems="center"
+									sx={{
+										my: xs ? (isMobile ? 0 : 0) : 0,
+										// paddingX: 0,
+										paddingTop: xs ? 0 : 2,
+										// paddingBottom: xs ? 0 : 0,
+									}}
+								>
+									<Box flexGrow={1} />
+									<Box ref={sliderRef} className="keen-slider">
 										{posts.map((data, index) => {
 											return (
-												<Grid
-													item
+												<Box
+													className="keen-slider__slide"
 													key={index}
-													xs={12}
-													md={6}
-													// lg={index % 4 === 0 ? 12 : 4}
-													lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
-													// xl={6}
-													// xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
+													sx={{
+														minWidth: xs ? "calc(100vw)" : "350px",
+														paddingX: xs ? 4.5 : 0,
+													}}
 												>
-													<LandingPageGridCard
+													{data && (
+														<LandingPageCarouselCard
+															author={data.author}
+															readTime={data.readTime}
+															id={data.id}
+															image={data.image}
+															title={data.title}
+															createdAt={data.createdAt}
+															updatedAt={data.updatedAt}
+															description={data.description}
+															type={data.type}
+															tags={data.tags}
+															published={data.published}
+														/>
+													)}
+												</Box>
+											);
+										})}
+									</Box>
+									<Box flexGrow={1} />
+									{/* <Box flexGrow={xs ? 0.5 : 1} /> */}
+									<ButtonGroup sx={{ padding: 1, gap: 1 }}>
+										<IconButton
+											sx={{
+												color: "text.primary",
+											}}
+											onClick={(e) => e.stopPropagation() || instanceRef.current?.prev()}
+											disabled={currentSlide === 0}
+										>
+											<ArrowBackIosNewSharp color="inherit" />
+										</IconButton>
+										<IconButton
+											sx={{
+												color: "text.primary",
+											}}
+											onClick={(e) => e.stopPropagation() || instanceRef.current?.next()}
+											disabled={xs ? currentSlide === posts.length - 1 : currentSlide === posts.length - 1}
+										>
+											<ArrowForwardIosSharp color="inherit" />
+										</IconButton>
+									</ButtonGroup>
+									<Box flexGrow={1} />
+									{/* <Box flexGrow={xs ? 0.5 : 1} /> */}
+								</Box>
+							) : cardLayout === "swipe" ? (
+								<Box
+									// height="100%"
+									height={xs && isMobile ? "calc(100vh - 180px)" : "calc(100vh - 130px)"}
+									display="flex"
+									flexDirection="column"
+									justifyContent="center"
+									alignItems="center"
+									sx={{
+										my: xs ? (isMobile ? 4 : 6) : 0,
+										paddingX: "0px",
+										paddingY: xs ? 2.5 : 8,
+									}}
+								>
+									<TinderSwipe posts={posts.slice().reverse()} />
+								</Box>
+							) : cardLayout === "grid" ? (
+								<Grid
+									container
+									rowSpacing={xs ? 2 : 3}
+									columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+									sx={{
+										width: "100%",
+										paddingTop: xs ? 1 : 2.5,
+										paddingX: lgUp ? "150px" : xs ? 2 : "80px",
+										paddingBottom: lgUp ? 1 : 5,
+										margin: 0,
+									}}
+								>
+									{posts.map((data, index) => {
+										return (
+											<Grid
+												item
+												key={index}
+												xs={12}
+												md={6}
+												// lg={index % 4 === 0 ? 12 : 4}
+												lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
+												// xl={6}
+												// xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
+											>
+												<LandingPageGridCard
+													author={data.author}
+													readTime={data.readTime}
+													id={data.id}
+													image={data.image}
+													title={data.title}
+													createdAt={data.createdAt}
+													updatedAt={data.updatedAt}
+													description={data.description}
+													type={data.type}
+													tags={data.tags}
+													published={data.published}
+													enlargeOnHover={false}
+												/>
+											</Grid>
+										);
+									})}
+								</Grid>
+							) : cardLayout === "list" ? (
+								<Grid
+									container
+									rowSpacing={xs ? 2.5 : 3}
+									columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+									sx={{
+										width: "100%",
+										paddingTop: mdDown ? 1 : 2.5,
+										paddingX: lgUp ? "150px" : xs ? 2 : "80px",
+										paddingBottom: xs ? 5 : 7,
+										margin: 0,
+									}}
+								>
+									{posts.map((data, index) => {
+										return (
+											<>
+												<Grid item key={index} md={2} lg={3} />
+												<Grid item key={index} xs={12} sm={12} md={8} lg={6}>
+													<LandingPageListCard
 														author={data.author}
 														readTime={data.readTime}
 														id={data.id}
@@ -470,50 +505,14 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 														enlargeOnHover={false}
 													/>
 												</Grid>
-											);
-										})}
-									</Grid>
-								) : cardLayout === "list" ? (
-									<Grid
-										container
-										rowSpacing={xs ? 2.5 : 3}
-										columnSpacing={mdDown ? 0 : xl ? 5 : 3}
-										sx={{
-											width: "100%",
-											paddingTop: mdDown ? 1 : 2.5,
-											paddingX: lgUp ? "150px" : xs ? 2 : "80px",
-											paddingBottom: xs ? 5 : 7,
-											margin: 0,
-										}}
-									>
-										{posts.map((data, index) => {
-											return (
-												<>
-													<Grid item key={index} md={2} lg={3} />
-													<Grid item key={index} xs={12} sm={12} md={8} lg={6}>
-														<LandingPageListCard
-															author={data.author}
-															readTime={data.readTime}
-															id={data.id}
-															image={data.image}
-															title={data.title}
-															createdAt={data.createdAt}
-															updatedAt={data.updatedAt}
-															description={data.description}
-															type={data.type}
-															tags={data.tags}
-															published={data.published}
-															enlargeOnHover={false}
-														/>
-													</Grid>
-													<Grid item key={index} md={2} lg={3} />
-												</>
-											);
-										})}
-									</Grid>
-								) : null}
-							</Box>
+												<Grid item key={index} md={2} lg={3} />
+											</>
+										);
+									})}
+								</Grid>
+							) : null}
 						</Box>
+						{/* </Box> */}
 					</Box>
 				</Box>
 			)}

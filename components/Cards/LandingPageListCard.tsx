@@ -50,7 +50,7 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 					flexDirection="column"
 					sx={{
 						height: "235px",
-						padding: "10px 20px",
+						padding: "10px 15px",
 					}}
 				>
 					{/* Title and description */}

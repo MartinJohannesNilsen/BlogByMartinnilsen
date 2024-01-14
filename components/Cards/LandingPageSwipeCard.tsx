@@ -54,7 +54,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 					flexDirection="column"
 					sx={{
 						height: xs && isMobile ? "235px" : "285px",
-						padding: "10px 20px",
+						padding: "10px 15px",
 					}}
 				>
 					{/* Title and description */}

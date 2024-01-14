@@ -108,6 +108,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				width={"100%"}
 				pt={isMobile ? 4.75 : 2}
 				pb={isMobile ? 0.75 : 2}
+				// pt={2}
+				// pb={2}
 				position={"fixed"}
 				display="flex"
 				alignItems="center"

@@ -186,7 +186,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 			<Box flexGrow={1} />
 			{/* Buttonstack */}
 			<Box>
-				<Stack direction="row" spacing={1.2} justifyContent="center">
+				<Stack direction="row" spacing={1.2} justifyContent="center" marginY={2}>
 					<IconButton
 						aria-label="clear"
 						disabled={!canSwipe}
