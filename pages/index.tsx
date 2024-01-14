@@ -345,16 +345,14 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							{cardLayout === "carousel" ? (
 								<Box
 									// height="100%"
-									height={xs && isMobile ? "calc(100vh - 150px)" : "calc(100vh - 130px)"}
+									height={xs && isMobile ? "calc(100vh - 170px)" : "calc(100vh - 130px)"}
 									display="flex"
 									flexDirection="column"
 									justifyContent="center"
 									alignItems="center"
 									sx={{
 										my: xs ? (isMobile ? 0 : 0) : 0,
-										// paddingX: 0,
-										paddingTop: xs ? 0 : 2,
-										// paddingBottom: xs ? 0 : 0,
+										paddingTop: 2,
 									}}
 								>
 									<Box flexGrow={1} />
@@ -417,7 +415,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							) : cardLayout === "swipe" ? (
 								<Box
 									// height="100%"
-									height={xs && isMobile ? "calc(100vh - 180px)" : "calc(100vh - 130px)"}
+									height={xs && isMobile ? "calc(100vh - 234px)" : "calc(100vh - 210px)"}
 									display="flex"
 									flexDirection="column"
 									justifyContent="center"
@@ -425,7 +423,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 									sx={{
 										my: xs ? (isMobile ? 4 : 6) : 0,
 										paddingX: "0px",
-										paddingY: xs ? 2.5 : 8,
+										paddingTop: xs ? 2.5 : 8.5,
+										paddingBottom: xs ? 2.5 : 0,
 									}}
 								>
 									<TinderSwipe posts={posts.slice().reverse()} />
