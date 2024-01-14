@@ -31,8 +31,8 @@ const CustomToggle = (props: EditorjsRendererProps) => {
 				handleClick={handleChange}
 				boxSx={{ my: 0 }}
 				accordionSx={{
-					backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[200],
-					border: theme.palette.mode === "dark" ? "none" : "1px solid" + theme.palette.grey[300],
+					backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
+					border: theme.palette.mode === "dark" ? "none" : "1px solid" + theme.palette.grey[200],
 				}}
 			>
 				{OutputElement}
