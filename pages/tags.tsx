@@ -284,6 +284,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 													published={data.published}
 													readTime={data.readTime}
 													tags={data.tags}
+													keywords={data.keywords}
 													createdAt={data.createdAt}
 													updatedAt={data.updatedAt}
 													title={data.title}
