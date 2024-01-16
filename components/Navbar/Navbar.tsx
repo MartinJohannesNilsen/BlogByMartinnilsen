@@ -53,6 +53,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
 	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
 	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
+	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", []);
 	// SettingsModal
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
 	const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -69,12 +70,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		event.preventDefault();
 		handleSearchModalOpen();
 	});
+	// Theme
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const sm = useMediaQuery(theme.breakpoints.only("sm"));
-	const md = useMediaQuery(theme.breakpoints.only("md"));
-	const lg = useMediaQuery(theme.breakpoints.only("lg"));
-	const xl = useMediaQuery(theme.breakpoints.only("xl"));
-	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
 	// Navigation
@@ -83,10 +80,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		router.push(path);
 	};
 
+	// Theme change
 	const handleThemeChange = (event: any) => {
 		setTheme(event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark, true);
 	};
 
+	// Notifications and badge
 	useEffect(() => {
 		const unreadNotifications = checkForUnreadRecentNotifications(
 			data,
@@ -102,6 +101,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		return () => {};
 	}, [data, notificationsRead, notificationsFilterDays]);
 
+	// Account page navbar
 	if (!props.posts)
 		return (
 			<Box
@@ -230,6 +230,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				/>
 			</Box>
 		);
+	// Default navbar
 	return (
 		<Box
 			width={"100%"}

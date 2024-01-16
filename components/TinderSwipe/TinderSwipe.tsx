@@ -81,12 +81,20 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 						enqueueSnackbar("Link copied to clipboard!", {
 							variant: "default",
 							preventDuplicate: true,
+							anchorOrigin: {
+								vertical: "top",
+								horizontal: "center",
+							},
 						});
 					})
 					.catch((error) => {
 						enqueueSnackbar("Unable to copy to clipboard!", {
 							variant: "error",
 							preventDuplicate: true,
+							anchorOrigin: {
+								vertical: "top",
+								horizontal: "center",
+							},
 						});
 					});
 			} else if (dir === "right") {

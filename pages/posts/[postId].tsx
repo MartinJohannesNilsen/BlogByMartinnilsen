@@ -2,7 +2,10 @@ import Giscus from "@giscus/react";
 import {
 	AccessTime,
 	ArrowBack,
+	Bookmark,
+	BookmarkBorder,
 	CalendarMonth,
+	Check,
 	Edit,
 	IosShareOutlined,
 	MenuBook,
@@ -291,6 +294,17 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		}
 		return () => {};
 	}, [data, notificationsRead, notificationsFilterDays]);
+
+	// SavedModal
+	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", []);
+	// const [savedPosts, setSavedPosts] = useState<string[]>([]);
+	const [isSaved, setIsSaved] = useState(false);
+	useEffect(() => {
+		if (savedPosts && savedPosts) {
+			setIsSaved(savedPosts.includes(props.postId));
+		}
+		return () => {};
+	}, [, savedPosts]);
 
 	if (!post.published && !isAuthorized) return <></>;
 	return (
@@ -622,6 +636,25 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 											}}
 										/>
 									)}
+									{/* SavedModal */}
+									<Box ml={0.5}>
+										<NavbarButton
+											variant="outline"
+											onClick={() =>
+												isSaved
+													? setSavedPosts(savedPosts.filter((id) => id !== props.postId))
+													: setSavedPosts([...savedPosts, props.postId])
+											}
+											icon={isSaved ? Bookmark : BookmarkBorder}
+											tooltip="Share"
+											sxButton={{
+												height: "34px",
+												width: "34px",
+												backgroundColor: theme.palette.primary.main + "99",
+											}}
+											sxIcon={{ height: "20px", width: "22px" }}
+										/>
+									</Box>
 									{/* ShareModal */}
 									<Box ml={0.5}>
 										<NavbarButton
