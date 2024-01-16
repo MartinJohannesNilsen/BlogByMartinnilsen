@@ -14,12 +14,15 @@ const _sortListOfStoredPostsOnTimestamp = (
 };
 export const _filterListOfStoredPostsOnPublished = (
   data: StoredPost[],
-  filter: "published" | "unpublished" | "all"
+  filter: "published" | "unpublished" | "all" | "saved"
 ) => {
   if (filter === "published") {
     return data.filter((post) => post.published);
   } else if (filter === "unpublished") {
     return data.filter((post) => !post.published);
+  } else if (filter === "saved") {
+    const saved = JSON.parse(localStorage.getItem("savedPosts"));
+    return data.filter((post) => saved.includes(post.id) && post.published);
   }
   return data;
 };

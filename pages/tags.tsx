@@ -61,7 +61,6 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 			: useAuthorized();
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState(true);
-	const [page, setPage] = useState(1);
 	const router = useRouter();
 	const [tag, setTag] = useState<string>("loading");
 	const { query, isReady } = useRouter();
@@ -78,6 +77,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 			if (isAuthorized) {
 				setPosts(_filterListOfStoredPostsOnPublished(props.posts, "unpublished"));
 			}
+		} else if (tag.toLowerCase() === "saved") {
+			setPosts(_filterListOfStoredPostsOnPublished(props.posts, "saved"));
 		} else {
 			setPosts(
 				isAuthorized
@@ -108,7 +109,6 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 	useEffect(() => {
 		if (isReady) {
 			updateData();
-			setPage(1);
 		}
 	}, [tag]);
 
@@ -125,7 +125,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 	if (
 		// (tag && router.query.tag.length > 1) ||
 		tag &&
-		!["all", "published", "unpublished"]
+		!["all", "published", "unpublished", "saved"]
 			.concat(props.tags)
 			.find((item) => tag.toLowerCase().replace(" ", "") === item.toLowerCase().replace(" ", ""))
 	) {
@@ -135,7 +135,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 		<SEO
 			pageMeta={{
 				title: tag
-					? tag.toLowerCase() === "published" || tag.toLowerCase() === "unpublished"
+					? tag.toLowerCase() === "published" || tag.toLowerCase() === "unpublished" || tag.toLowerCase() === "saved"
 						? tag.charAt(0).toUpperCase() + tag.slice(1)
 						: "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
 					: "All posts",
@@ -177,8 +177,10 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 								fontWeight={600}
 							>
 								{tag
-									? tag.toLowerCase() === "published" || tag.toLowerCase() === "unpublished"
-										? tag.charAt(0).toUpperCase() + tag.slice(1)
+									? tag.toLowerCase() === "published" ||
+									  tag.toLowerCase() === "unpublished" ||
+									  tag.toLowerCase() === "saved"
+										? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
 										: "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
 									: "All posts"}
 							</Typography>
@@ -187,7 +189,6 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 						<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={8} rowSpacing={xs ? 2 : 4}>
 							{/* Tags */}
 							<Grid item xs={12} lg={3} order={{ lg: 3, xl: 3 }} sx={lgUp && { position: "fixed", right: 30, mt: -10 }}>
-								{/* <Box display={lgUp && "flex"} flexDirection={"column"}> */}
 								<Box>
 									<Button
 										size="small"
@@ -223,48 +224,51 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 											All posts
 										</Typography>
 									</Button>
-									{(isAuthorized ? ["Published", "Unpublished"] : []).concat(props.tags.sort()).map((element) => (
-										<Button
-											size="small"
-											disabled={tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")}
-											sx={{
-												width: "fit-content",
-												border: "1px solid " + theme.palette.secondary.main,
-												backgroundColor:
-													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-														? theme.palette.secondary.main
-														: "",
-												"&:hover": {
-													border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+									{(isAuthorized ? ["Published", "Unpublished", "Saved"] : ["Saved"])
+										.concat(props.tags.sort())
+										.map((element, index) => (
+											<Button
+												key={index}
+												size="small"
+												disabled={tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")}
+												sx={{
+													width: "fit-content",
+													border: "1px solid " + theme.palette.secondary.main,
 													backgroundColor:
 														tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
 															? theme.palette.secondary.main
-															: theme.palette.mode == "dark"
-															? theme.palette.grey[900]
-															: theme.palette.grey[100],
-												},
-												margin: 0.5,
-												padding: "5px 6px",
-											}}
-											onClick={() => {
-												router.replace("/tags?name=" + element.replace(" ", ""));
-												setTag(element);
-											}}
-										>
-											<Typography
-												fontFamily={theme.typography.fontFamily}
-												color={theme.palette.text.primary}
-												variant="body2"
-												fontSize={xs ? "11px" : "13px"}
-												textTransform="none"
-												fontWeight={600}
+															: "",
+													"&:hover": {
+														border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+														backgroundColor:
+															tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+																? theme.palette.secondary.main
+																: theme.palette.mode == "dark"
+																? theme.palette.grey[900]
+																: theme.palette.grey[100],
+													},
+													margin: 0.5,
+													padding: "5px 6px",
+												}}
+												onClick={() => {
+													router.replace("/tags?name=" + element.replace(" ", ""));
+													setTag(element);
+												}}
 											>
-												{element === "Published" || element === "Unpublished"
-													? element
-													: "#" + _getCaseInsensitiveElement(props.tags, element).replace(" ", "")}
-											</Typography>
-										</Button>
-									))}
+												<Typography
+													fontFamily={theme.typography.fontFamily}
+													color={theme.palette.text.primary}
+													variant="body2"
+													fontSize={xs ? "11px" : "13px"}
+													textTransform="none"
+													fontWeight={600}
+												>
+													{element === "Published" || element === "Unpublished" || element === "Saved"
+														? element
+														: "#" + _getCaseInsensitiveElement(props.tags, element).replace(" ", "")}
+												</Typography>
+											</Button>
+										))}
 								</Box>
 							</Grid>
 							{/* Separator */}
@@ -302,7 +306,18 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 											fontWeight={600}
 											sx={{ opacity: 0.5 }}
 										>
-											No posts yet with this tag ...
+											{tag
+												? tag.toLowerCase() === "published"
+													? // "Currently, the author is in deep contemplation (or maybe just daydreaming). Posts will appear as soon as thoughts transform into words!"
+													  //   "The author's pen is still busy at work. No published posts yet, but great stories are on the way!"
+													  "It appears the author (that's me!) is still warming up their keyboard. Stay tuned for posts coming soon!"
+													: tag.toLowerCase() === "unpublished"
+													? "No unpublished posts at the moment, what should we write about next?"
+													: tag.toLowerCase() === "saved"
+													? // ? "Are your saved posts section playing hide and seek?"
+													  "Your list of saved posts is waiting to be filled!"
+													: "No posts yet with this tag, but check back soon!"
+												: ""}
 										</Typography>
 									</Box>
 								)}

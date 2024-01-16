@@ -1,4 +1,4 @@
-import { Notifications, Person } from "@mui/icons-material";
+import { Bookmark, Notifications, Person } from "@mui/icons-material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import { Badge, Typography } from "@mui/material";
@@ -137,6 +137,14 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 						<Typography fontFamily={theme.typography.fontFamily}>Notifications</Typography>
 					</MenuItem>
 				)}
+
+				{/* Saved */}
+				<MenuItem onClick={() => (window.location.href = "/tags?name=saved")}>
+					<ListItemIcon sx={{ mr: 0.25 }}>
+						<Bookmark fontSize="medium" sx={{ color: theme.palette.text.primary }} />
+					</ListItemIcon>
+					<Typography fontFamily={theme.typography.fontFamily}>Saved</Typography>
+				</MenuItem>
 
 				{/* Settings */}
 				{props.settings && (

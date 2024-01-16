@@ -5,7 +5,6 @@ import {
 	Bookmark,
 	BookmarkBorder,
 	CalendarMonth,
-	Check,
 	Edit,
 	IosShareOutlined,
 	MenuBook,
@@ -390,6 +389,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 								width: xs ? 400 : 500,
 							}}
 						/>
+
 						{/* Header row */}
 						{isMobile ? (
 							// Mobile
@@ -497,31 +497,48 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 													}}
 												/>
 											) : (
+												// <NavbarButton
+												// 	disabled={!post.published}
+												// 	variant="outline"
+												// 	onClick={() => {
+												// 		handleSharing({
+												// 			url: typeof window !== "undefined" ? window.location.href : "",
+												// 			title: post.title,
+												// 			text: "",
+												// 			icon: post.image || DEFAULT_OGIMAGE,
+												// 			fallback: () => setOpenShareModal(true),
+												// 		});
+												// 	}}
+												// 	icon={IosShareOutlined}
+												// 	tooltip="Share"
+												// 	sxButton={{
+												// 		minWidth: "34px",
+												// 		minHeight: "34px",
+												// 		height: "34px",
+												// 		width: "34px",
+												// 		"&:disabled": { opacity: "0.5" },
+												// 	}}
+												// 	sxIcon={{
+												// 		height: "18px",
+												// 		width: "22px",
+												// 	}}
+												// />
 												<NavbarButton
-													disabled={!post.published}
 													variant="outline"
-													onClick={() => {
-														handleSharing({
-															url: typeof window !== "undefined" ? window.location.href : "",
-															title: post.title,
-															text: "",
-															icon: post.image || DEFAULT_OGIMAGE,
-															fallback: () => setOpenShareModal(true),
-														});
-													}}
-													icon={IosShareOutlined}
+													disabled={!post.published}
+													onClick={() =>
+														isSaved
+															? setSavedPosts(savedPosts.filter((id) => id !== props.postId))
+															: setSavedPosts([...savedPosts, props.postId])
+													}
+													icon={isSaved ? Bookmark : BookmarkBorder}
 													tooltip="Share"
 													sxButton={{
-														minWidth: "34px",
-														minHeight: "34px",
 														height: "34px",
 														width: "34px",
-														"&:disabled": { opacity: "0.5" },
+														backgroundColor: theme.palette.primary.main + "99",
 													}}
-													sxIcon={{
-														height: "18px",
-														width: "22px",
-													}}
+													sxIcon={{ height: "20px", width: "22px", opacity: !post.published && "0.5" }}
 												/>
 											)}
 										</Box>
@@ -636,23 +653,24 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 											}}
 										/>
 									)}
-									{/* SavedModal */}
+									{/* Saved */}
 									<Box ml={0.5}>
 										<NavbarButton
 											variant="outline"
+											disabled={!post.published}
 											onClick={() =>
 												isSaved
 													? setSavedPosts(savedPosts.filter((id) => id !== props.postId))
 													: setSavedPosts([...savedPosts, props.postId])
 											}
 											icon={isSaved ? Bookmark : BookmarkBorder}
-											tooltip="Share"
+											tooltip="Save"
 											sxButton={{
 												height: "34px",
 												width: "34px",
 												backgroundColor: theme.palette.primary.main + "99",
 											}}
-											sxIcon={{ height: "20px", width: "22px" }}
+											sxIcon={{ height: "20px", width: "22px", opacity: !post.published && "0.5" }}
 										/>
 									</Box>
 									{/* ShareModal */}
@@ -668,7 +686,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 												width: "34px",
 												backgroundColor: theme.palette.primary.main + "99",
 											}}
-											sxIcon={{ height: "18px", width: "22px" }}
+											sxIcon={{ height: "18px", width: "22px", opacity: !post.published && "0.5" }}
 										/>
 									</Box>
 									{/* Profile Menu */}
@@ -890,9 +908,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 														sxButton={{
 															height: "36px",
 															width: "36px",
-															"&:disabled": { opacity: "0.5" },
+															// "&:disabled": { opacity: "0.5" },
 														}}
-														styleIcon={{ height: "26px", width: "26px" }}
+														styleIcon={{ height: "22px", width: "24px", opacity: !post.published && "0.5" }}
 													/>
 												</Box>
 
@@ -912,9 +930,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 														sxButton={{
 															height: "36px",
 															width: "36px",
-															"&:disabled": { opacity: "0.5" },
 														}}
-														styleIcon={{ height: "26px", width: "26px" }}
+														styleIcon={{ height: "22px", width: "24px", opacity: isExploding && "0.5" }}
 													/>
 												</Box>
 
@@ -928,9 +945,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 														sxButton={{
 															height: "36px",
 															width: "36px",
-															"&:disabled": { opacity: "0.5" },
 														}}
-														styleIcon={{ height: "26px", width: "26px" }}
+														styleIcon={{ height: "22px", width: "24px" }}
 													/>
 												</Box>
 											</Box>
