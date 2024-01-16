@@ -420,22 +420,42 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 										width: "95%",
 									}}
 								>
-									<NavbarButton
-										variant="outline"
-										onClick={() => handleNavigate("/")}
-										icon={ArrowBack}
-										tooltip="Back"
-										sxButton={{
-											minWidth: "34px",
-											minHeight: "34px",
-											height: "34px",
-											width: "34px",
-										}}
-										sxIcon={{
-											height: "24px",
-											width: "24px",
-										}}
-									/>
+									{isAuthorized ? (
+										<NavbarButton
+											variant="outline"
+											href={`/create/${props.postId}`}
+											icon={Edit}
+											tooltip="Edit post"
+											sxButton={{
+												minWidth: "34px",
+												minHeight: "34px",
+												height: "34px",
+												width: "34px",
+											}}
+											sxIcon={{
+												height: "20px",
+												width: "22px",
+												color: "inherit",
+											}}
+										/>
+									) : (
+										<NavbarButton
+											variant="outline"
+											onClick={() => handleNavigate("/")}
+											icon={ArrowBack}
+											tooltip="Back"
+											sxButton={{
+												minWidth: "34px",
+												minHeight: "34px",
+												height: "34px",
+												width: "34px",
+											}}
+											sxIcon={{
+												height: "24px",
+												width: "24px",
+											}}
+										/>
+									)}
 									<Box ml={0.5} mr={0.1}>
 										{OutputString ? (
 											<NavbarButton
@@ -476,71 +496,55 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 									</Typography>
 									<Box flexGrow={100} />
 									<Box display="flex" ml={0.1}>
-										{/* Edit / Share */}
+										{/* Share */}
+										{/* <Box mr={0.5}>
+											<NavbarButton
+												disabled={!post.published}
+												variant="outline"
+												onClick={() => {
+													handleSharing({
+														url: typeof window !== "undefined" ? window.location.href : "",
+														title: post.title,
+														text: "",
+														icon: post.image || DEFAULT_OGIMAGE,
+														fallback: () => setOpenShareModal(true),
+													});
+												}}
+												icon={IosShareOutlined}
+												tooltip="Share"
+												sxButton={{
+													minWidth: "34px",
+													minHeight: "34px",
+													height: "34px",
+													width: "34px",
+													"&:disabled": { opacity: "0.5" },
+												}}
+												sxIcon={{
+													height: "18px",
+													width: "22px",
+												}}
+											/>
+										</Box> */}
+
+										{/* Save */}
 										<Box mr={0.5}>
-											{isAuthorized ? (
-												<NavbarButton
-													variant="outline"
-													href={`/create/${props.postId}`}
-													icon={Edit}
-													tooltip="Edit post"
-													sxButton={{
-														minWidth: "34px",
-														minHeight: "34px",
-														height: "34px",
-														width: "34px",
-													}}
-													sxIcon={{
-														height: "20px",
-														width: "22px",
-														color: "inherit",
-													}}
-												/>
-											) : (
-												// <NavbarButton
-												// 	disabled={!post.published}
-												// 	variant="outline"
-												// 	onClick={() => {
-												// 		handleSharing({
-												// 			url: typeof window !== "undefined" ? window.location.href : "",
-												// 			title: post.title,
-												// 			text: "",
-												// 			icon: post.image || DEFAULT_OGIMAGE,
-												// 			fallback: () => setOpenShareModal(true),
-												// 		});
-												// 	}}
-												// 	icon={IosShareOutlined}
-												// 	tooltip="Share"
-												// 	sxButton={{
-												// 		minWidth: "34px",
-												// 		minHeight: "34px",
-												// 		height: "34px",
-												// 		width: "34px",
-												// 		"&:disabled": { opacity: "0.5" },
-												// 	}}
-												// 	sxIcon={{
-												// 		height: "18px",
-												// 		width: "22px",
-												// 	}}
-												// />
-												<NavbarButton
-													variant="outline"
-													disabled={!post.published}
-													onClick={() =>
-														isSaved
-															? setSavedPosts(savedPosts.filter((id) => id !== props.postId))
-															: setSavedPosts([...savedPosts, props.postId])
-													}
-													icon={isSaved ? Bookmark : BookmarkBorder}
-													tooltip="Share"
-													sxButton={{
-														height: "34px",
-														width: "34px",
-														backgroundColor: theme.palette.primary.main + "99",
-													}}
-													sxIcon={{ height: "20px", width: "22px", opacity: !post.published && "0.5" }}
-												/>
-											)}
+											<NavbarButton
+												variant="outline"
+												disabled={!post.published}
+												onClick={() =>
+													isSaved
+														? setSavedPosts(savedPosts.filter((id) => id !== props.postId))
+														: setSavedPosts([...savedPosts, props.postId])
+												}
+												icon={isSaved ? Bookmark : BookmarkBorder}
+												tooltip="Share"
+												sxButton={{
+													height: "34px",
+													width: "34px",
+													backgroundColor: theme.palette.primary.main + "99",
+												}}
+												sxIcon={{ height: "20px", width: "22px", opacity: !post.published && "0.5" }}
+											/>
 										</Box>
 										{/* Account */}
 										<ProfileMenu
