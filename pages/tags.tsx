@@ -184,7 +184,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 							</Typography>
 						</Box>
 						{/* Grid of tags and posts */}
-						<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={4} rowSpacing={xs ? 2 : 4}>
+						<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={8} rowSpacing={xs ? 2 : 4}>
 							{/* Tags */}
 							<Grid item xs={12} lg={3} order={{ lg: 3, xl: 3 }} sx={lgUp && { position: "fixed", right: 30, mt: -10 }}>
 								{/* <Box display={lgUp && "flex"} flexDirection={"column"}> */}

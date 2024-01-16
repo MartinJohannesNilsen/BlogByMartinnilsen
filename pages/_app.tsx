@@ -14,9 +14,13 @@ function MyApp({ Component, pageProps, session }) {
 					<SnackbarProvider
 						preventDuplicate
 						maxSnack={Number(process.env.NEXT_PUBLIC_MAX_STACK_OF_SNACKBARS)}
+						// anchorOrigin={{
+						// 	vertical: "top",
+						// 	horizontal: "center",
+						// }}
 						anchorOrigin={{
-							vertical: "top",
-							horizontal: "center",
+							vertical: "bottom",
+							horizontal: "right",
 						}}
 						action={(snackbarId) => (
 							<IconButton size="small" disableRipple onClick={() => closeSnackbar(snackbarId)}>

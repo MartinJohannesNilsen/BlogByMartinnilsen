@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useRef } from "react";
 import { isMobile } from "react-device-detect";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
 import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
@@ -33,6 +33,7 @@ import { _filterListOfStoredPostsOnPublished, getPostsOverview } from "../databa
 import { useTheme } from "../styles/themes/ThemeProvider";
 import { LandingPageProps, StoredPost } from "../types";
 import useStickyState from "../utils/useStickyState";
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
 	if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -65,6 +66,7 @@ export const getStaticProps = async (context: any) => {
 const LandingPage: FC<LandingPageProps> = (props) => {
 	// const { isAuthorized } = useAuthorized();
 	const { theme } = useTheme();
+	const boxRef = useRef(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const [cardLayout, setCardLayout] = useStickyState<String>("cardLayout", mdDown ? "grid" : "carousel");
@@ -94,6 +96,17 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 		);
 		return () => {};
 	}, []);
+
+	useEffect(() => {
+		if (cardLayout === "carousel" || cardLayout === "swipe") {
+			disableBodyScroll(boxRef);
+		} else {
+			enableBodyScroll(boxRef);
+		}
+		return () => {
+			disableBodyScroll();
+		};
+	}, [, cardLayout]);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -342,6 +355,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							{/* Card layouts */}
 							{cardLayout === "carousel" ? (
 								<Box
+									ref={boxRef}
 									// TODO Weird, 170px safari but not chrome. Need to figure out more dynamic approach
 									// height={xs && isMobile ? "calc(100vh - 170px)" : "calc(100vh - 114px)"}
 									height={xs && isMobile ? "calc(100vh - 88px)" : "calc(100vh - 114px)"}
@@ -413,6 +427,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 								</Box>
 							) : cardLayout === "swipe" ? (
 								<Box
+									ref={boxRef}
 									// height="100%"
 									// height={xs && isMobile ? "calc(100vh - 234px)" : "calc(100vh - 210px)"}
 									height={xs && isMobile ? "calc(100vh - 152px)" : "calc(100vh - 210px)"}
@@ -422,7 +437,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 									alignItems="center"
 									sx={{
 										my: xs ? (isMobile ? 4 : 6) : 0,
-										paddingX: "0px",
+										// paddingX: "0px",
 										paddingTop: xs ? 2.5 : 8.5,
 										paddingBottom: xs ? 2.5 : 0,
 									}}
@@ -432,8 +447,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							) : cardLayout === "grid" ? (
 								<Grid
 									container
-									rowSpacing={xs ? 2 : 3}
-									columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+									rowSpacing={2}
+									columnSpacing={mdDown ? 0 : xl ? 5 : 2}
 									sx={{
 										width: "100%",
 										paddingTop: xs ? 1 : 2.5,
@@ -476,11 +491,11 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							) : cardLayout === "list" ? (
 								<Grid
 									container
-									rowSpacing={xs ? 2.5 : 3}
-									columnSpacing={mdDown ? 0 : xl ? 5 : 3}
+									rowSpacing={2}
+									columnSpacing={mdDown ? 0 : xl ? 5 : 2}
 									sx={{
 										width: "100%",
-										paddingTop: mdDown ? 1 : 2.5,
+										paddingTop: xs ? 1 : 2.5,
 										paddingX: lgUp ? "150px" : xs ? 2 : "80px",
 										paddingBottom: xs ? 5 : 7,
 										margin: 0,

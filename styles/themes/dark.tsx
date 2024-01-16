@@ -5,7 +5,9 @@ export const dark = createTheme({
 	palette: {
 		mode: "dark",
 		background: {
-			default: baseTheme.palette.background.default,
+			// default: baseTheme.palette.background.default,
+			default: "#161518",
+			// default: "green",
 			paper: "#1C1C1C",
 		},
 		text: {
