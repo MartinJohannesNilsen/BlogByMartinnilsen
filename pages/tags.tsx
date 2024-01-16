@@ -196,7 +196,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 										sx={{
 											width: "fit-content",
 											border: "1px solid " + theme.palette.secondary.main,
-											backgroundColor: !tag ? theme.palette.secondary.main : "",
+											backgroundColor: !tag && theme.palette.secondary.main,
 											"&:hover": {
 												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 												backgroundColor: !tag
@@ -235,9 +235,9 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 													width: "fit-content",
 													border: "1px solid " + theme.palette.secondary.main,
 													backgroundColor:
-														tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-															? theme.palette.secondary.main
-															: "",
+														tag &&
+														tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") &&
+														theme.palette.secondary.main,
 													"&:hover": {
 														border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 														backgroundColor:
@@ -306,8 +306,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 											fontWeight={600}
 											sx={{ opacity: 0.5 }}
 										>
-											{tag
-												? tag.toLowerCase() === "published"
+											{tag &&
+												(tag.toLowerCase() === "published"
 													? // "Currently, the author is in deep contemplation (or maybe just daydreaming). Posts will appear as soon as thoughts transform into words!"
 													  //   "The author's pen is still busy at work. No published posts yet, but great stories are on the way!"
 													  "It appears the author (that's me!) is still warming up their keyboard. Stay tuned for posts coming soon!"
@@ -316,8 +316,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 													: tag.toLowerCase() === "saved"
 													? // ? "Are your saved posts section playing hide and seek?"
 													  "Your list of saved posts is waiting to be filled!"
-													: "No posts yet with this tag, but check back soon!"
-												: ""}
+													: "No posts yet with this tag, but check back soon!")}
 										</Typography>
 									</Box>
 								)}
