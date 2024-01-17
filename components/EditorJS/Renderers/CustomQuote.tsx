@@ -65,8 +65,8 @@ const CustomQuote = (props: EditorjsRendererProps) => {
 								text:
 									'"' +
 									props.data.text +
-									'" ~ ' +
-									props.data.caption +
+									'"' +
+									(props.data.caption && " ~ " + props.data.caption) +
 									"\n\nA quote from the post available at " +
 									window.location.href,
 							});
