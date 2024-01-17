@@ -114,20 +114,22 @@ export const renderers = {
 	callout: CustomCallout,
 };
 
-export const handleSharing = async ({ url, title, text, icon, fallback }) => {
-	const shareDetails = {
-		url, // The URL of the webpage you want to share
-		title, // The title of the shared content
-		text, // The description or text to accompany the shared content
-		icon, // URL of the image for the preview
-	};
+type NavigatorShareProps = {
+	url?: string; // The URL of the webpage you want to share
+	title?: string; // The title of the shared content, although may be ignored by the target
+	text: string; // The description or text to accompany the shared content
+	icon?: string; // URL of the image for the preview
+	fallback?: () => void; // Fallback method
+};
+
+export const handleSharing = async (shareDetails: NavigatorShareProps) => {
 	if (navigator.share) {
 		try {
 			await navigator.share(shareDetails);
 		} catch (error) {}
 	} else {
 		// fallback code
-		fallback();
+		shareDetails.fallback && shareDetails.fallback();
 	}
 };
 
