@@ -426,7 +426,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 									ref={boxRef}
 									// height="100%"
 									// height={xs && isMobile ? "calc(100vh - 234px)" : "calc(100vh - 210px)"}
-									height={xs && isMobile ? "100vh" : "calc(100vh - 114px)"}
+									height={xs && isMobile ? "calc(100vh - 160px)" : "calc(100vh - 114px)"}
 									display="flex"
 									flexDirection="column"
 									justifyContent="center"
