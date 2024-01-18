@@ -19,9 +19,10 @@ import {
 	Typography,
 	useMediaQuery,
 } from "@mui/material";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import { FC, useEffect, useState, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
 import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
@@ -33,7 +34,6 @@ import { _filterListOfStoredPostsOnPublished, getPostsOverview } from "../databa
 import { useTheme } from "../styles/themes/ThemeProvider";
 import { LandingPageProps, StoredPost } from "../types";
 import useStickyState from "../utils/useStickyState";
-import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
 	if (chunkSize <= 0) throw "chunkSize must be greater than 0";
@@ -356,15 +356,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 							{cardLayout === "carousel" ? (
 								<Box
 									ref={boxRef}
-									// TODO Weird, 170px safari but not chrome. Need to figure out more dynamic approach
-									// height={xs && isMobile ? "calc(100vh - 170px)" : "calc(100vh - 114px)"}
+									// height={"100vh"}
 									height={xs && isMobile ? "calc(100vh - 88px)" : "calc(100vh - 114px)"}
 									display="flex"
 									flexDirection="column"
 									justifyContent="center"
 									alignItems="center"
 									sx={{
-										my: xs ? (isMobile ? 0 : 0) : 0,
 										paddingTop: 2,
 									}}
 								>
@@ -401,7 +399,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 										})}
 									</Box>
 									<Box flexGrow={1} />
-									{/* <Box flexGrow={xs ? 0.5 : 1} /> */}
 									<ButtonGroup sx={{ padding: 1, gap: 1 }}>
 										<IconButton
 											sx={{
@@ -423,14 +420,13 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 										</IconButton>
 									</ButtonGroup>
 									<Box flexGrow={1} />
-									{/* <Box flexGrow={xs ? 0.5 : 1} /> */}
 								</Box>
 							) : cardLayout === "swipe" ? (
 								<Box
 									ref={boxRef}
 									// height="100%"
 									// height={xs && isMobile ? "calc(100vh - 234px)" : "calc(100vh - 210px)"}
-									height={xs && isMobile ? "calc(100vh - 152px)" : "calc(100vh - 210px)"}
+									height={xs && isMobile ? "100vh" : "calc(100vh - 114px)"}
 									display="flex"
 									flexDirection="column"
 									justifyContent="center"
@@ -448,7 +444,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 								<Grid
 									container
 									rowSpacing={2}
-									columnSpacing={mdDown ? 0 : xl ? 5 : 2}
+									columnSpacing={mdDown ? 0 : 2}
 									sx={{
 										width: "100%",
 										paddingTop: xs ? 1 : 2.5,
@@ -464,14 +460,19 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 												key={index}
 												xs={12}
 												md={6}
-												// lg={index % 4 === 0 ? 12 : 4}
-												lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
-												// xl={6}
-												// xl={index % 5 === 0 || index % 5 === 1 ? 12 : 4} // 2 on first row, 3 on second
+												lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4} // Lg and up to have 2 at top and 3 at bottom
+												// lg={6}
+												// xl={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
 											>
 												<LandingPageGridCard
 													author={data.author}
-													readTime={data.readTime}
+													readTime={
+														// Remove read for the bottom third row
+														mdDown || index % 5 === 0 || index % 5 === 1
+															? data.readTime
+															: data.readTime.replace(" read", "")
+													}
+													// readTime={data.readTime}
 													id={data.id}
 													image={data.image}
 													title={data.title}

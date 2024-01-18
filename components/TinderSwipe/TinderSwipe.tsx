@@ -195,11 +195,13 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 			<Box flexGrow={1} />
 			{/* Buttonstack */}
 			<Box>
-				<Stack direction="row" spacing={1.2} justifyContent="center" marginTop={xs ? 4 : 6} marginBottom={xs ? 2 : 0}>
+				<Stack direction="row" spacing={1.2} justifyContent="center" marginTop={xs ? 4 : 2} marginBottom={xs ? 2 : 0}>
 					<IconButton
 						aria-label="clear"
 						disabled={!canSwipe}
 						sx={{
+							maxWidth: "42x",
+							maxHeight: "42px",
 							border: "2px solid",
 							borderColor: "#fd5c63",
 							color: "#FFF",
@@ -218,12 +220,14 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 						}}
 						onClick={() => swipe("left")}
 					>
-						<ClearIcon />
+						<ClearIcon sx={{ height: 24, width: 24 }} />
 					</IconButton>
 					<IconButton
 						aria-label="undo"
 						disabled={!canGoBack}
 						sx={{
+							maxWidth: "42x",
+							maxHeight: "42px",
 							border: "2px solid",
 							borderColor: "#ffdf00",
 							color: "#FFF",
@@ -242,12 +246,14 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 						}}
 						onClick={() => goBack()}
 					>
-						<ReplayIcon />
+						<ReplayIcon sx={{ height: 24, width: 24 }} />
 					</IconButton>
 					<IconButton
 						aria-label="copy"
 						disabled={!canSwipe}
 						sx={{
+							maxWidth: "42x",
+							maxHeight: "42px",
 							border: "2px solid",
 							borderColor: "#2196F3",
 							color: "#FFF",
@@ -270,12 +276,14 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 					>
 						{/* <ContentCopyIcon /> */}
 						{/* <CopyAll /> */}
-						<BiCopy />
+						<BiCopy style={{ height: 24, width: 24 }} />
 					</IconButton>
 					<IconButton
 						aria-label="launch"
 						disabled={!canSwipe}
 						sx={{
+							maxWidth: "42x",
+							maxHeight: "42px",
 							border: "2px solid",
 							borderColor: "#00e676",
 							color: "#FFF",
@@ -297,7 +305,7 @@ const TinderSwipe: FC<TinderSwipeType> = (props) => {
 							swipe("right");
 						}}
 					>
-						<LaunchIcon />
+						<LaunchIcon sx={{ height: 24, width: 24 }} />
 					</IconButton>
 				</Stack>
 			</Box>

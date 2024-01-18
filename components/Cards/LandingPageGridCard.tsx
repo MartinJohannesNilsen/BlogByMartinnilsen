@@ -1,14 +1,12 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
-import React from "react";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 import PostViews from "../PostViews/PostViews";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -94,9 +92,6 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 							sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
 						>
 							{new Date(props.createdAt).toLocaleDateString("en-GB", {
-								// day: "2-digit",
-								// month: "short",
-								// year: "numeric",
 								day: "2-digit",
 								month: "2-digit",
 								year: "2-digit",

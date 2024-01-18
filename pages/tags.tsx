@@ -136,14 +136,12 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 			pageMeta={{
 				title: tag
 					? tag.toLowerCase() === "published" || tag.toLowerCase() === "unpublished" || tag.toLowerCase() === "saved"
-						? tag.charAt(0).toUpperCase() + tag.slice(1)
+						? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
 						: "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
 					: "All posts",
 			}}
 		>
-			{isLoading ? (
-				<></>
-			) : (
+			{!isLoading && (
 				<Box
 					sx={{
 						height: "100%",
@@ -169,7 +167,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 						}}
 					>
 						{/* Header */}
-						<Box>
+						<Box display="flex" alignItems="center">
 							<Typography
 								variant={xs ? "h4" : "h3"}
 								fontFamily={theme.typography.fontFamily}
@@ -183,7 +181,17 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 										? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
 										: "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
 									: "All posts"}
+								{/* {" (" + posts.length + ")"} */}
 							</Typography>
+							{/* <Typography
+								ml={1}
+								variant={xs ? "h6" : "h5"}
+								fontFamily={theme.typography.fontFamily}
+								color={theme.palette.text.primary}
+								fontWeight={600}
+							>
+								{"⋅ " + posts.length}
+							</Typography> */}
 						</Box>
 						{/* Grid of tags and posts */}
 						<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={8} rowSpacing={xs ? 2 : 4}>

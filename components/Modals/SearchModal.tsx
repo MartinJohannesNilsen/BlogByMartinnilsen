@@ -1,5 +1,6 @@
 import {
 	Api,
+	Bookmark,
 	Clear,
 	DarkMode,
 	GridViewSharp,
@@ -96,6 +97,12 @@ export const SearchModal = (props: SearchModalProps) => {
 			requirement: () => {
 				return !window.location.pathname.includes("/tags");
 			},
+		},
+		{
+			title: "Go to saved posts",
+			href: "/tags?name=saved",
+			keywords: ["saved", "bookmark", "favorite"],
+			iconElement: <Bookmark sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
 			title: "Go to account page",

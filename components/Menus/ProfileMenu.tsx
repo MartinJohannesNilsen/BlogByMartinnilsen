@@ -41,8 +41,8 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 					variant="outline"
 					onClick={props.handleMenuOpen}
 					icon={Person}
-					tooltip="Account settings"
-					aria-controls={open ? "account-menu" : undefined}
+					tooltip="Profile menu"
+					aria-controls={open ? "profile-menu" : undefined}
 					aria-haspopup="true"
 					aria-expanded={open ? "true" : undefined}
 					sxButton={{
@@ -61,7 +61,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 			</Box>
 			<Menu
 				anchorEl={props.anchorEl}
-				id="account-menu"
+				id="profile-menu"
 				open={props.open}
 				onClose={props.handleMenuOpen}
 				onClick={props.handleMenuClose}
