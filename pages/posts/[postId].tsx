@@ -94,14 +94,10 @@ export const getStaticProps = async (context: any) => {
 
 // Pass your custom renderers to Output
 export const renderers = {
-	// personality: CustomPersonality,
 	paragraph: CustomParagraph,
 	header: CustomHeader,
 	code: CustomCode,
 	divider: CustomDivider,
-	simpleimage: CustomImage,
-	uploadimage: CustomImage,
-	urlimage: CustomImage,
 	image: CustomImage,
 	linktool: CustomLinkTool,
 	quote: CustomQuote,
