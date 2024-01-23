@@ -241,7 +241,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 											}}
 											disabled
 										>
-											<Typography variant="subtitle2" color="textPrimary">
+											<Typography variant="subtitle2" color="textPrimary" fontFamily={theme.typography.fontFamily}>
 												{page}
 											</Typography>
 										</ToggleButton>

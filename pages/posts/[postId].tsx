@@ -20,7 +20,7 @@ import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
-import { style } from "../../components/EditorJS/Style";
+import { style } from "../../components/EditorJS/style";
 import Footer from "../../components/Footer/Footer";
 import SettingsModal from "../../components/Modals/SettingsModal";
 import ShareModal from "../../components/Modals/ShareModal";
@@ -102,6 +102,7 @@ export const renderers = {
 	simpleimage: CustomImage,
 	uploadimage: CustomImage,
 	urlimage: CustomImage,
+	image: CustomImage,
 	linktool: CustomLinkTool,
 	quote: CustomQuote,
 	video: CustomVideo,

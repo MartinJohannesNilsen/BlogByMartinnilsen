@@ -1,6 +1,19 @@
 // General
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { cloudStorage } from "../../lib/firebaseConfig";
+// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+// import { cloudStorage } from "../../lib/firebaseConfig";
+import {
+	CalloutIcon,
+	CodeIcon,
+	DividerIcon,
+	ImageUploadIcon,
+	ImageUrlIcon,
+	MathIcon,
+	QuoteIcon,
+	TableIcon,
+	ToggleIcon,
+	VideoIcon,
+} from "./Icons";
+
 // Tools
 import CheckList from "@editorjs/checklist";
 import Embed from "@editorjs/embed";
@@ -14,9 +27,7 @@ import Quote from "@editorjs/quote";
 import Underline from "@editorjs/underline";
 import ToggleBlock from "editorjs-toggle-block";
 import ChangeCase from "./BlockTools/ChangeCase/change-case";
-import ImageTool from "@editorjs/image";
-import SimpleImage from "@editorjs/simple-image";
-import InlineImage from "editorjs-inline-image";
+// @ts-ignore
 import Table from "@martinjohannesnilsen/editorjs-table";
 const EJLaTeX = require("editorjs-latex"); // Math
 const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
@@ -26,20 +37,11 @@ import InlineVideo from "./BlockTools/InlineVideo/tool";
 import Divider from "./BlockTools/Divider/tool";
 import CodeBlock from "./BlockTools/CodeBlock/tool";
 import Callout from "./BlockTools/Callout/tool";
-import ImageOnPaste from "./BlockTools/ImageOnPaste/tool";
-import Image from "./BlockTools/Image/tool";
-import {
-	CalloutIcon,
-	CodeIcon,
-	DividerIcon,
-	ImageUploadIcon,
-	ImageUrlIcon,
-	MathIcon,
-	QuoteIcon,
-	TableIcon,
-	ToggleIcon,
-	VideoIcon,
-} from "./icons";
+
+// Development
+// Images
+// import ImageOnPaste from "./BlockTools/ImageOnPaste/tool"; // TODO Trial at implementing SimpleImage, but focus on ImageBlock first
+import Image from "./BlockTools/ImageBlock/tool";
 
 export const EDITOR_JS_TOOLS = {
 	underline: { class: Underline, shortcut: "CMD+U" },

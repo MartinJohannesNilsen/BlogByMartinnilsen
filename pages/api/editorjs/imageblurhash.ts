@@ -12,11 +12,6 @@ async function getBlurhash(url: string) {
 	return output;
 }
 
-//  *             example:
-//  *              encoded: "UCBnNqOEACxGNgn%Sday1GwcbHNt}YbIr]W;",
-//  *              width: 1200,
-//  *              height: 700,
-
 /**
  * @swagger
  * /api/editorjs/imageblurhash:
