@@ -1,4 +1,4 @@
-import { Api, Create, Newspaper, Notifications } from "@mui/icons-material";
+import { Api, Bookmark, Create, Newspaper, Notifications } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -124,7 +124,12 @@ export const Account = () => {
 								onClick={handlePostTableModalOpen}
 							/>
 						) : (
-							<TileButtonCard icon={<Newspaper sx={{ color: theme.palette.text.primary }} />} text="Posts" href="/" />
+							// <TileButtonCard icon={<Newspaper sx={{ color: theme.palette.text.primary }} />} text="Posts" href="/" />
+							<TileButtonCard
+								icon={<Bookmark sx={{ color: theme.palette.text.primary }} />}
+								text="Saved Posts"
+								href="/tags?name=Saved"
+							/>
 						)}
 					</Grid>
 					<Grid item xs={5.7}>
