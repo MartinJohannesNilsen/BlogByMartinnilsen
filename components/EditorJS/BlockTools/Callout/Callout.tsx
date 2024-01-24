@@ -101,11 +101,14 @@ export const Callout = (props: CalloutProps) => {
 								</Box>
 							</Modal>
 							<Card
+								elevation={0}
 								sx={{
 									display: "flex",
 									alignItems: "center",
-									padding: 2,
-									boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+									padding: 1,
+									// boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+									backgroundColor: theme.palette.grey[100],
+									border: "2px solid " + theme.palette.grey[200],
 									maxWidth: "100vw",
 								}}
 							>
@@ -114,7 +117,7 @@ export const Callout = (props: CalloutProps) => {
 									disableRipple
 									sx={{ margin: xs ? "0 7.5px 0 -5px" : "0 10px 0 0px" }}
 								>
-									<Typography fontSize={30}>{stateData.icon}</Typography>
+									<Typography fontSize={20}>{stateData.icon}</Typography>
 								</IconButton>
 								<Box
 									display="flex"
@@ -139,6 +142,7 @@ export const Callout = (props: CalloutProps) => {
 											...theme.typography.subtitle1,
 											fontWeight: 800,
 											fontFamily: theme.typography.fontFamily,
+											marginBottom: -0.6,
 										}}
 										onChange={(e) => {
 											setStateData({
@@ -159,9 +163,10 @@ export const Callout = (props: CalloutProps) => {
 										// placeholder="Insert message here ..."
 										ref={messageRef}
 										style={{
-											...theme.typography.body1,
+											...theme.typography.subtitle2,
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
+											paddingBottom: 6,
 										}}
 										onInputCapture={(e) => {
 											const currentDiv = messageRef.current;
@@ -217,6 +222,7 @@ export const Callout = (props: CalloutProps) => {
 											"&::placeholder": {
 												color: "black", // Set the color of the placeholder
 											},
+											my: -0.4,
 											overflow: "hidden",
 											textOverflow: "ellipsis",
 											display: "webkit-flex",
@@ -241,7 +247,7 @@ export const Callout = (props: CalloutProps) => {
 										// placeholder="Insert message here ..."
 										ref={messageRef}
 										style={{
-											...theme.typography.body1,
+											...theme.typography.subtitle2,
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
 										}}

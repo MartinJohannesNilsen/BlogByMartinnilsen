@@ -110,7 +110,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		keywords: [],
 		title: "",
 		description: "",
-		ogImage: { src: "", blurhash: null, height: null, width: null },
+		ogImage: { src: "https://blog.mjntech.dev/assets/icons/ogimage.png", blurhash: null, height: null, width: null },
 		data: { blocks: [] },
 		author: "Martin Johannes Nilsen",
 		createdAt: Date.now(),
@@ -122,6 +122,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 	};
 	const { enqueueSnackbar } = useSnackbar();
 	const [openTab, setOpenTab] = useState(postId ? 1 : 0);
+	// const [openTab, setOpenTab] = useState(1); // TODO remove before push
 
 	useEffect(() => {
 		setTheme(ThemeEnum.Light);
@@ -187,13 +188,20 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 				const details = await imageDetailsApiFetcher(
 					process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/imageblurhash?url=" + encodeURIComponent(data.ogImage.src)
 				);
+				if (details.hasOwnProperty("code") && details.code !== 200) {
+					enqueueSnackbar(`Open Graph Image: ${details.reason}`, {
+						variant: "error",
+						preventDuplicate: true,
+					});
+					return;
+				}
 
 				// Create object
 				const newObject = {
 					...data,
 					data: editorJSContent,
 					readTime: readTime,
-					// ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
+					ogImage: { src: data.ogImage.src, blurhash: details.encoded, height: details.height, width: details.width },
 				};
 
 				// If post exists, then update, or add new

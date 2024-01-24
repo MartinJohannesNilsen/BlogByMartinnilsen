@@ -12,6 +12,12 @@ async function getBlurhash(url: string) {
 	return output;
 }
 
+function isImgUrl(url) {
+	return fetch(url, { method: "HEAD" }).then((res) => {
+		return res.headers.get("Content-Type").startsWith("image");
+	});
+}
+
 /**
  * @swagger
  * /api/editorjs/imageblurhash:
@@ -57,10 +63,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	if (req.method === "GET") {
 		try {
-			// Get blurhash
-			getBlurhash(req.query.url as string).then((output) => {
-				return res.status(200).json(output);
-			});
+			// Check that url links to image
+			let isImage = await isImgUrl(req.query.url as string);
+			if (isImage) {
+				// Get blurhash
+				await getBlurhash(req.query.url as string).then((output) => {
+					return res.status(200).json(output);
+				});
+			} else {
+				return res.status(400).json({ code: 400, reason: "Invalid url, ensure that url links to an image!" });
+			}
 		} catch (err) {
 			return res.status(500).json({ code: 500, reason: err });
 		}

@@ -6,7 +6,9 @@ import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import DOMPurify from "dompurify";
 import { StyledTextField } from "../../../StyledMUI/TextInput";
 import { NavbarButton } from "../../../Buttons/NavbarButton";
-import { Add, Upload } from "@mui/icons-material";
+import { Add, AddPhotoAlternate, AddPhotoAlternateOutlined, Upload } from "@mui/icons-material";
+import { enqueueSnackbar } from "notistack";
+import { ImageUploadIcon } from "../../Icons";
 
 export const imageDetailsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header
@@ -104,6 +106,35 @@ export const ImageBlock = (props: ImageProps) => {
 				) : (
 					// Render input box
 					<Box display="flex" gap={1}>
+						{/* Upload image */}
+						<NavbarButton
+							variant="outline"
+							disabled
+							onClick={() => {}}
+							// icon={Upload}
+							icon={AddPhotoAlternateOutlined}
+							tooltip="Upload to storage"
+							sxButton={{
+								minWidth: "40px",
+								minHeight: "40px",
+								height: "40px",
+								width: "40px",
+								backgroundColor: theme.palette.text.primary,
+								borderColor: theme.palette.grey[400],
+								"&:hover": {
+									backgroundColor: theme.palette.grey[200],
+									borderColor: theme.palette.grey[300],
+								},
+							}}
+							sxIcon={{
+								height: "22px",
+								width: "22px",
+								color: theme.palette.text.secondary,
+								"&:hover": {
+									opacity: 0.8,
+								},
+							}}
+						/>
 						<StyledTextField
 							InputLabelProps={{ shrink: false }}
 							placeholder="URL"
@@ -125,25 +156,6 @@ export const ImageBlock = (props: ImageProps) => {
 								setInputValue(value);
 							}}
 						/>
-						{/* Upload image */}
-						<NavbarButton
-							variant="outline"
-							disabled
-							onClick={() => {}}
-							icon={Add}
-							tooltip="Upload to storage"
-							sxButton={{
-								minWidth: "40px",
-								minHeight: "40px",
-								height: "40px",
-								width: "40px",
-							}}
-							sxIcon={{
-								height: "22px",
-								width: "22px",
-								color: "inherit",
-							}}
-						/>
 						{/* Fetch image */}
 						<NavbarButton
 							variant="outline"
@@ -151,27 +163,44 @@ export const ImageBlock = (props: ImageProps) => {
 								const details = await imageDetailsApiFetcher(
 									process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/imageblurhash?url=" + encodeURIComponent(inputValue)
 								);
-								setStateData({
-									...stateData,
-									type: "url",
-									url: inputValue,
-									blurhash: details.encoded,
-									height: details.height,
-									width: details.width,
-								});
+								if (details.hasOwnProperty("code") && details.code !== 200) {
+									enqueueSnackbar(details.reason, {
+										// variant: "default",
+										variant: "error",
+										preventDuplicate: true,
+									});
+								} else {
+									setStateData({
+										...stateData,
+										type: "url",
+										url: inputValue,
+										blurhash: details.encoded,
+										height: details.height,
+										width: details.width,
+									});
+								}
 							}}
-							icon={Upload}
-							tooltip="Fetch image"
+							icon={Add}
+							tooltip="Fetch image from url"
 							sxButton={{
 								minWidth: "40px",
 								minHeight: "40px",
 								height: "40px",
 								width: "40px",
+								backgroundColor: theme.palette.text.primary,
+								borderColor: theme.palette.grey[400],
+								"&:hover": {
+									backgroundColor: theme.palette.grey[200],
+									borderColor: theme.palette.grey[300],
+								},
 							}}
 							sxIcon={{
 								height: "22px",
 								width: "22px",
-								color: "inherit",
+								color: theme.palette.text.secondary,
+								"&:hover": {
+									opacity: 0.8,
+								},
 							}}
 						/>
 					</Box>

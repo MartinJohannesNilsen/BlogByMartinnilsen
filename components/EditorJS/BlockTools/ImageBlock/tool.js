@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from 'react-dom';
 import ImageBlock from "./ImageBlock";
-import { ImageUploadIcon } from "../../Icons";
+import { ImageIcon } from "../../Icons";
 
 const dataDefaults = {
   type: "upload", // url, upload, unsplash, paste?
@@ -43,7 +43,7 @@ export default class Tool extends React.Component{
 
   static get toolbox() {
     return {
-      icon: ImageUploadIcon,
+      icon: ImageIcon,
       title: "Image",
     };
   }

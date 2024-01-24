@@ -12,16 +12,19 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 		<Box my={1} maxWidth={"100vw"}>
 			{props.data.type === "message" ? (
 				<Card
+					elevation={0}
 					sx={{
 						display: "flex",
 						alignItems: "center",
-						padding: 2,
-						boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+						padding: 1,
+						// boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+						backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
+						border: "2px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
 						maxWidth: "100vw",
 					}}
 				>
-					<IconButton disabled disableRipple sx={{ margin: xs ? "0 7.5px 0 -5px" : "0 10px 0 0px" }}>
-						<Typography fontSize={30}>{props.data.icon || "💬"}</Typography>
+					<IconButton disabled disableRipple sx={{ margin: xs ? "0 7.5px 0 -5px" : "0 5px 0 0px" }}>
+						<Typography fontSize={16}>{props.data.icon || "💬"}</Typography>
 					</IconButton>
 					<Box display="flex" flexDirection="column" maxWidth="100vw">
 						{/* Title */}
@@ -31,8 +34,9 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 									...theme.typography.subtitle1,
 									fontWeight: 800,
 									fontFamily: theme.typography.fontFamily,
-									pt: "4px",
-									pb: "5px",
+									// pt: "4px",
+									mb: -0.5,
+									// pb: -2,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									display: "webkit-flex",
@@ -52,9 +56,9 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 							style={{
 								box: { my: 0 },
 								typography: {
-									...theme.typography.body1,
+									...theme.typography.subtitle2,
 									pt: 0,
-									pb: 1,
+									pb: props.data.title && 0.6,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									display: "webkit-flex",
@@ -91,8 +95,9 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 									fontWeight: 800,
 									fontFamily: theme.typography.fontFamily,
 									// color: "black",
-									pt: 0.5,
-									pb: 0.6,
+									// pt: 0.5,
+									// pb: 0.6,
+									my: 0,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									display: "webkit-flex",
@@ -111,9 +116,9 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 								style={{
 									box: { my: 0 },
 									typography: {
-										...theme.typography.body1,
+										...theme.typography.subtitle2,
 										pt: 0,
-										pb: 1,
+										// pb: 1,
 										overflow: "hidden",
 										textOverflow: "ellipsis",
 										display: "webkit-flex",
