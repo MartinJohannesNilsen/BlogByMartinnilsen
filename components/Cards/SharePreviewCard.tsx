@@ -20,13 +20,6 @@ export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
 			}}
 		>
 			<Box display="flex" width="100%" height="100%">
-				{/* <Image
-					src={props.ogImage.src}
-					alt={`Image for the post titled "${props.title}"`}
-					width={props.height}
-					height={props.height}
-					style={{ objectFit: "cover" }}
-				/> */}
 				<BlurHashHTMLImage
 					src={props.ogImage.src}
 					blurhash={{ encoded: props.ogImage.blurhash }}

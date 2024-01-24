@@ -6,6 +6,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 
 export const TagsPageCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -81,15 +82,8 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 							</Typography>
 						</Box>
 						<Box flexGrow={1} />
-						{/* <Image
-							src={props.image || DEFAULT_OGIMAGE}
-							alt={'OpenGraph image for article titled "' + props.title + '"'}
-							width={xs ? 70 : 125}
-							height={xs ? 70 : 82}
-							style={{ borderRadius: 2, objectFit: "cover" }}
-						/> */}
 						<BlurHashHTMLImage
-							src={props.ogImage.src}
+							src={props.ogImage.src || DEFAULT_OGIMAGE}
 							blurhash={{ encoded: props.ogImage.blurhash }}
 							alt={'OpenGraph image for article titled "' + props.title + '"'}
 							style={{ borderRadius: 2, objectFit: "cover", width: xs ? 70 : 125, height: xs ? 70 : 82 }}

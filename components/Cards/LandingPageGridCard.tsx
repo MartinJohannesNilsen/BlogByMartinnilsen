@@ -1,11 +1,11 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -24,7 +24,7 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 		>
 			<CardMedia>
 				<BlurHashHTMLImage
-					src={props.ogImage.src}
+					src={props.ogImage.src || DEFAULT_OGIMAGE}
 					blurhash={{ encoded: props.ogImage.blurhash, width: 100, height: 100 }}
 					alt={`OpenGraph image for post titled "${props.title}"`}
 					style={{
