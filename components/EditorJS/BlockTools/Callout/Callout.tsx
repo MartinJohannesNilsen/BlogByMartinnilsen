@@ -188,12 +188,14 @@ export const Callout = (props: CalloutProps) => {
 							sx={{
 								display: "flex",
 								alignItems: "center",
-								backgroundColor: "#f7cb2a",
+								// backgroundColor: "#f7cb2a",
+								backgroundColor: theme.palette.grey[300],
 							}}
 						>
 							<Box display="flex" flexDirection="row">
 								{/* <Box sx={{ backgroundColor: "#575757" }} p={0.5} /> */}
-								<Box sx={{ backgroundColor: "#b89002" }} p={0.5} />
+								{/* <Box sx={{ backgroundColor: "#b89002" }} p={0.5} /> */}
+								<Box sx={{ backgroundColor: theme.palette.grey[400] }} p={0.5} />
 								<Box
 									display="flex"
 									flexDirection="column"

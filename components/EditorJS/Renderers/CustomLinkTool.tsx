@@ -5,8 +5,10 @@ import { EditorjsRendererProps } from "../../../types";
 const CustomLinkTool = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const sm = useMediaQuery(theme.breakpoints.only("sm"));
-	const containerWidth = xs ? 380 - 16 * 2 : sm ? 500 - 16 * 2 : 700 - 16 * 2;
+	// const sm = useMediaQuery(theme.breakpoints.only("sm"));
+	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
+
+	// const containerWidth = xs ? 380 - 16 * 2 : sm ? 500 - 16 * 2 : 700 - 16 * 2;
 
 	return (
 		<Box my={1} display="flex" width="100%" flexDirection="column" textAlign="center">
@@ -14,9 +16,13 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 				elevation={0}
 				sx={{
 					display: "flex",
-					height: props.data.link! ? "150px" : "120px",
-					boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 8px",
-					border: theme.palette.mode === "dark" ? "none" : "1px solid" + theme.palette.grey[300],
+					position: "relative",
+					minHeight: props.data.link! ? "100px" : "80px",
+					maxHeight: props.data.link! ? "150px" : "120px",
+					// boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 8px",
+					// padding: 1,
+					// boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+					backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
 				}}
 			>
 				<CardActionArea
@@ -25,24 +31,31 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 						backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[0],
 					}}
 				>
-					<Box display="flex" alignItems="center">
+					<Box display="flex" alignItems="center" height="100%">
+						{/* Text */}
 						<Box
 							display="flex"
 							flexDirection="column"
 							sx={{
+								// border: "2px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
 								textAlign: "left",
-								width: (containerWidth / 5) * 3.5,
 							}}
-							px={1.5}
+							px={2}
+							py={1}
 						>
 							<Typography
 								variant="subtitle1"
-								fontWeight={800}
 								fontFamily={theme.typography.fontFamily}
 								sx={{
+									...theme.typography.subtitle1,
+									fontWeight: 800,
 									textOverflow: "ellipsis",
 									whiteSpace: "nowrap",
 									overflow: "hidden",
+									WebkitLineClamp: 1,
+									lineClamp: 1,
+									display: "webkit-flex",
+									WebkitBoxOrient: "vertical",
 								}}
 							>
 								{props.data.meta?.title}
@@ -52,6 +65,8 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 								fontWeight={400}
 								fontFamily={theme.typography.fontFamily}
 								sx={{
+									...theme.typography.subtitle2,
+									// marginY: ,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									display: "webkit-flex",
@@ -64,7 +79,7 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 							</Typography>
 							{props.data.link ? (
 								<Typography
-									mt={1}
+									mt={0.5}
 									variant="subtitle2"
 									fontWeight={600}
 									fontFamily={theme.typography.fontFamily}
@@ -84,11 +99,14 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 								<></>
 							)}
 						</Box>
-						<Box flexGrow={100} />
+						<Box flexGrow={1} />
+						{/* Image */}
 						<img
 							style={{
-								height: props.data.meta?.image ? "150px" : "120px",
-								width: (containerWidth / 5) * 1.5,
+								minHeight: props.data.meta?.image ? "100px" : "80px",
+								maxHeight: props.data.meta?.image ? "135px" : "120px",
+								height: "100%",
+								width: xs ? 150 : mdDown ? 175 : 200,
 								objectFit: "cover",
 							}}
 							src={props.data.meta?.image}
