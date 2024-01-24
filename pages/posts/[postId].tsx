@@ -314,7 +314,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 				canonical: "https://blog.mjntech.dev/posts/" + props.postId,
 				openGraph: {
 					url: "https://blog.mjntech.dev/posts/" + props.postId,
-					image: post.image || DEFAULT_OGIMAGE,
+					image: post.ogImage.src || DEFAULT_OGIMAGE,
 					type: "article",
 					article: {
 						published: new Date(post.createdAt),
@@ -382,7 +382,15 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 							data={{
 								title: post.title,
 								description: post.description,
-								image: post.image && post.image.trim() !== "" ? post.image : DEFAULT_OGIMAGE,
+								ogImage:
+									post.ogImage && post.ogImage.src && post.ogImage.src.trim() !== ""
+										? post.ogImage
+										: {
+												src: DEFAULT_OGIMAGE,
+												height: 630,
+												width: 1200,
+												blurhash: "U00l#at7D%M{ofj[WBayD%Rj-;xuRjayt7of",
+										  },
 								url: window.location.href,
 								height: xs ? 100 : 130,
 								width: xs ? 400 : 500,
@@ -901,7 +909,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 																		url: typeof window !== "undefined" ? window.location.href : "",
 																		title: post.title,
 																		text: "",
-																		icon: post.image || DEFAULT_OGIMAGE,
+																		icon: post.ogImage.src || DEFAULT_OGIMAGE,
 																		fallback: () => setOpenShareModal(true),
 																  })
 																: setOpenShareModal(true);

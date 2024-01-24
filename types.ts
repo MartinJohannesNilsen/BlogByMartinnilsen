@@ -105,7 +105,7 @@ export type EditorjsRendererProps = {
 export type SharePreviewCardProps = {
 	title: string;
 	description: string;
-	image: string;
+	ogImage: ImageProps;
 	url: string;
 	width: number;
 	height: number;
@@ -115,11 +115,18 @@ export type PostCardProps = PostProps & {
 	id: string;
 };
 
+export type ImageProps = {
+	src: string;
+	blurhash?: string;
+	height?: number;
+	width?: number;
+};
+
 type PostProps = {
 	author: string;
 	createdAt: number;
 	description: string;
-	image: string;
+	ogImage: ImageProps;
 	updatedAt: number;
 	published: boolean;
 	readTime: string;
@@ -134,7 +141,8 @@ export type FullPost = PostProps & {
 };
 
 export type FirestoreFullPost = PostProps & {
-	data: string;
+	// data: string;
+	data: any;
 };
 
 export type StoredPost = PostProps & {

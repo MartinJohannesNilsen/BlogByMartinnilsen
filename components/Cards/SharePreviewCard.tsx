@@ -1,11 +1,12 @@
-import { Box, Card, Typography } from "@mui/material";
-import Image from "next/image";
+import { Box, Card, Typography, useMediaQuery } from "@mui/material";
 import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { SharePreviewCardProps } from "../../types";
+import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 
 export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
 	const { theme } = useTheme();
+	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 
 	return (
 		<Card
@@ -19,13 +20,26 @@ export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
 			}}
 		>
 			<Box display="flex" width="100%" height="100%">
-				<Image
-					src={props.image}
+				{/* <Image
+					src={props.ogImage.src}
 					alt={`Image for the post titled "${props.title}"`}
 					width={props.height}
 					height={props.height}
 					style={{ objectFit: "cover" }}
+				/> */}
+				<BlurHashHTMLImage
+					src={props.ogImage.src}
+					blurhash={{ encoded: props.ogImage.blurhash }}
+					alt={`Image for the post titled "${props.title}"`}
+					style={{
+						width: props.height,
+						height: props.height,
+						objectFit: "cover",
+						borderRadius: 0,
+						maxHeight: xs ? 250 : 230,
+					}}
 				/>
+
 				{/* Title and summary */}
 				<Box
 					display="flex"

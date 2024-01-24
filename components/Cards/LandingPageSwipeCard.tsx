@@ -1,12 +1,10 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, Typography, useMediaQuery } from "@mui/material";
-import Image from "next/image";
 import { FC } from "react";
+import { isMobile } from "react-device-detect";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
-import { isMobile } from "react-device-detect";
-import React from "react";
+import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
 
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
@@ -35,17 +33,15 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 				}}
 			>
 				<Box display="flex" flexDirection="column" sx={{ height: xs ? 250 : 230 }}>
-					<Image
-						src={props.image || DEFAULT_OGIMAGE}
-						draggable={false}
-						alt=""
-						height={xs ? 250 : 230}
-						width={350}
-						// fill={true}
+					<BlurHashHTMLImage
+						src={props.ogImage.src}
+						blurhash={{ encoded: props.ogImage.blurhash }}
+						alt={`OpenGraph image for post titled "${props.title}"`}
 						style={{
+							width: "100%",
+							height: xs ? 250 : 230,
 							objectFit: "cover",
-							maxHeight: xs ? 250 : 230,
-							userSelect: "none",
+							borderRadius: 0,
 						}}
 					/>
 				</Box>

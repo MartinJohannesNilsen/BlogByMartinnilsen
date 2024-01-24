@@ -3,6 +3,8 @@ import {
 	ArrowBackIosNewSharp,
 	ArrowBackIosSharp,
 	ArrowForwardIosSharp,
+	FormatAlignCenterSharp,
+	FormatListBulletedSharp,
 	GridViewSharp,
 	TableRowsSharp,
 	ViewCarousel,
@@ -27,6 +29,7 @@ import { isMobile } from "react-device-detect";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
 import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
 import LandingPageListCard from "../components/Cards/LandingPageListCard";
+import LandingPagePlainCard from "../components/Cards/LandingPagePlainCard";
 import Navbar from "../components/Navbar/Navbar";
 import SEO from "../components/SEO/SEO";
 import TinderSwipe from "../components/TinderSwipe/TinderSwipe";
@@ -118,7 +121,8 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 
 	useEffect(() => {
 		setIsLoading(false);
-		// instanceRef && instanceRef.current?.update;
+		// console.log(posts[0]);
+		instanceRef && instanceRef.current?.update;
 		return () => {};
 	}, [posts]);
 
@@ -143,7 +147,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 	};
 
 	const handleChangeView = (event: React.MouseEvent<HTMLElement>, newView: string | null) => {
-		if (["carousel", "swipe", "grid", "list"].includes(newView)) setCardLayout(newView);
+		if (["carousel", "swipe", "grid", "list", "plain"].includes(newView)) setCardLayout(newView);
 	};
 
 	const [currentSlide, setCurrentSlide] = useState(0);
@@ -346,6 +350,22 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 											/>
 										</Tooltip>
 									</ToggleButton>
+									<ToggleButton
+										sx={{ width: 34, height: 34, borderRadius: "10px" }}
+										value={"plain"}
+										selected={cardLayout === "plain"}
+										disabled={cardLayout === "plain"}
+									>
+										<Tooltip enterDelay={2000} title="Plain layout">
+											<FormatListBulletedSharp
+												sx={{
+													height: 22,
+													width: 22,
+													color: theme.palette.text.primary,
+												}}
+											/>
+										</Tooltip>
+									</ToggleButton>
 								</ToggleButtonGroup>
 							</Box>
 						</Box>
@@ -383,7 +403,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 															author={data.author}
 															readTime={data.readTime}
 															id={data.id}
-															image={data.image}
+															ogImage={data.ogImage}
 															title={data.title}
 															createdAt={data.createdAt}
 															updatedAt={data.updatedAt}
@@ -474,7 +494,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 													}
 													// readTime={data.readTime}
 													id={data.id}
-													image={data.image}
+													ogImage={data.ogImage}
 													title={data.title}
 													createdAt={data.createdAt}
 													updatedAt={data.updatedAt}
@@ -511,7 +531,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 														author={data.author}
 														readTime={data.readTime}
 														id={data.id}
-														image={data.image}
+														ogImage={data.ogImage}
 														title={data.title}
 														createdAt={data.createdAt}
 														updatedAt={data.updatedAt}
@@ -524,6 +544,47 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 													/>
 												</Grid>
 												<Grid item key={index} md={2} lg={3} />
+											</>
+										);
+									})}
+								</Grid>
+							) : cardLayout === "plain" ? (
+								<Grid
+									container
+									rowSpacing={2}
+									columnSpacing={mdDown ? 0 : xl ? 5 : 2}
+									sx={{
+										width: "100%",
+										paddingTop: xs ? 1 : 2.5,
+										paddingX: lgUp ? "150px" : xs ? 2 : "80px",
+										paddingBottom: xs ? 5 : 7,
+										margin: 0,
+									}}
+								>
+									{posts.map((data, index) => {
+										return (
+											<>
+												{/* <Grid item key={index} md={1} lg={1} /> */}
+												<Grid item key={index} md={1} lg={2} />
+												<Grid item key={index} xs={12} sm={12} md={8} lg={6}>
+													<LandingPagePlainCard
+														author={data.author}
+														readTime={data.readTime}
+														id={data.id}
+														ogImage={data.ogImage}
+														title={data.title}
+														createdAt={data.createdAt}
+														updatedAt={data.updatedAt}
+														description={data.description}
+														type={data.type}
+														tags={data.tags}
+														keywords={data.keywords}
+														published={data.published}
+														enlargeOnHover={false}
+													/>
+												</Grid>
+												{/* <Grid item key={index} md={3} lg={5} /> */}
+												<Grid item key={index} md={3} lg={4} />
 											</>
 										);
 									})}

@@ -292,7 +292,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 													author={data.author}
 													description={data.description}
 													id={data.id}
-													image={data.image}
+													ogImage={data.ogImage}
 													published={data.published}
 													readTime={data.readTime}
 													tags={data.tags}

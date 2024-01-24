@@ -46,7 +46,7 @@ import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SearchModalProps, StoredPost } from "../../types";
 import { userSignOut } from "../../utils/signOut";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 
 type ActionProps = {
 	title: string;
@@ -136,7 +136,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.handleSettingsModalOpen();
 			},
-			keywords: ["settings", "configure", "tune"],
+			keywords: ["settings", "configure", "tune", "accent", "color", "mode", "light", "dark", "font"],
 			iconElement: <Settings sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.handleSettingsModalOpen != null;
@@ -710,12 +710,13 @@ export const SearchModal = (props: SearchModalProps) => {
 																background: "transparent",
 															}}
 														>
-															<img
-																src={post.image || DEFAULT_OGIMAGE}
+															<BlurHashHTMLImage
+																src={post.ogImage.src}
+																blurhash={{ encoded: post.ogImage.blurhash }}
 																alt={'OpenGraph image for article titled "' + post.title + '"'}
 																style={{
-																	minWidth: "125px",
-																	minHeight: "82px",
+																	width: "125px",
+																	height: "82px",
 																	objectFit: "cover",
 																}}
 															/>

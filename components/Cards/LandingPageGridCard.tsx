@@ -1,32 +1,45 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
-import { Box, Button, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import Image from "next/image";
 import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
+import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const useStyles = makeStyles({
-		root: {
-			width: "100%",
-			"&:hover": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			"&:active": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			backgroundColor: theme.palette.primary.light,
-		},
-	});
-	const classes = useStyles();
 
 	return (
-		<Card className={classes.root} sx={{ width: "100%", borderRadius: 4, boxShadow: "none" }}>
+		<Card
+			sx={{
+				height: xs ? "235px" : "260px",
+				position: "relative",
+				width: "100%",
+				borderRadius: 4,
+				boxShadow: "none",
+				backgroundColor: theme.palette.primary.light,
+			}}
+		>
+			<CardMedia>
+				<BlurHashHTMLImage
+					src={props.ogImage.src}
+					blurhash={{ encoded: props.ogImage.blurhash, width: 100, height: 100 }}
+					alt={`OpenGraph image for post titled "${props.title}"`}
+					style={{
+						width: "100%",
+						height: xs ? "235px" : "260px",
+						position: "absolute",
+						left: 0,
+						top: 0,
+						right: 0,
+						bottom: 0,
+						objectFit: "cover",
+						borderRadius: 4,
+					}}
+				/>
+			</CardMedia>
 			<CardActionArea
 				href={`/posts/${props.id}`}
 				sx={{
@@ -36,18 +49,6 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 				}}
 			>
 				<Box display="flex" flexDirection="column" sx={{ height: "100%" }}>
-					{/* Image and type/tag rows */}
-					<Box display="flex" flexDirection="row">
-						<Image
-							src={props.image || DEFAULT_OGIMAGE}
-							alt=""
-							fill={true}
-							style={{
-								borderRadius: 4,
-								objectFit: "cover",
-							}}
-						/>
-					</Box>
 					{/* Tags */}
 					<Box display="flex" flexDirection="row" alignItems="center" pt={0.7} pb={0.6}>
 						{props.tags.map((tag, index) => (

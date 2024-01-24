@@ -7,35 +7,9 @@ import { EditorjsRendererProps } from "../../../types";
 import colorLuminance from "../../../utils/colorLuminance";
 import { BlurhashCanvas } from "react-blurhash";
 import { useEffect, useState } from "react";
+import BlurHashHTMLImage from "../../Image/BlurHashHTMLImage";
 
 const maxWidth = 760;
-
-function BlurHashImage({ src, blurHash, aspectRatio, height, width, alt, style }) {
-	const [loaded, setLoaded] = useState(false);
-
-	useEffect(() => {
-		const img = new Image();
-		img.src = src;
-		img.onload = () => setLoaded(true);
-	}, [src]);
-
-	return (
-		<>
-			<Box style={{ display: loaded ? "inline" : "none" }}>
-				<img src={src} alt={alt} style={style} />
-			</Box>
-			<Box style={{ display: !loaded ? "inline" : "none" }}>
-				<BlurhashCanvas
-					hash={blurHash}
-					width={Math.min(maxWidth, width)}
-					height={Math.min(Math.floor(maxWidth * aspectRatio), height)}
-					punch={1}
-					style={style}
-				/>
-			</Box>
-		</>
-	);
-}
 
 const CustomImage = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
@@ -52,23 +26,44 @@ const CustomImage = (props: EditorjsRendererProps) => {
 	}));
 	const style = useStyles();
 
+	const [loaded, setLoaded] = useState(false);
+
+	useEffect(() => {
+		const img = new Image();
+		img.src = props.data.url;
+		img.onload = () => setLoaded(true);
+	}, [props.data.url]);
+
 	return (
 		<Box my={2} display="flex" width="100%" flexDirection="column" textAlign="center" alignItems="center">
 			{props.data.height && props.data.width && props.data.blurhash ? (
-				<BlurHashImage
-					aspectRatio={props.data.height / props.data.width}
-					height={props.data.height}
-					width={props.data.width}
-					style={{
-						width: "100%",
-						borderRadius: "0px",
-						maxHeight: props.data.withBackground ? (isMobile ? 215 : 400) : "none",
-						objectFit: "contain",
-					}}
-					alt=""
-					blurHash={props.data.blurhash}
-					src={props.data.url ? props.data.url : props.data.file.url ? props.data.file.url : ""}
-				/>
+				<>
+					<Box style={{ display: loaded ? "inline" : "none" }}>
+						<img
+							src={props.data.url}
+							alt=""
+							style={{
+								width: "100%",
+								borderRadius: "0px",
+								maxHeight: props.data.withBackground ? (isMobile ? 215 : 400) : "none",
+								objectFit: "contain",
+							}}
+						/>
+					</Box>
+					<Box style={{ display: !loaded ? "inline" : "none" }}>
+						<BlurhashCanvas
+							hash={props.data.blurhash}
+							width={Math.min(maxWidth, props.data.width)}
+							height={Math.min(Math.floor(maxWidth * (props.data.height / props.data.width)), props.data.height)}
+							style={{
+								width: "100%",
+								borderRadius: "0px",
+								maxHeight: props.data.withBackground ? (isMobile ? 215 : 400) : "none",
+								objectFit: "contain",
+							}}
+						/>
+					</Box>
+				</>
 			) : (
 				<img
 					style={{

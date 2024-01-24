@@ -73,7 +73,7 @@ export const ShareModal = (props: ShareModalProps) => {
 					<SharePreviewCard
 						title={props.data.title}
 						description={props.data.description}
-						image={props.data.image}
+						ogImage={props.data.ogImage}
 						url={window.location.host}
 						width={props.data.width}
 						height={props.data.height}

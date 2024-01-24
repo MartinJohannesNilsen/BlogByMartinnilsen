@@ -1,14 +1,13 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import Image from "next/image";
 import { FC } from "react";
+import { isMobile } from "react-device-detect";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
-import { isMobile } from "react-device-detect";
-import React from "react";
+import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
+import { BlurHashNextImage } from "../Image/BlurHashNextImage";
 
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -45,16 +44,16 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 					width: "100%",
 				}}
 			>
-				{/* <CardMedia sx={{ height: 210 }}> */}
 				<CardMedia sx={{ height: xs ? 250 : 230 }}>
-					<Image
-						src={props.image || DEFAULT_OGIMAGE}
-						alt=""
-						fill={true}
+					<BlurHashHTMLImage
+						src={props.ogImage.src}
+						blurhash={{ encoded: props.ogImage.blurhash }}
+						alt={`OpenGraph image for post titled "${props.title}"`}
 						style={{
+							width: "100%",
+							height: xs ? 250 : 230,
 							objectFit: "cover",
 							borderRadius: 0,
-							maxHeight: xs ? 250 : 230,
 						}}
 					/>
 				</CardMedia>

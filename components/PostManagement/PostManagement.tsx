@@ -34,6 +34,7 @@ import { NavbarButton } from "../Buttons/NavbarButton";
 import { BpRadio } from "../StyledMUI/RadioButton";
 import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
 import { StyledTextField } from "../StyledMUI/TextInput";
+import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -109,7 +110,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		keywords: [],
 		title: "",
 		description: "",
-		image: "",
+		ogImage: { src: "", blurhash: null, height: null, width: null },
 		data: { blocks: [] },
 		author: "Martin Johannes Nilsen",
 		createdAt: Date.now(),
@@ -171,7 +172,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		return html.replace(/<[^>]+>/g, " ");
 	}
 
-	const handleSubmit = (event: { preventDefault: () => void }) => {
+	const handleSubmit = async (event: { preventDefault: () => void }) => {
 		try {
 			event.preventDefault();
 			if (!isSaved) {
@@ -182,11 +183,17 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 				// const readTime = "<" + Math.max(readingTime(text, 275).minutes, 1) + " min read";
 				const readTime = Math.max(readingTime(text, 275).minutes, 1) + " min read";
 
+				// Get image details
+				const details = await imageDetailsApiFetcher(
+					process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/imageblurhash?url=" + encodeURIComponent(data.ogImage.src)
+				);
+
 				// Create object
 				const newObject = {
 					...data,
 					data: editorJSContent,
 					readTime: readTime,
+					// ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
 				};
 
 				// If post exists, then update, or add new
@@ -202,18 +209,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								preventDuplicate: true,
 							});
 							updatePostsOverview({
+								...newObject,
 								id: postId,
-								title: newObject.title,
-								description: newObject.description,
-								image: newObject.image,
-								published: newObject.published,
-								createdAt: newObject.createdAt,
-								updatedAt: newObject.updatedAt,
-								type: newObject.type,
-								tags: newObject.tags,
-								keywords: newObject.keywords,
-								author: newObject.author,
-								readTime: newObject.readTime,
 							}).then((overviewWasUpdated) => {
 								if (overviewWasUpdated) {
 									enqueueSnackbar("Your changes are saved!", {
@@ -238,18 +235,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								preventDuplicate: true,
 							});
 							addPostsOverview({
+								...newObject,
 								id: postId,
-								title: newObject.title,
-								description: newObject.description,
-								image: newObject.image,
-								published: newObject.published,
-								createdAt: newObject.createdAt,
-								updatedAt: newObject.updatedAt,
-								type: newObject.type,
-								tags: newObject.tags,
-								keywords: newObject.keywords,
-								author: newObject.author,
-								readTime: newObject.readTime,
 							}).then((overviewWasAdded) => {
 								if (overviewWasAdded) {
 									enqueueSnackbar("Successfully created post!", {
@@ -616,25 +603,40 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									placeholder="Open Graph Image"
 									inputProps={{ style: { padding: 10 } }}
 									name="image"
-									error={data.image && data.image.trim() !== "" && !isvalidHTTPUrl(data.image)}
+									error={
+										data.ogImage &&
+										data.ogImage.src &&
+										data.ogImage.src.trim() !== "" &&
+										!isvalidHTTPUrl(data.ogImage.src)
+									}
 									InputProps={{
-										endAdornment: data.image && data.image.trim() !== "" && !isvalidHTTPUrl(data.image) && (
-											<Typography
-												fontFamily={theme.typography.fontFamily}
-												fontSize={12}
-												fontWeight={400}
-												sx={{
-													ml: 1,
-													color: "red",
-												}}
-											>
-												URL
-											</Typography>
-										),
+										endAdornment: data.ogImage &&
+											data.ogImage.src &&
+											data.ogImage.src.trim() !== "" &&
+											!isvalidHTTPUrl(data.ogImage.src) && (
+												<Typography
+													fontFamily={theme.typography.fontFamily}
+													fontSize={12}
+													fontWeight={400}
+													sx={{
+														ml: 1,
+														color: "red",
+													}}
+												>
+													URL
+												</Typography>
+											),
 									}}
 									fullWidth
-									value={data.image}
-									onChange={handleInputChange}
+									value={data.ogImage.src}
+									onChange={(e) => {
+										setIsSaved(false);
+										const { value } = e.target;
+										setData({
+											...data,
+											ogImage: { ...data.ogImage, src: value },
+										});
+									}}
 								/>
 
 								<Autocomplete

@@ -1,11 +1,10 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
-import { Box, Button, Card, CardActionArea, Link, Typography, useMediaQuery } from "@mui/material";
+import { Box, Card, CardActionArea, Link, Typography, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import Image from "next/image";
 import { FC, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
 
 export const TagsPageCard: FC<PostCardProps> = (props) => {
@@ -82,12 +81,18 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 							</Typography>
 						</Box>
 						<Box flexGrow={1} />
-						<Image
+						{/* <Image
 							src={props.image || DEFAULT_OGIMAGE}
 							alt={'OpenGraph image for article titled "' + props.title + '"'}
 							width={xs ? 70 : 125}
 							height={xs ? 70 : 82}
 							style={{ borderRadius: 2, objectFit: "cover" }}
+						/> */}
+						<BlurHashHTMLImage
+							src={props.ogImage.src}
+							blurhash={{ encoded: props.ogImage.blurhash }}
+							alt={'OpenGraph image for article titled "' + props.title + '"'}
+							style={{ borderRadius: 2, objectFit: "cover", width: xs ? 70 : 125, height: xs ? 70 : 82 }}
 						/>
 					</Box>
 					{/* Information gutter */}

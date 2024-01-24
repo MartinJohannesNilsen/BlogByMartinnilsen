@@ -4,7 +4,6 @@ import { makeStyles } from "@mui/styles";
 import { FC, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
-import React from "react";
 import PostViews from "../PostViews/PostViews";
 
 export const LandingPageListCard: FC<PostCardProps> = (props) => {
@@ -49,7 +48,7 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 					display="flex"
 					flexDirection="column"
 					sx={{
-						height: "235px",
+						height: "210px",
 						padding: "10px 15px",
 					}}
 				>
@@ -84,8 +83,8 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 								overflow: "hidden",
 								textOverflow: "ellipsis",
 								display: "webkit-flex",
-								WebkitLineClamp: 3,
-								lineClamp: 3,
+								WebkitLineClamp: 2,
+								lineClamp: 2,
 								WebkitBoxOrient: "vertical",
 							}}
 						>
