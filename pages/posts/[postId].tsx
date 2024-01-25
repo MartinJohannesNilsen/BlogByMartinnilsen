@@ -611,13 +611,17 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 										flexDirection: "row",
 										justifyContent: "center",
 										alignItems: "center",
+										color: theme.palette.text.primary,
+										"&:hover": {
+											color: theme.palette.text.primary + "AA",
+										},
 									}}
 								>
 									<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
 									<Typography
 										// variant={"h5"}
 										fontFamily={theme.typography.fontFamily}
-										color={theme.palette.text.primary}
+										color="inherit"
 										fontWeight={700}
 										fontSize={22}
 										textAlign="left"

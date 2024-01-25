@@ -138,6 +138,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
+							color: props.textColor || theme.palette.text.primary,
+							"&:hover": {
+								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "AA",
+							},
 						}}
 						underline="none"
 					>
@@ -145,12 +149,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						<Typography
 							// variant={"h5"}
 							fontFamily={theme.typography.fontFamily}
-							color={props.textColor || theme.palette.text.primary}
 							fontWeight={700}
 							fontSize={22}
 							textAlign="left"
 							pl={0.5}
-							sx={{ textDecoration: "none" }}
+							sx={{ textDecoration: "none", color: "inherit" }}
 						>
 							Blog
 						</Typography>
@@ -268,16 +271,20 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						flexDirection: "row",
 						justifyContent: "center",
 						alignItems: "center",
+						color: props.textColor || theme.palette.text.primary,
+						"&:hover": {
+							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "AA",
+						},
 					}}
 				>
 					<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
 					<Typography
 						fontFamily={theme.typography.fontFamily}
-						color={props.textColor || theme.palette.text.primary}
 						fontWeight={700}
 						fontSize={22}
 						textAlign="left"
 						pl={0.5}
+						color="inherit"
 					>
 						Blog
 					</Typography>
