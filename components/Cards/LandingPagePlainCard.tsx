@@ -14,19 +14,6 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 	const [state, setState] = useState({
 		raised: false,
 	});
-	const useStyles = makeStyles({
-		root: {
-			width: "100%",
-			"&:hover": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			"&:active": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			backgroundColor: theme.palette.primary.light,
-		},
-	});
-	const classes = useStyles();
 
 	return (
 		<Link href={`/posts/${props.id}`}>
@@ -36,7 +23,7 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 				sx={{
 					color: theme.palette.text.primary,
 					"&:hover": {
-						color: theme.palette.secondary.main,
+						color: theme.palette.text.primary + "BB",
 					},
 					// height: "235px",
 					// padding: "10px 15px",

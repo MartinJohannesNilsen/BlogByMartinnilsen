@@ -140,7 +140,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							alignItems: "center",
 							color: props.textColor || theme.palette.text.primary,
 							"&:hover": {
-								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "AA",
+								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
 							},
 						}}
 						underline="none"
@@ -273,7 +273,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						alignItems: "center",
 						color: props.textColor || theme.palette.text.primary,
 						"&:hover": {
-							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "AA",
+							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
 						},
 					}}
 				>
