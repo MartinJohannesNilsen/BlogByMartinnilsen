@@ -5,6 +5,7 @@ import { SnackbarProvider, closeSnackbar } from "notistack";
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
 import ThemeProvider from "../styles/themes/ThemeProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 function MyApp({ Component, pageProps, session }) {
 	return (
@@ -29,6 +30,7 @@ function MyApp({ Component, pageProps, session }) {
 						)}
 					>
 						<CssBaseline />
+						{process.env.NEXT_PUBLIC_LOCALHOST === "false" && <Analytics />}
 						<Component {...pageProps} />
 					</SnackbarProvider>
 				</ThemeProvider>
