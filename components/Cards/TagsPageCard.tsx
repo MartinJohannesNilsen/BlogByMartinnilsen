@@ -1,9 +1,9 @@
-import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
-import { Box, Card, CardActionArea, Link, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { FC, useState } from "react";
+import { AccessTime, CalendarMonth, Edit, Visibility } from "@mui/icons-material";
+import { Box, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
+import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
+import { NavbarButton } from "../Buttons/NavbarButton";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
@@ -13,25 +13,22 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lg = useMediaQuery(theme.breakpoints.only("lg"));
 	const xl = useMediaQuery(theme.breakpoints.only("xl"));
-	const [state, setState] = useState({
-		raised: false,
-	});
-	const useStyles = makeStyles({
-		root: {
-			width: "100%",
-			"&:hover": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			"&:active": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			backgroundColor: theme.palette.primary.light,
-		},
-	});
-	const classes = useStyles();
 
 	return (
-		<Card className={classes.root} sx={{ width: "100%", boxShadow: "none" }}>
+		<Card
+			sx={{
+				width: "100%",
+				boxShadow: "none",
+				"&:hover": {
+					backgroundColor: theme.palette.primary.light,
+				},
+				"&:active": {
+					backgroundColor: theme.palette.primary.light,
+				},
+				backgroundColor: theme.palette.primary.light,
+				position: "relative",
+			}}
+		>
 			<CardActionArea
 				href={`/posts/${props.id}`}
 				sx={{
@@ -157,20 +154,37 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 									</Typography>
 								</>
 							)}
-
-							{/* Not published icon */}
-							{!props.published && (
-								<>
-									<Box flexGrow={100} />
-									<Link href={`/create/${props.id}`} sx={{}}>
-										<Typography sx={{ fontSize: "13px" }}>🖊</Typography>
-									</Link>
-								</>
-							)}
 						</Box>
 					</Box>
 				</Box>
 			</CardActionArea>
+			{/* Not published icon */}
+			{!props.published && (
+				<>
+					<Box flexGrow={100} />
+					<NavbarButton
+						variant="outline"
+						// onClick={() => (window.location.href = `/create/${props.id}`)}
+						href={`/create/${props.id}`}
+						icon={Edit}
+						tooltip="Edit post"
+						sxButton={{
+							minWidth: "30px",
+							minHeight: "30px",
+							height: "30px",
+							width: "30px",
+							position: "absolute",
+							right: 20,
+							bottom: 12,
+						}}
+						sxIcon={{
+							height: "16px",
+							width: "16px",
+							color: "inherit",
+						}}
+					/>
+				</>
+			)}
 		</Card>
 	);
 };
