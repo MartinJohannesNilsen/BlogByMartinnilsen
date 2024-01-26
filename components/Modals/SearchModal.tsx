@@ -425,7 +425,7 @@ export const SearchModal = (props: SearchModalProps) => {
 						},
 					}}
 				>
-					<motion.div className={`${isPulsating ? "pulsate" : ""}`}>
+					<Box className={`${isPulsating ? "pulsate" : ""}`}>
 						<Box sx={modalStyle}>
 							{/* Search bar */}
 							<Box>
@@ -769,7 +769,7 @@ export const SearchModal = (props: SearchModalProps) => {
 								)
 							)}
 						</Box>
-					</motion.div>
+					</Box>
 				</Box>
 			</Modal>
 		</Box>
