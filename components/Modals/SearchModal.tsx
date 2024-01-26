@@ -35,7 +35,6 @@ import {
 	Typography,
 	useMediaQuery,
 } from "@mui/material";
-import { motion } from "framer-motion";
 import { matchSorter } from "match-sorter";
 import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
