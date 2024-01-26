@@ -1,18 +1,8 @@
 import Giscus from "@giscus/react";
-import {
-	AccessTime,
-	ArrowBack,
-	Bookmark,
-	BookmarkBorder,
-	CalendarMonth,
-	Edit,
-	IosShareOutlined,
-	MenuBook,
-	Visibility,
-} from "@mui/icons-material";
-import { Box, ButtonBase, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -22,31 +12,18 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/style";
 import Footer from "../../components/Footer/Footer";
-import SettingsModal from "../../components/Modals/SettingsModal";
-import ShareModal from "../../components/Modals/ShareModal";
-import TOCModal, { extractHeaders } from "../../components/Modals/TOCModal";
 import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../styles/themes/themeMap";
 import { ReadArticleViewProps } from "../../types";
 // import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
-import Image from "next/image";
-import logo from "public/assets/imgs/terminal.png";
-import useSWR from "swr";
 import { useEventListener } from "usehooks-ts";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
-import ProfileMenu from "../../components/Menus/ProfileMenu";
-import NotificationsModal, {
-	checkForUnreadRecentNotifications,
-	notificationsApiFetcher,
-} from "../../components/Modals/NotificationsModal";
 import Toggle from "../../components/Toggles/Toggle";
-import useStickyState from "../../utils/useStickyState";
 
 // EditorJS renderers
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
@@ -64,8 +41,8 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
-import PostViews from "../../components/PostViews/PostViews";
 import PostNavbar from "../../components/Navbar/PostNavbar";
+import PostViews from "../../components/PostViews/PostViews";
 // import CustomPersonality from "../../components/EditorJS/Renderers/_CustomPersonality";
 
 export async function getStaticPaths() {
@@ -253,6 +230,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	// ShareModal
 	const [openShareModal, setOpenShareModal] = useState(false);
 
+	// Ref
+	const container = useRef();
+
 	if (!post.published && !isAuthorized) return <></>;
 	return (
 		<SEO
@@ -288,12 +268,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 						justifyContent="center"
 						justifyItems="center"
 						sx={{ backgroundColor: theme.palette.primary.main }}
+						// ref={container}
 					>
 						{/* Navbar */}
 						<PostNavbar
 							post={{ ...post, id: props.postId }}
 							toc={{ content: OutputString, currentSection: currentSection }}
 							shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
+							// ref={container}
 						/>
 						{/* Content */}
 						<Grid

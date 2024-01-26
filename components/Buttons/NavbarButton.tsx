@@ -1,7 +1,6 @@
 import { ButtonBase, Tooltip } from "@mui/material";
-import { ButtonProps } from "../../types";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { Typography } from "antd";
+import { ButtonProps } from "../../types";
 
 export const NavbarButton = (props: ButtonProps) => {
 	const { theme } = useTheme();

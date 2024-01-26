@@ -106,8 +106,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		return (
 			<Box
 				width={"100%"}
-				pt={isMobile ? 4.75 : 2}
-				pb={isMobile ? 0.75 : 2}
+				pt={isMobile ? 4.75 : 1.5}
+				pb={isMobile ? 0.75 : 1.5}
 				// pt={2}
 				// pb={2}
 				position={"fixed"}

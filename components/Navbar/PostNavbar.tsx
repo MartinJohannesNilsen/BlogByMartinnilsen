@@ -2,7 +2,7 @@ import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, MenuBook }
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import logo from "public/assets/imgs/terminal.png";
-import { FC, useEffect, useState } from "react";
+import { FC, MutableRefObject, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import useSWR from "swr";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
@@ -20,11 +20,16 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost } from "../../types";
 import useStickyState from "../../utils/useStickyState";
+// import gsap from "gsap";
+// import { useGSAP } from "@gsap/react";
+// import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+// gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 type PostNavbarProps = {
 	post: FullPost & { id: string };
 	toc: { content: string; currentSection: string };
 	shareModal: { open: boolean; setOpen: (value: boolean) => void };
+	ref?: MutableRefObject<undefined>;
 };
 
 export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
@@ -103,6 +108,25 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	}, [, savedPosts]);
 
 	// GSAP animate
+	// useGSAP(
+	// 	() => {
+	// 		const box = document.getElementById("computer-navbar");
+	// 		ScrollTrigger.create({
+	// 			trigger: box,
+	// 			start: "top top",
+	// 			end: "bottom bottom",
+	// 			scrub: 1,
+	// 			onUpdate: (self) => {
+	// 				const progress = self.progress;
+	// 				const totalDistance = box.clientHeight;
+	// 				const pixelsPerScroll = totalDistance / 100; // Adjust this value for the desired speed
+
+	// 				gsap.set(box, { y: -progress * totalDistance });
+	// 			},
+	// 		});
+	// 	},
+	// 	{ scope: props.ref }
+	// );
 
 	return (
 		<>
@@ -345,12 +369,14 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 			) : (
 				// Not mobile
 				<Box
+					ref={props.ref}
+					id="computer-navbar"
 					display="flex"
 					alignItems="center"
 					width={"100%"}
 					px={3}
-					pt={2}
-					pb={2}
+					pt={1.5}
+					pb={1.5}
 					position={"sticky"}
 					sx={{
 						top: 0,
