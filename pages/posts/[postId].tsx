@@ -10,7 +10,7 @@ import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
-import { style } from "../../components/EditorJS/ejsStyle";
+import { style } from "../../components/EditorJS/style";
 import Footer from "../../components/Footer/Footer";
 import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
