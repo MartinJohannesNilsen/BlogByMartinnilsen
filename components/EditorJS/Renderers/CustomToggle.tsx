@@ -5,7 +5,7 @@ import { processJsonToggleBlocks, renderers } from "../../../pages/posts/[postId
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import Toggle from "../../Toggles/Toggle";
-import { style } from "../style";
+import { style } from "../ejsStyle";
 
 const CustomToggle = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
