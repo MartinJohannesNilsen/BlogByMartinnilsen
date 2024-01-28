@@ -13,7 +13,6 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 				elevation={0}
 				sx={{
 					display: "flex",
-					position: "relative",
 					minHeight: props.data.link! ? "100px" : "80px",
 					maxHeight: props.data.link! ? "150px" : "120px",
 					backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
@@ -22,6 +21,8 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 				<CardActionArea
 					href={props.data.link!}
 					sx={{
+						position: "relative",
+						width: "100%",
 						backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[0],
 					}}
 				>
@@ -31,6 +32,7 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 							display="flex"
 							flexDirection="column"
 							sx={{
+								width: "100%",
 								// border: "2px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
 								textAlign: "left",
 							}}
@@ -43,12 +45,11 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 								sx={{
 									...theme.typography.subtitle1,
 									fontWeight: 800,
-									textOverflow: "ellipsis",
-									whiteSpace: "nowrap",
 									overflow: "hidden",
+									textOverflow: "ellipsis",
+									display: "webkit-flex",
 									WebkitLineClamp: 1,
 									lineClamp: 1,
-									display: "webkit-flex",
 									WebkitBoxOrient: "vertical",
 								}}
 							>
@@ -60,7 +61,6 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 								fontFamily={theme.typography.fontFamily}
 								sx={{
 									...theme.typography.subtitle2,
-									// marginY: ,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									display: "webkit-flex",

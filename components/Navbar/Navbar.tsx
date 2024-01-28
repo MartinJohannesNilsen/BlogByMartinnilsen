@@ -1,8 +1,7 @@
 import { Info, LogoutRounded, PostAdd, Search, SettingsRounded, Tag } from "@mui/icons-material";
 import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import logo from "public/assets/imgs/terminal.png";
+import { MenuIcon } from "../Icons/MenuIcon";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -145,7 +144,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						}}
 						underline="none"
 					>
-						<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
+						<MenuIcon
+							alt="Website logo"
+							width={22}
+							height={22}
+							fill={props.textColor ? props.textColor : theme.palette.text.primary}
+							style={{ fillRule: "evenodd" }}
+						/>
 						<Typography
 							// variant={"h5"}
 							fontFamily={theme.typography.fontFamily}
@@ -277,7 +282,13 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						},
 					}}
 				>
-					<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
+					<MenuIcon
+						alt="Website logo"
+						width={22}
+						height={22}
+						fill={props.textColor ? props.textColor : theme.palette.text.primary}
+						style={{ fillRule: "evenodd" }}
+					/>
 					<Typography
 						fontFamily={theme.typography.fontFamily}
 						fontWeight={700}

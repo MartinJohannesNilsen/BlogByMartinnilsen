@@ -1,7 +1,6 @@
 import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, MenuBook } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
-import Image from "next/image";
-import logo from "public/assets/imgs/terminal.png";
+import { MenuIcon } from "../Icons/MenuIcon";
 import { FC, MutableRefObject, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import useSWR from "swr";
@@ -47,7 +46,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 					},
 					status: "authenticated",
 			  }
-			: useAuthorized(props.post.published);
+			: useAuthorized();
 	const { theme, setTheme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const handleNavigate = (path: string) => {
@@ -408,7 +407,13 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 							},
 						}}
 					>
-						<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
+						<MenuIcon
+							alt="Website logo"
+							width={22}
+							height={22}
+							fill={theme.palette.text.primary}
+							style={{ fillRule: "evenodd" }}
+						/>
 						<Typography
 							// variant={"h5"}
 							fontFamily={theme.typography.fontFamily}

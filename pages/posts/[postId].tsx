@@ -195,6 +195,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			(status === "unauthenticated" ||
 				(status === "authenticated" && session && session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
 			// All criterias are met, run POST request to increment counter
+			// TODO uncomment
 			fetch(`/api/views/${props.postId}`, {
 				method: "POST",
 				headers: {
@@ -231,7 +232,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const [openShareModal, setOpenShareModal] = useState(false);
 
 	// Ref
-	const container = useRef();
+	// const container = useRef();
 
 	if (!post.published && !isAuthorized) return <></>;
 	return (
