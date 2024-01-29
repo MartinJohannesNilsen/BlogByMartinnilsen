@@ -3,7 +3,6 @@ import {
 	ArrowBackIosNewSharp,
 	ArrowBackIosSharp,
 	ArrowForwardIosSharp,
-	FormatAlignCenterSharp,
 	FormatListBulletedSharp,
 	GridViewSharp,
 	TableRowsSharp,
@@ -72,7 +71,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 	const boxRef = useRef(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
-	const [cardLayout, setCardLayout] = useStickyState<String>("cardLayout", mdDown ? "grid" : "carousel");
+	const [cardLayout, setCardLayout] = useStickyState<String>("cardLayout", mdDown ? "grid" : "plain");
 	const [page, setPage] = useState(1);
 	const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>(
 		splitChunks(

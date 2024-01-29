@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { NotificationProps, NotificationsModalProps } from "../../types";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
-import UnstyledSelect from "../Selects/NotificationSelectDays";
+import StyledControlledSelect, { SelectOption } from "../StyledMUI/MUISelect";
 
 export const notificationsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header
@@ -131,7 +131,14 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 						Notifications{" "}
 						{props.unreadNotificationsIds.length !== 0 ? `‎ • ‎ ${props.unreadNotificationsIds.length}` : null}
 					</Typography>
-					<UnstyledSelect value={props.notificationsFilterDays} setValue={props.setNotificationsFilterDays} />
+					{/* <UnstyledSelect value={props.notificationsFilterDays} setValue={props.setNotificationsFilterDays} /> */}
+					<StyledControlledSelect value={props.notificationsFilterDays} setValue={props.setNotificationsFilterDays}>
+						<SelectOption value={7}>Last 7 days</SelectOption>
+						<SelectOption value={14}>Last 14 days</SelectOption>
+						<SelectOption value={30}>Last 30 days</SelectOption>
+						<SelectOption value={180}>Last 180 days</SelectOption>
+						<SelectOption value={365}>Last 365 days</SelectOption>
+					</StyledControlledSelect>
 					{/* Content */}
 					<Box
 						sx={{
