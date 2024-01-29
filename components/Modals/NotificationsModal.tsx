@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { NotificationProps, NotificationsModalProps } from "../../types";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
-import StyledControlledSelect, { SelectOption } from "../StyledMUI/MUISelect";
+import StyledControlledSelect, { SelectOption } from "../StyledMUI/StyledControlledSelect";
 
 export const notificationsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header

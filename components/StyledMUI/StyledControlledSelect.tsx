@@ -5,8 +5,8 @@ import { styled } from "@mui/system";
 import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
 
 type SelectContentProps = {
-	value: number;
-	setValue: (value: number) => void;
+	value: any;
+	setValue: (value: any) => void;
 	children?: JSX.Element[];
 };
 
@@ -43,7 +43,7 @@ const CustomButton = React.forwardRef(function CustomButton(
 				display: "flex",
 				justifyContent: "space-between",
 				alignItems: "center",
-				minWidth: "100%",
+				minWidth: "160px",
 			}}
 		>
 			<span>{other.children}</span>
@@ -57,7 +57,7 @@ const StyledButton = styled(CustomButton, { shouldForwardProp: () => true })(
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 0.875rem;
     box-sizing: border-box;
-    min-width: 336px;
+    // min-width: 336px;
     padding: 8px 12px;
     border-radius: 8px;
     text-align: left;
@@ -101,7 +101,8 @@ const Listbox = styled("ul")(
   box-sizing: border-box;
   padding: 6px;
   margin: 12px 0;
-  min-width: 336px;
+  // min-width: 336px;
+  min-width: 160px;
   border-radius: 12px;
   overflow: auto;
   outline: 0px;

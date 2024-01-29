@@ -1,11 +1,11 @@
 import { Close } from "@mui/icons-material";
 import { CssBaseline, IconButton, StyledEngineProvider } from "@mui/material";
+import { Analytics } from "@vercel/analytics/react";
 import { SessionProvider } from "next-auth/react";
 import { SnackbarProvider, closeSnackbar } from "notistack";
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
 import ThemeProvider from "../styles/themes/ThemeProvider";
-import { Analytics } from "@vercel/analytics/react";
 
 function MyApp({ Component, pageProps, session }) {
 	return (

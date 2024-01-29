@@ -5,24 +5,52 @@ import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { defaultFontFamily } from "../../styles/themes/themeDefaults";
+import { defaultAccentColor, defaultFontFamily } from "../../styles/themes/themeDefaults";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../types";
 import { CustomSwitchNew as Switch } from "../Switch/Switch";
+import StyledControlledSelect, { SelectOption } from "../StyledMUI/StyledControlledSelect";
 
 const defaultFonts = [
 	{ title: "System font", font: defaultFontFamily },
-	{ title: "Gotham Pro", font: "Gotham Pro" },
-	{ title: "Source Sans Pro", font: "Source Sans Pro" },
+	{ title: "Source Sans Pro", font: "Source Sans Pro, calibri" },
+	{ title: "Gotham Pro", font: "Gotham Pro, montserrat" },
 	{ title: "Consolas", font: "Consolas, monospace" },
-	{ title: "Fantasy", font: "Luminari, sans-serif" },
+	{ title: "Luminari", font: "Luminari, sans-serif" },
+	{ title: "Stardom", font: "Stardom" },
+	{ title: "General Sans", font: "General Sans" },
+	{ title: "Cabinet Grotesk", font: "Cabinet Grotesk" },
 ];
 
 const defaultColors = [
-	{ title: "Teal", color: "#29939b" },
+	{ title: "Beige", color: "#E9B384" },
+	{ title: "Crimson", color: "#F47373" },
+	{ title: "Green", color: "#51A83E" },
+	{ title: "Lime", color: "#37D67A" },
 	{ title: "Yellow", color: "#fdd835" },
+	{ title: "Orange", color: "#ff8a65" },
 	{ title: "Pink", color: "#df487f" },
-	{ title: "Red", color: "#ff1744" },
+	{ title: "Purple", color: "#ba68c8" },
+	{ title: "Teal", color: "#29939b" },
+	// { title: "Red", color: "#ff1744" },
+	// { title: "Gray", color: "#D9E3F0" },
+	// { title: "Dark gray", color: "#697689" },
+	// { title: "Light blue", color: "#2CCCE4" },
+	// { title: "Darker gray", color: "#555555" },
+	// { title: "Custom", color: "custom" },
+];
+
+const blockPickerColors = [
+	// "#D9E3F0",
+	// "#F47373",
+	// "#697689",
+	// "#37D67A",
+	// "#2CCCE4",
+	// "#555555",
+	// "#E9B384",
+	// "#ff8a65",
+	// "#ba68c8",
+	// "#7ca18d",
 ];
 
 const TransparentTooltip = withStyles({
@@ -61,19 +89,6 @@ export const SettingsModal = (props: SettingsModalProps) => {
 			setThemeUserConfugurationExist(localStorage.getItem("theme") !== null);
 		}
 	}, []);
-
-	const blockPickerColors = [
-		"#D9E3F0",
-		"#F47373",
-		"#697689",
-		"#37D67A",
-		"#2CCCE4",
-		"#555555",
-		"#E9B384",
-		"#ff8a65",
-		"#ba68c8",
-		"#7ca18d",
-	];
 
 	return (
 		<Box>
@@ -135,6 +150,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 					</Box>
 					<Box display="flex" mt={0.4} alignItems="baseline">
 						<Typography
+							mt={0.8}
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
 							fontWeight="800"
@@ -143,38 +159,23 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							Font Family:
 						</Typography>
 						<Box flexGrow="1" />
-						{defaultFonts.map((element: { title: string; font: string }, index: number) => (
-							<Box mt={-0.6} display="flex" key={index}>
-								<Tooltip enterDelay={2000} title={element.title}>
-									<IconButton
-										onClick={() => {
-											setFontFamily(element.font);
-											setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
-										}}
-										disabled={fontFamily === element.font}
-										sx={{
-											width: "35px",
-											height: "35px",
-										}}
-									>
-										<Typography
-											// mt={index === 1 ? "4.2px" : index === 4 ? "2px" : 0}
-											color={theme.palette.text.primary}
-											sx={{
-												fontFamily: element.font,
-												fontWeight: 600,
-												borderBottom: fontFamily === element.font ? "2px solid " + theme.palette.text.primary : "",
-											}}
-										>
-											Aa
-										</Typography>
-									</IconButton>
-								</Tooltip>
-							</Box>
-						))}
+						<StyledControlledSelect
+							value={fontFamily}
+							setValue={(value) => {
+								setFontFamily(value);
+								setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
+							}}
+						>
+							{defaultFonts.map((element) => (
+								<SelectOption value={element.font}>
+									<Typography sx={{ fontFamily: element.font, fontWeight: 400 }}>{element.title}</Typography>
+								</SelectOption>
+							))}
+						</StyledControlledSelect>
 					</Box>
-					<Box display="flex" mt={0.3}>
+					<Box display="flex" mt={0.2}>
 						<Typography
+							mt={0.8}
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
 							fontWeight="800"
@@ -183,89 +184,55 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							Accent color:
 						</Typography>
 						<Box flexGrow="1" />
-						{defaultColors.map((element: { title: string; color: string }, index: number) => (
-							<Box mt={-0.6} key={index}>
-								<Tooltip enterDelay={2000} title={element.title}>
-									<IconButton
-										onClick={() => {
-											setAccentColor(element.color);
+						{/* <ClickAwayListener onClickAway={() => setColorPickerOpen(false)}> */}
+						<Box>
+							<TransparentTooltip
+								PopperProps={{
+									disablePortal: true,
+								}}
+								// onClose={() => setColorPickerOpen(false)}
+								open={colorPickerOpen}
+								disableFocusListener
+								disableHoverListener
+								disableTouchListener
+								placement={isMobile ? "top" : "bottom"}
+								title={
+									<BlockPicker
+										triangle={isMobile ? "hide" : "top"}
+										colors={blockPickerColors}
+										color={accentColor}
+										onChange={(color, event) => {
+											setAccentColor(color.hex);
+											setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, true);
+										}}
+									/>
+								}
+							>
+								<StyledControlledSelect
+									value={accentColor || defaultAccentColor}
+									setValue={(value) => {
+										if (value == "custom") {
+											setColorPickerOpen(!colorPickerOpen);
+										} else {
+											setAccentColor(value || defaultAccentColor);
 											setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
-										}}
-										disabled={accentColor === element.color}
-										sx={{
-											width: "35px",
-											height: "35px",
-										}}
-									>
-										<Square
-											fontFamily={theme.typography.fontFamily}
-											sx={{
-												color: element.color,
-												fontWeight: 600,
-												borderBottom: accentColor === element.color ? "2px solid " + theme.palette.secondary.main : "",
-											}}
-										/>
-									</IconButton>
-								</Tooltip>
-							</Box>
-						))}
-						<Box mt={-0.6}>
-							<ClickAwayListener onClickAway={() => setColorPickerOpen(false)}>
-								<Box>
-									<TransparentTooltip
-										PopperProps={{
-											disablePortal: true,
-										}}
-										onClose={() => setColorPickerOpen(false)}
-										open={colorPickerOpen}
-										disableFocusListener
-										disableHoverListener
-										disableTouchListener
-										placement={isMobile ? "top" : "bottom"}
-										title={
-											<BlockPicker
-												triangle={isMobile ? "hide" : "top"}
-												colors={blockPickerColors}
-												color={accentColor}
-												onChange={(color, event) => {
-													setAccentColor(color.hex);
-													setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, true);
-												}}
-											/>
 										}
-									>
-										<IconButton
-											onClick={() => {
-												setColorPickerOpen(!colorPickerOpen);
-											}}
-											sx={{
-												width: "35px",
-												height: "35px",
-											}}
-										>
-											<GradientSharp
-												fontFamily={theme.typography.fontFamily}
-												sx={{
-													color:
-														defaultColors.filter(function (e) {
-															return e.color === accentColor;
-														}).length === 0
-															? accentColor
-															: theme.palette.text.primary,
-													fontWeight: 600,
-													borderBottom:
-														defaultColors.filter(function (e) {
-															return e.color === accentColor;
-														}).length === 0
-															? "2px solid " + theme.palette.secondary.main
-															: "",
-												}}
-											/>
-										</IconButton>
-									</TransparentTooltip>
-								</Box>
-							</ClickAwayListener>
+									}}
+								>
+									{defaultColors.map((element: { title: string; color?: string }, index: number) => (
+										<SelectOption value={element.color}>
+											<Box display="flex" alignItems="center" gap={0.25}>
+												<Square sx={{ color: element.color }} />
+												<Typography sx={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "0.875rem" }}>
+													{element.title}
+												</Typography>
+											</Box>
+										</SelectOption>
+									))}
+								</StyledControlledSelect>
+							</TransparentTooltip>
 						</Box>
+						{/* </ClickAwayListener> */}
 					</Box>
 				</Box>
 			</Modal>
