@@ -2,8 +2,7 @@ import { checkboxClasses, createTheme, radioClasses } from "@mui/material";
 
 export const defaultFontFamily =
 	"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol";
-// export const defaultAccentColor = "#29939b";
-export const defaultAccentColor = "#e9b384";
+export const defaultAccentColor = { hex: "#e9b384", name: "Beige" };
 
 // Create base theme
 const defaultTheme = createTheme();
@@ -135,7 +134,7 @@ export const baseTheme = createTheme({
 				root: {
 					color: defaultTheme.palette.text.primary,
 					[`&.${radioClasses.checked}`]: {
-						color: defaultAccentColor,
+						color: defaultAccentColor.hex,
 					},
 				},
 			},
@@ -145,7 +144,7 @@ export const baseTheme = createTheme({
 				root: {
 					color: defaultTheme.palette.text.primary,
 					[`&.${checkboxClasses.checked}`]: {
-						color: defaultAccentColor,
+						color: defaultAccentColor.hex,
 					},
 				},
 			},

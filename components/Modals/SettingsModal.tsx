@@ -1,15 +1,15 @@
-import { Close, GradientSharp, Square } from "@mui/icons-material";
-import { Box, ClickAwayListener, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Close, Gradient, Square } from "@mui/icons-material";
+import { Box, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { defaultAccentColor, defaultFontFamily } from "../../styles/themes/themeDefaults";
+import { defaultFontFamily } from "../../styles/themes/themeDefaults";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../types";
-import { CustomSwitchNew as Switch } from "../Switch/Switch";
 import StyledControlledSelect, { SelectOption } from "../StyledMUI/StyledControlledSelect";
+import { CustomSwitchNew as Switch } from "../Switch/Switch";
 
 const defaultFonts = [
 	{ title: "System font", font: defaultFontFamily },
@@ -17,40 +17,25 @@ const defaultFonts = [
 	{ title: "Gotham Pro", font: "Gotham Pro, montserrat" },
 	{ title: "Consolas", font: "Consolas, monospace" },
 	{ title: "Luminari", font: "Luminari, sans-serif" },
-	{ title: "Stardom", font: "Stardom" },
 	{ title: "General Sans", font: "General Sans" },
 	{ title: "Cabinet Grotesk", font: "Cabinet Grotesk" },
+	// { title: "Stardom", font: "Stardom" },
+	{ title: "Chillax", font: "Chillax" },
+	{ title: "Merriweather", font: "Merriweather" },
+	{ title: "Zodiak", font: "Zodiak" },
 ];
 
 const defaultColors = [
-	{ title: "Beige", color: "#E9B384" },
-	{ title: "Crimson", color: "#F47373" },
-	{ title: "Green", color: "#51A83E" },
-	{ title: "Lime", color: "#37D67A" },
+	{ title: "Beige", color: "#e9b384" },
+	{ title: "Crimson", color: "#f47373" },
+	{ title: "Green", color: "#51a83e" },
+	{ title: "Lime", color: "#37d67a" },
 	{ title: "Yellow", color: "#fdd835" },
 	{ title: "Orange", color: "#ff8a65" },
 	{ title: "Pink", color: "#df487f" },
 	{ title: "Purple", color: "#ba68c8" },
 	{ title: "Teal", color: "#29939b" },
-	// { title: "Red", color: "#ff1744" },
-	// { title: "Gray", color: "#D9E3F0" },
-	// { title: "Dark gray", color: "#697689" },
-	// { title: "Light blue", color: "#2CCCE4" },
-	// { title: "Darker gray", color: "#555555" },
-	// { title: "Custom", color: "custom" },
-];
-
-const blockPickerColors = [
-	// "#D9E3F0",
-	// "#F47373",
-	// "#697689",
-	// "#37D67A",
-	// "#2CCCE4",
-	// "#555555",
-	// "#E9B384",
-	// "#ff8a65",
-	// "#ba68c8",
-	// "#7ca18d",
+	{ title: "Custom", color: null },
 ];
 
 const TransparentTooltip = withStyles({
@@ -98,6 +83,9 @@ export const SettingsModal = (props: SettingsModalProps) => {
 					props.handleModalClose();
 					setColorPickerOpen(false);
 				}}
+				onKeyDown={(e) => {
+					e.key === "Enter" && colorPickerOpen && setColorPickerOpen(false);
+				}}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
 			>
@@ -124,7 +112,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						<Typography
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
-							fontWeight="800"
+							fontWeight="600"
 							color={theme.palette.text.primary}
 						>
 							Light Mode:
@@ -153,7 +141,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							mt={0.8}
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
-							fontWeight="800"
+							fontWeight="600"
 							color={theme.palette.text.primary}
 						>
 							Font Family:
@@ -178,51 +166,64 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							mt={0.8}
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
-							fontWeight="800"
+							fontWeight="600"
 							color={theme.palette.text.primary}
 						>
 							Accent color:
 						</Typography>
 						<Box flexGrow="1" />
-						{/* <ClickAwayListener onClickAway={() => setColorPickerOpen(false)}> */}
-						<Box>
-							<TransparentTooltip
-								PopperProps={{
-									disablePortal: true,
-								}}
-								// onClose={() => setColorPickerOpen(false)}
-								open={colorPickerOpen}
-								disableFocusListener
-								disableHoverListener
-								disableTouchListener
-								placement={isMobile ? "top" : "bottom"}
-								title={
-									<BlockPicker
-										triangle={isMobile ? "hide" : "top"}
-										colors={blockPickerColors}
-										color={accentColor}
-										onChange={(color, event) => {
-											setAccentColor(color.hex);
-											setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, true);
-										}}
-									/>
-								}
-							>
+						<TransparentTooltip
+							PopperProps={{
+								disablePortal: true,
+							}}
+							open={colorPickerOpen}
+							disableFocusListener
+							disableHoverListener
+							disableTouchListener
+							placement={isMobile ? "top" : "bottom"}
+							title={
+								<BlockPicker
+									triangle={isMobile ? "hide" : "top"}
+									colors={blockPickerColors}
+									color={accentColor}
+									onChange={(color, event) => {
+										setAccentColor(color.hex);
+										setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, true);
+									}}
+								/>
+							}
+						>
+							<Box>
 								<StyledControlledSelect
-									value={accentColor || defaultAccentColor}
+									value={accentColor}
 									setValue={(value) => {
-										if (value == "custom") {
-											setColorPickerOpen(!colorPickerOpen);
-										} else {
-											setAccentColor(value || defaultAccentColor);
+										if (value === undefined || value) {
+											setAccentColor(value);
 											setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
 										}
 									}}
 								>
 									{defaultColors.map((element: { title: string; color?: string }, index: number) => (
-										<SelectOption value={element.color}>
+										<SelectOption
+											value={element.color}
+											onClick={() => {
+												// element.title === "Custom" ? setColorPickerOpen(true) :  ;
+												setColorPickerOpen(element.title === "Custom");
+											}}
+										>
 											<Box display="flex" alignItems="center" gap={0.25}>
-												<Square sx={{ color: element.color }} />
+												{element.color ? (
+													<Square sx={{ color: element.color }} />
+												) : (
+													<Gradient
+														sx={{
+															color: !defaultColors.some((obj) => obj.color === accentColor)
+																? accentColor
+																: theme.palette.text.primary,
+														}}
+													/>
+												)}
+
 												<Typography sx={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "0.875rem" }}>
 													{element.title}
 												</Typography>
@@ -230,9 +231,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
 										</SelectOption>
 									))}
 								</StyledControlledSelect>
-							</TransparentTooltip>
-						</Box>
-						{/* </ClickAwayListener> */}
+							</Box>
+						</TransparentTooltip>
 					</Box>
 				</Box>
 			</Modal>

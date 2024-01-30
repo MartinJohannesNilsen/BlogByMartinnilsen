@@ -32,7 +32,7 @@ export const ThemeContext = createContext<ThemeContextType>({
 	setTheme: (theme, persist) => {},
 	setDefaultTheme: () => {},
 	accentColor:
-		typeof window !== "undefined" ? localStorage.getItem("accent") || defaultAccentColor : defaultAccentColor,
+		typeof window !== "undefined" ? localStorage.getItem("accent") || defaultAccentColor.hex : defaultAccentColor.hex,
 	setAccentColor: (accent) => {},
 	fontFamily: typeof window !== "undefined" ? localStorage.getItem("font") || defaultFontFamily : defaultFontFamily,
 	setFontFamily: (fontFamily) => {},
@@ -52,8 +52,8 @@ const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
 	);
 	const [accentColor, _setAccentColor] = useState(
 		typeof window !== "undefined"
-			? JSON.parse(String(localStorage.getItem("accent"))) || defaultAccentColor
-			: defaultAccentColor
+			? JSON.parse(String(localStorage.getItem("accent"))) || defaultAccentColor.hex
+			: defaultAccentColor.hex
 	);
 	const [theme, _setTheme] = useState(
 		getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light)
