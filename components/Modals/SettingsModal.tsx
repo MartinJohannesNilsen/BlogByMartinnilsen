@@ -184,7 +184,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							title={
 								<BlockPicker
 									triangle={isMobile ? "hide" : "top"}
-									colors={blockPickerColors}
+									colors={null}
 									color={accentColor}
 									onChange={(color, event) => {
 										setAccentColor(color.hex);
