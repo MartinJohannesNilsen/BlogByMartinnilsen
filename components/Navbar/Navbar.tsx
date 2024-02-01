@@ -94,8 +94,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		);
 		if (data) {
 			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
-			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
-			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // Filter on day select option
+			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // TODO Filter on day select option
 			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
 		}
 		return () => {};

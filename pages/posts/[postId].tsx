@@ -257,11 +257,16 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 				type="BlogPosting"
 				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`}
 				images={[props.post.ogImage.src]}
-				datePublished={new Date(props.post.createdAt).toISOString().replace("Z", "")}
-				dateModified={props.post.updatedAt ? new Date(props.post.updatedAt).toISOString().replace("Z", "") : null}
-				authorName={post.author}
+				datePublished={new Date(props.post.createdAt).toISOString()}
+				dateModified={props.post.updatedAt ? new Date(props.post.updatedAt).toISOString() : null}
 				title={post.title}
 				description={post.description}
+				// authorName={post.author}
+				authorName={{
+					"@type": "Person",
+					name: post.author,
+					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/yjdttN68e7V3E8SKIupT`,
+				}}
 			/>
 			<Box width="100%">
 				{isLoading ? (
