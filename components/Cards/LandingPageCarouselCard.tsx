@@ -8,6 +8,7 @@ import { PostCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import NextLink from "next/link";
 
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -36,6 +37,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 			}}
 		>
 			<CardActionArea
+				tabIndex={0}
 				// disableTouchRipple
 				href={`/posts/${props.id}`}
 				sx={{
@@ -110,7 +112,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 						{/* Tags */}
 						<Box display="flex" flexDirection="row" alignItems="center" pt={3} pb={1}>
 							{props.tags.map((tag, index) => (
-								<Button key={index} disabled variant="contained" sx={{ marginRight: 1 }}>
+								<Button LinkComponent={NextLink} key={index} disabled variant="contained" sx={{ marginRight: 1 }}>
 									<Typography
 										variant="body2"
 										fontWeight={600}

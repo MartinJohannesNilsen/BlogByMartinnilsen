@@ -12,23 +12,26 @@ import StyledControlledSelect, { SelectOption } from "../StyledMUI/StyledControl
 import { CustomSwitchNew as Switch } from "../Switch/Switch";
 
 const defaultFonts = [
-	{ title: "System font", font: defaultFontFamily },
-	{ title: "Source Sans Pro", font: "Source Sans Pro, calibri" },
-	{ title: "Gotham Pro", font: "Gotham Pro, montserrat" },
-	{ title: "Consolas", font: "Consolas, monospace" },
-	{ title: "Luminari", font: "Luminari, sans-serif" },
-	{ title: "General Sans", font: "General Sans" },
 	{ title: "Cabinet Grotesk", font: "Cabinet Grotesk" },
-	// { title: "Stardom", font: "Stardom" },
-	{ title: "Chillax", font: "Chillax" },
+	// { title: "Chillax", font: "Chillax" },
+	{ title: "Consolas", font: "Consolas, monospace" },
+	{ title: "General Sans", font: "General Sans" },
+	{ title: "Gotham Pro", font: "Gotham Pro, montserrat" },
+	{ title: "Luminari", font: "Luminari, sans-serif" },
 	{ title: "Merriweather", font: "Merriweather" },
+	{ title: "Source Sans Pro", font: "Source Sans Pro, calibri" },
+	// { title: "Stardom", font: "Stardom" },
+	{
+		title: "System font",
+		font: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
+	},
 	{ title: "Zodiak", font: "Zodiak" },
 ];
 
 const defaultColors = [
 	{ title: "Beige", color: "#e9b384" },
 	{ title: "Crimson", color: "#f47373" },
-	{ title: "Green", color: "#51a83e" },
+	// { title: "Green", color: "#51a83e" },
 	{ title: "Lime", color: "#37d67a" },
 	{ title: "Yellow", color: "#fdd835" },
 	{ title: "Orange", color: "#ff8a65" },
@@ -73,7 +76,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 		if (typeof window !== "undefined" && window.localStorage) {
 			setThemeUserConfugurationExist(localStorage.getItem("theme") !== null);
 		}
-	}, []);
+	}, [, theme]);
 
 	return (
 		<Box>

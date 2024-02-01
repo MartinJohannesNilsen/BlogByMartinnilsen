@@ -15,13 +15,13 @@ import useAuthorized from "../AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../Buttons/NavbarButton";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import ProfileMenu from "../Menus/ProfileMenu";
-import AboutModal from "../Modals/AboutModal";
-import NotificationsModal, {
-	checkForUnreadRecentNotifications,
-	notificationsApiFetcher,
-} from "../Modals/NotificationsModal";
-import SearchModal from "../Modals/SearchModal";
-import SettingsModal from "../Modals/SettingsModal";
+import NextLink from "next/link";
+import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../Modals/NotificationsModal";
+import dynamic from "next/dynamic";
+// Modals can be dynamically imported
+const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
+const SearchModal = dynamic(() => import("../Modals/SearchModal"));
+const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const { theme, setTheme } = useTheme();
@@ -94,14 +94,16 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		);
 		if (data) {
 			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
-			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // Filter on day select option
 			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
 		}
 		return () => {};
 	}, [data, notificationsRead, notificationsFilterDays]);
 
 	// Account page navbar
-	if (!props.posts)
+	if (!props.posts) {
+		const AboutModal = dynamic(() => import("../Modals/AboutModal"));
 		return (
 			<Box
 				width={"100%"}
@@ -131,6 +133,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				>
 					{/* Home button */}
 					<Link
+						component={NextLink}
 						href="/"
 						sx={{
 							display: "flex",
@@ -138,7 +141,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							justifyContent: "center",
 							alignItems: "center",
 							color: props.textColor || theme.palette.text.primary,
+							"&:focus-visible": {
+								// color: theme.palette.secondary.main,
+								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+							},
 							"&:hover": {
+								// color: theme.palette.secondary.main,
 								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
 							},
 						}}
@@ -210,6 +218,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						)}
 					</Box>
 				</Box>
+
 				{/* Modals */}
 				<SettingsModal
 					open={openSettingsModal}
@@ -238,6 +247,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				/>
 			</Box>
 		);
+	}
+
 	// Default navbar
 	return (
 		<Box
@@ -269,6 +280,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 			>
 				{/* Home button */}
 				<ButtonBase
+					LinkComponent={NextLink}
 					onClick={() => handleNavigate("/")}
 					disableRipple
 					sx={{
@@ -277,7 +289,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						justifyContent: "center",
 						alignItems: "center",
 						color: props.textColor || theme.palette.text.primary,
+						"&:focus-visible": {
+							// color: theme.palette.secondary.main,
+							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+						},
 						"&:hover": {
+							// color: theme.palette.secondary.main,
 							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
 						},
 					}}
@@ -397,6 +414,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					/>
 				</Box>
 			</Box>
+
+			{/* Modals */}
 			<SearchModal
 				open={openSearchModal}
 				handleModalOpen={handleSearchModalOpen}

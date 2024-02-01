@@ -46,6 +46,7 @@ import { SearchModalProps, StoredPost } from "../../types";
 import { userSignOut } from "../../utils/signOut";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
+import NextLink from "next/link";
 
 type ActionProps = {
 	title: string;
@@ -442,6 +443,7 @@ export const SearchModal = (props: SearchModalProps) => {
 										endAdornment: (
 											<InputAdornment position="end">
 												<ButtonBase
+													LinkComponent={NextLink}
 													disabled={!isMobile}
 													sx={{
 														color: theme.palette.grey[800],
@@ -487,7 +489,10 @@ export const SearchModal = (props: SearchModalProps) => {
 											padding: "4px 12px",
 										},
 									}}
-									sx={{ paddingBottom: 0, borderColor: "transparent" }}
+									sx={{
+										paddingBottom: 0,
+										borderColor: "transparent",
+									}}
 									InputLabelProps={{ style: { fontSize: xs ? 20 : 26 } }}
 									onKeyDown={(e) => {
 										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {

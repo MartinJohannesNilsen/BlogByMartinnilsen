@@ -12,6 +12,8 @@ import { getTags } from "../database/tags";
 import { useTheme } from "../styles/themes/ThemeProvider";
 import { StoredPost, TagsPageProps } from "../types";
 import colorLumincance from "../utils/colorLuminance";
+import NextLink from "next/link";
+import { WebPageJsonLd } from "next-seo";
 
 // Next.js functions
 // On-demand Revalidation, thus no defined revalidation interval
@@ -139,8 +141,18 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 						? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
 						: "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
 					: "All posts",
+				description: "Navigate the full collection of posts, filtering based on their associated tag(s).",
 			}}
 		>
+			<WebPageJsonLd
+				description="Navigate the full collection of posts, filtering based on their associated tag(s)."
+				id={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/tags`}
+				lastReviewed={new Date(Math.max(...posts.map((post) => post.updatedAt || post.createdAt), 0)).toISOString()}
+				reviewedBy={{
+					type: "Person",
+					name: "Martin Johannes Nilsen",
+				}}
+			/>
 			{!isLoading && (
 				<Box
 					sx={{
@@ -199,6 +211,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 							<Grid item xs={12} lg={3} order={{ lg: 3, xl: 3 }} sx={lgUp && { position: "fixed", right: 30, mt: -10 }}>
 								<Box>
 									<Button
+										LinkComponent={NextLink}
 										size="small"
 										disabled={!tag}
 										sx={{
@@ -236,6 +249,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 										.concat(props.tags.sort())
 										.map((element, index) => (
 											<Button
+												LinkComponent={NextLink}
 												key={index}
 												size="small"
 												disabled={tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")}

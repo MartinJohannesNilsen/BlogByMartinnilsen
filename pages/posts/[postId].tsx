@@ -24,6 +24,7 @@ import Output from "editorjs-react-renderer";
 import { useEventListener } from "usehooks-ts";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import Toggle from "../../components/Toggles/Toggle";
+import { ArticleJsonLd } from "next-seo";
 
 // EditorJS renderers
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
@@ -43,7 +44,6 @@ import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import PostNavbar from "../../components/Navbar/PostNavbar";
 import PostViews from "../../components/PostViews/PostViews";
-// import CustomPersonality from "../../components/EditorJS/Renderers/_CustomPersonality";
 
 export async function getStaticPaths() {
 	const idList = await getAllPostIds(false); // Not filter on visibility
@@ -241,9 +241,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 				title: post.title,
 				description: post.description,
 				themeColor: isMobile ? theme.palette.primary.dark : theme.palette.primary.main,
-				canonical: "https://blog.mjntech.dev/posts/" + props.postId,
+				canonical: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
 				openGraph: {
-					url: "https://blog.mjntech.dev/posts/" + props.postId,
+					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
 					image: post.ogImage.src || DEFAULT_OGIMAGE,
 					type: "article",
 					article: {
@@ -253,6 +253,16 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 				},
 			}}
 		>
+			<ArticleJsonLd
+				type="BlogPosting"
+				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`}
+				images={[props.post.ogImage.src]}
+				datePublished={new Date(props.post.createdAt).toISOString().replace("Z", "")}
+				dateModified={props.post.updatedAt ? new Date(props.post.updatedAt).toISOString().replace("Z", "") : null}
+				authorName={post.author}
+				title={post.title}
+				description={post.description}
+			/>
 			<Box width="100%">
 				{isLoading ? (
 					<></>

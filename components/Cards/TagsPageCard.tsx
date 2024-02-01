@@ -164,7 +164,6 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 					<Box flexGrow={100} />
 					<NavbarButton
 						variant="outline"
-						// onClick={() => (window.location.href = `/create/${props.id}`)}
 						href={`/create/${props.id}`}
 						icon={Edit}
 						tooltip="Edit post"

@@ -5,15 +5,15 @@ import useSWR from "swr";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
-import NotificationsModal, {
-	checkForUnreadRecentNotifications,
-	notificationsApiFetcher,
-} from "../components/Modals/NotificationsModal";
+import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../components/Modals/NotificationsModal";
 import Navbar from "../components/Navbar/Navbar";
-import PostTableModal from "../components/PostManagement/PostTableModal";
 import SEO from "../components/SEO/SEO";
 import { useTheme } from "../styles/themes/ThemeProvider";
 import useStickyState from "../utils/useStickyState";
+import dynamic from "next/dynamic";
+// Modals can be dynamically imported
+const PostTableModal = dynamic(() => import("../components/Modals/PostTableModal"));
+const NotificationsModal = dynamic(() => import("../components/Modals/NotificationsModal"));
 
 export const Account = () => {
 	const { isAuthorized, session, status } =
@@ -59,6 +59,7 @@ export const Account = () => {
 		if (data) {
 			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
 			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // TODO Filter on day select option
 			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
 		}
 		return () => {};
@@ -142,6 +143,8 @@ export const Account = () => {
 						/>
 					</Grid>
 				</Grid>
+
+				{/* Modals */}
 				<PostTableModal
 					open={openPostTableModal}
 					handleModalOpen={handlePostTableModalOpen}

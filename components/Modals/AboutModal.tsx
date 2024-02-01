@@ -8,6 +8,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ModalProps } from "../../types";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
 import Toggle from "../Toggles/Toggle";
+import NextLink from "next/link";
 
 export const AboutModal = (props: ModalProps) => {
 	const { theme } = useTheme();
@@ -225,6 +226,7 @@ export const AboutModal = (props: ModalProps) => {
 									disableHoverListener
 								>
 									<Button
+										LinkComponent={NextLink}
 										disabled={buttonDisabled}
 										sx={{
 											border: "1px solid " + theme.palette.error.main,

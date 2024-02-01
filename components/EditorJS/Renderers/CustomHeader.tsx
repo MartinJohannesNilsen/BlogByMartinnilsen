@@ -4,6 +4,7 @@ import { CSSProperties, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
+import NextLink from "next/link";
 
 const defaultStyle: CSSProperties = {
 	margin: "8px 0",
@@ -112,10 +113,13 @@ const HeaderOutput = ({ data, style, classNames, config }: EditorjsRendererProps
 				}}
 			></a>
 			<Box display="flex" alignItems="center">
-				{showHash ? (
+				{showHash && (
 					<Link
 						// disableRipple
 						href={"#" + parse(data.text).toString().replaceAll(" ", "_")}
+						component={NextLink}
+						replace={true}
+						scroll={false}
 						sx={{
 							mt: data.level === 1 ? (smDown ? 0.9 : 0.75) : data.level === 2 ? (smDown ? 1 : 0.75) : 0.9,
 							position: "absolute",
@@ -137,8 +141,6 @@ const HeaderOutput = ({ data, style, classNames, config }: EditorjsRendererProps
 							#
 						</Typography>
 					</Link>
-				) : (
-					<Box />
 				)}
 				{element}
 			</Box>

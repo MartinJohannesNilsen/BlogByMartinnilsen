@@ -50,11 +50,13 @@ export const SEO = ({ children, pageMeta }: SEOProps) => {
 		<>
 			<Head>
 				{/* Standard */}
+				<meta charSet="UTF-8" />
 				<title>{meta.title}</title>
 				<meta name="author" content={meta.author} />
 				<meta name="description" content={meta.description} />
 				<meta name="theme-color" content={meta.themeColor} />
-				{meta.canonical ? <link rel="canonical" href={meta.canonical} /> : null}
+				{meta.canonical && <link rel="canonical" href={meta.canonical} />}
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 				{/* Open Graph */}

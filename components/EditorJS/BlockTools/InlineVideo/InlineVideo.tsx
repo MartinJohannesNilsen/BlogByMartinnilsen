@@ -3,6 +3,7 @@ import { Fragment, useRef, useState } from "react";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import CustomVideo from "../../Renderers/CustomVideo";
 import { isvalidHTTPUrl } from "../../../PostManagement/PostManagement";
+import NextLink from "next/link";
 
 export const InlineVideo = (props: { data: { url: "" }; onDataChange: (arg0: any) => void; readOnly: boolean }) => {
 	const { theme } = useTheme();
@@ -24,6 +25,7 @@ export const InlineVideo = (props: { data: { url: "" }; onDataChange: (arg0: any
 						InputProps={{
 							endAdornment: (
 								<Button
+									LinkComponent={NextLink}
 									disabled={props.readOnly}
 									onClick={() => {
 										if (isvalidHTTPUrl(textFieldRef.current.value)) {

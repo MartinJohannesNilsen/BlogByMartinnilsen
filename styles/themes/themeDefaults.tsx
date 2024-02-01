@@ -1,7 +1,6 @@
 import { checkboxClasses, createTheme, radioClasses } from "@mui/material";
 
-export const defaultFontFamily =
-	"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol";
+export const defaultFontFamily = "Cabinet Grotesk";
 export const defaultAccentColor = { hex: "#e9b384", name: "Beige" };
 
 // Create base theme
@@ -9,10 +8,7 @@ const defaultTheme = createTheme();
 // https://mui.com/material-ui/customization/default-theme/
 export const baseTheme = createTheme({
 	typography: {
-		fontFamily:
-			typeof window !== "undefined"
-				? JSON.parse(String(localStorage.getItem("font")))
-				: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
+		fontFamily: typeof window !== "undefined" ? JSON.parse(String(localStorage.getItem("font"))) : defaultFontFamily,
 		// Headings
 		// Usage:
 		h1: {},
@@ -110,7 +106,8 @@ export const baseTheme = createTheme({
 				body: {},
 			},
 		},
-		// Mui Filled TextField
+
+		// SearchField Input
 		MuiFilledInput: {
 			styleOverrides: {
 				root: {
@@ -128,43 +125,44 @@ export const baseTheme = createTheme({
 				},
 			},
 		},
+
 		// Radio group and checkboxes
-		MuiRadio: {
-			styleOverrides: {
-				root: {
-					color: defaultTheme.palette.text.primary,
-					[`&.${radioClasses.checked}`]: {
-						color: defaultAccentColor.hex,
-					},
-				},
-			},
-		},
-		MuiCheckbox: {
-			styleOverrides: {
-				root: {
-					color: defaultTheme.palette.text.primary,
-					[`&.${checkboxClasses.checked}`]: {
-						color: defaultAccentColor.hex,
-					},
-				},
-			},
-		},
+		// MuiRadio: {
+		// 	styleOverrides: {
+		// 		root: {
+		// 			color: defaultTheme.palette.text.primary,
+		// 			[`&.${radioClasses.checked}`]: {
+		// 				color: defaultAccentColor.hex,
+		// 			},
+		// 		},
+		// 	},
+		// },
+		// MuiCheckbox: {
+		// 	styleOverrides: {
+		// 		root: {
+		// 			color: defaultTheme.palette.text.primary,
+		// 			[`&.${checkboxClasses.checked}`]: {
+		// 				color: defaultAccentColor.hex,
+		// 			},
+		// 		},
+		// 	},
+		// },
 		// No default width on buttons
-		MuiButton: {
-			styleOverrides: {
-				root: {
-					minWidth: "0px",
-				},
-			},
-		},
+		// MuiButton: {
+		// 	styleOverrides: {
+		// 		root: {
+		// 			minWidth: "0px",
+		// 		},
+		// 	},
+		// },
 		// For tooltips
-		MuiTooltip: {
-			styleOverrides: {
-				tooltip: {
-					backgroundColor: defaultTheme.palette.grey[800],
-				},
-			},
-		},
+		// MuiTooltip: {
+		// 	styleOverrides: {
+		// 		tooltip: {
+		// 			backgroundColor: defaultTheme.palette.grey[800],
+		// 		},
+		// 	},
+		// },
 	},
 	breakpoints: defaultTheme.breakpoints,
 	palette: defaultTheme.palette,

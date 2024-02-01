@@ -7,18 +7,22 @@ import useSWR from "swr";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Menus/ProfileMenu";
-import NotificationsModal, {
-	checkForUnreadRecentNotifications,
-	notificationsApiFetcher,
-} from "../../components/Modals/NotificationsModal";
-import SettingsModal from "../../components/Modals/SettingsModal";
-import ShareModal from "../../components/Modals/ShareModal";
-import TOCModal, { extractHeaders } from "../../components/Modals/TOCModal";
+import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../../components/Modals/NotificationsModal";
+import { extractHeaders } from "../../components/Modals/TOCModal";
 import { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost } from "../../types";
 import useStickyState from "../../utils/useStickyState";
+import NextLink from "next/link";
+import dynamic from "next/dynamic";
+// Modals can be dynamically imported
+const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
+const TOCModal = dynamic(() => import("../Modals/TOCModal"));
+const ShareModal = dynamic(() => import("../Modals/ShareModal"));
+const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
+
+// GSAP Trial
 // import gsap from "gsap";
 // import { useGSAP } from "@gsap/react";
 // import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -90,6 +94,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 		if (data) {
 			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
 			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // TODO Filter on day select option
 			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
 		}
 		return () => {};
@@ -129,63 +134,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 
 	return (
 		<>
-			{/* Modals */}
-			{/* Notifications */}
-			<NotificationsModal
-				open={openNotificationsModal}
-				handleModalOpen={handleNotificationsModalOpen}
-				handleModalClose={handleNotificationsModalClose}
-				lastRead={lastRead}
-				setLastRead={setLastRead}
-				notificationsRead={notificationsRead}
-				setNotificationsRead={setNotificationsRead}
-				allNotificationsFilteredOnDate={notifications}
-				unreadNotificationsIds={unreadNotificationsIds}
-				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-				notificationsFilterDays={notificationsFilterDays}
-				setNotificationsFilterDays={setNotificationsFilterDays}
-			/>
-			{/* Settings */}
-			<SettingsModal
-				open={openSettingsModal}
-				handleModalOpen={() => setOpenSettingsModal(true)}
-				handleModalClose={() => setOpenSettingsModal(false)}
-				handleThemeChange={handleThemeChange}
-			/>
-			{/* TOC */}
-			{props.toc.content && (
-				<TOCModal
-					open={openTOCModal}
-					handleModalOpen={() => setOpenTOCModal(true)}
-					handleModalClose={() => setOpenTOCModal(false)}
-					headings={extractHeaders(props.toc.content)}
-					currentSection={props.toc.currentSection}
-					postTitle={props.post.title}
-				/>
-			)}
-			{/* Share */}
-			<ShareModal
-				open={props.shareModal.open}
-				handleModalOpen={() => props.shareModal.setOpen(true)}
-				handleModalClose={() => props.shareModal.setOpen(false)}
-				data={{
-					title: props.post.title,
-					description: props.post.description,
-					ogImage:
-						props.post.ogImage && props.post.ogImage.src && props.post.ogImage.src.trim() !== ""
-							? props.post.ogImage
-							: {
-									src: DEFAULT_OGIMAGE,
-									height: 630,
-									width: 1200,
-									blurhash: "U00l#at7D%M{ofj[WBayD%Rj-;xuRjayt7of",
-							  },
-					url: window.location.href,
-					height: xs ? 100 : 130,
-					width: xs ? 400 : 500,
-				}}
-			/>
-
+			{/* Navbar based on mobile device or not */}
 			{isMobile ? (
 				// Mobile
 				<Box
@@ -293,33 +242,33 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						<Box display="flex" ml={0.1}>
 							{/* Share */}
 							{/* <Box mr={0.5}>
-						<NavbarButton
-							disabled={!post.published}
-							variant="outline"
-							onClick={() => {
-								handleSharing({
-									url: typeof window !== "undefined" ? window.location.href : "",
-									title: post.title,
-									text: "",
-									icon: post.image || DEFAULT_OGIMAGE,
-									fallback: () => setOpenShareModal(true),
-								});
-							}}
-							icon={IosShareOutlined}
-							tooltip="Share"
-							sxButton={{
-								minWidth: "34px",
-								minHeight: "34px",
-								height: "34px",
-								width: "34px",
-								"&:disabled": { opacity: "0.5" },
-							}}
-							sxIcon={{
-								height: "18px",
-								width: "22px",
-							}}
-						/>
-					</Box> */}
+								<NavbarButton
+									disabled={!props.post.published}
+									variant="outline"
+									onClick={() => {
+										handleSharing({
+											url: typeof window !== "undefined" ? window.location.href : "",
+											title: props.post.title,
+											text: "",
+											icon: props.post.ogImage || DEFAULT_OGIMAGE,
+											fallback: () => props.shareModal.setOpen(true),
+										});
+									}}
+									icon={IosShareOutlined}
+									tooltip="Share"
+									sxButton={{
+										minWidth: "34px",
+										minHeight: "34px",
+										height: "34px",
+										width: "34px",
+										"&:disabled": { opacity: "0.5" },
+									}}
+									sxIcon={{
+										height: "18px",
+										width: "22px",
+									}}
+								/>
+							</Box> */}
 
 							{/* Save */}
 							<Box mr={0.5}>
@@ -394,6 +343,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 				>
 					{/* Home button */}
 					<ButtonBase
+						LinkComponent={NextLink}
 						onClick={() => handleNavigate("/")}
 						disableRipple
 						sx={{
@@ -402,6 +352,9 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 							justifyContent: "center",
 							alignItems: "center",
 							color: theme.palette.text.primary,
+							"&:focus-visible": {
+								color: theme.palette.text.primary + "AA",
+							},
 							"&:hover": {
 								color: theme.palette.text.primary + "AA",
 							},
@@ -526,6 +479,63 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 					</Box>
 				</Box>
 			)}
+
+			{/* Modals */}
+			{/* Notifications */}
+			<NotificationsModal
+				open={openNotificationsModal}
+				handleModalOpen={handleNotificationsModalOpen}
+				handleModalClose={handleNotificationsModalClose}
+				lastRead={lastRead}
+				setLastRead={setLastRead}
+				notificationsRead={notificationsRead}
+				setNotificationsRead={setNotificationsRead}
+				allNotificationsFilteredOnDate={notifications}
+				unreadNotificationsIds={unreadNotificationsIds}
+				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
+				notificationsFilterDays={notificationsFilterDays}
+				setNotificationsFilterDays={setNotificationsFilterDays}
+			/>
+			{/* Settings */}
+			<SettingsModal
+				open={openSettingsModal}
+				handleModalOpen={() => setOpenSettingsModal(true)}
+				handleModalClose={() => setOpenSettingsModal(false)}
+				handleThemeChange={handleThemeChange}
+			/>
+			{/* TOC */}
+			{props.toc.content && (
+				<TOCModal
+					open={openTOCModal}
+					handleModalOpen={() => setOpenTOCModal(true)}
+					handleModalClose={() => setOpenTOCModal(false)}
+					headings={extractHeaders(props.toc.content)}
+					currentSection={props.toc.currentSection}
+					postTitle={props.post.title}
+				/>
+			)}
+			{/* Share */}
+			<ShareModal
+				open={props.shareModal.open}
+				handleModalOpen={() => props.shareModal.setOpen(true)}
+				handleModalClose={() => props.shareModal.setOpen(false)}
+				data={{
+					title: props.post.title,
+					description: props.post.description,
+					ogImage:
+						props.post.ogImage && props.post.ogImage.src && props.post.ogImage.src.trim() !== ""
+							? props.post.ogImage
+							: {
+									src: DEFAULT_OGIMAGE,
+									height: 630,
+									width: 1200,
+									blurhash: "U00l#at7D%M{ofj[WBayD%Rj-;xuRjayt7of",
+							  },
+					url: window.location.href,
+					height: xs ? 100 : 130,
+					width: xs ? 400 : 500,
+				}}
+			/>
 		</>
 	);
 };

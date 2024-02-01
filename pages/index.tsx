@@ -209,6 +209,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 								{lgUp && cardLayout === "grid" && (
 									<ToggleButtonGroup size="small" sx={{ paddingRight: 1 }}>
 										<ToggleButton
+											disableFocusRipple
 											value
 											sx={{
 												width: 30,
@@ -217,6 +218,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 												color: theme.palette.text.primary,
 												"&:disabled": {
 													color: theme.palette.text.primary + "50",
+												},
+												"&:focus-visible": {
+													backgroundColor:
+														theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
 												},
 											}}
 											disabled={page <= 1}
@@ -233,6 +238,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 											</Tooltip>
 										</ToggleButton>
 										<ToggleButton
+											disableFocusRipple
 											value
 											sx={{
 												width: 30,
@@ -249,6 +255,7 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 											</Typography>
 										</ToggleButton>
 										<ToggleButton
+											disableFocusRipple
 											value
 											sx={{
 												width: 30,
@@ -257,6 +264,10 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 												color: theme.palette.text.primary,
 												"&:disabled": {
 													color: theme.palette.text.primary + "50",
+												},
+												"&:focus-visible": {
+													backgroundColor:
+														theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
 												},
 											}}
 											disabled={
@@ -285,7 +296,16 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 								{/* Toggle for switching layouts */}
 								<ToggleButtonGroup value={cardLayout} exclusive onChange={handleChangeView} size="small">
 									<ToggleButton
-										sx={{ width: 34, height: 34, borderRadius: "10px" }}
+										disableFocusRipple
+										sx={{
+											width: 34,
+											height: 34,
+											borderRadius: "10px",
+											"&:focus-visible": {
+												backgroundColor:
+													theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+											},
+										}}
 										value={"carousel"}
 										selected={cardLayout === "carousel"}
 										disabled={cardLayout === "carousel"}
@@ -301,7 +321,15 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 										</Tooltip>
 									</ToggleButton>
 									<ToggleButton
-										sx={{ width: 34, height: 34 }}
+										disableFocusRipple
+										sx={{
+											width: 34,
+											height: 34,
+											"&:focus-visible": {
+												backgroundColor:
+													theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+											},
+										}}
 										value={"swipe"}
 										selected={cardLayout === "swipe"}
 										disabled={cardLayout === "swipe"}
@@ -317,7 +345,15 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 										</Tooltip>
 									</ToggleButton>
 									<ToggleButton
-										sx={{ width: 34, height: 34 }}
+										disableFocusRipple
+										sx={{
+											width: 34,
+											height: 34,
+											"&:focus-visible": {
+												backgroundColor:
+													theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+											},
+										}}
 										value={"grid"}
 										selected={cardLayout === "grid"}
 										disabled={cardLayout === "grid"}
@@ -334,7 +370,16 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 										</Tooltip>
 									</ToggleButton>
 									<ToggleButton
-										sx={{ width: 34, height: 34, borderRadius: "10px" }}
+										disableFocusRipple
+										sx={{
+											width: 34,
+											height: 34,
+											borderRadius: "10px",
+											"&:focus-visible": {
+												backgroundColor:
+													theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+											},
+										}}
 										value={"list"}
 										selected={cardLayout === "list"}
 										disabled={cardLayout === "list"}
@@ -350,7 +395,16 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 										</Tooltip>
 									</ToggleButton>
 									<ToggleButton
-										sx={{ width: 34, height: 34, borderRadius: "10px" }}
+										disableFocusRipple
+										sx={{
+											width: 34,
+											height: 34,
+											borderRadius: "10px",
+											"&:focus-visible": {
+												backgroundColor:
+													theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+											},
+										}}
 										value={"plain"}
 										selected={cardLayout === "plain"}
 										disabled={cardLayout === "plain"}

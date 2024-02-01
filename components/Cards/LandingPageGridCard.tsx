@@ -6,6 +6,7 @@ import { PostCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import NextLink from "next/link";
 
 export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -52,7 +53,13 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 					{/* Tags */}
 					<Box display="flex" flexDirection="row" alignItems="center" pt={0.7} pb={0.6}>
 						{props.tags.map((tag, index) => (
-							<Button key={index} disabled variant="contained" sx={{ marginRight: 1, backgroundColor: "white" }}>
+							<Button
+								LinkComponent={NextLink}
+								key={index}
+								disabled
+								variant="contained"
+								sx={{ marginRight: 1, backgroundColor: "white" }}
+							>
 								<Typography
 									variant="body2"
 									fontWeight={600}
@@ -141,15 +148,6 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 								}}
 							/>
 						</Typography>
-						{/* Not published icon */}
-						{!props.published && (
-							<>
-								<Box flexGrow={100} />
-								<Button disabled variant="contained" sx={{ backgroundColor: "white", p: "8px 8px" }}>
-									<Typography sx={{ fontSize: "default" }}>🖊</Typography>
-								</Button>
-							</>
-						)}
 					</Box>
 				</Box>
 			</CardActionArea>

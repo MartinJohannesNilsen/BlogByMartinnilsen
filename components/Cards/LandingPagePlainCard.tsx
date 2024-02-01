@@ -1,10 +1,10 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Link, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { FC, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import PostViews from "../PostViews/PostViews";
+import NextLink from "next/link";
 
 export const LandingPageListCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -16,7 +16,7 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 	});
 
 	return (
-		<Link href={`/posts/${props.id}`}>
+		<Link href={`/posts/${props.id}`} component={NextLink}>
 			<Box
 				display="flex"
 				flexDirection="column"

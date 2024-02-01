@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { getPostsOverview } from "../../database/overview";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TablePost } from "../../types";
+import NextLink from "next/link";
 
 const fetchPosts = async () => {
 	const db_posts = await getPostsOverview(
@@ -101,6 +102,7 @@ export const PostTable = (props) => {
 			width: 50,
 			renderCell: ({ row }: Partial<GridRowParams>) => (
 				<Link
+					component={NextLink}
 					sx={{ color: theme.palette.text.primary }}
 					href={process.env.NEXT_PUBLIC_WEBSITE_URL + "/posts/" + row.id}
 				>
@@ -116,6 +118,7 @@ export const PostTable = (props) => {
 			width: 50,
 			renderCell: ({ row }: Partial<GridRowParams>) => (
 				<Link
+					component={NextLink}
 					sx={{ color: theme.palette.text.primary }}
 					href={process.env.NEXT_PUBLIC_WEBSITE_URL + "/create/" + row.id}
 				>

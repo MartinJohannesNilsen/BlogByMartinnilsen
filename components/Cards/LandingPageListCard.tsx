@@ -5,6 +5,7 @@ import { FC, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import PostViews from "../PostViews/PostViews";
+import NextLink from "next/link";
 
 export const LandingPageListCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -98,7 +99,7 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 						{/* Tags */}
 						<Box display="flex" flexDirection="row" alignItems="center" pt={2} pb={0.6}>
 							{props.tags.map((tag, index) => (
-								<Button key={index} disabled variant="contained" sx={{ marginRight: 1 }}>
+								<Button LinkComponent={NextLink} key={index} disabled variant="contained" sx={{ marginRight: 1 }}>
 									<Typography
 										variant="body2"
 										fontWeight={600}

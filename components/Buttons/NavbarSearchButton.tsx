@@ -2,16 +2,20 @@ import { ButtonBase, Tooltip, Typography } from "@mui/material";
 import { ButtonProps } from "../../types";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { Search } from "@mui/icons-material";
+import NextLink from "next/link";
 
 export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
 	const button = (
-		<ButtonBase onClick={props.onClick} href={props.href}>
+		<ButtonBase LinkComponent={NextLink} aria-label={props.tooltip} onClick={props.onClick} href={props.href}>
 			<props.icon
 				sx={{
 					color: theme.palette.text.primary,
 					height: "30px",
 					width: "30px",
+					"&:focus-visible": {
+						color: theme.palette.secondary.main,
+					},
 					"&:hover": {
 						color: theme.palette.secondary.main,
 					},
@@ -22,6 +26,8 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 	);
 	const outlineButton = (
 		<ButtonBase
+			LinkComponent={NextLink}
+			aria-label={props.tooltip}
 			onClick={props.onClick}
 			href={props.href}
 			disabled={props.disabled || false}
@@ -32,9 +38,13 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 				height: "32px",
 				backgroundColor: theme.palette.primary.main,
 				color: theme.palette.text.primary,
-				"&:hover": {
+				"&:focus": {
 					border: "1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[600] : theme.palette.grey[300]),
 					backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+				},
+				"&:hover": {
+					border: "1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[600] : theme.palette.grey[300]),
+					backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[100],
 					color: theme.palette.secondary.main,
 				},
 				...props.sxButton,

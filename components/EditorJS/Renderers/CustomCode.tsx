@@ -4,6 +4,7 @@ import { IoCheckmark, IoCopyOutline } from "react-icons/io5";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
+import NextLink from "next/link";
 
 // Themes
 import { enqueueSnackbar } from "notistack";
@@ -43,7 +44,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 		<Box
 			sx={{
 				position: "relative",
-				borderRadius: "50px",
+				borderRadius: "10px",
+				// border: "2px solid" + theme.palette.secondary.main,
 				"& .language-plaintext code": {
 					userSelect: "none",
 					margin: "-15px 10px -15px -15px",
@@ -61,7 +63,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 						sx={{
 							userSelect: "none",
 							backgroundColor: "#363642",
-							// backgroundColor: "#343434",
+							// backgroundColor: "#282a2e",
 							borderRadius: "10px 10px 0px 0px",
 							padding: "5px",
 						}}
@@ -86,11 +88,16 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 						<Box flexGrow={100} />
 						<Box mr={1}>
 							<Button
+								disableFocusRipple
+								LinkComponent={NextLink}
 								disabled={copyMessageShown}
 								sx={{
 									color: "white",
 									"&:disabled": {
 										color: "white",
+									},
+									"&:focus-visible": {
+										backgroundColor: theme.palette.grey[700],
 									},
 								}}
 								onClick={() => handleButtonClick(props.data.code!)}

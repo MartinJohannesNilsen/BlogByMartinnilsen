@@ -35,6 +35,7 @@ import { BpRadio } from "../StyledMUI/RadioButton";
 import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
 import { StyledTextField } from "../StyledMUI/TextInput";
 import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
+import NextLink from "next/link";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -462,6 +463,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 											</DialogContent>
 											<DialogActions sx={{ marginRight: theme.spacing(2) }}>
 												<Button
+													LinkComponent={NextLink}
 													onClick={handleDeleteDialogClose}
 													sx={
 														{
@@ -478,6 +480,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													</Typography>
 												</Button>
 												<Button
+													LinkComponent={NextLink}
 													onClick={handleDeletePost}
 													autoFocus
 													sx={
@@ -681,6 +684,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																	{value}
 																</Typography>
 																<ButtonBase
+																	LinkComponent={NextLink}
 																	sx={{
 																		"&: hover": { backgroundColor: "#F5C0B0", color: "#CC4525" },
 																		margin: "-2px -4px -2px 3px",

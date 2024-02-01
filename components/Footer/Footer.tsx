@@ -5,14 +5,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { FooterProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";
-
-const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
-	<Tooltip {...props} classes={{ popper: className }} />
-))({
-	[`& .${tooltipClasses.tooltip}`]: {
-		maxWidth: 400,
-	},
-});
+import NextLink from "next/link";
 
 const Footer: FC<FooterProps> = (props) => {
 	const { theme } = useTheme();
@@ -72,6 +65,7 @@ const Footer: FC<FooterProps> = (props) => {
 						>
 							{"Made in 🇳🇴 by "}
 							<Link
+								component={NextLink}
 								fontFamily={theme.typography.fontFamily}
 								display="inline-block"
 								variant="body1"

@@ -128,9 +128,6 @@ export const AccountCard: FC<AccountCard> = (props) => {
 					</Typography>
 				</Box>
 			</CardContent>
-			<CardActions>
-				<IconButton></IconButton>
-			</CardActions>
 		</Card>
 	);
 };
