@@ -10,7 +10,7 @@ const dataDefaults = {
   blurhash: "",
   height: 0,
   width: 0,
-  filename: null,
+  fileRef: null,
   unsplash: null
 }
 

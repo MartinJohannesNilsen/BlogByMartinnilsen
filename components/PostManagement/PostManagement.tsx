@@ -1,5 +1,5 @@
 import { OutputData } from "@editorjs/editorjs";
-import { Clear, Delete, Home, Launch, Save, Update } from "@mui/icons-material";
+import { Clear, Delete, Edit, Home, Launch, Save, Update } from "@mui/icons-material";
 import {
 	Autocomplete,
 	Box,
@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { FC, useEffect, useState } from "react";
@@ -31,11 +32,12 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManageArticleViewProps } from "../../types";
 import { NavbarButton } from "../Buttons/NavbarButton";
+import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
 import { BpRadio } from "../StyledMUI/RadioButton";
 import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
 import { StyledTextField } from "../StyledMUI/TextInput";
-import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
-import NextLink from "next/link";
+import { post } from "jquery";
+import { isMobile } from "react-device-detect";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -111,7 +113,13 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		keywords: [],
 		title: "",
 		description: "",
-		ogImage: { src: "https://blog.mjntech.dev/assets/icons/ogimage.png", blurhash: null, height: null, width: null },
+		ogImage: {
+			src: "https://blog.mjntech.dev/assets/icons/ogimage.png",
+			blurhash: null,
+			height: null,
+			width: null,
+			fileRef: null,
+		},
 		data: { blocks: [] },
 		author: "Martin Johannes Nilsen",
 		createdAt: Date.now(),
@@ -124,6 +132,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 	const { enqueueSnackbar } = useSnackbar();
 	const [openTab, setOpenTab] = useState(postId ? 1 : 0);
 	// const [openTab, setOpenTab] = useState(1); // TODO remove before push
+	const [createdAtEditable, setCreatedAtEditable] = useState(false);
+	const [updatedAtEditable, setUpdatedAtEditable] = useState(false);
 
 	useEffect(() => {
 		setTheme(ThemeEnum.Light);
@@ -194,7 +204,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 						variant: "error",
 						preventDuplicate: true,
 					});
-					return;
+					// return;
 				}
 
 				// Create object
@@ -202,13 +212,13 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 					...data,
 					data: editorJSContent,
 					readTime: readTime,
-					ogImage: { src: data.ogImage.src, blurhash: details.encoded, height: details.height, width: details.width },
+					ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
 				};
 
 				// If post exists, then update, or add new
 				if (postId !== "") {
-					// Update field 'updatedAt' only when not localhost
-					if (process.env.NEXT_PUBLIC_LOCALHOST === "false") {
+					// Update field 'updatedAt' only when not localhost and not adjusted already
+					if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && props.post.updatedAt === newObject.updatedAt) {
 						newObject.updatedAt = Date.now();
 					}
 					updatePost(postId, newObject).then((postWasUpdated) => {
@@ -607,7 +617,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									onChange={handleInputChange}
 								/>
 								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
-									Optional
+									Open Graph Image
 								</Typography>
 								<StyledTextField
 									InputLabelProps={{ shrink: false }}
@@ -649,7 +659,9 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										});
 									}}
 								/>
-
+								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
+									Optional
+								</Typography>
 								<Autocomplete
 									freeSolo
 									multiple
@@ -723,6 +735,152 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										options={tagOptions}
 									/>
 								</Box>
+								{props.post && (
+									<Box mt={3} display="flex" flexDirection="column" gap={0.8}>
+										<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mb={0.5}>
+											Date and time
+										</Typography>
+
+										{/* Created At */}
+										<Box display="flex" gap={0.5} alignItems="center">
+											<Typography
+												fontFamily={theme.typography.fontFamily}
+												fontWeight={600}
+												fontSize={18}
+												sx={{ color: theme.palette.text.primary, minWidth: 100 }}
+											>
+												Created at:
+											</Typography>
+											{xs && <Box flexGrow={1} />}
+											<input
+												style={{
+													border:
+														"1px solid " +
+														(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+													borderRadius: 5,
+													padding: 5,
+													fontFamily: theme.typography.fontFamily,
+													fontWeight: 600,
+													fontSize: isMobile ? 18 : 15,
+												}}
+												disabled={!createdAtEditable}
+												type="datetime-local"
+												name="createdAt"
+												onChange={(e) => setData({ ...data, createdAt: new Date(e.target.value).valueOf() })}
+											/>
+											<NavbarButton
+												variant="outline"
+												onClick={() => {
+													setCreatedAtEditable(!createdAtEditable);
+												}}
+												icon={Edit}
+												tooltip="Edit"
+												sxButton={{
+													minWidth: "36px",
+													minHeight: "36px",
+													height: "36px",
+													width: "36px",
+												}}
+												sxIcon={{
+													height: "18px",
+													width: "18px",
+													color: "inherit",
+												}}
+											/>
+											<NavbarButton
+												variant="outline"
+												onClick={() => {
+													setData({ ...data, createdAt: props.post.createdAt });
+													setCreatedAtEditable(false);
+												}}
+												disabled={!props.post}
+												icon={Clear}
+												tooltip="Revert"
+												sxButton={{
+													minWidth: "36px",
+													minHeight: "36px",
+													height: "36px",
+													width: "36px",
+												}}
+												sxIcon={{
+													height: "18px",
+													width: "18px",
+													color: "inherit",
+												}}
+											/>
+										</Box>
+
+										{/* Updated At */}
+										<Box display="flex" gap={0.5} alignItems="center">
+											<Typography
+												fontFamily={theme.typography.fontFamily}
+												fontWeight={600}
+												fontSize={18}
+												sx={{ color: theme.palette.text.primary, minWidth: 100 }}
+											>
+												Updated at:
+											</Typography>
+											{xs && <Box flexGrow={1} />}
+											<input
+												style={{
+													border:
+														"1px solid " +
+														(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+													borderRadius: 5,
+													padding: 5,
+													fontFamily: theme.typography.fontFamily,
+													fontWeight: 600,
+													fontSize: isMobile ? 18 : 15,
+												}}
+												disabled={!updatedAtEditable}
+												type="datetime-local"
+												name="updatedAt"
+												onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+											/>
+											<NavbarButton
+												variant="outline"
+												onClick={() => {
+													setUpdatedAtEditable(!updatedAtEditable);
+												}}
+												icon={Edit}
+												tooltip="Edit"
+												sxButton={{
+													minWidth: "36px",
+													minHeight: "36px",
+													height: "36px",
+													width: "36px",
+												}}
+												sxIcon={{
+													height: "18px",
+													width: "18px",
+													color: "inherit",
+												}}
+											/>
+											<NavbarButton
+												variant="outline"
+												onClick={() => {
+													setData({ ...data, updatedAt: props.post.updatedAt });
+													setUpdatedAtEditable(false);
+												}}
+												disabled={!props.post}
+												icon={Clear}
+												tooltip="Revert"
+												sxButton={{
+													minWidth: "36px",
+													minHeight: "36px",
+													height: "36px",
+													width: "36px",
+												}}
+												sxIcon={{
+													height: "18px",
+													width: "18px",
+													color: "inherit",
+												}}
+											/>
+										</Box>
+									</Box>
+								)}
+
 								<Box mt={3} mb={10}>
 									<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mb={0.5}>
 										Published

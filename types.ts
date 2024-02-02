@@ -80,6 +80,7 @@ export type EditorjsRendererProps = {
 		height?: number;
 		width?: number;
 		blurhash?: string;
+		fileref?: string;
 	};
 	style: {
 		typography?: SxProps;
@@ -120,6 +121,7 @@ export type ImageProps = {
 	blurhash?: string;
 	height?: number;
 	width?: number;
+	fileRef?: string;
 };
 
 type PostProps = {
