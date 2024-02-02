@@ -38,9 +38,9 @@ export function validateAuthAPIToken(req: NextApiRequest) {
  *       '200':
  *         description: Successful response.
  *         content:
- *          text/plain:
- *            example:
- *             "API is running"
+ *           text/plain:
+ *             example:
+ *              "API is running"
  *       '500':
  *         description: Internal Server Error.
  *       '501':

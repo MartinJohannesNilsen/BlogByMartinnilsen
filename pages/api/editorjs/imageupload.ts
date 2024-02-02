@@ -1,12 +1,12 @@
 // TODO Fix image uploading and deletion
 import type { NextApiRequest, NextApiResponse } from "next";
 // import type { NextRequest, NextResponse } from "next/server";
-import { validateAuthAPIToken } from "..";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { cloudStorage } from "../../../lib/firebaseConfig";
-import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
-import { join } from "path";
-import { writeFile } from "fs/promises";
+// import { validateAuthAPIToken } from "..";
+// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+// import { cloudStorage } from "../../../lib/firebaseConfig";
+// import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
+// import { join } from "path";
+// import { writeFile } from "fs/promises";
 import formidable from "formidable";
 
 const generateName = (postId: string, extension: string) => {
@@ -84,32 +84,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	if (req.method === "POST") {
 		try {
-			const file = req.body as unknown as File;
+			const form = formidable.formidable({ multiple: true });
+			form.parse(req, (err, fields, files) => {
+				if (err) {
+					res.status(500).json({ success: false, error: err });
+				} else {
+					let image_url; //to save the download url
 
-			if (!file) {
-				return res.status(400).json({ code: 400, reason: "File is not supported!" });
-			}
+					// path to image
+					const filePath = files["file_variable_name"][0].filepath;
 
-			// Generate buffer
-			const bytes = await file.arrayBuffer();
-			const buffer = Buffer.from(bytes);
-			return res.status(200).json({ ye: "yah" });
-
-			// Extract type and name
-			const type = await fileTypeFromBuffer(buffer);
-			const filename = generateName(req.query.postId as string, type.ext);
-
-			// Write to file system
-			const path = join("/", "tmp", filename);
-			await writeFile(path, buffer);
-
-			return res.status(200).json({ type: type.mime, ext: type.ext, url: path });
-			// let imageRef = ref(cloudStorage, );
-			// let metadata = {
-			// 	contentType: type.ext,
-			// };
-			// let uploadTask = await uploadBytes(imageRef, file, metadata);
-			// const downloadURL = await getDownloadURL(uploadTask.ref);
+					res.status(200).json({ code: 200, url: filePath });
+				}
+			});
 		} catch (err) {
 			return res.status(500).json({ code: 500, reason: err });
 		}

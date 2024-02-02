@@ -26,7 +26,7 @@ import { db } from "../../../lib/firebaseConfig";
  *             example:
  *              posts:
  *               - id: "7FPz65Fkv8sHM3aDIx0r"
- *                 document:
+ *                 data:
  *                 - title: "Post title"
  *                   description: "Post description"
  *                   createdAt: 1701103064042
@@ -59,54 +59,45 @@ import { db } from "../../../lib/firebaseConfig";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Validate authorized access based on header field 'apikey'
-  const authValidation = validateAuthAPIToken(req);
-  if (!authValidation.isValid) {
-    return res
-      .status(authValidation.code)
-      .json({ code: authValidation.code, reason: authValidation.reason });
-  }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = validateAuthAPIToken(req);
+	if (!authValidation.isValid) {
+		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+	}
 
-  // Get query parameter if present
-  const parseData = req.query.parseData;
+	// Get query parameter if present
+	const parseData = req.query.parseData;
 
-  if (req.method === "GET") {
-    // Get all posts
-    try {
-      const response = {
-        posts: [],
-        overview: [],
-      };
-      const querySnapshot = await getDocs(collection(db, "posts"));
-      querySnapshot.forEach((doc) => {
-        // Get doc data object
-        const docData = doc.data();
-        // Get datafield, parse if parseData is present
-        const dataField =
-          parseData &&
-          typeof parseData === "string" &&
-          parseData.toLowerCase() === "true"
-            ? JSON.parse(docData.data)
-            : docData.data;
-        // Push response
-        response.posts.push({
-          id: doc.id,
-          data: { ...docData, data: dataField },
-        });
-      });
-      const postOverviewSnapshot = await getDoc(
-        doc(db, "administrative", "overview")
-      );
-      response.overview = postOverviewSnapshot.data().values;
-      return res.status(200).json(response);
-    } catch (error) {
-      return res.status(500).json({ code: 500, reason: error });
-    }
-  } else {
-    return res.status(501).json({ code: 501, reason: "Method not supported" });
-  }
+	if (req.method === "GET") {
+		// Get all posts
+		try {
+			const response = {
+				posts: [],
+				overview: [],
+			};
+			const querySnapshot = await getDocs(collection(db, "posts"));
+			querySnapshot.forEach((doc) => {
+				// Get doc data object
+				const docData = doc.data();
+				// Get datafield, parse if parseData is present
+				const dataField =
+					parseData && typeof parseData === "string" && parseData.toLowerCase() === "true"
+						? JSON.parse(docData.data)
+						: docData.data;
+				// Push response
+				response.posts.push({
+					id: doc.id,
+					data: { ...docData, data: dataField },
+				});
+			});
+			const postOverviewSnapshot = await getDoc(doc(db, "administrative", "overview"));
+			response.overview = postOverviewSnapshot.data().values;
+			return res.status(200).json(response);
+		} catch (error) {
+			return res.status(500).json({ code: 500, reason: error });
+		}
+	} else {
+		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	}
 }
