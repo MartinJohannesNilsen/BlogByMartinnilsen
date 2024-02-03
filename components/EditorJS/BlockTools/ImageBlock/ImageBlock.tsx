@@ -225,8 +225,8 @@ export const ImageBlock = (props: ImageProps) => {
 								<input
 									type="file"
 									id="fileInput"
-									// accept="image/*,video/*"
-									accept="image/*"
+									accept="image/*,video/*"
+									// accept="image/*"
 									style={{ marginLeft: 10 }}
 									onChange={(e) => {
 										setUploadfieldInputValue(e.target.files[0]);
@@ -263,30 +263,42 @@ export const ImageBlock = (props: ImageProps) => {
 							variant="outline"
 							onClick={async () => {
 								if (stateData.type === "upload") {
-									// Upload image
+									// Upload image or video
 									const uploadResponse = await uploadImage(uploadfieldInputValue, postId, null);
-									// Fetch details
+
+									// Check if response was ok and we got data, else error snackbar
 									if (uploadResponse.hasOwnProperty("data")) {
-										const details = await imageDetailsApiFetcher(
-											process.env.NEXT_PUBLIC_SERVER_URL +
-												"/editorjs/imageblurhash?url=" +
-												encodeURIComponent(uploadResponse.data.url)
-										);
-										if (details.hasOwnProperty("code") && details.code !== 200) {
-											enqueueSnackbar(details.reason, {
-												variant: "error",
-												preventDuplicate: true,
-											});
-										} else {
+										// Check if image, then fetch details and blurhash
+										if (uploadfieldInputValue.type.startsWith("image/")) {
+											const details = await imageDetailsApiFetcher(
+												process.env.NEXT_PUBLIC_SERVER_URL +
+													"/editorjs/imageblurhash?url=" +
+													encodeURIComponent(uploadResponse.data.url)
+											);
+											if (details.hasOwnProperty("code") && details.code !== 200) {
+												enqueueSnackbar(details.reason, {
+													variant: "error",
+													preventDuplicate: true,
+												});
+											} else {
+												await setStateData({
+													...stateData,
+													type: "upload",
+													url: uploadResponse.data.url,
+													fileRef: uploadResponse.data.fileRef,
+													fileSize: uploadfieldInputValue.size,
+													blurhash: details.encoded,
+													height: details.height,
+													width: details.width,
+												});
+											}
+										} else if (uploadfieldInputValue.type.startsWith("video/")) {
 											await setStateData({
 												...stateData,
 												type: "upload",
 												url: uploadResponse.data.url,
 												fileRef: uploadResponse.data.fileRef,
 												fileSize: uploadfieldInputValue.size,
-												blurhash: details.encoded,
-												height: details.height,
-												width: details.width,
 											});
 										}
 									} else {
