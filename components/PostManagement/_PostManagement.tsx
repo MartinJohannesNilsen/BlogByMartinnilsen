@@ -39,7 +39,6 @@ import { BpRadio } from "../StyledMUI/RadioButton";
 import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
 import { StyledTextField } from "../StyledMUI/TextInput";
 import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
-import Toggle from "../Toggles/Toggle";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -598,17 +597,31 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 							</Box>
 						</Box>
 
-						{/* Information */}
-						<Toggle
-							title={"<b>Information</b>"}
-							open={toggleOpen}
-							handleClick={() => setToggleOpen(!toggleOpen)}
-							boxSx={{ my: 0 }}
-							accordionSx={{
-								backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
-								border: theme.palette.mode === "dark" ? "none" : "1px solid" + theme.palette.grey[200],
+						<Tabs
+							defaultValue={openTab}
+							onChange={(event, value) => {
+								setOpenTab(Number(value));
 							}}
 						>
+							{/* {mdDown ? (
+								<TabsListHorizontal>
+									<Tab>Info</Tab>
+									<Tab>Content</Tab>
+								</TabsListHorizontal>
+							) : (
+								<TabsListVertical>
+									<Tab>Info</Tab>
+									<Tab>Content</Tab>
+								</TabsListVertical>
+							)} */}
+							<TabsListHorizontal>
+								<Tab>Info</Tab>
+								<Tab>Content</Tab>
+							</TabsListHorizontal>
+						</Tabs>
+
+						{/* Information */}
+						{openTab === 0 && (
 							<Box display="flex" flexDirection="column" sx={{ width: width }} rowGap={2}>
 								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
 									Required
@@ -620,7 +633,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									name="type"
 									required
 									fullWidth
-									sx={{ backgroundColor: theme.palette.primary.main }}
 									value={data.type}
 									onChange={handleInputChange}
 									InputProps={{
@@ -644,7 +656,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									name="title"
 									required
 									fullWidth
-									sx={{ backgroundColor: theme.palette.primary.main }}
 									inputProps={{
 										style: { padding: 10 },
 										maxlength: OGDEFAULTS.titleMax,
@@ -674,7 +685,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									fullWidth
 									multiline
 									size="small"
-									sx={{ backgroundColor: theme.palette.primary.main }}
 									onKeyPress={(e) => {
 										if (e.key === "Enter") {
 											event.preventDefault();
@@ -764,7 +774,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 											InputLabelProps={{ shrink: false }}
 											placeholder={data.keywords && data.keywords.length !== 0 ? "" : "Keywords"}
 											variant="outlined"
-											sx={{ backgroundColor: theme.palette.primary.main }}
 											InputProps={{
 												style: { padding: 3 },
 												startAdornment: (
@@ -840,7 +849,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												InputLabelProps={{ shrink: false }}
 												placeholder="Open Graph Image"
 												inputProps={{ style: { padding: 10 } }}
-												sx={{ backgroundColor: theme.palette.primary.main }}
 												name="image"
 												InputProps={{
 													endAdornment: (
@@ -1184,7 +1192,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									</Box>
 								)}
 
-								<Box mt={3} mb={2}>
+								<Box mt={3} mb={10}>
 									<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mb={0.5}>
 										Published
 									</Typography>
@@ -1200,16 +1208,18 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									</RadioGroup>
 								</Box>
 							</Box>
-						</Toggle>
+						)}
 
 						{/* Content */}
-						<Box display="flex" flexDirection="column" sx={{ width: width }}>
-							{EditorBlock && !isLoading && (
-								<Box mt={3}>
-									<EditorBlock data={editorJSContent} onChange={setEditorJSContent} holder="editorjs-container" />
-								</Box>
-							)}
-						</Box>
+						{openTab === 1 && (
+							<Box display="flex" flexDirection="column" sx={{ width: width }}>
+								{EditorBlock && !isLoading && (
+									<Box mt={3}>
+										<EditorBlock data={editorJSContent} onChange={setEditorJSContent} holder="editorjs-container" />
+									</Box>
+								)}
+							</Box>
+						)}
 
 						{/* Button row */}
 						<Box
