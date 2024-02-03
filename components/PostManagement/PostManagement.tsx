@@ -265,25 +265,31 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 				// const readTime = "<" + Math.max(readingTime(text, 275).minutes, 1) + " min read";
 				const readTime = Math.max(readingTime(text, 275).minutes, 1) + " min read";
 
-				// Get image details
-				const details = await imageDetailsApiFetcher(
-					process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/imageblurhash?url=" + encodeURIComponent(data.ogImage.src)
-				);
-				if (details.hasOwnProperty("code") && details.code !== 200) {
-					enqueueSnackbar(`Open Graph Image: ${details.reason}`, {
-						variant: "error",
-						preventDuplicate: true,
-					});
-					// return;
-				}
-
 				// Create object
-				const newObject = {
+				let newObject = {
 					...data,
 					data: editorJSContent,
 					readTime: readTime,
-					ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
 				};
+
+				// Fetch blurhash if null
+				if (!data.ogImage.blurhash) {
+					// Get image details
+					const details = await imageDetailsApiFetcher(
+						process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/imageblurhash?url=" + encodeURIComponent(data.ogImage.src)
+					);
+					if (details.hasOwnProperty("code") && details.code !== 200) {
+						enqueueSnackbar(`Open Graph Image: ${details.reason}`, {
+							variant: "error",
+							preventDuplicate: true,
+						});
+					} else {
+						newObject = {
+							...newObject,
+							ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
+						};
+					}
+				}
 
 				// If post exists, then update, or add new
 				if (postId !== "") {
