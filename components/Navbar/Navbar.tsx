@@ -1,7 +1,8 @@
 import { Info, LogoutRounded, PostAdd, Search, SettingsRounded, Tag } from "@mui/icons-material";
 import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material";
+import dynamic from "next/dynamic";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { MenuIcon } from "../Icons/MenuIcon";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -14,10 +15,9 @@ import useStickyState from "../../utils/useStickyState";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../Buttons/NavbarButton";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
+import { MenuIcon } from "../Icons/MenuIcon";
 import ProfileMenu from "../Menus/ProfileMenu";
-import NextLink from "next/link";
 import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../Modals/NotificationsModal";
-import dynamic from "next/dynamic";
 // Modals can be dynamically imported
 const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
 const SearchModal = dynamic(() => import("../Modals/SearchModal"));
@@ -323,9 +323,10 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						<NavbarButton
 							variant="outline"
 							// variant="base"
-							onClick={() => {
-								handleNavigate("/create");
-							}}
+							// onClick={() => {
+							// 	handleNavigate("/create");
+							// }}
+							href="/create"
 							icon={PostAdd}
 							tooltip="Upload new post"
 							sxButton={{

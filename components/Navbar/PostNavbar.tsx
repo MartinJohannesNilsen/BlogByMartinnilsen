@@ -1,6 +1,7 @@
 import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, MenuBook } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
-import { MenuIcon } from "../Icons/MenuIcon";
+import dynamic from "next/dynamic";
+import NextLink from "next/link";
 import { FC, MutableRefObject, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import useSWR from "swr";
@@ -14,8 +15,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost } from "../../types";
 import useStickyState from "../../utils/useStickyState";
-import NextLink from "next/link";
-import dynamic from "next/dynamic";
+import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
 const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
 const TOCModal = dynamic(() => import("../Modals/TOCModal"));
@@ -167,7 +167,10 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						{isAuthorized ? (
 							<NavbarButton
 								variant="outline"
-								href={`/create/${props.post.id}`}
+								// href={`/create/${props.post.id}`}
+								onClick={() =>
+									(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)
+								}
 								icon={Edit}
 								tooltip="Edit post"
 								sxButton={{
@@ -384,7 +387,10 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						{isAuthorized && (
 							<NavbarButton
 								variant="outline"
-								href={`/create/${props.post.id}`}
+								// href={`/create/${props.post.id}`}
+								onClick={() =>
+									(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)
+								}
 								icon={Edit}
 								tooltip="Edit post"
 								sxButton={{

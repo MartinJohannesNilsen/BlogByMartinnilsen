@@ -1,12 +1,12 @@
 import { Check, Close, Edit, OpenInNewRounded } from "@mui/icons-material";
-import { Link, useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { getPostsOverview } from "../../database/overview";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TablePost } from "../../types";
-import NextLink from "next/link";
+import { NavbarButton } from "../Buttons/NavbarButton";
 
 const fetchPosts = async () => {
 	const db_posts = await getPostsOverview(
@@ -101,13 +101,20 @@ export const PostTable = (props) => {
 			filterable: false,
 			width: 50,
 			renderCell: ({ row }: Partial<GridRowParams>) => (
-				<Link
-					component={NextLink}
-					sx={{ color: theme.palette.text.primary }}
-					href={process.env.NEXT_PUBLIC_WEBSITE_URL + "/posts/" + row.id}
-				>
-					<OpenInNewRounded />
-				</Link>
+				// <Link
+				// 	component={NextLink}
+				// 	sx={{ color: theme.palette.text.primary }}
+				// 	href={process.env.NEXT_PUBLIC_WEBSITE_URL + "/posts/" + row.id}
+				// >
+				// 	<OpenInNewRounded />
+				// </Link>
+				<NavbarButton
+					variant="base"
+					icon={OpenInNewRounded}
+					sxIcon={{ color: theme.palette.text.primary, width: 24, height: 24 }}
+					// href={/posts/" + row.id}
+					onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${row.id}`)}
+				/>
 			),
 		},
 		{
@@ -117,13 +124,21 @@ export const PostTable = (props) => {
 			filterable: false,
 			width: 50,
 			renderCell: ({ row }: Partial<GridRowParams>) => (
-				<Link
-					component={NextLink}
-					sx={{ color: theme.palette.text.primary }}
-					href={process.env.NEXT_PUBLIC_WEBSITE_URL + "/create/" + row.id}
-				>
-					<Edit />
-				</Link>
+				// <Link
+				// 	component={NextLink}
+				// 	sx={{ color: theme.palette.text.primary }}
+				// 	href={`/create/${row.id}`}
+				// 	// onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${row.id}`)}
+				// >
+				// 	<Edit />
+				// </Link>
+				<NavbarButton
+					variant="base"
+					icon={Edit}
+					sxIcon={{ color: theme.palette.text.primary, width: 24, height: 24 }}
+					// href={`/create/${row.id}`}
+					onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${row.id}`)}
+				/>
 			),
 		},
 	];

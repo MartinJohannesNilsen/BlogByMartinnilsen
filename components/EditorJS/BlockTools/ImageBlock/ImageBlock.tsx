@@ -1,15 +1,11 @@
-import React, { useRef } from "react";
-import { Box, Card, IconButton, InputBase, MenuItem, Modal, Select, Typography, useMediaQuery } from "@mui/material";
-import EmojiPicker, { EmojiClickData, SkinTonePickerLocation } from "emoji-picker-react";
+import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-material";
+import { Box, Typography } from "@mui/material";
+import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import DOMPurify from "dompurify";
-import { StyledTextField } from "../../../StyledMUI/TextInput";
 import { NavbarButton } from "../../../Buttons/NavbarButton";
-import { Add, AddPhotoAlternate, AddPhotoAlternateOutlined, Delete, Link, Upload } from "@mui/icons-material";
-import { enqueueSnackbar } from "notistack";
-import { ImageUploadIcon } from "../../Icons";
 import { deleteImage, uploadImage } from "../../../PostManagement/PostManagement";
+import { StyledTextField } from "../../../StyledMUI/TextInput";
 
 export const imageDetailsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header

@@ -293,6 +293,8 @@ export type ButtonProps = {
 	ariaHasPopup?: any;
 	ariaExpanded?: any;
 	type?: "button" | "submit" | "reset";
+	LinkComponent?: any;
+	replace?: any;
 };
 
 // export type SearchButtonProps = ButtonProps;

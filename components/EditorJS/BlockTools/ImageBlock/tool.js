@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from 'react-dom';
-import ImageBlock from "./ImageBlock";
 import { ImageIcon } from "../../Icons";
+import ImageBlock from "./ImageBlock";
 
 const dataDefaults = {
   type: "upload", // url, upload, unsplash, paste?
