@@ -38,6 +38,7 @@ import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 import { BpRadio } from "../StyledMUI/RadioButton";
 import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
 import { StyledTextField } from "../StyledMUI/TextInput";
+import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -953,7 +954,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												// onKeyDown={(e) => {
 												// 	if (e.key === "Delete") e.preventDefault();
 												// }}
-												value={new Date(data.createdAt).toISOString().replace(/:\d{2}\.\d{3}Z$/, "")}
+												value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
 												onChange={(e) => {
 													console.log(new Date(e.target.value).toISOString());
 													setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
@@ -1064,10 +1065,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													disabled={!updatedAtEditable}
 													type="datetime-local"
 													name="updatedAt"
-													// onKeyDown={(e) => {
-													// 	if (e.key === "Delete") e.preventDefault();
-													// }}
-													value={new Date(data.updatedAt).toISOString().replace(/:\d{2}\.\d{3}Z$/, "")}
+													value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
 													onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
 												/>
 											) : (
