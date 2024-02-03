@@ -97,6 +97,11 @@ export const ImageBlock = (props: ImageProps) => {
 									fontWeight={600}
 									sx={{
 										mr: 0.5,
+										color: "white",
+										border: "1px solid" + theme.palette.grey[900],
+										borderRadius: "5px",
+										backgroundColor: "black",
+										padding: "4px 6px",
 									}}
 								>
 									{`${(stateData.fileSize / 1024).toFixed(2)}kb`}
