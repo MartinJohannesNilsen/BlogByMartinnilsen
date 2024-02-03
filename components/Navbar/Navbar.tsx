@@ -19,8 +19,9 @@ import { MenuIcon } from "../Icons/MenuIcon";
 import ProfileMenu from "../Menus/ProfileMenu";
 import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../Modals/NotificationsModal";
 // Modals can be dynamically imported
+import SearchModal from "../Modals/SearchModal"; // For listening to hotkeys on render, not rerender
+// const SearchModal = dynamic(() => import("../Modals/SearchModal"));
 const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
-const SearchModal = dynamic(() => import("../Modals/SearchModal"));
 const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
