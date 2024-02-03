@@ -381,6 +381,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 														day: "2-digit",
 														month: "short",
 														year: "numeric",
+														timeZone: "Europe/Oslo",
 													})}
 												</Typography>
 												<AccessTime
@@ -545,22 +546,24 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 										>
 											Author: {post.author}
 										</Typography>
-										{post.updatedAt && post.updatedAt !== -1 && (
-											<Typography
-												variant="body1"
-												fontFamily={theme.typography.fontFamily}
-												color={theme.palette.text.primary}
-												sx={{ opacity: 0.6 }}
-											>
-												Last updated:{" "}
-												{new Date(post.updatedAt).toLocaleDateString("en-GB", {
-													// weekday: "long",
-													day: "2-digit",
-													month: "short",
-													year: "numeric",
-												})}
-											</Typography>
-										)}
+										{post.updatedAt &&
+											post.updatedAt !== -1 && ( // Go from -1 to null for each none-updated yet, but some have -1 value
+												<Typography
+													variant="body1"
+													fontFamily={theme.typography.fontFamily}
+													color={theme.palette.text.primary}
+													sx={{ opacity: 0.6 }}
+												>
+													Last updated:{" "}
+													{new Date(post.updatedAt).toLocaleDateString("en-GB", {
+														// weekday: "long",
+														day: "2-digit",
+														month: "short",
+														year: "numeric",
+														timeZone: "Europe/Oslo",
+													})}
+												</Typography>
+											)}
 									</Box>
 									{/* Comment section */}
 									<Box mb={3}>

@@ -150,12 +150,10 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 								sx={{ opacity: 0.6, fontSize: "default" }}
 							>
 								{new Date(props.createdAt).toLocaleDateString("en-GB", {
-									// day: "2-digit",
-									// month: "short",
-									// year: "numeric",
 									day: "2-digit",
 									month: "2-digit",
 									year: "2-digit",
+									timeZone: "Europe/Oslo",
 								})}
 							</Typography>
 							{/* Read time */}

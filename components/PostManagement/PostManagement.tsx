@@ -1,5 +1,5 @@
 import { OutputData } from "@editorjs/editorjs";
-import { Clear, Delete, Edit, Home, Launch, Save, Update } from "@mui/icons-material";
+import { Clear, Delete, Edit, Home, Launch, Restore, Save, Update } from "@mui/icons-material";
 import {
 	Autocomplete,
 	Box,
@@ -117,7 +117,7 @@ export const uploadImage = async (file, postId, name) => {
 	try {
 		// Make the HTTP request
 		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?postId=${postId}${name ? "&name=" + name : ""}`,
+			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?directory=${postId}${name ? "&name=" + name : ""}`,
 			fetchOptions
 		);
 
@@ -191,7 +191,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		data: { blocks: [] },
 		author: "Martin Johannes Nilsen",
 		createdAt: Date.now(),
-		updatedAt: -1,
+		updatedAt: null,
 		readTime: "",
 	});
 	const handleNavigate = (path: string) => {
@@ -202,6 +202,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 	// const [openTab, setOpenTab] = useState(1); // TODO remove before push
 	const [createdAtEditable, setCreatedAtEditable] = useState(false);
 	const [updatedAtEditable, setUpdatedAtEditable] = useState(false);
+	const [automaticallySetUpdatedAt, setAutomaticallySetUpdatedAt] = useState(true);
 
 	useEffect(() => {
 		setTheme(ThemeEnum.Light);
@@ -286,8 +287,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 				// If post exists, then update, or add new
 				if (postId !== "") {
 					// Update field 'updatedAt' only when not localhost and not adjusted already
-					if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && props.post.updatedAt === newObject.updatedAt) {
+					// if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && props.post.updatedAt === newObject.updatedAt) {
+					if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && automaticallySetUpdatedAt) {
 						newObject.updatedAt = Date.now();
+						setData({ ...data, updatedAt: newObject.updatedAt });
 					}
 					updatePost(postId, newObject).then((postWasUpdated) => {
 						if (postWasUpdated) {
@@ -947,8 +950,14 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												disabled={!createdAtEditable}
 												type="datetime-local"
 												name="createdAt"
+												// onKeyDown={(e) => {
+												// 	if (e.key === "Delete") e.preventDefault();
+												// }}
 												value={new Date(data.createdAt).toISOString().replace(/:\d{2}\.\d{3}Z$/, "")}
-												onChange={(e) => setData({ ...data, createdAt: new Date(e.target.value).valueOf() })}
+												onChange={(e) => {
+													console.log(new Date(e.target.value).toISOString());
+													setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
+												}}
 											/>
 											<NavbarButton
 												variant="outline"
@@ -976,7 +985,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													setCreatedAtEditable(false);
 												}}
 												disabled={!props.post}
-												icon={Clear}
+												icon={Restore}
 												tooltip="Revert"
 												sxButton={{
 													minWidth: "36px",
@@ -1021,30 +1030,80 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												Updated at:
 											</Typography>
 											{xs && <Box flexGrow={1} />}
-											<input
-												style={{
-													border:
-														"1px solid " +
-														(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-													borderRadius: 5,
-													padding: 5,
-													fontFamily: theme.typography.fontFamily,
-													fontWeight: 600,
-													fontSize: isMobile ? 18 : 15,
-												}}
-												disabled={!updatedAtEditable}
-												type="datetime-local"
-												name="updatedAt"
-												value={new Date(data.updatedAt).toISOString().replace(/:\d{2}\.\d{3}Z$/, "")}
-												onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
-											/>
+											{automaticallySetUpdatedAt ? (
+												<input
+													style={{
+														border:
+															"1px solid " +
+															(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+														borderRadius: 5,
+														padding: 7,
+														fontFamily: theme.typography.fontFamily,
+														fontWeight: 600,
+														fontSize: isMobile ? 18 : 15,
+														color: theme.palette.grey[400],
+														width: 155.5,
+													}}
+													disabled
+													name="updatedAt"
+													value="Automatic on save"
+													onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+												/>
+											) : data.updatedAt ? (
+												<input
+													style={{
+														border:
+															"1px solid " +
+															(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+														borderRadius: 5,
+														padding: 5,
+														fontFamily: theme.typography.fontFamily,
+														fontWeight: 600,
+														fontSize: isMobile ? 18 : 15,
+													}}
+													disabled={!updatedAtEditable}
+													type="datetime-local"
+													name="updatedAt"
+													// onKeyDown={(e) => {
+													// 	if (e.key === "Delete") e.preventDefault();
+													// }}
+													value={new Date(data.updatedAt).toISOString().replace(/:\d{2}\.\d{3}Z$/, "")}
+													onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+												/>
+											) : (
+												<input
+													style={{
+														border:
+															"1px solid " +
+															(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+														borderRadius: 5,
+														padding: 7,
+														fontFamily: theme.typography.fontFamily,
+														fontWeight: 600,
+														fontSize: isMobile ? 18 : 15,
+														color: theme.palette.grey[400],
+														width: 155.5,
+													}}
+													disabled
+													name="updatedAt"
+													value={props.post.updatedAt ? "Will be removed" : "Not yet updated"}
+													onChange={(e) => {
+														console.log(e.target.value);
+														setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
+													}}
+												/>
+											)}
+
 											<NavbarButton
 												variant="outline"
 												onClick={() => {
-													setUpdatedAtEditable(!updatedAtEditable);
+													setData({ ...data, updatedAt: props.post.updatedAt || data.createdAt });
+													setAutomaticallySetUpdatedAt(false);
+													setUpdatedAtEditable(true);
 												}}
 												icon={Edit}
 												tooltip="Edit"
+												disabled={updatedAtEditable}
 												sxButton={{
 													minWidth: "36px",
 													minHeight: "36px",
@@ -1061,10 +1120,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												variant="outline"
 												onClick={() => {
 													setData({ ...data, updatedAt: props.post.updatedAt });
+													setAutomaticallySetUpdatedAt(false);
 													setUpdatedAtEditable(false);
 												}}
 												disabled={!props.post}
-												icon={Clear}
+												icon={Restore}
 												tooltip="Revert"
 												sxButton={{
 													minWidth: "36px",
@@ -1079,7 +1139,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												}}
 											/>
 											<Typography
-												onClick={() => setData({ ...data, updatedAt: Date.now() })}
+												// onClick={() => setData({ ...data, updatedAt: Date.now() })}
+												onClick={() => {
+													setUpdatedAtEditable(false);
+													setAutomaticallySetUpdatedAt(true);
+												}}
 												ml={1}
 												sx={{
 													fontFamily: theme.typography.fontFamily,
@@ -1094,7 +1158,29 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													},
 												}}
 											>
-												Now
+												Default
+											</Typography>
+											<Typography
+												onClick={() => {
+													setData({ ...data, updatedAt: null });
+													setAutomaticallySetUpdatedAt(false);
+													setUpdatedAtEditable(false);
+												}}
+												ml={1}
+												sx={{
+													fontFamily: theme.typography.fontFamily,
+													fontSize: 14,
+													fontWeight: 600,
+													color: theme.palette.grey[500],
+													display: "inline-block", // Allows the underline to fit the text
+													cursor: "pointer", // Changes the cursor to indicate it's clickable
+													textDecoration: "none", // Ensures text is not underlined by default
+													"&:hover": {
+														textDecoration: "underline", // Underlines text on hover
+													},
+												}}
+											>
+												Remove
 											</Typography>
 										</Box>
 									</Box>

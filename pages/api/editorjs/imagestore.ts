@@ -62,11 +62,11 @@ export const config = {
  *       - EditorJS
  *     parameters:
  *       - in: query
- *         name: postId
+ *         name: directory
  *         required: true
  *         schema:
  *           type: string
- *         description: The id of the post the image belongs to.
+ *         description: The directory to store the image in (postId for posts).
  *       - in: query
  *         name: name
  *         required: false
@@ -180,8 +180,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	}
 
 	if (req.method === "POST") {
-		if (!req.query.postId) {
-			return res.status(400).json({ code: 400, reason: "Missing postId!" });
+		if (!req.query.directory) {
+			return res.status(400).json({ code: 400, reason: "Missing directory, root should not be used!" });
 		}
 
 		try {
@@ -214,7 +214,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 					// Rename file, timestamp as default if not given new name
 					const fileRef =
-						`images/${req.query.postId}/` +
+						`images/${req.query.directory}${req.query.directory && "/"}` +
 						(req.query.name ? `${req.query.name}.${extension}` : generateName(extension));
 
 					// Upload to Firestore

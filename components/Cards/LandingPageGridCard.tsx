@@ -103,6 +103,7 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 								day: "2-digit",
 								month: "2-digit",
 								year: "2-digit",
+								timeZone: "Europe/Oslo",
 							})}
 						</Typography>
 						{/* Read time */}
