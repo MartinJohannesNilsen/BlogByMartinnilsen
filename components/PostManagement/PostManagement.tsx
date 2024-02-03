@@ -36,8 +36,8 @@ import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageB
 import { BpRadio } from "../StyledMUI/RadioButton";
 import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
 import { StyledTextField } from "../StyledMUI/TextInput";
-import { post } from "jquery";
 import { isMobile } from "react-device-detect";
+import { DEFAULT_OGIMAGE } from "../SEO/SEO";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -97,6 +97,73 @@ export function isvalidHTTPUrl(string: string) {
 	return url.protocol === "http:" || url.protocol === "https:";
 }
 
+export const uploadImage = async (file, postId, name) => {
+	// Prepare FormData
+	const formData = new FormData();
+	formData.append("file", file); // 'file' is the name expected by the server for the file
+
+	// Add apikey header
+	const headers = new Headers();
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+
+	// Options for the fetch request
+	const fetchOptions = {
+		method: "POST",
+		body: formData, // Attach the FormData object
+		headers: headers,
+		// Don't set Content-Type header manually, so the browser can set the boundary parameter automatically
+	};
+
+	try {
+		// Make the HTTP request
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?postId=${postId}${name ? "&name=" + name : ""}`,
+			fetchOptions
+		);
+
+		if (!response.ok) {
+			return { code: response.status, reason: response.statusText };
+		}
+
+		// Process the response (assuming JSON response)
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		return { error: error };
+	}
+};
+
+export const deleteImage = async (fileRef) => {
+	// Add apikey header
+	const headers = new Headers();
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+
+	// Options for the fetch request
+	const fetchOptions = {
+		method: "DELETE",
+		headers: headers,
+		// Don't set Content-Type header manually, so the browser can set the boundary parameter automatically
+	};
+
+	try {
+		// Make the HTTP request
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?fileRef=${fileRef}`,
+			fetchOptions
+		);
+
+		if (!response.ok) {
+			return { code: response.status, reason: response.statusText };
+		}
+
+		// Process the response (assuming JSON response)
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		return { error: error };
+	}
+};
+
 const CreatePost: FC<ManageArticleViewProps> = (props) => {
 	const { theme, setTheme } = useTheme();
 	const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -119,6 +186,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 			height: null,
 			width: null,
 			fileRef: null,
+			fileSize: null,
 		},
 		data: { blocks: [] },
 		author: "Martin Johannes Nilsen",
@@ -449,10 +517,17 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												border: "1px solid red",
 												index: 2,
 												backgroundColor: theme.palette.primary.main,
-												"&:hover": {
-													color: "red",
-												},
 												color: "red",
+												"&:focus-visible": {
+													backgroundColor:
+														theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+												},
+												"&:hover": {
+													border: "1px solid rgba(255,0,0,0.8)",
+													color: "rgba(255,0,0,0.8)",
+													backgroundColor:
+														theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+												},
 											}}
 											sxIcon={{
 												height: "24px",
@@ -548,6 +623,20 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									fullWidth
 									value={data.type}
 									onChange={handleInputChange}
+									InputProps={{
+										endAdornment: data.type.length > 0 && (
+											<Typography
+												fontFamily={theme.typography.fontFamily}
+												fontSize={12}
+												fontWeight={400}
+												sx={{
+													ml: 1,
+												}}
+											>
+												Type
+											</Typography>
+										),
+									}}
 								/>
 								<StyledTextField
 									InputLabelProps={{ shrink: false }}
@@ -616,10 +705,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 									value={data.description}
 									onChange={handleInputChange}
 								/>
-								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
-									Open Graph Image
-								</Typography>
-								<StyledTextField
+								{/* <StyledTextField
 									InputLabelProps={{ shrink: false }}
 									placeholder="Open Graph Image"
 									inputProps={{ style: { padding: 10 } }}
@@ -658,7 +744,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 											ogImage: { ...data.ogImage, src: value },
 										});
 									}}
-								/>
+								/> */}
 								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
 									Optional
 								</Typography>
@@ -704,7 +790,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																		borderRadius: 0.25,
 																	}}
 																	onClick={() => {
-																		console.log(value);
 																		setData({
 																			...data,
 																			keywords: data.keywords.filter((keyword) => keyword !== value),
@@ -735,6 +820,102 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										options={tagOptions}
 									/>
 								</Box>
+								{postId && (
+									<>
+										<Typography
+											variant="h6"
+											color="textPrimary"
+											fontFamily={theme.typography.fontFamily}
+											mt={2}
+											mb={-1.5}
+										>
+											Open Graph Image
+										</Typography>
+										{data.ogImage.hasOwnProperty("fileRef") && data.ogImage.fileRef ? (
+											<StyledTextField
+												disabled
+												InputLabelProps={{ shrink: false }}
+												placeholder="Open Graph Image"
+												inputProps={{ style: { padding: 10 } }}
+												name="image"
+												InputProps={{
+													endAdornment: (
+														<Box display="flex" alignItems="center" ml={0.2}>
+															<Typography fontFamily={theme.typography.fontFamily} fontSize={14} fontWeight={600}>
+																{`${(data.ogImage.fileSize / 1024).toFixed(2)}kb`}
+															</Typography>
+															<NavbarButton
+																variant="base"
+																icon={Clear}
+																sxButton={{ width: 20, height: 20 }}
+																sxIcon={{ width: 20, height: 20 }}
+																onClick={async () => {
+																	const response = await deleteImage(data.ogImage.fileRef);
+																	if (response.code === 200) {
+																		setData({
+																			...data,
+																			ogImage: { ...data.ogImage, src: DEFAULT_OGIMAGE, fileRef: null, fileSize: null },
+																		});
+																		enqueueSnackbar(`Open Graph Image successfully deleted`, {
+																			variant: "success",
+																			preventDuplicate: true,
+																		});
+																	} else {
+																		enqueueSnackbar(`(${response.code}) ${response.reason}`, {
+																			variant: "error",
+																			preventDuplicate: true,
+																		});
+																	}
+																}}
+															/>
+														</Box>
+													),
+												}}
+												fullWidth
+												value={data.ogImage.src}
+											/>
+										) : (
+											<input
+												type="file"
+												id="fileInput"
+												// accept="image/*,video/*"
+												accept="image/*"
+												onChange={async (e) => {
+													const file = e.target.files[0];
+													const uploadResponse = await uploadImage(file, postId, "ogImage");
+													if (uploadResponse.hasOwnProperty("data")) {
+														const details = await imageDetailsApiFetcher(
+															process.env.NEXT_PUBLIC_SERVER_URL +
+																"/editorjs/imageblurhash?url=" +
+																encodeURIComponent(uploadResponse.data.url)
+														);
+														setData({
+															...data,
+															ogImage: {
+																...data.ogImage,
+																src: uploadResponse.data.url,
+																height: details.height,
+																width: details.width,
+																blurhash: details.encoded,
+																fileRef: uploadResponse.data.fileRef,
+																fileSize: file.size,
+															},
+														});
+														enqueueSnackbar(`Open Graph Image uploaded (${(file.size / 1024).toFixed(2)}kb)`, {
+															variant: "success",
+															preventDuplicate: true,
+														});
+													} else {
+														enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+															variant: "error",
+															preventDuplicate: true,
+														});
+													}
+												}}
+											/>
+										)}
+									</>
+								)}
 								{props.post && (
 									<Box mt={3} display="flex" flexDirection="column" gap={0.8}>
 										<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mb={0.5}>
@@ -766,6 +947,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												disabled={!createdAtEditable}
 												type="datetime-local"
 												name="createdAt"
+												value={new Date(data.createdAt).toISOString().replace(/:\d{2}\.\d{3}Z$/, "")}
 												onChange={(e) => setData({ ...data, createdAt: new Date(e.target.value).valueOf() })}
 											/>
 											<NavbarButton
@@ -808,6 +990,24 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													color: "inherit",
 												}}
 											/>
+											<Typography
+												onClick={() => setData({ ...data, createdAt: Date.now() })}
+												ml={1}
+												sx={{
+													fontFamily: theme.typography.fontFamily,
+													fontSize: 14,
+													fontWeight: 600,
+													color: theme.palette.grey[500],
+													display: "inline-block", // Allows the underline to fit the text
+													cursor: "pointer", // Changes the cursor to indicate it's clickable
+													textDecoration: "none", // Ensures text is not underlined by default
+													"&:hover": {
+														textDecoration: "underline", // Underlines text on hover
+													},
+												}}
+											>
+												Now
+											</Typography>
 										</Box>
 
 										{/* Updated At */}
@@ -835,6 +1035,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												disabled={!updatedAtEditable}
 												type="datetime-local"
 												name="updatedAt"
+												value={new Date(data.updatedAt).toISOString().replace(/:\d{2}\.\d{3}Z$/, "")}
 												onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
 											/>
 											<NavbarButton
@@ -877,6 +1078,24 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													color: "inherit",
 												}}
 											/>
+											<Typography
+												onClick={() => setData({ ...data, updatedAt: Date.now() })}
+												ml={1}
+												sx={{
+													fontFamily: theme.typography.fontFamily,
+													fontSize: 14,
+													fontWeight: 600,
+													color: theme.palette.grey[500],
+													display: "inline-block", // Allows the underline to fit the text
+													cursor: "pointer", // Changes the cursor to indicate it's clickable
+													textDecoration: "none", // Ensures text is not underlined by default
+													"&:hover": {
+														textDecoration: "underline", // Underlines text on hover
+													},
+												}}
+											>
+												Now
+											</Typography>
 										</Box>
 									</Box>
 								)}

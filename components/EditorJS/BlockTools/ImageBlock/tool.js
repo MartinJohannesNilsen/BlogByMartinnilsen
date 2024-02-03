@@ -11,7 +11,8 @@ const dataDefaults = {
   height: 0,
   width: 0,
   fileRef: null,
-  unsplash: null
+  fileSize: null,
+  // unsplash: null
 }
 
 export default class Tool extends React.Component{
@@ -27,8 +28,9 @@ export default class Tool extends React.Component{
       blurhash: data.blurhash || this.dataDefaults.blurhash,
       height: data.height || this.dataDefaults.height,
       width: data.width || this.dataDefaults.width,
-      filename: data.filename || this.dataDefaults.filename,
-      unsplash: data.unsplash || this.dataDefaults.unsplash,
+      fileRef: data.fileRef || this.dataDefaults.fileref,
+      fileSize: data.fileSize || this.dataDefaults.fileSize,
+      // unsplash: data.unsplash || this.dataDefaults.unsplash,
       ...config.data
     };
 
