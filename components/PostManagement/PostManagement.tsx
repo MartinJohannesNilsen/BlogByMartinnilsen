@@ -305,8 +305,9 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								variant: "default",
 								preventDuplicate: true,
 							});
+							const { data, ...overviewObject } = newObject; // Should not include data in postsOverview
 							updatePostsOverview({
-								...newObject,
+								...overviewObject,
 								id: postId,
 							}).then((overviewWasUpdated) => {
 								if (overviewWasUpdated) {

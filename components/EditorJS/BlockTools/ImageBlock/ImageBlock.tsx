@@ -46,9 +46,9 @@ export const ImageBlock = (props: ImageProps) => {
 			type: "upload", // url, upload // Maybe unsplash & paste?
 			url: "",
 			caption: "",
-			blurhash: "",
-			height: 0,
-			width: 0,
+			blurhash: null,
+			height: null,
+			width: null,
 			fileRef: null,
 			fileSize: null,
 			// unsplash: null,
@@ -101,7 +101,7 @@ export const ImageBlock = (props: ImageProps) => {
 										border: "1px solid" + theme.palette.grey[900],
 										borderRadius: "5px",
 										backgroundColor: "black",
-										padding: "4px 6px",
+										padding: "3px 6px",
 									}}
 								>
 									{`${(stateData.fileSize / 1024).toFixed(2)}kb`}
