@@ -60,6 +60,14 @@ export const PostTable = (props) => {
 			valueGetter: (params) => new Date(params.value), // Transforming string to Date object
 		},
 		{
+			field: "updatedAt",
+			headerName: "UpdatedAt",
+			width: 100,
+			align: "center",
+			type: "date",
+			valueGetter: (params) => params.value && new Date(params.value), // Transforming string to Date object
+		},
+		{
 			field: "readTime",
 			headerName: "ReadTime",
 			width: 110,
@@ -127,7 +135,7 @@ export const PostTable = (props) => {
 				// <Link
 				// 	component={NextLink}
 				// 	sx={{ color: theme.palette.text.primary }}
-				// 	href={`/create/${row.id}`}
+				// href={`/create/${row.id}`}
 				// 	// onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${row.id}`)}
 				// >
 				// 	<Edit />
@@ -136,8 +144,8 @@ export const PostTable = (props) => {
 					variant="base"
 					icon={Edit}
 					sxIcon={{ color: theme.palette.text.primary, width: 24, height: 24 }}
-					// href={`/create/${row.id}`}
-					onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${row.id}`)}
+					href={`/create/${row.id}`}
+					// onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${row.id}`)}
 				/>
 			),
 		},
@@ -149,6 +157,11 @@ export const PostTable = (props) => {
 			columns={columns}
 			initialState={{
 				pagination: { paginationModel: { pageSize: 10 } },
+				columns: {
+					columnVisibilityModel: {
+						updatedAt: false,
+					},
+				},
 			}}
 			pageSizeOptions={[5, 10, 15, 20, 25]}
 			sx={{
@@ -168,6 +181,9 @@ export const PostTable = (props) => {
 				"& .MuiDataGrid-panelFooter": {
 					color: "black", // Example style
 				},
+				// "& .MuiDataGrid-paper": { // Column background
+				// 	backgroundColor: "black", // Your desired background color
+				// },
 				"& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
 					outline: "none", // Removes the default focus outline/border
 				},

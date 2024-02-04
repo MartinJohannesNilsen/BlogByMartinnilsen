@@ -167,10 +167,8 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						{isAuthorized ? (
 							<NavbarButton
 								variant="outline"
-								// href={`/create/${props.post.id}`}
-								onClick={() =>
-									(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)
-								}
+								href={`/create/${props.post.id}`}
+								// onClick={() =>(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)}
 								icon={Edit}
 								tooltip="Edit post"
 								sxButton={{
@@ -387,10 +385,8 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						{isAuthorized && (
 							<NavbarButton
 								variant="outline"
-								// href={`/create/${props.post.id}`}
-								onClick={() =>
-									(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)
-								}
+								href={`/create/${props.post.id}`}
+								// onClick={() =>(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)}
 								icon={Edit}
 								tooltip="Edit post"
 								sxButton={{

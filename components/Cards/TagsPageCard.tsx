@@ -165,8 +165,8 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 					<Box flexGrow={100} />
 					<NavbarButton
 						variant="outline"
-						// href={`/create/${props.id}`}
-						onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.id}`)}
+						href={`/create/${props.id}`}
+						// onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.id}`)}
 						icon={Edit}
 						tooltip="Edit post"
 						sxButton={{

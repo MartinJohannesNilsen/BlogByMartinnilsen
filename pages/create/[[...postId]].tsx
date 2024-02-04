@@ -21,7 +21,7 @@ const ManageArticleView: FC = (props) => {
 
 	// https://github.com/vercel/next.js/discussions/13729#discussioncomment-22270
 	useEffect(() => {
-		if (!postId) {
+		if (!postId || postId.length > 1) {
 			return setIsLoading(false);
 		}
 		const id = router.query.postId[0];
@@ -33,13 +33,17 @@ const ManageArticleView: FC = (props) => {
 		return () => {};
 	}, [postId]);
 
+	useEffect(() => {
+		setIsLoading(false);
+	}, [post]);
+
 	if (status === "authenticated" && !isAuthorized) {
 		return <ErrorPage statusCode={403} title="You've taken the wrong path! Please return home" />;
 	}
 	if (isLoading || status === "loading") {
 		return <></>;
 	} else {
-		return <>{!postId ? <CreatePost /> : post ? <CreatePost post={post} /> : null}</>;
+		return !postId ? <CreatePost /> : post ? <CreatePost post={post} /> : <></>;
 	}
 };
 export default ManageArticleView;
