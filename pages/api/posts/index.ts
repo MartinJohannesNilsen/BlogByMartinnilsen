@@ -39,7 +39,11 @@ import { db } from "../../../lib/firebaseConfig";
  *                   published: false
  *                   updatedAt: 1701472730348
  *                   readTime: "2 min read"
- *                   image: ""
+ *                   ogImage:
+ *                     src: "https://example.com/og-image.png"
+ *                     blurhash: "L35O{g_4s9xu~qRkofayx^ayofay"
+ *                     height: 600
+ *                     width: 800
  *              overview:
  *               - id: "7FPz65Fkv8sHM3aDIx0r"
  *                 title: "Post title"
@@ -52,7 +56,11 @@ import { db } from "../../../lib/firebaseConfig";
  *                 published: false
  *                 updatedAt: 1701472730348
  *                 readTime: "2 min read"
- *                 image: ""
+ *                 ogImage:
+ *                   src: "https://example.com/og-image.png"
+ *                   blurhash: "L35O{g_4s9xu~qRkofayx^ayofay"
+ *                   height: 600
+ *                   width: 800
  *       '404':
  *         description: Post not found.
  *       '500':

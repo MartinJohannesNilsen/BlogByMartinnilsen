@@ -23,7 +23,7 @@ function isImgUrl(url) {
  * /api/editorjs/imageblurhash:
  *   get:
  *     summary: Generate blurhash
- *     description: Generate blurhash and return encoded string, in addition to heigth and width of image.
+ *     description: Generate blurhash and return encoded string, in addition to height and width of the image.
  *     tags:
  *       - EditorJS
  *     parameters:
@@ -38,10 +38,18 @@ function isImgUrl(url) {
  *         description: Successful response.
  *         content:
  *           application/json:
- *             example:
- *              encoded: "UCBnNqOEACxGNgn%Sday1GwcbHNt}YbIr]W;"
- *              width: 1200
- *              height: 700
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 encoded:
+ *                   type: string
+ *                   example: "UCBnNqOEACxGNgn%Sday1GwcbHNt}YbIr]W;"
+ *                 width:
+ *                   type: integer
+ *                   example: 1200
+ *                 height:
+ *                   type: integer
+ *                   example: 700
  *
  *       '400':
  *         description: Bad request. URL parameter is missing or invalid.
@@ -50,6 +58,7 @@ function isImgUrl(url) {
  *       '501':
  *         description: Method not supported.
  */
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = validateAuthAPIToken(req);

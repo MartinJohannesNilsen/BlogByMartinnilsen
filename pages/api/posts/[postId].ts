@@ -32,19 +32,61 @@ import { db } from "../../../lib/firebaseConfig";
  *         description: Successful response.
  *         content:
  *           application/json:
- *             example:
- *               title: "Post title"
- *               description: "Post description"
- *               createdAt: 1701103064042
- *               type: "Tutorial"
- *               data: "{\"time\":1701472725450,\"blocks\":[],\"version\":\"2.28.2\"}"
- *               tags: ["Development","Python"]
- *               keywords: ["Keyword"]
- *               author: "Martin Johannes Nilsen"
- *               published: false
- *               updatedAt: 1701472730348
- *               readTime: "2 min read"
- *               image: ""
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                  type string
+ *                 description:
+ *                  type string
+ *                 createdAt:
+ *                  type number
+ *                 type:
+ *                  type string
+ *                 data:
+ *                  type string
+ *                 tags:
+ *                  type list
+ *                 keywords:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 author:
+ *                  type string
+ *                 published:
+ *                  type boolean
+ *                 updatedAt:
+ *                  type number
+ *                 readTime:
+ *                  type string
+ *                 ogImage:
+ *                   type: object
+ *                   properties:
+ *                     src:
+ *                       type: string
+ *                     blurhash:
+ *                       type: string
+ *                     height:
+ *                       type: number
+ *                     width:
+ *                       type: number
+ *               example:
+ *                 title: "Post title"
+ *                 description: "Post description"
+ *                 createdAt: 1701103064042
+ *                 type: "Tutorial"
+ *                 data: "{\"time\":1701472725450,\"blocks\":[],\"version\":\"2.28.2\"}"
+ *                 tags: ["Development","Python"]
+ *                 keywords: ["Keyword"]
+ *                 author: "Martin Johannes Nilsen"
+ *                 published: false
+ *                 updatedAt: 1701472730348
+ *                 readTime: "2 min read"
+ *                 ogImage:
+ *                   src: "https://example.com/og-image.png"
+ *                   blurhash: "L35O{g_4s9xu~qRkofayx^ayofay"
+ *                   height: 600
+ *                   width: 800
  *       '404':
  *         description: Post not found.
  *       '500':
@@ -105,28 +147,6 @@ import { db } from "../../../lib/firebaseConfig";
  *                   width:
  *                     type: number
  *             example:
- *               title: ""
- *               description: ""
- *               createdAt: 0
- *               type: ""
- *               data: ""
- *               tags: []
- *               keywords: []
- *               author: ""
- *               published: false
- *               updatedAt: 0
- *               readTime: ""
- *               ogImage:
- *                 src: ""
- *                 blurhash: ""
- *                 height: 0
- *                 width: 0
- *     responses:
- *       '200':
- *         description: Successful response.
- *         content:
- *           application/json:
- *             example:
  *               title: "Post title"
  *               description: "Post description"
  *               createdAt: 1701103064042
@@ -143,6 +163,66 @@ import { db } from "../../../lib/firebaseConfig";
  *                 blurhash: "L35O{g_4s9xu~qRkofayx^ayofay"
  *                 height: 600
  *                 width: 800
+ *     responses:
+ *       '200':
+ *         description: Successful response.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                  type string
+ *                 description:
+ *                  type string
+ *                 createdAt:
+ *                  type number
+ *                 type:
+ *                  type string
+ *                 data:
+ *                  type string
+ *                 tags:
+ *                  type list
+ *                 keywords:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 author:
+ *                  type string
+ *                 published:
+ *                  type boolean
+ *                 updatedAt:
+ *                  type number
+ *                 readTime:
+ *                  type string
+ *                 ogImage:
+ *                   type: object
+ *                   properties:
+ *                     src:
+ *                       type: string
+ *                     blurhash:
+ *                       type: string
+ *                     height:
+ *                       type: number
+ *                     width:
+ *                       type: number
+ *               example:
+ *                 title: "Post title"
+ *                 description: "Post description"
+ *                 createdAt: 1701103064042
+ *                 type: "Tutorial"
+ *                 data: "{\"time\":1701472725450,\"blocks\":[],\"version\":\"2.28.2\"}"
+ *                 tags: ["Development","Python"]
+ *                 keywords: ["Keyword"]
+ *                 author: "Martin Johannes Nilsen"
+ *                 published: false
+ *                 updatedAt: 1701472730348
+ *                 readTime: "2 min read"
+ *                 ogImage:
+ *                   src: "https://example.com/og-image.png"
+ *                   blurhash: "L35O{g_4s9xu~qRkofayx^ayofay"
+ *                   height: 600
+ *                   width: 800
  *       '404':
  *         description: Post not found.
  *       '500':

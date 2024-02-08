@@ -120,76 +120,62 @@ import { validateAuthAPIToken } from "..";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Validate authorized access based on header field 'apikey'
-  const authValidation = validateAuthAPIToken(req);
-  if (!authValidation.isValid) {
-    return res
-      .status(authValidation.code)
-      .json({ code: authValidation.code, reason: authValidation.reason });
-  }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = validateAuthAPIToken(req);
+	if (!authValidation.isValid) {
+		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+	}
 
-  // Check if id is provided
-  const { notificationId } = req.query;
-  if (
-    !notificationId ||
-    notificationId == "{notificationId}" ||
-    notificationId === "" ||
-    typeof notificationId !== "string"
-  ) {
-    return res
-      .status(400)
-      .json({ code: 400, reason: "Missing notificationId" });
-  }
+	// Check if id is provided
+	const { notificationId } = req.query;
+	if (
+		!notificationId ||
+		notificationId == "{notificationId}" ||
+		notificationId === "" ||
+		typeof notificationId !== "string"
+	) {
+		return res.status(400).json({ code: 400, reason: "Missing notificationId" });
+	}
 
-  if (req.method === "GET") {
-    // Query the pages table in the database where slug equals the request params slug.
-    const { data, error } = await SupabaseAdmin.from("notifications")
-      .select("id, createdAt, title, content, action, important")
-      .filter("id", "eq", notificationId)
-      .single();
-    // Return
-    if (data) {
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(404)
-        .json({ code: 404, reason: "Notification not found" });
-    }
-  } else if (req.method === "PUT") {
-    if (req.body.id)
-      return res.status(400).json({
-        code: 400,
-        reason: "Update not followed through. Id should not be updated!",
-      });
-    const { data, error } = await SupabaseAdmin.from("notifications")
-      .update(req.body)
-      .eq("id", notificationId)
-      .select();
-    return data && data.length === 1
-      ? res
-          .status(200)
-          .json({ code: 200, reason: "Notification successfully updated" })
-      : res.status(400).json({ code: 400, reason: "No changes made" });
-  } else if (req.method === "DELETE") {
-    // Delete row where postId equal query parameter postId
-    const { error } = await SupabaseAdmin.from("notifications")
-      .delete()
-      .eq("id", notificationId)
-      .single();
-    return error
-      ? res.status(400).json({
-          code: 400,
-          reason: `Could not delete view count of notification '${notificationId}'`,
-        })
-      : res.status(200).json({
-          code: 200,
-          reason: `Deleted view count of post '${notificationId}'`,
-        });
-  } else {
-    return res.status(501).json({ code: 501, reason: "Method not supported" });
-  }
+	if (req.method === "GET") {
+		// Query the pages table in the database where slug equals the request params slug.
+		const { data, error } = await SupabaseAdmin.from("notifications")
+			.select("id, createdAt, title, content, action, important")
+			.filter("id", "eq", notificationId)
+			.single();
+		// Return
+		if (data) {
+			return res.status(200).json(data);
+		} else {
+			return res.status(404).json({ code: 404, reason: "Notification not found" });
+		}
+	} else if (req.method === "PUT") {
+		if (req.body.id)
+			return res.status(400).json({
+				code: 400,
+				reason: "Update not followed through. Id should not be updated!",
+			});
+		const { data, error } = await SupabaseAdmin.from("notifications")
+			.update(req.body)
+			.eq("id", notificationId)
+			.select();
+		return data && data.length === 1
+			? res.status(200).json({ code: 200, reason: "Notification successfully updated" })
+			: res.status(400).json({ code: 400, reason: "No changes made" });
+	} else if (req.method === "DELETE") {
+		// Delete row where postId equal query parameter postId
+		const { error } = await SupabaseAdmin.from("notifications").delete().eq("id", notificationId).single();
+		return error
+			? res.status(400).json({
+					code: 400,
+					reason: `Could not delete view count of notification '${notificationId}'`,
+			  })
+			: res.status(200).json({
+					code: 200,
+					reason: `Deleted view count of post '${notificationId}'`,
+			  });
+	} else {
+		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	}
 }
