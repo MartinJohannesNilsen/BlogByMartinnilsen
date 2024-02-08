@@ -4,8 +4,8 @@ import { validateAuthAPIToken } from "..";
 import { deletePostsOverview, updatePostsOverview } from "../../../database/overview";
 import { deletePost, getPost, updatePost } from "../../../database/posts";
 import { db } from "../../../lib/firebaseConfig";
-import { FullPost } from "../../../types";
 
+// TODO
 /**
  * @swagger
  * /api/posts/{postId}:

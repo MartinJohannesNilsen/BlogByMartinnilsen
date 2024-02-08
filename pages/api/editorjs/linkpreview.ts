@@ -20,14 +20,29 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *         description: Successful response.
  *         content:
  *           application/json:
- *             example:
- *              success: 1
- *              meta: {
- *               title: "Sample Link",
- *               description: "This is a sample link.",
- *               image: "https://example.com/sample.jpg",
- *               url: https://example.com
- *              }
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: integer
+ *                   example: 1
+ *                 meta:
+ *                   type: object
+ *                   properties:
+ *                     title:
+ *                       type: string
+ *                       example: "Sample Link"
+ *                     description:
+ *                       type: string
+ *                       example: "This is a sample link."
+ *                     image:
+ *                       type: string
+ *                       format: uri
+ *                       example: "https://example.com/sample.jpg"
+ *                     url:
+ *                       type: string
+ *                       format: uri
+ *                       example: "https://example.com"
  *
  *       '400':
  *         description: Bad request. URL parameter is missing or invalid.
@@ -36,40 +51,34 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Removed due to editorjs component not supporting additional parameters
-  // Check for secret to confirm this is a valid request
-  // if (!req.query.secret) {
-  //   return res.status(400).json({ code: 400, reason: "Missing token" });
-  // } else if (req.query.secret !== process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY) {
-  //   return res.status(400).json({ code: 400, reason: "Invalid token" });
-  // }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+	// Removed due to editorjs component not supporting additional parameters
+	// Check for secret to confirm this is a valid request
+	// if (!req.query.secret) {
+	//   return res.status(400).json({ code: 400, reason: "Missing token" });
+	// } else if (req.query.secret !== process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY) {
+	//   return res.status(400).json({ code: 400, reason: "Invalid token" });
+	// }
 
-  // Check if url is set
-  if (!req.query.url) {
-    return res.status(400).json({ code: 400, reason: "Missing url" });
-  }
+	// Check if url is set
+	if (!req.query.url) {
+		return res.status(400).json({ code: 400, reason: "Missing url" });
+	}
 
-  if (req.method === "GET") {
-    try {
-      const api = await fetch(
-        "http://api.linkpreview.net/?key=" +
-          process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY +
-          "&q=" +
-          req.query.url
-      ).then((data) => data.json());
-      if (api.error === undefined) {
-        return res.json({ success: 1, meta: api });
-      } else {
-        return res.status(400).json({ code: 400, reason: "Invalid url" });
-      }
-    } catch (err) {
-      return res.status(500).json({ code: 401, reason: err });
-    }
-  } else {
-    return res.status(501).json({ code: 501, reason: "Method not supported" });
-  }
+	if (req.method === "GET") {
+		try {
+			const api = await fetch(
+				"http://api.linkpreview.net/?key=" + process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY + "&q=" + req.query.url
+			).then((data) => data.json());
+			if (api.error === undefined) {
+				return res.json({ success: 1, meta: api });
+			} else {
+				return res.status(400).json({ code: 400, reason: "Invalid url" });
+			}
+		} catch (err) {
+			return res.status(500).json({ code: 401, reason: err });
+		}
+	} else {
+		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	}
 }

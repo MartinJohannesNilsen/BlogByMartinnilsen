@@ -1,13 +1,4 @@
-// TODO Fix image uploading and deletion
 import type { NextApiRequest, NextApiResponse } from "next";
-// import type { NextRequest, NextResponse } from "next/server";
-// import { validateAuthAPIToken } from "..";
-// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-// import { cloudStorage } from "../../../lib/firebaseConfig";
-// import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
-// import { join } from "path";
-// import { writeFile } from "fs/promises";
-// import formidable from "formidable";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import formidable from "formidable-serverless";
 import * as fs from "fs";
