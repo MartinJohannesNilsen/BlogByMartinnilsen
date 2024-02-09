@@ -53,7 +53,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
 	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
 	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
-	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", []);
 	// SettingsModal
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
 	const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -96,7 +95,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		if (data) {
 			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
 			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
-			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // TODO Filter on day select option
 			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
 		}
 		return () => {};

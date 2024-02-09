@@ -27,7 +27,6 @@ type UnreadFunctionProps = {
 	allNotificationsFilteredOnDateIds: number[];
 	unreadNotifications: NotificationProps[];
 	unreadNotificationsIds: number[];
-	unreadNotificationsFilteredOnDateIds: number[];
 	hasUnreadNotifications: boolean;
 };
 
@@ -38,35 +37,34 @@ export const checkForUnreadRecentNotifications = (
 	notificationsRead: number[]
 ): UnreadFunctionProps => {
 	if (!data) return;
+	// Would need to have the filter option days in milliseconds for later
 	const notificationDaysInMilliseconds = notificationsFilterDays * 24 * 60 * 60 * 1000;
+	// Find all notifications which are either not read or is important, and should should be shown
 	const allFilteredOnDateOrImportant = data
 		.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
 		.filter(
-			// Only show notifications on new past 30 days
+			// Only show new notifications for past (notificationFilterDays) days, but important should be visible as well
 			(notification) =>
 				Date.parse(notification.createdAt) > lastRead - notificationDaysInMilliseconds || notification.important
 		);
+	// Find all notifications which are either not read, or is important - but only their id
 	const allFilteredOnDateIds = allFilteredOnDateOrImportant.map((notification) => notification.id);
+	// Find all notifications that are undread and visible based on notificationsFilterDays option
 	const unreadNotifications = data
 		.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
-		.filter((notification) => !notificationsRead.includes(notification.id));
-	const unreadNotificationsIds = unreadNotifications.map((notification) => notification.id);
-	const unreadFilteredOnDateOrImportantIds = unreadNotifications
-		.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
-		.map(
-			// Only show notifications on new past 30 days
+		// .filter((notification) => !notificationsRead.includes(notification.id));
+		.filter(
 			(notification) =>
-				Date.parse(notification.createdAt) > lastRead - notificationDaysInMilliseconds || notification.important
-					? notification.id
-					: null
-		);
+				!notificationsRead.includes(notification.id) &&
+				(Date.parse(notification.createdAt) > Date.now() - notificationDaysInMilliseconds || notification.important) // Also count important in unread notifications as these are visible as well
+		); //Need to include the filtering if notificationsFilterDate is larger (thus not visible)
+	const unreadNotificationsIds = unreadNotifications.map((notification) => notification.id);
 	return {
 		allNotificationsFilteredOnDate: allFilteredOnDateOrImportant,
 		allNotificationsFilteredOnDateIds: allFilteredOnDateIds,
 		unreadNotifications: unreadNotifications,
 		unreadNotificationsIds: unreadNotificationsIds,
-		unreadNotificationsFilteredOnDateIds: unreadFilteredOnDateOrImportantIds,
-		hasUnreadNotifications: unreadFilteredOnDateOrImportantIds.length !== 0,
+		hasUnreadNotifications: unreadNotificationsIds.length !== 0,
 	};
 };
 
@@ -77,13 +75,19 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 	useEffect(() => {
 		if (props.open) {
 			props.setLastRead(Date.now());
-			// Await to set read
+			// Await to set read for seeing the notifications count
 			setTimeout(() => {
 				props.setNotificationsRead([...props.notificationsRead, ...props.unreadNotificationsIds]);
 			}, 5000);
 		}
 		return () => {};
-	}, [props.open]);
+	}, [props.open, props.notificationsFilterDays]);
+
+	useEffect(() => {
+		console.log("Read", props.notificationsRead);
+		console.log("Unread", props.unreadNotificationsIds);
+		return () => {};
+	}, [props.notificationsRead]);
 
 	const style = {
 		position: "absolute" as "absolute",
