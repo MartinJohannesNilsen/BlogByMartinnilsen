@@ -278,6 +278,8 @@ export const SearchModal = (props: SearchModalProps) => {
 		const action = matchedActions![activeItem];
 		if (action.onClick) {
 			action.onClick();
+			setMatchedActions([]);
+			setActiveItem(isMobile ? -1 : 0);
 		}
 		if (action.href) handleNavigate(action.href);
 		setIsActions(false);
@@ -585,8 +587,7 @@ export const SearchModal = (props: SearchModalProps) => {
 												onClick={() => {
 													props.handleModalClose();
 													setTextFieldValue("");
-													if (isMobile) setActiveItem(-1);
-													if (action.onClick) action.onClick();
+													handleEnterClickActions();
 												}}
 											>
 												<ListItemAvatar>
@@ -594,9 +595,7 @@ export const SearchModal = (props: SearchModalProps) => {
 														sx={{
 															marginRight: "12px",
 															borderRadius: "5px",
-															// minWidth: xs ? "70px" : "124px",
-															// minHeight: xs ? "50px" : "70px",
-															background: "transparent",
+															backgroundColor: "transparent",
 														}}
 													>
 														{action.iconElement}
@@ -612,14 +611,6 @@ export const SearchModal = (props: SearchModalProps) => {
 														textOverflow: "ellipsis",
 														overflow: "hidden",
 													}}
-													// secondary={post.description}
-													// secondaryTypographyProps={{
-													// 	color: theme.palette.text.primary,
-													// 	fontFamily: theme.typography.fontFamily,
-													// 	whiteSpace: "nowrap",
-													// 	textOverflow: "ellipsis",
-													// 	overflow: "hidden",
-													// }}
 													sx={{
 														width: "100%",
 														marginRight: isMobile ? 0 : 5,
