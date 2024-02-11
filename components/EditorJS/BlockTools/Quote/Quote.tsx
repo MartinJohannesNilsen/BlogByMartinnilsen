@@ -62,7 +62,7 @@ export const Quote = (props: QuoteProps) => {
 			<Box display="flex" flexDirection="column" my={1} maxWidth={"100vw"}>
 				<Box display="flex">
 					<Box ml={xs ? 2 : 4} mt={0.1}>
-						<BiSolidQuoteRight style={{ color: theme.palette.text.primary, opacity: 0.4 }} />
+						<BiSolidQuoteRight style={{ color: "black", opacity: 0.4 }} />
 					</Box>
 					<Box textAlign="left" ml={1} mr={xs ? 1 : 2.5} sx={{}}>
 						<div
