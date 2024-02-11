@@ -3,6 +3,7 @@
 // import { cloudStorage } from "../../lib/firebaseConfig";
 import {
 	CalloutIcon,
+	ChecklistIcon,
 	CodeIcon,
 	DividerIcon,
 	ImageUploadIcon,
@@ -23,7 +24,7 @@ import LinkTool from "@editorjs/link";
 import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
 import Paragraph from "@editorjs/paragraph";
-import Quote from "@editorjs/quote";
+// import Quote from "@editorjs/quote";
 import Underline from "@editorjs/underline";
 import ToggleBlock from "editorjs-toggle-block";
 import ChangeCase from "./BlockTools/ChangeCase/change-case";
@@ -37,6 +38,7 @@ import InlineVideo from "./BlockTools/InlineVideo/tool";
 import Divider from "./BlockTools/Divider/tool";
 import CodeBlock from "./BlockTools/CodeBlock/tool";
 import Callout from "./BlockTools/Callout/tool";
+import Quote from "./BlockTools/Quote/tool";
 
 // Development
 // Images
@@ -86,7 +88,7 @@ export const EDITOR_JS_TOOLS = {
 	checklist: {
 		class: CheckList,
 		toolbox: {
-			icon: QuoteIcon,
+			icon: ChecklistIcon,
 		},
 	},
 	code: {

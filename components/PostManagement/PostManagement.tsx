@@ -527,10 +527,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												minHeight: "40px",
 												height: "40px",
 												width: "40px",
-												border: "1px solid red",
 												index: 2,
 												backgroundColor: theme.palette.primary.main,
-												color: "red",
 												"&:focus-visible": {
 													backgroundColor:
 														theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],

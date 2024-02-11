@@ -248,6 +248,13 @@ export const CodeBlock = (props: CodeBlockProps) => {
 								margin: "-15px 10px -15px -15px",
 								padding: "15px 0px 15px 15px",
 								backgroundColor: "rgb(30, 30, 30)",
+								// TODO Remove scrollbar on unwrapped codeblocks on render
+								// "& > div": {
+								// 	scrollbarWidth: "none",
+								// },
+								// "& > div::-webkit-scrollbar": {
+								// 	display: "none",
+								// },
 							},
 						}}
 					>
@@ -261,8 +268,10 @@ export const CodeBlock = (props: CodeBlockProps) => {
 								customStyle={{
 									height: !stateData.multiline && "54px",
 									overflowY: "hidden",
+									// overflowX: "scroll",
 									backgroundColor: "rgb(36, 39, 46)",
 									margin: "0px",
+									marginBottom: 0,
 									padding: "15px",
 									borderRadius: "0 0 10px 10px",
 								}}

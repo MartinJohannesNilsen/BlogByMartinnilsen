@@ -131,10 +131,9 @@ export const ImageBlock = (props: ImageProps) => {
 										minHeight: "30px",
 										height: "30px",
 										width: "30px",
-										border: "1px solid red",
 										index: 2,
 										backgroundColor: "black",
-										color: "red",
+										color: "white",
 										"&:focus-visible": {
 											backgroundColor: theme.palette.grey[800],
 										},
