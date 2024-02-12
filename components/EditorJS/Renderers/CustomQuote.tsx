@@ -7,6 +7,7 @@ import { handleSharing } from "../../../pages/posts/[postId]";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import { NavbarButton } from "../../Buttons/NavbarButton";
+const { convert } = require("html-to-text");
 
 const CustomQuote = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
@@ -64,9 +65,9 @@ const CustomQuote = (props: EditorjsRendererProps) => {
 							handleSharing({
 								text:
 									'"' +
-									props.data.text +
+									convert(props.data.text).trimEnd() +
 									'"' +
-									(props.data.caption && " ~ " + props.data.caption) +
+									(props.data.caption && " ~ " + convert(props.data.caption).trimEnd()) +
 									"\n\nA quote from the post available at " +
 									window.location.href,
 							});
