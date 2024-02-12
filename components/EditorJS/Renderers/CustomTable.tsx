@@ -67,7 +67,10 @@ const CustomTable = (props: EditorjsRendererProps) => {
 								<TableRow
 									sx={{
 										"& > *": {
-											borderBottom: `1px solid ${theme.palette.text.primary}08`,
+											// borderBottom: `1px solid ${theme.palette.text.primary}08`,
+											borderBottom:
+												"1px solid " +
+												(theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
 										},
 									}}
 								>
@@ -97,7 +100,10 @@ const CustomTable = (props: EditorjsRendererProps) => {
 									sx={{
 										"&:last-child td, &:last-child th": { border: 0 },
 										"& > *": {
-											borderBottom: `1px solid ${theme.palette.text.primary}08`,
+											// borderBottom: `1px solid ${theme.palette.text.primary}08`,
+											borderBottom:
+												"1px solid " +
+												(theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
 										},
 									}}
 								>

@@ -43,7 +43,7 @@ const Toggle = (props: {
 				<AccordionSummary aria-controls="toggle text">
 					<CustomParagraph data={{ text: props.title }} style={null} config={null} classNames={null} />
 				</AccordionSummary>
-				<AccordionDetails>{props.children}</AccordionDetails>
+				<AccordionDetails sx={{ paddingTop: 0, paddingBottom: 1 }}>{props.children}</AccordionDetails>
 			</Accordion>
 		</Box>
 	);
