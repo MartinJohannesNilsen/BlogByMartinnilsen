@@ -36,6 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const CustomTable = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
+	const newDesign = true;
 
 	const useStyles = makeStyles(() => ({
 		verticalLine: {
@@ -51,44 +52,112 @@ const CustomTable = (props: EditorjsRendererProps) => {
 
 	return (
 		<Box my={1}>
-			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: "100%" }} aria-label="table">
-					{props.data.withHeadings && (
-						<TableHead>
-							<TableRow>
-								{heading.map((cell, j) => (
-									<StyledTableCell
-										key={cell}
-										className={j !== heading.length - 1 ? style.verticalLine : ""}
-										align="center"
-										dangerouslySetInnerHTML={{
-											__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
-										}}
-									/>
-								))}
-							</TableRow>
-						</TableHead>
-					)}
-					<TableBody>
-						{content.map((row, i) => (
-							<StyledTableRow key={i}>
-								{row.map((cell, j) => (
-									<StyledTableCell
-										key={cell}
-										className={j !== row.length - 1 ? style.verticalLine : ""}
-										component="th"
-										scope="row"
-										align="center"
-										dangerouslySetInnerHTML={{
-											__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
-										}}
-									/>
-								))}
-							</StyledTableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			{newDesign ? (
+				<TableContainer
+					component={Paper}
+					elevation={0}
+					sx={{
+						backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
+						border: "2px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
+					}}
+				>
+					<Table sx={{ minWidth: "100%" }} size="small" aria-label="a dense table">
+						{props.data.withHeadings && (
+							<TableHead>
+								<TableRow
+									sx={{
+										"& > *": {
+											borderBottom: `1px solid ${theme.palette.text.primary}08`,
+										},
+									}}
+								>
+									{heading.map((cell, j) => (
+										<TableCell
+											key={cell}
+											// className={j !== heading.length - 1 ? style.verticalLine : ""}
+											sx={{
+												[`&.${tableCellClasses.head}`]: {
+													// fontWeight: 800,
+													// fontSize: 18,
+												},
+											}}
+											align="center"
+											dangerouslySetInnerHTML={{
+												__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
+											}}
+										/>
+									))}
+								</TableRow>
+							</TableHead>
+						)}
+						<TableBody>
+							{content.map((row, i) => (
+								<TableRow
+									key={i}
+									sx={{
+										"&:last-child td, &:last-child th": { border: 0 },
+										"& > *": {
+											borderBottom: `1px solid ${theme.palette.text.primary}08`,
+										},
+									}}
+								>
+									{row.map((cell, j) => (
+										<TableCell
+											key={cell}
+											// className={j !== row.length - 1 ? style.verticalLine : ""}
+											component="th"
+											scope="row"
+											align="center"
+											dangerouslySetInnerHTML={{
+												__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
+											}}
+										/>
+									))}
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			) : (
+				<TableContainer component={Paper}>
+					<Table sx={{ minWidth: "100%" }} aria-label="table">
+						{props.data.withHeadings && (
+							<TableHead>
+								<TableRow>
+									{heading.map((cell, j) => (
+										<StyledTableCell
+											key={cell}
+											className={j !== heading.length - 1 ? style.verticalLine : ""}
+											align="center"
+											dangerouslySetInnerHTML={{
+												__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
+											}}
+										/>
+									))}
+								</TableRow>
+							</TableHead>
+						)}
+						<TableBody>
+							{content.map((row, i) => (
+								<StyledTableRow key={i}>
+									{row.map((cell, j) => (
+										<StyledTableCell
+											key={cell}
+											className={j !== row.length - 1 ? style.verticalLine : ""}
+											component="th"
+											scope="row"
+											align="center"
+											dangerouslySetInnerHTML={{
+												__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
+											}}
+										/>
+									))}
+								</StyledTableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			)}
 		</Box>
 	);
 };
