@@ -66,8 +66,7 @@ const CustomTable = (props: EditorjsRendererProps) => {
 							<TableHead>
 								<TableRow
 									sx={{
-										"& > *": {
-											// borderBottom: `1px solid ${theme.palette.text.primary}08`,
+										"td, th": {
 											borderBottom:
 												"1px solid " +
 												(theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
@@ -98,13 +97,12 @@ const CustomTable = (props: EditorjsRendererProps) => {
 								<TableRow
 									key={i}
 									sx={{
-										"&:last-child td, &:last-child th": { border: 0 },
-										"& > *": {
-											// borderBottom: `1px solid ${theme.palette.text.primary}08`,
+										"td, th": {
 											borderBottom:
 												"1px solid " +
 												(theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200]),
 										},
+										"&:last-child td, &:last-child th": { border: 0 },
 									}}
 								>
 									{row.map((cell, j) => (
