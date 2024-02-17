@@ -1,7 +1,7 @@
-import { ButtonBase, Tooltip } from "@mui/material";
+import { ButtonBase, Tooltip, Typography } from "@mui/material";
+import NextLink from "next/link";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ButtonProps } from "../../types";
-import NextLink from "next/link";
 
 export const NavbarButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
@@ -61,6 +61,19 @@ export const NavbarButton = (props: ButtonProps) => {
 			aria-expanded={props.ariaExpanded || undefined}
 			type={props.type || undefined}
 		>
+			{props.text && (
+				<Typography
+					variant="body2"
+					sx={{
+						fontFamily: theme.typography.fontFamily,
+						fontweight: 800,
+						color: theme.palette.text.primary,
+						...props.sxText,
+					}}
+				>
+					{props.text}
+				</Typography>
+			)}
 			{props.icon && (
 				<props.icon
 					sx={{
@@ -79,7 +92,9 @@ export const NavbarButton = (props: ButtonProps) => {
 		<Tooltip enterDelay={2000} title={props.tooltip}>
 			{props.variant === "outline" ? outlineButton : props.variant === "base" ? button : null}
 		</Tooltip>
-	) : (
+	) : props.variant === "outline" ? (
+		outlineButton
+	) : props.variant === "base" ? (
 		button
-	);
+	) : null;
 };

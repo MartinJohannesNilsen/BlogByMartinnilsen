@@ -272,21 +272,13 @@ export type ButtonProps = {
 				muiName: string;
 		  })
 		| IconType;
+	text?: string;
 	onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
 	href?: string;
 	disabled?: boolean;
-	sxButton?: SxProps & {
-		// backgroundColor?: string;
-		// backgroundColorHover?: string;
-		// height?: string;
-		// width?: string;
-	};
-	sxIcon?: SxProps & {
-		// color?: string;
-		// colorHover?: string;
-		// height?: string;
-		// width?: string;
-	};
+	sxButton?: SxProps & {};
+	sxIcon?: SxProps & {};
+	sxText?: SxProps & {};
 	styleIcon?: CSSProperties;
 	tooltip?: string;
 	ariaControls?: string;

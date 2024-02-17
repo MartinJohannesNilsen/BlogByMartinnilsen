@@ -2,7 +2,7 @@ import Giscus from "@giscus/react";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -21,10 +21,10 @@ import { ReadArticleViewProps } from "../../types";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
+import { ArticleJsonLd } from "next-seo";
 import { useEventListener } from "usehooks-ts";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import Toggle from "../../components/Toggles/Toggle";
-import { ArticleJsonLd } from "next-seo";
 
 // EditorJS renderers
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
@@ -307,7 +307,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 								<Stack
 									p={2}
 									sx={{
-										minHeight: isMobile ? "calc(100vh - 81px - 30px)" : "calc(100vh - 67px - 117px)",
+										minHeight: isMobile ? "calc(100vh - 81px - 30px)" : "calc(100vh - 67px - 104px)",
 										minWidth: "380px",
 										width: xs ? "96vw" : sm ? "90vw" : "760px",
 										position: "relative",

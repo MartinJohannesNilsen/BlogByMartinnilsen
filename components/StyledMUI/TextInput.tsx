@@ -5,7 +5,7 @@ import { withStyles } from "@mui/styles";
 import { styled } from "@mui/system";
 import * as React from "react";
 
-// Teextfield
+// Textfield
 export const StyledTextField = withStyles((theme) => ({
 	root: {
 		"& label": {
@@ -15,6 +15,10 @@ export const StyledTextField = withStyles((theme) => ({
 			color: "#2684FF",
 		},
 		"& .MuiOutlinedInput-root": {
+			paddingTop: "8px",
+			paddingBottom: "8px",
+			paddingLeft: "10px",
+			paddingRight: "10px",
 			borderColor: "#CCCCCC",
 			"& fieldset": {
 				borderColor: "#CCCCCC",

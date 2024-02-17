@@ -1,5 +1,16 @@
 import { OutputData } from "@editorjs/editorjs";
-import { Clear, Delete, Edit, Home, Launch, Restore, Save, Update } from "@mui/icons-material";
+import {
+	Clear,
+	ContentPaste,
+	Delete,
+	Edit,
+	Home,
+	Launch,
+	LaunchRounded,
+	Restore,
+	Save,
+	Update,
+} from "@mui/icons-material";
 import {
 	Autocomplete,
 	Box,
@@ -9,7 +20,9 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
+	Divider,
 	FormControlLabel,
+	Grid,
 	RadioGroup,
 	Typography,
 	useMediaQuery,
@@ -32,14 +45,14 @@ import { renderers } from "../../pages/posts/[postId]";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManageArticleViewProps } from "../../types";
+import { copyToClipboardV2 } from "../../utils/copyToClipboard";
+import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
 import { NavbarButton } from "../Buttons/NavbarButton";
 import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
 import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import EditableTypography from "../StyledMUI/EditableTypography";
 import { BpRadio } from "../StyledMUI/RadioButton";
-import { Tab, Tabs, TabsListHorizontal } from "../StyledMUI/Tabs";
 import { StyledTextField } from "../StyledMUI/TextInput";
-import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
-import Toggle from "../Toggles/Toggle";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -469,9 +482,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								// e.preventDefault();
 							}
 						}}
+						// style={{ position: "relative", width: "100%" }}
 					>
+						{/* Button row */}
 						<Box my={1}>
-							{/* Button row */}
 							<Box display="flex" alignItems="center" minWidth={"380px"} width={width} py={2} columnGap={1}>
 								{xs && <Box sx={{ width: "40px" }} />}
 								{xs && <Box sx={{ width: "40px" }} />}
@@ -598,459 +612,362 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 							</Box>
 						</Box>
 
-						{/* Information */}
-						<Toggle
-							title={"<b>Information</b>"}
-							open={toggleOpen}
-							handleClick={() => setToggleOpen(!toggleOpen)}
-							boxSx={{ my: 0 }}
-							accordionSx={{
-								backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
-								border: theme.palette.mode === "dark" ? "none" : "1px solid" + theme.palette.grey[200],
+						{/* Title */}
+						<EditableTypography
+							variant="h3"
+							sx={{
+								my: 1,
+								width: width,
+								opacity: data.title.trim() == "" && 0.3,
+								color:
+									data.title.length > OGDEFAULTS.titleOptimal
+										? data.title.length > OGDEFAULTS.titleMax
+											? "red"
+											: "#cfa602"
+										: theme.palette.text.primary,
 							}}
+							onChange={(e) => setData({ ...data, title: e })}
+							placeholder="Untitled"
 						>
-							<Box display="flex" flexDirection="column" sx={{ width: width }} rowGap={2}>
-								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
-									Required
-								</Typography>
-								<StyledTextField
-									InputLabelProps={{ shrink: false }}
-									placeholder="Type"
-									inputProps={{ style: { padding: 10 } }}
-									name="type"
-									required
-									fullWidth
-									sx={{ backgroundColor: theme.palette.primary.main }}
-									value={data.type}
-									onChange={handleInputChange}
-									InputProps={{
-										endAdornment: data.type.length > 0 && (
-											<Typography
-												fontFamily={theme.typography.fontFamily}
-												fontSize={12}
-												fontWeight={400}
-												sx={{
-													ml: 1,
-												}}
-											>
-												Type
-											</Typography>
-										),
-									}}
-								/>
-								<StyledTextField
-									InputLabelProps={{ shrink: false }}
-									placeholder="Title"
-									name="title"
-									required
-									fullWidth
-									sx={{ backgroundColor: theme.palette.primary.main }}
-									inputProps={{
-										style: { padding: 10 },
-										maxlength: OGDEFAULTS.titleMax,
-									}}
-									InputProps={{
-										endAdornment: (
-											<Typography
-												fontFamily={theme.typography.fontFamily}
-												fontSize={12}
-												fontWeight={400}
-												sx={{
-													ml: 1,
-													color: data.title.length <= OGDEFAULTS.titleOptimal ? "green" : "#cfa602",
-												}}
-											>
-												{`${data.title.length}/${OGDEFAULTS.titleMax}`}
-											</Typography>
-										),
-									}}
-									value={data.title}
-									onChange={handleInputChange}
-								/>
-								<StyledTextField
-									InputLabelProps={{ shrink: false }}
-									placeholder="Description"
-									name="description"
-									fullWidth
-									multiline
-									size="small"
-									sx={{ backgroundColor: theme.palette.primary.main }}
-									onKeyPress={(e) => {
-										if (e.key === "Enter") {
-											event.preventDefault();
-										}
-									}}
-									inputProps={{
-										maxlength: OGDEFAULTS.descriptionMax,
-										style: { padding: "0px" },
-									}}
-									InputProps={{
-										endAdornment: (
-											<Typography
-												fontFamily={theme.typography.fontFamily}
-												fontSize={12}
-												fontWeight={400}
-												sx={{
-													ml: 1,
-													color:
-														data.description.length <= OGDEFAULTS.descriptionOptimal
-															? "green"
-															: data.description.length <= OGDEFAULTS.descriptionWarning
-															? theme.palette.text.primary
-															: "#cfa602",
-												}}
-											>
-												{`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
-											</Typography>
-										),
-									}}
-									value={data.description}
-									onChange={handleInputChange}
-								/>
-								{/* <StyledTextField
-									InputLabelProps={{ shrink: false }}
-									placeholder="Open Graph Image"
-									inputProps={{ style: { padding: 10 } }}
-									name="image"
-									error={
-										data.ogImage &&
-										data.ogImage.src &&
-										data.ogImage.src.trim() !== "" &&
-										!isvalidHTTPUrl(data.ogImage.src)
-									}
-									InputProps={{
-										endAdornment: data.ogImage &&
-											data.ogImage.src &&
-											data.ogImage.src.trim() !== "" &&
-											!isvalidHTTPUrl(data.ogImage.src) && (
+							{data.title}
+						</EditableTypography>
+
+						{/* Properties */}
+						<Box display="flex" flexDirection="column" sx={{ width: width }} rowGap={2} my={1}>
+							<Divider />
+							<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={1} mb={-1}>
+								Properties
+							</Typography>
+							<Grid container alignItems="center" justifyContent="flex-start" rowGap={1}>
+								{/* Description */}
+								<Grid item xs={3} md={2}>
+									<Typography sx={{ fontWeight: 600 }}>Description</Typography>
+								</Grid>
+								<Grid item xs={9} md={10}>
+									<StyledTextField
+										InputLabelProps={{ shrink: false }}
+										placeholder="Description"
+										name="description"
+										fullWidth
+										multiline
+										size="small"
+										sx={{ backgroundColor: theme.palette.primary.main }}
+										onKeyPress={(e) => {
+											if (e.key === "Enter") {
+												event.preventDefault();
+											}
+										}}
+										inputProps={{
+											maxlength: OGDEFAULTS.descriptionMax,
+											style: { padding: 0 },
+										}}
+										InputProps={{
+											endAdornment: (
 												<Typography
 													fontFamily={theme.typography.fontFamily}
 													fontSize={12}
 													fontWeight={400}
 													sx={{
 														ml: 1,
-														color: "red",
+														color:
+															data.description.length <= OGDEFAULTS.descriptionOptimal
+																? "green"
+																: data.description.length <= OGDEFAULTS.descriptionWarning
+																? theme.palette.text.primary
+																: "#cfa602",
 													}}
 												>
-													URL
+													{`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
 												</Typography>
 											),
-									}}
-									fullWidth
-									value={data.ogImage.src}
-									onChange={(e) => {
-										setIsSaved(false);
-										const { value } = e.target;
-										setData({
-											...data,
-											ogImage: { ...data.ogImage, src: value },
-										});
-									}}
-								/> */}
-								<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mt={2} mb={-1.5}>
-									Optional
-								</Typography>
-								<Autocomplete
-									freeSolo
-									multiple
-									options={[]}
-									value={data.keywords}
-									onChange={(event, newValue) => {
-										setData({ ...data, keywords: newValue });
-									}}
-									renderInput={(params) => (
-										<StyledTextField
-											{...params}
-											InputLabelProps={{ shrink: false }}
-											placeholder={data.keywords && data.keywords.length !== 0 ? "" : "Keywords"}
-											variant="outlined"
-											sx={{ backgroundColor: theme.palette.primary.main }}
-											InputProps={{
-												style: { padding: 3 },
-												startAdornment: (
-													<Box marginLeft={0.5} display="flex" flexWrap="wrap">
-														{data.keywords?.map((value, index) => (
-															<Box
-																key={index}
-																display="flex"
-																sx={{
-																	backgroundColor: "#E6E6E6",
-																	borderRadius: 0.5,
-																	padding: "2px 4px",
-																	marginLeft: 0.5,
-																	marginY: 0.25,
-																}}
-															>
-																<Typography sx={{ color: "#333333", fontWeight: 500, fontSize: 14 }}>
-																	{value}
-																</Typography>
-																<ButtonBase
-																	LinkComponent={NextLink}
+										}}
+										value={data.description}
+										onChange={handleInputChange}
+									/>
+								</Grid>
+								{/* Type */}
+								<Grid item xs={3} md={2}>
+									<Typography sx={{ fontWeight: 600 }}>Type</Typography>
+								</Grid>
+								<Grid item xs={9} md={10}>
+									<StyledTextField
+										InputLabelProps={{ shrink: false }}
+										placeholder="Type"
+										inputProps={{ style: { padding: 0 } }}
+										name="type"
+										required
+										fullWidth
+										sx={{ backgroundColor: theme.palette.primary.main }}
+										value={data.type}
+										onChange={handleInputChange}
+										// InputProps={{
+										// 	endAdornment: data.type.length > 0 && (
+										// 		<Typography
+										// 			fontFamily={theme.typography.fontFamily}
+										// 			fontSize={12}
+										// 			fontWeight={400}
+										// 			sx={{
+										// 				ml: 1,
+										// 			}}
+										// 		>
+										// 			Type
+										// 		</Typography>
+										// 	),
+										// }}
+									/>
+								</Grid>
+								{/* Keywords */}
+								<Grid item xs={3} md={2}>
+									<Typography sx={{ fontWeight: 600 }}>Keywords</Typography>
+								</Grid>
+								<Grid item xs={9} md={10}>
+									<Autocomplete
+										freeSolo
+										multiple
+										options={[]}
+										value={data.keywords}
+										onChange={(event, newValue) => {
+											setData({ ...data, keywords: newValue });
+										}}
+										renderInput={(params) => (
+											<StyledTextField
+												{...params}
+												InputLabelProps={{ shrink: false }}
+												placeholder={data.keywords && data.keywords.length !== 0 ? "" : "Keywords"}
+												variant="outlined"
+												sx={{ backgroundColor: theme.palette.primary.main }}
+												InputProps={{
+													style: { padding: 3 },
+													startAdornment: (
+														<Box marginLeft={0.5} display="flex" flexWrap="wrap">
+															{data.keywords?.map((value, index) => (
+																<Box
+																	key={index}
+																	display="flex"
 																	sx={{
-																		"&: hover": { backgroundColor: "#F5C0B0", color: "#CC4525" },
-																		margin: "-2px -4px -2px 3px",
-																		padding: 0.5,
-																		borderRadius: 0.25,
-																	}}
-																	onClick={() => {
-																		setData({
-																			...data,
-																			keywords: data.keywords.filter((keyword) => keyword !== value),
-																		});
+																		backgroundColor: "#E6E6E6",
+																		borderRadius: 0.5,
+																		padding: "2px 4px",
+																		marginLeft: 0.5,
+																		marginY: 0.25,
 																	}}
 																>
-																	<Clear sx={{ width: 12, height: 12, fontWeight: 1000 }} />
-																</ButtonBase>
-															</Box>
-														))}
-													</Box>
-												),
-											}}
-										/>
-									)}
-								/>
-								<Box sx={{ zIndex: 5 }}>
-									<CreatableSelect
-										isMulti
-										isClearable
-										isSearchable
-										placeholder="Tags"
-										value={data.tags.map((tag) => ({ value: tag, label: tag }))}
-										onChange={(array) => {
-											setData({ ...data, tags: array.map((item) => item.value) });
-										}}
-										onCreateOption={handleCreateTagOption}
-										options={tagOptions}
-									/>
-								</Box>
-								{postId && (
-									<>
-										<Typography
-											variant="h6"
-											color="textPrimary"
-											fontFamily={theme.typography.fontFamily}
-											mt={2}
-											mb={-1.5}
-										>
-											Open Graph Image
-										</Typography>
-										{data.ogImage.hasOwnProperty("fileRef") && data.ogImage.fileRef ? (
-											<StyledTextField
-												disabled
-												InputLabelProps={{ shrink: false }}
-												placeholder="Open Graph Image"
-												inputProps={{ style: { padding: 10 } }}
-												sx={{ backgroundColor: theme.palette.primary.main }}
-												name="image"
-												InputProps={{
-													endAdornment: (
-														<Box display="flex" alignItems="center" ml={0.2}>
-															<Typography fontFamily={theme.typography.fontFamily} fontSize={14} fontWeight={600}>
-																{`${(data.ogImage.fileSize / 1024).toFixed(2)}kb`}
-															</Typography>
-															<NavbarButton
-																variant="base"
-																icon={Clear}
-																sxButton={{ width: 20, height: 20 }}
-																sxIcon={{ width: 20, height: 20 }}
-																onClick={async () => {
-																	const response = await deleteImage(data.ogImage.fileRef);
-																	if (response.code === 200) {
-																		setData({
-																			...data,
-																			ogImage: { ...data.ogImage, src: DEFAULT_OGIMAGE, fileRef: null, fileSize: null },
-																		});
-																		enqueueSnackbar(`Open Graph Image successfully deleted`, {
-																			variant: "success",
-																			preventDuplicate: true,
-																		});
-																	} else {
-																		enqueueSnackbar(`(${response.code}) ${response.reason}`, {
-																			variant: "error",
-																			preventDuplicate: true,
-																		});
-																	}
-																}}
-															/>
+																	<Typography sx={{ color: "#333333", fontWeight: 500, fontSize: 14 }}>
+																		{value}
+																	</Typography>
+																	<ButtonBase
+																		LinkComponent={NextLink}
+																		sx={{
+																			"&: hover": { backgroundColor: "#F5C0B0", color: "#CC4525" },
+																			margin: "-2px -4px -2px 3px",
+																			padding: 0.5,
+																			borderRadius: 0.25,
+																		}}
+																		onClick={() => {
+																			setData({
+																				...data,
+																				keywords: data.keywords.filter((keyword) => keyword !== value),
+																			});
+																		}}
+																	>
+																		<Clear sx={{ width: 12, height: 12, fontWeight: 1000 }} />
+																	</ButtonBase>
+																</Box>
+															))}
 														</Box>
 													),
 												}}
-												fullWidth
-												value={data.ogImage.src}
-											/>
-										) : (
-											<input
-												type="file"
-												id="fileInput"
-												// accept="image/*,video/*"
-												accept="image/*"
-												onChange={async (e) => {
-													const file = e.target.files[0];
-													const uploadResponse = await uploadImage(file, postId, "ogImage");
-													if (uploadResponse.hasOwnProperty("data")) {
-														const details = await imageDetailsApiFetcher(
-															process.env.NEXT_PUBLIC_SERVER_URL +
-																"/editorjs/imageblurhash?url=" +
-																encodeURIComponent(uploadResponse.data.url)
-														);
-														setData({
-															...data,
-															ogImage: {
-																...data.ogImage,
-																src: uploadResponse.data.url,
-																height: details.height,
-																width: details.width,
-																blurhash: details.encoded,
-																fileRef: uploadResponse.data.fileRef,
-																fileSize: file.size,
-															},
-														});
-														enqueueSnackbar(`Open Graph Image uploaded (${(file.size / 1024).toFixed(2)}kb)`, {
-															variant: "success",
-															preventDuplicate: true,
-														});
-													} else {
-														enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
-															variant: "error",
-															preventDuplicate: true,
-														});
-													}
+												inputProps={{
+													style: { paddingLeft: "3px", paddingRight: "3px", paddingTop: "4px", paddingBottom: "4px" },
 												}}
 											/>
 										)}
+									/>
+								</Grid>
+								{/* Tags */}
+								<Grid item xs={3} md={2}>
+									<Typography sx={{ fontWeight: 600 }}>Tags</Typography>
+								</Grid>
+								<Grid item xs={9} md={10}>
+									<Box sx={{ zIndex: 5 }}>
+										<CreatableSelect
+											isMulti
+											isClearable
+											isSearchable
+											placeholder="Tags"
+											value={data.tags.map((tag) => ({ value: tag, label: tag }))}
+											onChange={(array) => {
+												setData({ ...data, tags: array.map((item) => item.value) });
+											}}
+											onCreateOption={handleCreateTagOption}
+											options={tagOptions}
+										/>
+									</Box>
+								</Grid>
+								{/* Open Graph Image */}
+								{postId && (
+									<>
+										<Grid item xs={3} md={2}>
+											<Typography sx={{ fontWeight: 600 }}>OG Image</Typography>
+										</Grid>
+										<Grid item xs={9} md={10}>
+											{data.ogImage.hasOwnProperty("fileRef") && data.ogImage.fileRef ? (
+												<Box display="flex" alignItems="center" gap={0.5}>
+													<StyledTextField
+														disabled
+														InputLabelProps={{ shrink: false }}
+														placeholder="Open Graph Image"
+														inputProps={{ style: { padding: 0 } }}
+														// sx={{ backgroundColor: theme.palette.primary.main, width: 155.5 }}
+														sx={{ backgroundColor: theme.palette.primary.main, width: "100%" }}
+														name="image"
+														// fullWidth
+														value={data.ogImage.src}
+													/>
+													{/* Copy */}
+													<NavbarButton
+														variant="outline"
+														icon={ContentPaste}
+														sxButton={{
+															minWidth: "40px",
+															minHeight: "40px",
+															height: "40px",
+															width: "40px",
+														}}
+														sxIcon={{
+															height: "22px",
+															width: "22px",
+															color: "inherit",
+														}}
+														onClick={() => {
+															copyToClipboardV2(data.ogImage.src);
+														}}
+													/>
+													{/* Open in browser */}
+													<NavbarButton
+														variant="outline"
+														icon={LaunchRounded}
+														sxButton={{
+															minWidth: "40px",
+															minHeight: "40px",
+															height: "40px",
+															width: "40px",
+														}}
+														sxIcon={{
+															height: "22px",
+															width: "22px",
+															color: "inherit",
+														}}
+														onClick={() => {
+															window.open(data.ogImage.src, "_blank");
+														}}
+													/>
+													{/* Delete image */}
+													<NavbarButton
+														variant="outline"
+														icon={Clear}
+														sxButton={{
+															minWidth: "40px",
+															minHeight: "40px",
+															height: "40px",
+															width: "40px",
+														}}
+														sxIcon={{
+															height: "22px",
+															width: "22px",
+															color: "inherit",
+														}}
+														onClick={async () => {
+															const response = await deleteImage(data.ogImage.fileRef);
+															if (response.code === 200) {
+																setData({
+																	...data,
+																	ogImage: {
+																		...data.ogImage,
+																		src: DEFAULT_OGIMAGE,
+																		fileRef: null,
+																		fileSize: null,
+																	},
+																});
+																enqueueSnackbar(`Open Graph Image successfully deleted`, {
+																	variant: "success",
+																	preventDuplicate: true,
+																});
+															} else {
+																enqueueSnackbar(`(${response.code}) ${response.reason}`, {
+																	variant: "error",
+																	preventDuplicate: true,
+																});
+															}
+														}}
+													/>
+													<Typography
+														ml={1}
+														sx={{
+															fontFamily: theme.typography.fontFamily,
+															fontSize: 14,
+															fontWeight: 600,
+															color: theme.palette.grey[500],
+															display: "inline-block", // Allows the underline to fit the text
+															textDecoration: "none", // Ensures text is not underlined by default
+														}}
+													>
+														{`${(data.ogImage.fileSize / 1024).toFixed(2)}kb`}
+													</Typography>
+												</Box>
+											) : (
+												<input
+													type="file"
+													id="fileInput"
+													// accept="image/*,video/*"
+													accept="image/*"
+													onChange={async (e) => {
+														const file = e.target.files[0];
+														const uploadResponse = await uploadImage(file, postId, "ogImage");
+														if (uploadResponse.hasOwnProperty("data")) {
+															const details = await imageDetailsApiFetcher(
+																process.env.NEXT_PUBLIC_SERVER_URL +
+																	"/editorjs/imageblurhash?url=" +
+																	encodeURIComponent(uploadResponse.data.url)
+															);
+															setData({
+																...data,
+																ogImage: {
+																	...data.ogImage,
+																	src: uploadResponse.data.url,
+																	height: details.height,
+																	width: details.width,
+																	blurhash: details.encoded,
+																	fileRef: uploadResponse.data.fileRef,
+																	fileSize: file.size,
+																},
+															});
+															enqueueSnackbar(`Open Graph Image uploaded (${(file.size / 1024).toFixed(2)}kb)`, {
+																variant: "success",
+																preventDuplicate: true,
+															});
+														} else {
+															enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+																variant: "error",
+																preventDuplicate: true,
+															});
+														}
+													}}
+												/>
+											)}
+										</Grid>
 									</>
 								)}
+								{/* Date and time */}
 								{props.post && (
-									<Box mt={3} display="flex" flexDirection="column" gap={0.8}>
-										<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mb={0.5}>
-											Date and time
-										</Typography>
-
-										{/* Created At */}
-										<Box display="flex" gap={0.5} alignItems="center">
-											<Typography
-												fontFamily={theme.typography.fontFamily}
-												fontWeight={600}
-												fontSize={18}
-												sx={{ color: theme.palette.text.primary, minWidth: 100 }}
-											>
-												Created at:
-											</Typography>
-											{xs && <Box flexGrow={1} />}
-											<input
-												style={{
-													border:
-														"1px solid " +
-														(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-													borderRadius: 5,
-													padding: 5,
-													fontFamily: theme.typography.fontFamily,
-													fontWeight: 600,
-													fontSize: isMobile ? 18 : 15,
-												}}
-												disabled={!createdAtEditable}
-												type="datetime-local"
-												name="createdAt"
-												// onKeyDown={(e) => {
-												// 	if (e.key === "Delete") e.preventDefault();
-												// }}
-												value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
-												onChange={(e) => {
-													console.log(new Date(e.target.value).toISOString());
-													setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
-												}}
-											/>
-											<NavbarButton
-												variant="outline"
-												onClick={() => {
-													setCreatedAtEditable(!createdAtEditable);
-												}}
-												icon={Edit}
-												tooltip="Edit"
-												sxButton={{
-													minWidth: "36px",
-													minHeight: "36px",
-													height: "36px",
-													width: "36px",
-												}}
-												sxIcon={{
-													height: "18px",
-													width: "18px",
-													color: "inherit",
-												}}
-											/>
-											<NavbarButton
-												variant="outline"
-												onClick={() => {
-													setData({ ...data, createdAt: props.post.createdAt });
-													setCreatedAtEditable(false);
-												}}
-												disabled={!props.post}
-												icon={Restore}
-												tooltip="Revert"
-												sxButton={{
-													minWidth: "36px",
-													minHeight: "36px",
-													height: "36px",
-													width: "36px",
-												}}
-												sxIcon={{
-													height: "18px",
-													width: "18px",
-													color: "inherit",
-												}}
-											/>
-											<Typography
-												onClick={() => setData({ ...data, createdAt: Date.now() })}
-												ml={1}
-												sx={{
-													fontFamily: theme.typography.fontFamily,
-													fontSize: 14,
-													fontWeight: 600,
-													color: theme.palette.grey[500],
-													display: "inline-block", // Allows the underline to fit the text
-													cursor: "pointer", // Changes the cursor to indicate it's clickable
-													textDecoration: "none", // Ensures text is not underlined by default
-													"&:hover": {
-														textDecoration: "underline", // Underlines text on hover
-													},
-												}}
-											>
-												Now
-											</Typography>
-										</Box>
-
-										{/* Updated At */}
-										<Box display="flex" gap={0.5} alignItems="center">
-											<Typography
-												fontFamily={theme.typography.fontFamily}
-												fontWeight={600}
-												fontSize={18}
-												sx={{ color: theme.palette.text.primary, minWidth: 100 }}
-											>
-												Updated at:
-											</Typography>
-											{xs && <Box flexGrow={1} />}
-											{automaticallySetUpdatedAt ? (
-												<input
-													style={{
-														border:
-															"1px solid " +
-															(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-														borderRadius: 5,
-														padding: 7,
-														fontFamily: theme.typography.fontFamily,
-														fontWeight: 600,
-														fontSize: isMobile ? 18 : 15,
-														color: theme.palette.grey[400],
-														width: 155.5,
-													}}
-													disabled
-													name="updatedAt"
-													value="Automatic on save"
-													onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
-												/>
-											) : data.updatedAt ? (
+									<>
+										<Grid item xs={3} md={2}>
+											<Typography sx={{ fontWeight: 600 }}>Created at</Typography>
+										</Grid>
+										<Grid item xs={9} md={10}>
+											{/* Created At */}
+											<Box display="flex" gap={0.5} alignItems="center">
+												{/* {xs && <Box flexGrow={1} />} */}
 												<input
 													style={{
 														border:
@@ -1062,134 +979,245 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 														fontWeight: 600,
 														fontSize: isMobile ? 18 : 15,
 													}}
-													disabled={!updatedAtEditable}
+													disabled={!createdAtEditable}
 													type="datetime-local"
-													name="updatedAt"
-													value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
-													onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
-												/>
-											) : (
-												<input
-													style={{
-														border:
-															"1px solid " +
-															(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-														borderRadius: 5,
-														padding: 7,
-														fontFamily: theme.typography.fontFamily,
-														fontWeight: 600,
-														fontSize: isMobile ? 18 : 15,
-														color: theme.palette.grey[400],
-														width: 155.5,
-													}}
-													disabled
-													name="updatedAt"
-													value={props.post.updatedAt ? "Will be removed" : "Not yet updated"}
+													name="createdAt"
+													// onKeyDown={(e) => {
+													// 	if (e.key === "Delete") e.preventDefault();
+													// }}
+													value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
 													onChange={(e) => {
-														console.log(e.target.value);
-														setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
+														console.log(new Date(e.target.value).toISOString());
+														setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
 													}}
 												/>
-											)}
+												<NavbarButton
+													variant="outline"
+													onClick={() => {
+														setCreatedAtEditable(!createdAtEditable);
+													}}
+													icon={Edit}
+													tooltip="Edit"
+													sxButton={{
+														minWidth: "36px",
+														minHeight: "36px",
+														height: "36px",
+														width: "36px",
+													}}
+													sxIcon={{
+														height: "18px",
+														width: "18px",
+														color: "inherit",
+													}}
+												/>
+												<NavbarButton
+													variant="outline"
+													onClick={() => {
+														setData({ ...data, createdAt: props.post.createdAt });
+														setCreatedAtEditable(false);
+													}}
+													disabled={!props.post}
+													icon={Restore}
+													tooltip="Revert"
+													sxButton={{
+														minWidth: "36px",
+														minHeight: "36px",
+														height: "36px",
+														width: "36px",
+													}}
+													sxIcon={{
+														height: "18px",
+														width: "18px",
+														color: "inherit",
+													}}
+												/>
+												<Typography
+													onClick={() => setData({ ...data, createdAt: Date.now() })}
+													ml={1}
+													sx={{
+														fontFamily: theme.typography.fontFamily,
+														fontSize: 14,
+														fontWeight: 600,
+														color: theme.palette.grey[500],
+														display: "inline-block", // Allows the underline to fit the text
+														cursor: "pointer", // Changes the cursor to indicate it's clickable
+														textDecoration: "none", // Ensures text is not underlined by default
+														"&:hover": {
+															textDecoration: "underline", // Underlines text on hover
+														},
+													}}
+												>
+													Now
+												</Typography>
+											</Box>
+										</Grid>
+										<Grid item xs={3} md={2}>
+											<Typography sx={{ fontWeight: 600 }}>Last edited</Typography>
+										</Grid>
+										<Grid item xs={9} md={10}>
+											{/* Updated At */}
+											<Box display="flex" gap={0.5} alignItems="center">
+												{/* {xs && <Box flexGrow={1} />} */}
+												{automaticallySetUpdatedAt ? (
+													<input
+														style={{
+															border:
+																"1px solid " +
+																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+															borderRadius: 5,
+															padding: 7,
+															fontFamily: theme.typography.fontFamily,
+															fontWeight: 600,
+															fontSize: isMobile ? 18 : 15,
+															color: theme.palette.grey[400],
+															width: 155.5,
+														}}
+														disabled
+														name="updatedAt"
+														value="Automatic on save"
+														onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+													/>
+												) : data.updatedAt ? (
+													<input
+														style={{
+															border:
+																"1px solid " +
+																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+															borderRadius: 5,
+															padding: 5,
+															fontFamily: theme.typography.fontFamily,
+															fontWeight: 600,
+															fontSize: isMobile ? 18 : 15,
+														}}
+														disabled={!updatedAtEditable}
+														type="datetime-local"
+														name="updatedAt"
+														value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
+														onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+													/>
+												) : (
+													<input
+														style={{
+															border:
+																"1px solid " +
+																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+															borderRadius: 5,
+															padding: 7,
+															fontFamily: theme.typography.fontFamily,
+															fontWeight: 600,
+															fontSize: isMobile ? 18 : 15,
+															color: theme.palette.grey[400],
+															width: 155.5,
+														}}
+														disabled
+														name="updatedAt"
+														value={props.post.updatedAt ? "Will be removed" : "Not yet updated"}
+														onChange={(e) => {
+															console.log(e.target.value);
+															setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
+														}}
+													/>
+												)}
 
-											<NavbarButton
-												variant="outline"
-												onClick={() => {
-													setData({ ...data, updatedAt: props.post.updatedAt || data.createdAt });
-													setAutomaticallySetUpdatedAt(false);
-													setUpdatedAtEditable(true);
-												}}
-												icon={Edit}
-												tooltip="Edit"
-												disabled={updatedAtEditable}
-												sxButton={{
-													minWidth: "36px",
-													minHeight: "36px",
-													height: "36px",
-													width: "36px",
-												}}
-												sxIcon={{
-													height: "18px",
-													width: "18px",
-													color: "inherit",
-												}}
-											/>
-											<NavbarButton
-												variant="outline"
-												onClick={() => {
-													setData({ ...data, updatedAt: props.post.updatedAt });
-													setAutomaticallySetUpdatedAt(false);
-													setUpdatedAtEditable(false);
-												}}
-												disabled={!props.post}
-												icon={Restore}
-												tooltip="Revert"
-												sxButton={{
-													minWidth: "36px",
-													minHeight: "36px",
-													height: "36px",
-													width: "36px",
-												}}
-												sxIcon={{
-													height: "18px",
-													width: "18px",
-													color: "inherit",
-												}}
-											/>
-											<Typography
-												// onClick={() => setData({ ...data, updatedAt: Date.now() })}
-												onClick={() => {
-													setUpdatedAtEditable(false);
-													setAutomaticallySetUpdatedAt(true);
-												}}
-												ml={1}
-												sx={{
-													fontFamily: theme.typography.fontFamily,
-													fontSize: 14,
-													fontWeight: 600,
-													color: theme.palette.grey[500],
-													display: "inline-block", // Allows the underline to fit the text
-													cursor: "pointer", // Changes the cursor to indicate it's clickable
-													textDecoration: "none", // Ensures text is not underlined by default
-													"&:hover": {
-														textDecoration: "underline", // Underlines text on hover
-													},
-												}}
-											>
-												Default
-											</Typography>
-											<Typography
-												onClick={() => {
-													setData({ ...data, updatedAt: null });
-													setAutomaticallySetUpdatedAt(false);
-													setUpdatedAtEditable(false);
-												}}
-												ml={1}
-												sx={{
-													fontFamily: theme.typography.fontFamily,
-													fontSize: 14,
-													fontWeight: 600,
-													color: theme.palette.grey[500],
-													display: "inline-block", // Allows the underline to fit the text
-													cursor: "pointer", // Changes the cursor to indicate it's clickable
-													textDecoration: "none", // Ensures text is not underlined by default
-													"&:hover": {
-														textDecoration: "underline", // Underlines text on hover
-													},
-												}}
-											>
-												Remove
-											</Typography>
-										</Box>
-									</Box>
+												<NavbarButton
+													variant="outline"
+													onClick={() => {
+														setData({ ...data, updatedAt: props.post.updatedAt || data.createdAt });
+														setAutomaticallySetUpdatedAt(false);
+														setUpdatedAtEditable(true);
+													}}
+													icon={Edit}
+													tooltip="Edit"
+													disabled={updatedAtEditable}
+													sxButton={{
+														minWidth: "36px",
+														minHeight: "36px",
+														height: "36px",
+														width: "36px",
+													}}
+													sxIcon={{
+														height: "18px",
+														width: "18px",
+														color: "inherit",
+													}}
+												/>
+												<NavbarButton
+													variant="outline"
+													onClick={() => {
+														setData({ ...data, updatedAt: props.post.updatedAt });
+														setAutomaticallySetUpdatedAt(false);
+														setUpdatedAtEditable(false);
+													}}
+													disabled={!props.post}
+													icon={Restore}
+													tooltip="Revert"
+													sxButton={{
+														minWidth: "36px",
+														minHeight: "36px",
+														height: "36px",
+														width: "36px",
+													}}
+													sxIcon={{
+														height: "18px",
+														width: "18px",
+														color: "inherit",
+													}}
+												/>
+												<Typography
+													// onClick={() => setData({ ...data, updatedAt: Date.now() })}
+													onClick={() => {
+														setUpdatedAtEditable(false);
+														setAutomaticallySetUpdatedAt(true);
+													}}
+													ml={1}
+													sx={{
+														fontFamily: theme.typography.fontFamily,
+														fontSize: 14,
+														fontWeight: 600,
+														color: theme.palette.grey[500],
+														display: "inline-block", // Allows the underline to fit the text
+														cursor: "pointer", // Changes the cursor to indicate it's clickable
+														textDecoration: "none", // Ensures text is not underlined by default
+														"&:hover": {
+															textDecoration: "underline", // Underlines text on hover
+														},
+													}}
+												>
+													Default
+												</Typography>
+												<Typography
+													onClick={() => {
+														setData({ ...data, updatedAt: null });
+														setAutomaticallySetUpdatedAt(false);
+														setUpdatedAtEditable(false);
+													}}
+													ml={1}
+													sx={{
+														fontFamily: theme.typography.fontFamily,
+														fontSize: 14,
+														fontWeight: 600,
+														color: theme.palette.grey[500],
+														display: "inline-block", // Allows the underline to fit the text
+														cursor: "pointer", // Changes the cursor to indicate it's clickable
+														textDecoration: "none", // Ensures text is not underlined by default
+														"&:hover": {
+															textDecoration: "underline", // Underlines text on hover
+														},
+													}}
+												>
+													Remove
+												</Typography>
+											</Box>
+										</Grid>
+									</>
 								)}
-
-								<Box mt={3} mb={2}>
-									<Typography variant="h6" color="textPrimary" fontFamily={theme.typography.fontFamily} mb={0.5}>
-										Published
-									</Typography>
+								{/* Published */}
+								<Grid item xs={3} md={2}>
+									<Typography sx={{ fontWeight: 600 }}>Published</Typography>
+								</Grid>
+								<Grid item xs={9} md={10}>
 									<RadioGroup
-										// sx={{ marginTop: theme.spacing(-2) }}
+										sx={{ marginLeft: theme.spacing(0.5) }}
 										row
 										value={data.published}
 										name="published-radio-buttons-group"
@@ -1198,9 +1226,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										<FormControlLabel value={true} control={<BpRadio />} label="Yes" />
 										<FormControlLabel value={false} control={<BpRadio />} label="No" />
 									</RadioGroup>
-								</Box>
-							</Box>
-						</Toggle>
+								</Grid>
+							</Grid>
+							<Divider />
+						</Box>
 
 						{/* Content */}
 						<Box display="flex" flexDirection="column" sx={{ width: width }}>
