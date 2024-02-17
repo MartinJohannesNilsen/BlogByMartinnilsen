@@ -478,7 +478,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								{/* Home */}
 								<NavbarButton
 									variant="outline"
-									href="/"
+									// href="/"
+									onClick={() => (window.location.href = `/`)}
 									icon={Home}
 									tooltip="Go to landing page"
 									sxButton={{
@@ -497,7 +498,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								{postId && (
 									<NavbarButton
 										variant="outline"
-										href={`/posts/${postId}`}
+										// href={`/posts/${postId}`}
+										onClick={() => (window.location.href = `/posts/${postId}`)}
 										icon={Launch}
 										tooltip="View post"
 										sxButton={{
