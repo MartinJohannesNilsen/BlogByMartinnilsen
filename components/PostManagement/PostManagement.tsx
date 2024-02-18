@@ -693,7 +693,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										</Grid>
 										<Grid item xs={9} md={10}>
 											{/* Updated At */}
-											<Box display="flex" gap={0.5} alignItems="center">
+											<Box display="flex" gap={0.5} alignItems="center" justifyContent="flex-start">
 												{/* {xs && <Box flexGrow={1} />} */}
 												{automaticallySetUpdatedAt ? (
 													<input
@@ -702,7 +702,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																"1px solid " +
 																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
 															borderRadius: 5,
-															padding: 7,
+															padding: "7px 7px",
+															marginRight: -1,
 															fontFamily: theme.typography.fontFamily,
 															fontWeight: 600,
 															fontSize: isMobile ? 18 : 15,
@@ -721,7 +722,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																"1px solid " +
 																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
 															borderRadius: 5,
-															padding: 5,
+															padding: "5px 5px",
 															fontFamily: theme.typography.fontFamily,
 															fontWeight: 600,
 															fontSize: isMobile ? 18 : 15,
@@ -739,12 +740,13 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																"1px solid " +
 																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
 															borderRadius: 5,
-															padding: 7,
+															padding: "7px 7px",
 															fontFamily: theme.typography.fontFamily,
 															fontWeight: 600,
 															fontSize: isMobile ? 18 : 15,
 															color: theme.palette.grey[400],
 															width: 155.5,
+															marginRight: -1,
 														}}
 														disabled
 														name="updatedAt"
@@ -1093,6 +1095,13 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													),
 												}}
 												inputProps={{
+													...params.inputProps,
+													onKeyDown: (e) => {
+														if (e.key === "Enter") {
+															// e.stopPropagation();
+															e.preventDefault();
+														}
+													},
 													style: { paddingLeft: "3px", paddingRight: "3px", paddingTop: "4px", paddingBottom: "4px" },
 												}}
 											/>
