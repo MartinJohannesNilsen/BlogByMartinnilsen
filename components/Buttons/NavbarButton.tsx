@@ -13,6 +13,8 @@ export const NavbarButton = (props: ButtonProps) => {
 			onClick={props.onClick}
 			href={props.href}
 			type={props.type || undefined}
+			sx={{ ...props.sxButton }}
+			disableRipple
 		>
 			<props.icon
 				sx={{
