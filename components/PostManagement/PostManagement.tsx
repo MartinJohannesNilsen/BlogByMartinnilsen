@@ -1010,82 +1010,26 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										</Grid>
 									</>
 								)}
-								{/* Description */}
+								{/* Tags */}
 								<Grid item xs={3} md={2}>
-									<Typography sx={{ fontWeight: 600 }}>Description</Typography>
+									<Typography sx={{ fontWeight: 600 }}>Tags</Typography>
 								</Grid>
 								<Grid item xs={9} md={10}>
-									<StyledTextField
-										InputLabelProps={{ shrink: false }}
-										placeholder="Description"
-										name="description"
-										fullWidth
-										multiline
-										size="small"
-										sx={{ backgroundColor: theme.palette.primary.main }}
-										onKeyPress={(e) => {
-											if (e.key === "Enter") {
-												event.preventDefault();
-											}
-										}}
-										inputProps={{
-											maxlength: OGDEFAULTS.descriptionMax,
-											style: { padding: 0 },
-										}}
-										InputProps={{
-											endAdornment: (
-												<Typography
-													fontFamily={theme.typography.fontFamily}
-													fontSize={12}
-													fontWeight={400}
-													sx={{
-														ml: 1,
-														color:
-															data.description.length <= OGDEFAULTS.descriptionOptimal
-																? "green"
-																: data.description.length <= OGDEFAULTS.descriptionWarning
-																? theme.palette.text.primary
-																: "#cfa602",
-													}}
-												>
-													{`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
-												</Typography>
-											),
-										}}
-										value={data.description}
-										onChange={handleInputChange}
-									/>
-								</Grid>
-								{/* Type */}
-								<Grid item xs={3} md={2}>
-									<Typography sx={{ fontWeight: 600 }}>Type</Typography>
-								</Grid>
-								<Grid item xs={9} md={10}>
-									<StyledTextField
-										InputLabelProps={{ shrink: false }}
-										placeholder="Type"
-										inputProps={{ style: { padding: 0 } }}
-										name="type"
-										required
-										fullWidth
-										sx={{ backgroundColor: theme.palette.primary.main }}
-										value={data.type}
-										onChange={handleInputChange}
-										// InputProps={{
-										// 	endAdornment: data.type.length > 0 && (
-										// 		<Typography
-										// 			fontFamily={theme.typography.fontFamily}
-										// 			fontSize={12}
-										// 			fontWeight={400}
-										// 			sx={{
-										// 				ml: 1,
-										// 			}}
-										// 		>
-										// 			Type
-										// 		</Typography>
-										// 	),
-										// }}
-									/>
+									<Box sx={{ zIndex: 5 }}>
+										<CreatableSelect
+											isMulti
+											isClearable
+											isSearchable
+											placeholder="Tags"
+											value={data.tags.map((tag) => ({ value: tag, label: tag }))}
+											onChange={(array) => {
+												setData({ ...data, tags: array.map((item) => item.value) });
+											}}
+											onCreateOption={handleCreateTagOption}
+											options={tagOptions}
+											maxMenuHeight={204}
+										/>
+									</Box>
 								</Grid>
 								{/* Keywords */}
 								<Grid item xs={3} md={2}>
@@ -1155,25 +1099,68 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										)}
 									/>
 								</Grid>
-								{/* Tags */}
+								{/* Type */}
 								<Grid item xs={3} md={2}>
-									<Typography sx={{ fontWeight: 600 }}>Tags</Typography>
+									<Typography sx={{ fontWeight: 600 }}>Type</Typography>
 								</Grid>
 								<Grid item xs={9} md={10}>
-									<Box sx={{ zIndex: 5 }}>
-										<CreatableSelect
-											isMulti
-											isClearable
-											isSearchable
-											placeholder="Tags"
-											value={data.tags.map((tag) => ({ value: tag, label: tag }))}
-											onChange={(array) => {
-												setData({ ...data, tags: array.map((item) => item.value) });
-											}}
-											onCreateOption={handleCreateTagOption}
-											options={tagOptions}
-										/>
-									</Box>
+									<StyledTextField
+										InputLabelProps={{ shrink: false }}
+										placeholder="Type"
+										inputProps={{ style: { padding: 0 } }}
+										name="type"
+										required
+										fullWidth
+										sx={{ backgroundColor: theme.palette.primary.main }}
+										value={data.type}
+										onChange={handleInputChange}
+									/>
+								</Grid>
+								{/* Description */}
+								<Grid item xs={3} md={2}>
+									<Typography sx={{ fontWeight: 600 }}>Description</Typography>
+								</Grid>
+								<Grid item xs={9} md={10}>
+									<StyledTextField
+										InputLabelProps={{ shrink: false }}
+										placeholder="Description"
+										name="description"
+										fullWidth
+										multiline
+										size="small"
+										sx={{ backgroundColor: theme.palette.primary.main }}
+										onKeyPress={(e) => {
+											if (e.key === "Enter") {
+												event.preventDefault();
+											}
+										}}
+										inputProps={{
+											maxlength: OGDEFAULTS.descriptionMax,
+											style: { padding: 0 },
+										}}
+										InputProps={{
+											endAdornment: (
+												<Typography
+													fontFamily={theme.typography.fontFamily}
+													fontSize={12}
+													fontWeight={400}
+													sx={{
+														ml: 1,
+														color:
+															data.description.length <= OGDEFAULTS.descriptionOptimal
+																? "green"
+																: data.description.length <= OGDEFAULTS.descriptionWarning
+																? theme.palette.text.primary
+																: "#cfa602",
+													}}
+												>
+													{`${data.description.length}/${OGDEFAULTS.descriptionMax}`}
+												</Typography>
+											),
+										}}
+										value={data.description}
+										onChange={handleInputChange}
+									/>
 								</Grid>
 								{/* Published */}
 								<Grid item xs={3} md={2}>
