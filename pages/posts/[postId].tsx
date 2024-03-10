@@ -1,14 +1,6 @@
 import Giscus from "@giscus/react";
-import {
-	AccessTime,
-	ArrowBack,
-	CalendarMonth,
-	Edit,
-	IosShareOutlined,
-	MenuBook,
-	Visibility,
-} from "@mui/icons-material";
-import { Box, Button, ButtonBase, Grid, Stack, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { FC, useEffect, useMemo, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
@@ -17,40 +9,30 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
-import { useTheme } from "../../styles/themes/ThemeProvider";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
-import { style } from "../../components/EditorJS/Style";
+import { style } from "../../components/EditorJS/style";
 import Footer from "../../components/Footer/Footer";
-import SettingsModal from "../../components/Modals/SettingsModal";
-import ShareModal from "../../components/Modals/ShareModal";
-import TOCModal, { extractHeaders } from "../../components/Modals/TOCModal";
 import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
-import { ThemeEnum } from "../../styles/themes/themeMap";
+import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ReadArticleViewProps } from "../../types";
 // import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
 import Output from "editorjs-react-renderer";
+import { ArticleJsonLd } from "next-seo";
 import { useEventListener } from "usehooks-ts";
-import logo from "public/assets/imgs/terminal.png";
-import Image from "next/image";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
-import ProfileMenu from "../../components/Menus/ProfileMenu";
-import NotificationsModal, {
-	checkForUnreadRecentNotifications,
-	notificationsApiFetcher,
-} from "../../components/Modals/NotificationsModal";
-import useSWR from "swr";
-import useStickyState from "../../utils/useStickyState";
 import Toggle from "../../components/Toggles/Toggle";
 
 // EditorJS renderers
+import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
 import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "../../components/EditorJS/Renderers/CustomCode";
 import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
 import CustomHeader from "../../components/EditorJS/Renderers/CustomHeader";
+import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
 import CustomImage from "../../components/EditorJS/Renderers/CustomImage";
 import CustomLinkTool from "../../components/EditorJS/Renderers/CustomLinkTool";
 import CustomList from "../../components/EditorJS/Renderers/CustomList";
@@ -58,17 +40,15 @@ import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
 import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
 import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
-import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
-import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
-import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
-import PostViews from "../../components/PostViews/PostViews";
 import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
-// import CustomPersonality from "../../components/EditorJS/Renderers/_CustomPersonality";
+import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
+import PostNavbar from "../../components/Navbar/PostNavbar";
+import PostViews from "../../components/PostViews/PostViews";
 
 export async function getStaticPaths() {
 	const idList = await getAllPostIds(false); // Not filter on visibility
 	const paths: string[] = [];
-	idList.forEach(id => {
+	idList.forEach((id) => {
 		paths.push(`/posts/${id}`);
 	});
 	return { paths, fallback: "blocking" };
@@ -92,14 +72,11 @@ export const getStaticProps = async (context: any) => {
 
 // Pass your custom renderers to Output
 export const renderers = {
-	// personality: CustomPersonality,
 	paragraph: CustomParagraph,
 	header: CustomHeader,
 	code: CustomCode,
 	divider: CustomDivider,
-	simpleimage: CustomImage,
-	uploadimage: CustomImage,
-	urlimage: CustomImage,
+	image: CustomImage,
 	linktool: CustomLinkTool,
 	quote: CustomQuote,
 	video: CustomVideo,
@@ -112,20 +89,22 @@ export const renderers = {
 	callout: CustomCallout,
 };
 
-export const handleSharing = async ({ url, title, text, icon, fallback }) => {
-	const shareDetails = {
-		url, // The URL of the webpage you want to share
-		title, // The title of the shared content
-		text, // The description or text to accompany the shared content
-		icon, // URL of the image for the preview
-	};
+type NavigatorShareProps = {
+	url?: string; // The URL of the webpage you want to share
+	title?: string; // The title of the shared content, although may be ignored by the target
+	text: string; // The description or text to accompany the shared content
+	icon?: string; // URL of the image for the preview
+	fallback?: () => void; // Fallback method
+};
+
+export const handleSharing = async (shareDetails: NavigatorShareProps) => {
 	if (navigator.share) {
 		try {
 			await navigator.share(shareDetails);
 		} catch (error) {}
 	} else {
 		// fallback code
-		fallback();
+		shareDetails.fallback && shareDetails.fallback();
 	}
 };
 
@@ -169,7 +148,7 @@ export function processJsonToggleBlocks(inputJson) {
 	return null;
 }
 
-export const ReadArticleView: FC<ReadArticleViewProps> = props => {
+export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const post = props.post;
 	const { isAuthorized, session, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
@@ -197,23 +176,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 		window.location.href = path;
 	};
 	const [currentSection, setCurrentSection] = useState(post.title);
-	// Modals
-	const [openTOCModal, setOpenTOCModal] = useState(false);
-	const [openSettingsModal, setOpenSettingsModal] = useState(false);
-	const [openShareModal, setOpenShareModal] = useState(false);
-	// ProfileMenu
-	const [anchorElProfileMenu, setAnchorElProfileMenu] = useState<null | HTMLElement>(null);
-	const openProfileMenu = Boolean(anchorElProfileMenu);
-	const handleProfileMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setAnchorElProfileMenu(event.currentTarget);
-	};
-	const handleProfileMenuClose = () => {
-		setAnchorElProfileMenu(null);
-	};
-
-	const handleThemeChange = (event: any) => {
-		setTheme(event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark, true);
-	};
 
 	const OutputElement = useMemo(() => {
 		if (post && post.data && post.data.blocks && Array.isArray(post.data.blocks)) {
@@ -233,6 +195,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 			(status === "unauthenticated" ||
 				(status === "authenticated" && session && session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
 			// All criterias are met, run POST request to increment counter
+			// TODO uncomment
 			fetch(`/api/views/${props.postId}`, {
 				method: "POST",
 				headers: {
@@ -255,7 +218,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 
 	useEventListener("scroll", () => {
 		const sectionEls = document.querySelectorAll(".anchorHeading");
-		sectionEls.forEach(sectionEl => {
+		sectionEls.forEach((sectionEl) => {
 			const { top, bottom } = sectionEl.getBoundingClientRect();
 			// Check if the top of the section is above the viewport's bottom
 			// if (top <= 0 && bottom >= 0) {
@@ -265,32 +228,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 		});
 	});
 
-	// NotificationsModal
-	const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
-	const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
-	const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
-	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
-	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
-	const [notifications, setNotifications] = useState([]);
-	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
-	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
-	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
-	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
+	// ShareModal
+	const [openShareModal, setOpenShareModal] = useState(false);
 
-	useEffect(() => {
-		const unreadNotifications = checkForUnreadRecentNotifications(
-			data,
-			lastRead,
-			notificationsFilterDays,
-			notificationsRead
-		);
-		if (data) {
-			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
-			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
-			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
-		}
-		return () => {};
-	}, [data, notificationsRead, notificationsFilterDays]);
+	// Ref
+	// const container = useRef();
 
 	if (!post.published && !isAuthorized) return <></>;
 	return (
@@ -299,10 +241,10 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 				title: post.title,
 				description: post.description,
 				themeColor: isMobile ? theme.palette.primary.dark : theme.palette.primary.main,
-				canonical: "https://blog.mjntech.dev/posts/" + props.postId,
+				canonical: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
 				openGraph: {
-					url: "https://blog.mjntech.dev/posts/" + props.postId,
-					image: post.image || DEFAULT_OGIMAGE,
+					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
+					image: post.ogImage.src || DEFAULT_OGIMAGE,
 					type: "article",
 					article: {
 						published: new Date(post.createdAt),
@@ -311,6 +253,21 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 				},
 			}}
 		>
+			<ArticleJsonLd
+				type="BlogPosting"
+				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`}
+				images={[props.post.ogImage.src]}
+				datePublished={new Date(props.post.createdAt).toISOString()}
+				dateModified={props.post.updatedAt ? new Date(props.post.updatedAt).toISOString() : null}
+				title={post.title}
+				description={post.description}
+				// authorName={post.author}
+				authorName={{
+					"@type": "Person",
+					name: post.author,
+					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/yjdttN68e7V3E8SKIupT`,
+				}}
+			/>
 			<Box width="100%">
 				{isLoading ? (
 					<></>
@@ -327,305 +284,16 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 						justifyContent="center"
 						justifyItems="center"
 						sx={{ backgroundColor: theme.palette.primary.main }}
+						// ref={container}
 					>
-						{/* Modals */}
-						{/* Notifications */}
-						<NotificationsModal
-							open={openNotificationsModal}
-							handleModalOpen={handleNotificationsModalOpen}
-							handleModalClose={handleNotificationsModalClose}
-							lastRead={lastRead}
-							setLastRead={setLastRead}
-							notificationsRead={notificationsRead}
-							setNotificationsRead={setNotificationsRead}
-							allNotificationsFilteredOnDate={notifications}
-							unreadNotificationsIds={unreadNotificationsIds}
-							setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-							notificationsFilterDays={notificationsFilterDays}
-							setNotificationsFilterDays={setNotificationsFilterDays}
+						{/* Navbar */}
+						<PostNavbar
+							post={{ ...post, id: props.postId }}
+							toc={{ content: OutputString, currentSection: currentSection }}
+							shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
+							// ref={container}
 						/>
-						{/* Settings */}
-						<SettingsModal
-							open={openSettingsModal}
-							handleModalOpen={() => setOpenSettingsModal(true)}
-							handleModalClose={() => setOpenSettingsModal(false)}
-							handleThemeChange={handleThemeChange}
-						/>
-						{/* TOC */}
-						{OutputString && (
-							<TOCModal
-								open={openTOCModal}
-								handleModalOpen={() => setOpenTOCModal(true)}
-								handleModalClose={() => setOpenTOCModal(false)}
-								headings={extractHeaders(OutputString)}
-								currentSection={currentSection}
-								postTitle={post.title}
-							/>
-						)}
-						{/* Share */}
-						<ShareModal
-							open={openShareModal}
-							handleModalOpen={() => setOpenShareModal(true)}
-							handleModalClose={() => setOpenShareModal(false)}
-							data={{
-								title: post.title,
-								description: post.description,
-								image: post.image && post.image.trim() !== "" ? post.image : DEFAULT_OGIMAGE,
-								url: window.location.href,
-								height: xs ? 100 : 130,
-								width: xs ? 400 : 500,
-							}}
-						/>
-						{/* Header row */}
-						{isMobile ? (
-							// Mobile
-							<Box
-								width={"100%"}
-								pt={4.75}
-								pb={0.75}
-								position={"fixed"}
-								display="flex"
-								justifyContent={"center"}
-								sx={{
-									backgroundColor: theme.palette.primary.dark,
-									borderBottom:
-										"1px solid" + (theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[200]),
-									top: 0,
-									whiteSpace: "nowrap",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									zIndex: 1000,
-									marginTop: "-32px",
-									WebkitTransform: "translateZ(0)",
-								}}
-							>
-								<Box
-									display="flex"
-									alignItems="center"
-									sx={{
-										width: "95%",
-									}}
-								>
-									<NavbarButton
-										variant="outline"
-										onClick={() => handleNavigate("/")}
-										icon={ArrowBack}
-										tooltip="Back"
-										sxButton={{
-											minWidth: "34px",
-											minHeight: "34px",
-											height: "34px",
-											width: "34px",
-										}}
-										sxIcon={{
-											height: "24px",
-											width: "24px",
-										}}
-									/>
-									<Box ml={0.5} mr={0.1}>
-										{OutputString ? (
-											<NavbarButton
-												variant="outline"
-												onClick={() => setOpenTOCModal(true)}
-												icon={MenuBook}
-												tooltip="Open table of contents"
-												sxButton={{
-													minWidth: "34px",
-													minHeight: "34px",
-													height: "34px",
-													width: "34px",
-												}}
-												sxIcon={{
-													height: "20px",
-													width: "24px",
-												}}
-											/>
-										) : (
-											<Box sx={{ width: "34px" }} />
-										)}
-									</Box>
-									<Box flexGrow={100} />
-									<Typography
-										fontFamily={theme.typography.fontFamily}
-										variant="body1"
-										fontWeight="800"
-										textAlign="center"
-										color={theme.palette.text.primary}
-										marginX={1}
-										sx={{
-											whiteSpace: "nowrap",
-											overflow: "hidden",
-											textOverflow: "ellipsis",
-										}}
-									>
-										{post.title}
-									</Typography>
-									<Box flexGrow={100} />
-									<Box display="flex" ml={0.1}>
-										{/* Share */}
-										<Box mr={0.5}>
-											<NavbarButton
-												disabled={!post.published}
-												variant="outline"
-												onClick={() => {
-													handleSharing({
-														url: typeof window !== "undefined" ? window.location.href : "",
-														title: post.title,
-														text: "",
-														icon: post.image || DEFAULT_OGIMAGE,
-														fallback: () => setOpenShareModal(true),
-													});
-												}}
-												icon={IosShareOutlined}
-												tooltip="Share"
-												sxButton={{
-													minWidth: "34px",
-													minHeight: "34px",
-													height: "34px",
-													width: "34px",
-													"&:disabled": { opacity: "0.5" },
-												}}
-												sxIcon={{
-													height: "18px",
-													width: "22px",
-												}}
-											/>
-										</Box>
-										{/* Account */}
-										<ProfileMenu
-											anchorEl={anchorElProfileMenu}
-											open={openProfileMenu}
-											handleMenuOpen={handleProfileMenuClick}
-											handleMenuClose={handleProfileMenuClose}
-											accountButtonSx={{
-												backgroundColor: theme.palette.primary.main + "99",
-											}}
-											showNotificationsBadge={visibleBadgeNotifications}
-											notifications={{
-												open: openNotificationsModal,
-												handleModalOpen: () => setOpenNotificationsModal(true),
-												handleModalClose: () => setOpenNotificationsModal(false),
-											}}
-											settings={{
-												open: openSettingsModal,
-												handleModalOpen: () => setOpenSettingsModal(true),
-												handleModalClose: () => setOpenSettingsModal(false),
-											}}
-										/>
-									</Box>
-								</Box>
-							</Box>
-						) : (
-							// Not mobile
-							<Box
-								display="flex"
-								alignItems="center"
-								width={"100%"}
-								px={3}
-								pt={2}
-								pb={2}
-								position={"sticky"}
-								sx={{
-									top: 0,
-									backgroundColor: isMobile ? theme.palette.primary.main : theme.palette.primary.main + "CC",
-									borderBottom:
-										"1px solid" + (theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[200]),
-									whiteSpace: "nowrap",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									zIndex: 1000,
-									marginTop: "0",
-									WebkitTransform: "translateZ(0)",
-									backdropFilter: "blur(10px)",
-									WebkitBackdropFilter: "blur(10px)",
-								}}
-							>
-								{/* Home button */}
-								<ButtonBase
-									onClick={() => handleNavigate("/")}
-									disableRipple
-									sx={{
-										display: "flex",
-										flexDirection: "row",
-										justifyContent: "center",
-										alignItems: "center",
-									}}
-								>
-									<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
-									<Typography
-										// variant={"h5"}
-										fontFamily={theme.typography.fontFamily}
-										color={theme.palette.text.primary}
-										fontWeight={700}
-										fontSize={22}
-										textAlign="left"
-										pl={0.5}
-									>
-										Blog
-									</Typography>
-								</ButtonBase>
-								<Box flexGrow={100} />
-								<Box display="flex">
-									{OutputString ? (
-										<NavbarButton
-											variant="outline"
-											onClick={() => setOpenTOCModal(true)}
-											icon={MenuBook}
-											tooltip="Open table of contents"
-											sxButton={{
-												height: "34px",
-												width: "34px",
-												backgroundColor: theme.palette.primary.main + "99",
-											}}
-											sxIcon={{
-												height: "20px",
-												width: "24px",
-											}}
-										/>
-									) : null}
-									{/* ShareModal */}
-									<Box ml={0.5}>
-										<NavbarButton
-											disabled={!post.published}
-											variant="outline"
-											onClick={() => setOpenShareModal(true)}
-											icon={IosShareOutlined}
-											tooltip="Share"
-											sxButton={{
-												height: "34px",
-												width: "34px",
-												backgroundColor: theme.palette.primary.main + "99",
-											}}
-											sxIcon={{ height: "18px", width: "22px" }}
-										/>
-									</Box>
-									{/* Profile Menu */}
-									<Box ml={0.5}>
-										<ProfileMenu
-											anchorEl={anchorElProfileMenu}
-											open={openProfileMenu}
-											handleMenuOpen={handleProfileMenuClick}
-											handleMenuClose={handleProfileMenuClose}
-											accountButtonSx={{
-												backgroundColor: theme.palette.primary.main + "99",
-											}}
-											showNotificationsBadge={visibleBadgeNotifications}
-											notifications={{
-												open: openNotificationsModal,
-												handleModalOpen: () => setOpenNotificationsModal(true),
-												handleModalClose: () => setOpenNotificationsModal(false),
-											}}
-											settings={{
-												open: openSettingsModal,
-												handleModalOpen: () => setOpenSettingsModal(true),
-												handleModalClose: () => setOpenSettingsModal(false),
-											}}
-										/>
-									</Box>
-								</Box>
-							</Box>
-						)}
-
+						{/* Content */}
 						<Grid
 							container
 							width="100%"
@@ -639,7 +307,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 								<Stack
 									p={2}
 									sx={{
-										minHeight: isMobile ? "calc(100vh - 81px - 30px)" : "calc(100vh - 67px - 117px)",
+										minHeight: isMobile ? "calc(100vh - 81px - 30px)" : "calc(100vh - 67px - 104px)",
 										minWidth: "380px",
 										width: xs ? "96vw" : sm ? "90vw" : "760px",
 										position: "relative",
@@ -713,6 +381,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 														day: "2-digit",
 														month: "short",
 														year: "numeric",
+														timeZone: "Europe/Oslo",
 													})}
 												</Typography>
 												<AccessTime
@@ -808,7 +477,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 																		url: typeof window !== "undefined" ? window.location.href : "",
 																		title: post.title,
 																		text: "",
-																		icon: post.image || DEFAULT_OGIMAGE,
+																		icon: post.ogImage.src || DEFAULT_OGIMAGE,
 																		fallback: () => setOpenShareModal(true),
 																  })
 																: setOpenShareModal(true);
@@ -818,9 +487,9 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 														sxButton={{
 															height: "36px",
 															width: "36px",
-															"&:disabled": { opacity: "0.5" },
+															// "&:disabled": { opacity: "0.5" },
 														}}
-														styleIcon={{ height: "26px", width: "26px" }}
+														styleIcon={{ height: "22px", width: "24px", opacity: !post.published && "0.5" }}
 													/>
 												</Box>
 
@@ -840,9 +509,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 														sxButton={{
 															height: "36px",
 															width: "36px",
-															"&:disabled": { opacity: "0.5" },
 														}}
-														styleIcon={{ height: "26px", width: "26px" }}
+														styleIcon={{ height: "22px", width: "24px", opacity: isExploding && "0.5" }}
 													/>
 												</Box>
 
@@ -856,9 +524,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 														sxButton={{
 															height: "36px",
 															width: "36px",
-															"&:disabled": { opacity: "0.5" },
 														}}
-														styleIcon={{ height: "26px", width: "26px" }}
+														styleIcon={{ height: "22px", width: "24px" }}
 													/>
 												</Box>
 											</Box>
@@ -879,22 +546,24 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 										>
 											Author: {post.author}
 										</Typography>
-										{post.updatedAt && post.updatedAt !== -1 ? (
-											<Typography
-												variant="body1"
-												fontFamily={theme.typography.fontFamily}
-												color={theme.palette.text.primary}
-												sx={{ opacity: 0.6 }}
-											>
-												Last updated:{" "}
-												{new Date(post.updatedAt).toLocaleDateString("en-GB", {
-													// weekday: "long",
-													day: "2-digit",
-													month: "short",
-													year: "numeric",
-												})}
-											</Typography>
-										) : null}
+										{post.updatedAt &&
+											post.updatedAt !== -1 && ( // Go from -1 to null for each none-updated yet, but some have -1 value
+												<Typography
+													variant="body1"
+													fontFamily={theme.typography.fontFamily}
+													color={theme.palette.text.primary}
+													sx={{ opacity: 0.6 }}
+												>
+													Last updated:{" "}
+													{new Date(post.updatedAt).toLocaleDateString("en-GB", {
+														// weekday: "long",
+														day: "2-digit",
+														month: "short",
+														year: "numeric",
+														timeZone: "Europe/Oslo",
+													})}
+												</Typography>
+											)}
 									</Box>
 									{/* Comment section */}
 									<Box mb={3}>
@@ -920,8 +589,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 								</Stack>
 							</Grid>
 						</Grid>
-						{/* </RevealFromDownOnEnter> */}
-						{isExploding ? (
+						{/* Exploding animation if active */}
+						{isExploding && (
 							<Box
 								sx={{
 									position: "fixed",
@@ -941,32 +610,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = props => {
 									width={xs ? width + 200 : width - 100}
 								/>
 							</Box>
-						) : null}
-						<Footer />
-						{/* Buttons for administration */}
-						{isAuthorized && (
-							<NavbarButton
-								variant="outline"
-								href={`/create/${props.postId}`}
-								icon={Edit}
-								tooltip="Edit post"
-								sxButton={{
-									minWidth: "40px",
-									minHeight: "40px",
-									height: "40px",
-									width: "40px",
-									position: "fixed",
-									left: 26,
-									bottom: 26,
-									zIndex: 10,
-								}}
-								sxIcon={{
-									height: "22px",
-									width: "22px",
-									color: "inherit",
-								}}
-							/>
 						)}
+						<Footer />
 					</Box>
 				)}
 			</Box>

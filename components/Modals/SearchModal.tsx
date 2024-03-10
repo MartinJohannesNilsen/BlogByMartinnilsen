@@ -1,5 +1,6 @@
 import {
 	Api,
+	Bookmark,
 	Clear,
 	DarkMode,
 	GridViewSharp,
@@ -20,40 +21,37 @@ import {
 } from "@mui/icons-material";
 import {
 	Avatar,
+	Badge,
 	Box,
-	Modal,
+	ButtonBase,
+	InputAdornment,
 	List,
 	ListItem,
 	ListItemAvatar,
 	ListItemButton,
 	ListItemText,
-	SvgIconTypeMap,
+	Modal,
 	TextField,
-	useMediaQuery,
-	InputAdornment,
-	IconButton,
-	ButtonBase,
 	Typography,
-	Button,
-	Badge,
+	useMediaQuery,
 } from "@mui/material";
 import { matchSorter } from "match-sorter";
+import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { SearchModalProps, StoredPost } from "../../types";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import useAuthorized from "../AuthorizationHook/useAuthorized";
-import { signIn } from "next-auth/react";
-import { userSignOut } from "../../utils/signOut";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { motion } from "framer-motion";
+import { SearchModalProps, StoredPost } from "../../types";
+import { userSignOut } from "../../utils/signOut";
+import useAuthorized from "../AuthorizationHook/useAuthorized";
+import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
+import NextLink from "next/link";
 
 type ActionProps = {
 	title: string;
 	iconElement: JSX.Element;
+	keywords: string[];
 	onClick?: () => void;
 	href?: string;
 	requirement?: () => boolean;
@@ -85,23 +83,31 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Go to landing page",
 			// href: "/",
+			keywords: ["home", "return", "back", "posts"],
 			iconElement: <Home sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				console.log(window.location.pathname);
 				return !window.location.pathname.includes("/");
 			},
 		},
 		{
 			title: "Go to tags page",
 			href: "/tags",
+			keywords: ["hashtags", "tags", "keywords", "categories"],
 			iconElement: <Tag sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return !window.location.pathname.includes("/tags");
 			},
 		},
 		{
+			title: "Go to saved posts",
+			href: "/tags?name=saved",
+			keywords: ["saved", "bookmark", "favorite"],
+			iconElement: <Bookmark sx={{ color: theme.palette.text.primary }} />,
+		},
+		{
 			title: "Go to account page",
 			href: "/account",
+			keywords: ["account", "profile", "login", "settings"],
 			iconElement: <Person sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status === "authenticated" && !window.location.pathname.includes("/account");
@@ -110,6 +116,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Create post",
 			href: "/create",
+			keywords: ["create", "add", "write", "new", "post"],
 			iconElement: <PostAdd sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return isAuthorized && !window.location.pathname.includes("/create");
@@ -118,6 +125,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Go to API documentation",
 			href: "/apidoc",
+			keywords: ["api", "docs", "documentation"],
 			iconElement: <Api sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return isAuthorized;
@@ -128,6 +136,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.handleSettingsModalOpen();
 			},
+			keywords: ["settings", "configure", "tune", "accent", "color", "mode", "light", "dark", "font"],
 			iconElement: <Settings sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.handleSettingsModalOpen != null;
@@ -138,6 +147,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.handleNotificationsModalOpen();
 			},
+			keywords: ["notifications", "messages"],
 			iconElement: props.notificationsBadgeVisible ? (
 				<Badge color="secondary" variant="dot" invisible={false} overlap="circular" badgeContent=" ">
 					<Notifications sx={{ color: theme.palette.text.primary }} />
@@ -155,6 +165,7 @@ export const SearchModal = (props: SearchModalProps) => {
 				localStorage.clear();
 				window.location.reload();
 			},
+			keywords: ["clear", "local", "storage", "data"],
 			iconElement: <Clear sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -162,6 +173,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				signIn();
 			},
+			keywords: ["login", "log", "in"],
 			iconElement: <Login sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status === "authenticated";
@@ -172,6 +184,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				userSignOut(window.location.pathname === "/account" ? "/" : null, true);
 			},
+			keywords: ["logout", "log", "out"],
 			iconElement: <Logout sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return status !== "authenticated";
@@ -182,6 +195,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				setTheme(ThemeEnum.Light, true);
 			},
+			keywords: ["light", "mode", "theme"],
 			iconElement: <LightMode sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -189,6 +203,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				setTheme(ThemeEnum.Dark, true);
 			},
+			keywords: ["dark", "mode", "theme"],
 			iconElement: <DarkMode sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -196,6 +211,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				setDefaultTheme();
 			},
+			keywords: ["system", "mode", "theme", "default"],
 			iconElement: <SettingsBrightness sx={{ color: theme.palette.text.primary }} />,
 		},
 		{
@@ -203,6 +219,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("carousel");
 			},
+			keywords: ["layout", "carousel", "view", "cards"],
 			iconElement: <ViewWeekSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -213,6 +230,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("swipe");
 			},
+			keywords: ["layout", "swipe", "view", "cards"],
 			iconElement: <ViewCarousel sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -223,6 +241,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("grid");
 			},
+			keywords: ["layout", "grid", "view", "cards"],
 			iconElement: <GridViewSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -233,6 +252,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			onClick: () => {
 				props.setCardLayout("list");
 			},
+			keywords: ["layout", "list", "view", "cards"],
 			iconElement: <TableRowsSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return props.setCardLayout != null;
@@ -258,6 +278,8 @@ export const SearchModal = (props: SearchModalProps) => {
 		const action = matchedActions![activeItem];
 		if (action.onClick) {
 			action.onClick();
+			setMatchedActions([]);
+			setActiveItem(isMobile ? -1 : 0);
 		}
 		if (action.href) handleNavigate(action.href);
 		setIsActions(false);
@@ -267,10 +289,10 @@ export const SearchModal = (props: SearchModalProps) => {
 	useEffect(() => {
 		if (isActions) {
 			const bestMatch = matchSorter(
-				actions.filter(action => action.requirement == null || action.requirement() === true),
+				actions.filter((action) => action.requirement == null || action.requirement() === true),
 				textFieldValue,
 				{
-					keys: ["title"],
+					keys: [(item) => item.title, (item) => item.keywords],
 				}
 			);
 			// const min = Math.min(bestMatch.length, actions.length);
@@ -284,7 +306,7 @@ export const SearchModal = (props: SearchModalProps) => {
 				setMaxNumberOfItems(0);
 			} else {
 				const bestMatch = matchSorter(props.postsOverview!, textFieldValue, {
-					keys: ["title", "description"],
+					keys: ["title", "description", "type", "keywords", "tags"],
 				});
 				const min = Math.min(bestMatch.length, Number(process.env.NEXT_PUBLIC_SEARCH_MAX_RESULTS));
 				setMatchedPosts(bestMatch.slice(0, min));
@@ -305,7 +327,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		}, [props.open, isActions]);
 
 	// Hotkeys
-	useHotkeys(["Control+k", "Meta+k"], event => {
+	useHotkeys(["Control+k", "Meta+k"], (event) => {
 		event.preventDefault();
 		props.handleModalClose();
 	});
@@ -405,7 +427,7 @@ export const SearchModal = (props: SearchModalProps) => {
 						},
 					}}
 				>
-					<motion.div className={`${isPulsating ? "pulsate" : ""}`}>
+					<Box className={`${isPulsating ? "pulsate" : ""}`}>
 						<Box sx={modalStyle}>
 							{/* Search bar */}
 							<Box>
@@ -423,6 +445,7 @@ export const SearchModal = (props: SearchModalProps) => {
 										endAdornment: (
 											<InputAdornment position="end">
 												<ButtonBase
+													LinkComponent={NextLink}
 													disabled={!isMobile}
 													sx={{
 														color: theme.palette.grey[800],
@@ -468,9 +491,12 @@ export const SearchModal = (props: SearchModalProps) => {
 											padding: "4px 12px",
 										},
 									}}
-									sx={{ paddingBottom: 0, borderColor: "transparent" }}
+									sx={{
+										paddingBottom: 0,
+										borderColor: "transparent",
+									}}
 									InputLabelProps={{ style: { fontSize: xs ? 20 : 26 } }}
-									onKeyDown={e => {
+									onKeyDown={(e) => {
 										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
 											e.preventDefault();
 											props.handleModalClose();
@@ -500,7 +526,7 @@ export const SearchModal = (props: SearchModalProps) => {
 											}
 										}
 									}}
-									onChange={e => {
+									onChange={(e) => {
 										setTextFieldValue(e.target.value);
 									}}
 								/>
@@ -561,8 +587,7 @@ export const SearchModal = (props: SearchModalProps) => {
 												onClick={() => {
 													props.handleModalClose();
 													setTextFieldValue("");
-													if (isMobile) setActiveItem(-1);
-													if (action.onClick) action.onClick();
+													handleEnterClickActions();
 												}}
 											>
 												<ListItemAvatar>
@@ -570,9 +595,7 @@ export const SearchModal = (props: SearchModalProps) => {
 														sx={{
 															marginRight: "12px",
 															borderRadius: "5px",
-															// minWidth: xs ? "70px" : "124px",
-															// minHeight: xs ? "50px" : "70px",
-															background: "transparent",
+															backgroundColor: "transparent",
 														}}
 													>
 														{action.iconElement}
@@ -588,20 +611,12 @@ export const SearchModal = (props: SearchModalProps) => {
 														textOverflow: "ellipsis",
 														overflow: "hidden",
 													}}
-													// secondary={post.description}
-													// secondaryTypographyProps={{
-													// 	color: theme.palette.text.primary,
-													// 	fontFamily: theme.typography.fontFamily,
-													// 	whiteSpace: "nowrap",
-													// 	textOverflow: "ellipsis",
-													// 	overflow: "hidden",
-													// }}
 													sx={{
 														width: "100%",
 														marginRight: isMobile ? 0 : 5,
 													}}
 												/>
-												{!isMobile ? (
+												{!isMobile && (
 													<>
 														<Box flexGrow={100} />
 														<ListItemText>
@@ -617,7 +632,7 @@ export const SearchModal = (props: SearchModalProps) => {
 															/>
 														</ListItemText>
 													</>
-												) : null}
+												)}
 											</ListItemButton>
 										</ListItem>
 									))}
@@ -690,12 +705,13 @@ export const SearchModal = (props: SearchModalProps) => {
 																background: "transparent",
 															}}
 														>
-															<img
-																src={post.image || DEFAULT_OGIMAGE}
+															<BlurHashHTMLImage
+																src={post.ogImage.src}
+																blurhash={{ encoded: post.ogImage.blurhash }}
 																alt={'OpenGraph image for article titled "' + post.title + '"'}
 																style={{
-																	minWidth: "125px",
-																	minHeight: "82px",
+																	width: "125px",
+																	height: "82px",
 																	objectFit: "cover",
 																}}
 															/>
@@ -724,7 +740,7 @@ export const SearchModal = (props: SearchModalProps) => {
 															marginRight: isMobile ? 0 : 5,
 														}}
 													/>
-													{!isMobile ? (
+													{!isMobile && (
 														<>
 															<Box flexGrow={100} />
 															<ListItemText>
@@ -740,7 +756,7 @@ export const SearchModal = (props: SearchModalProps) => {
 																/>
 															</ListItemText>
 														</>
-													) : null}
+													)}
 												</ListItemButton>
 											</ListItem>
 										))}
@@ -748,7 +764,7 @@ export const SearchModal = (props: SearchModalProps) => {
 								)
 							)}
 						</Box>
-					</motion.div>
+					</Box>
 				</Box>
 			</Modal>
 		</Box>

@@ -39,6 +39,17 @@ export const Callout = (props: CalloutProps) => {
 	//   if (componentType === "note") setStateData({ ...stateData, title: "" });
 	// }, [componentType]);
 
+	// Set message value on render
+	// useEffect(() => {
+	// 	messageRef.current.innerHTML = props.data.message;
+	// 	return () => {};
+	// }, []);
+
+	// Set message value on stateData.type change
+	useEffect(() => {
+		messageRef.current.innerHTML = stateData.message;
+	}, [stateData.type]);
+
 	// Change Editorjs state on state change
 	useEffect(() => {
 		props.onDataChange(stateData);
@@ -53,7 +64,7 @@ export const Callout = (props: CalloutProps) => {
 						sx={{ width: "150px" }}
 						size="small"
 						value={stateData.type}
-						onChange={e => setStateData({ ...stateData, type: e.target.value })}
+						onChange={(e) => setStateData({ ...stateData, type: e.target.value })}
 					>
 						<MenuItem value={"message"}>Message</MenuItem>
 						<MenuItem value={"note"}>Note</MenuItem>
@@ -90,11 +101,14 @@ export const Callout = (props: CalloutProps) => {
 								</Box>
 							</Modal>
 							<Card
+								elevation={0}
 								sx={{
 									display: "flex",
 									alignItems: "center",
-									padding: 2,
-									boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+									padding: 1,
+									// boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+									backgroundColor: theme.palette.grey[100],
+									border: "2px solid " + theme.palette.grey[200],
 									maxWidth: "100vw",
 								}}
 							>
@@ -103,7 +117,7 @@ export const Callout = (props: CalloutProps) => {
 									disableRipple
 									sx={{ margin: xs ? "0 7.5px 0 -5px" : "0 10px 0 0px" }}
 								>
-									<Typography fontSize={30}>{stateData.icon}</Typography>
+									<Typography fontSize={20}>{stateData.icon}</Typography>
 								</IconButton>
 								<Box
 									display="flex"
@@ -116,7 +130,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Title */}
 									<InputBase
 										fullWidth
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" || event.key === "ArrowUp" || event.key === "ArrowDown") {
 												event.preventDefault();
 												event.stopPropagation();
@@ -128,8 +142,9 @@ export const Callout = (props: CalloutProps) => {
 											...theme.typography.subtitle1,
 											fontWeight: 800,
 											fontFamily: theme.typography.fontFamily,
+											marginBottom: -0.6,
 										}}
-										onChange={e => {
+										onChange={(e) => {
 											setStateData({
 												...stateData,
 												title: e.target.value,
@@ -139,7 +154,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Message */}
 									<div
 										contentEditable
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" && !event.shiftKey) {
 												event.preventDefault();
 												event.stopPropagation();
@@ -148,26 +163,23 @@ export const Callout = (props: CalloutProps) => {
 										// placeholder="Insert message here ..."
 										ref={messageRef}
 										style={{
-											...theme.typography.body1,
+											...theme.typography.subtitle2,
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
+											paddingBottom: 6,
 										}}
-										onInputCapture={() => {
+										onInputCapture={(e) => {
 											const currentDiv = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;
 											}
-										}}
-										onChangeCapture={e => {
 											setStateData({
 												...stateData,
-												message: e.currentTarget.textContent,
+												message: e.currentTarget.innerHTML,
 											});
 										}}
-									>
-										{stateData.message}
-									</div>
+									/>
 								</Box>
 							</Card>
 						</>
@@ -176,12 +188,14 @@ export const Callout = (props: CalloutProps) => {
 							sx={{
 								display: "flex",
 								alignItems: "center",
-								backgroundColor: "#f7cb2a",
+								// backgroundColor: "#f7cb2a",
+								backgroundColor: theme.palette.grey[300],
 							}}
 						>
 							<Box display="flex" flexDirection="row">
 								{/* <Box sx={{ backgroundColor: "#575757" }} p={0.5} /> */}
-								<Box sx={{ backgroundColor: "#b89002" }} p={0.5} />
+								{/* <Box sx={{ backgroundColor: "#b89002" }} p={0.5} /> */}
+								<Box sx={{ backgroundColor: theme.palette.grey[400] }} p={0.5} />
 								<Box
 									display="flex"
 									flexDirection="column"
@@ -195,7 +209,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Title */}
 									<InputBase
 										fullWidth
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" || event.key === "ArrowUp" || event.key === "ArrowDown") {
 												event.preventDefault();
 												event.stopPropagation();
@@ -210,12 +224,13 @@ export const Callout = (props: CalloutProps) => {
 											"&::placeholder": {
 												color: "black", // Set the color of the placeholder
 											},
+											my: -0.4,
 											overflow: "hidden",
 											textOverflow: "ellipsis",
 											display: "webkit-flex",
 											WebkitBoxOrient: "vertical",
 										}}
-										onChange={e => {
+										onChange={(e) => {
 											setStateData({
 												...stateData,
 												title: e.target.value,
@@ -225,7 +240,7 @@ export const Callout = (props: CalloutProps) => {
 									{/* Message */}
 									<div
 										contentEditable
-										onKeyDown={event => {
+										onKeyDown={(event) => {
 											if (event.key === "Enter" && !event.shiftKey) {
 												event.preventDefault();
 												event.stopPropagation();
@@ -234,26 +249,22 @@ export const Callout = (props: CalloutProps) => {
 										// placeholder="Insert message here ..."
 										ref={messageRef}
 										style={{
-											...theme.typography.body1,
+											...theme.typography.subtitle2,
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
 										}}
-										onInputCapture={() => {
+										onInputCapture={(e) => {
 											const currentDiv = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;
 											}
-										}}
-										onChange={e => {
 											setStateData({
 												...stateData,
-												message: e.currentTarget.textContent,
+												message: e.currentTarget.innerHTML,
 											});
 										}}
-									>
-										{stateData.message}
-									</div>
+									/>
 								</Box>
 							</Box>
 						</Card>

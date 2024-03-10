@@ -3,11 +3,12 @@ import { ButtonBase, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
+import DOMPurify from "dompurify";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TOCModalProps } from "../../types";
-import DOMPurify from "dompurify";
+import NextLink from "next/link";
 
 export function extractHeaders(html: string) {
 	const regex = /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
@@ -56,6 +57,7 @@ export const TOCModal = (props: TOCModalProps) => {
 		if (!props.headings) return null;
 		const elements: JSX.Element[] = [
 			<ButtonBase
+				LinkComponent={NextLink}
 				onClick={() => {
 					props.handleModalClose();
 					window.scrollTo(0, 0);
@@ -90,10 +92,11 @@ export const TOCModal = (props: TOCModalProps) => {
 				</Typography>
 			</ButtonBase>,
 		];
-		props.headings.map(heading => {
+		props.headings.map((heading) => {
 			const id = decodeHtml(heading.id);
 			elements.push(
 				<ButtonBase
+					LinkComponent={NextLink}
 					key={id}
 					onClick={() => {
 						props.handleModalClose();
@@ -135,7 +138,6 @@ export const TOCModal = (props: TOCModalProps) => {
 				flexDirection="column"
 				alignItems="flex-start"
 				justifyContent="flex-start"
-				// gap="10px"
 				sx={{
 					overflowY: "scroll",
 					"& p": {

@@ -11,37 +11,37 @@ import { useTheme } from "../styles/themes/ThemeProvider";
 type BreakpointOrNull = Breakpoint | null;
 
 export const useWidth = (): Breakpoint => {
-  const { theme } = useTheme();
-  const keys: readonly Breakpoint[] = [...theme.breakpoints.keys].reverse();
-  return (
-    keys.reduce((output: BreakpointOrNull, key: Breakpoint) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const matches = useMediaQuery(theme.breakpoints.up(key));
-      return output != null && matches ? key : output;
-    }, null) ?? "xs"
-  );
+	const { theme } = useTheme();
+	const keys: readonly Breakpoint[] = [...theme.breakpoints.keys].reverse();
+	return (
+		keys.reduce((output: BreakpointOrNull, key: Breakpoint) => {
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			const matches = useMediaQuery(theme.breakpoints.up(key));
+			return output != null && matches ? key : output;
+		}, null) ?? "xs"
+	);
 };
 
 export const showMuiSize = () => {
-  const breakpoint = useWidth();
+	const breakpoint = useWidth();
 
-  return (
-    <Box>
-      <Typography
-        sx={{
-          position: "fixed",
-          zIndex: 100,
-          bottom: 10,
-          right: 0,
-          margin: "-5px 5px",
-          color: "red",
-          fontSize: "2rem",
-          fontWeight: 800,
-        }}
-      >
-        {breakpoint}
-      </Typography>
-    </Box>
-  );
+	return (
+		<Box>
+			<Typography
+				sx={{
+					position: "fixed",
+					zIndex: 100,
+					bottom: 10,
+					right: 0,
+					margin: "-5px 5px",
+					color: "red",
+					fontSize: "2rem",
+					fontWeight: 800,
+				}}
+			>
+				{breakpoint}
+			</Typography>
+		</Box>
+	);
 };
 export default showMuiSize;

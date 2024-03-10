@@ -1,21 +1,20 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
+import { Bookmark, Notifications, Person } from "@mui/icons-material";
+import Logout from "@mui/icons-material/Logout";
+import Settings from "@mui/icons-material/Settings";
+import { Badge, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import Settings from "@mui/icons-material/Settings";
-import Logout from "@mui/icons-material/Logout";
-import { Badge, ButtonBase, Typography } from "@mui/material";
-import { Notifications, Person } from "@mui/icons-material";
-import { ProfileMenuProps } from "../../types";
-import { useTheme } from "../../styles/themes/ThemeProvider";
 import { signIn } from "next-auth/react";
+import * as React from "react";
+import { useTheme } from "../../styles/themes/ThemeProvider";
+import { ProfileMenuProps } from "../../types";
+import { userSignOut } from "../../utils/signOut";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../Buttons/NavbarButton";
-import { userSignOut } from "../../utils/signOut";
 
 export const AccountMenu = (props: ProfileMenuProps) => {
 	const { theme } = useTheme();
@@ -42,8 +41,8 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 					variant="outline"
 					onClick={props.handleMenuOpen}
 					icon={Person}
-					tooltip="Account settings"
-					aria-controls={open ? "account-menu" : undefined}
+					tooltip="Profile menu"
+					aria-controls={open ? "profile-menu" : undefined}
 					aria-haspopup="true"
 					aria-expanded={open ? "true" : undefined}
 					sxButton={{
@@ -62,7 +61,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 			</Box>
 			<Menu
 				anchorEl={props.anchorEl}
-				id="account-menu"
+				id="profile-menu"
 				open={props.open}
 				onClose={props.handleMenuOpen}
 				onClick={props.handleMenuClose}
@@ -138,6 +137,14 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 						<Typography fontFamily={theme.typography.fontFamily}>Notifications</Typography>
 					</MenuItem>
 				)}
+
+				{/* Saved */}
+				<MenuItem onClick={() => (window.location.href = "/tags?name=saved")}>
+					<ListItemIcon sx={{ mr: 0.25 }}>
+						<Bookmark fontSize="medium" sx={{ color: theme.palette.text.primary }} />
+					</ListItemIcon>
+					<Typography fontFamily={theme.typography.fontFamily}>Saved</Typography>
+				</MenuItem>
 
 				{/* Settings */}
 				{props.settings && (

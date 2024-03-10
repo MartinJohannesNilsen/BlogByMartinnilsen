@@ -1,8 +1,8 @@
-import { StyledEngineProvider, Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import React, { createContext, useContext, useMemo, useState } from "react";
+import useDidUpdate from "../../utils/useDidUpdate";
 import { defaultAccentColor, defaultFontFamily } from "./themeDefaults";
 import { ThemeEnum, themeCreator } from "./themeMap";
-import useDidUpdate from "../../utils/useDidUpdate";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting
@@ -32,10 +32,10 @@ export const ThemeContext = createContext<ThemeContextType>({
 	setTheme: (theme, persist) => {},
 	setDefaultTheme: () => {},
 	accentColor:
-		typeof window !== "undefined" ? localStorage.getItem("accent") || defaultAccentColor : defaultAccentColor,
-	setAccentColor: accent => {},
+		typeof window !== "undefined" ? localStorage.getItem("accent") || defaultAccentColor.hex : defaultAccentColor.hex,
+	setAccentColor: (accent) => {},
 	fontFamily: typeof window !== "undefined" ? localStorage.getItem("font") || defaultFontFamily : defaultFontFamily,
-	setFontFamily: fontFamily => {},
+	setFontFamily: (fontFamily) => {},
 });
 export const useTheme = () => useContext(ThemeContext);
 
@@ -43,7 +43,7 @@ type CustomThemeProviderProps = {
 	children: React.ReactNode;
 };
 
-const CustomThemeProvider: React.FC<CustomThemeProviderProps> = props => {
+const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
 	const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
 	const [fontFamily, _setFontFamily] = useState(
 		typeof window !== "undefined"
@@ -52,8 +52,8 @@ const CustomThemeProvider: React.FC<CustomThemeProviderProps> = props => {
 	);
 	const [accentColor, _setAccentColor] = useState(
 		typeof window !== "undefined"
-			? JSON.parse(String(localStorage.getItem("accent"))) || defaultAccentColor
-			: defaultAccentColor
+			? JSON.parse(String(localStorage.getItem("accent"))) || defaultAccentColor.hex
+			: defaultAccentColor.hex
 	);
 	const [theme, _setTheme] = useState(
 		getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light)

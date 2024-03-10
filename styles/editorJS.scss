@@ -50,3 +50,10 @@
     text-transform: uppercase;
     cursor: pointer;
 }
+
+.contentEditablePlaceholder::before {
+    content: attr(data-placeholder);
+    display: inline-block; /* or inline, depending on your layout */
+    color: #aaa; /* Placeholder text color */
+    /* Additional placeholder styles (e.g., font-style: italic) */
+  }

@@ -1,38 +1,28 @@
-import {
-	Info,
-	InfoOutlined,
-	Logout,
-	LogoutRounded,
-	LogoutSharp,
-	PostAdd,
-	Search,
-	SettingsRounded,
-	Tag,
-} from "@mui/icons-material";
+import { Info, LogoutRounded, PostAdd, Search, SettingsRounded, Tag } from "@mui/icons-material";
 import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material";
-import Image from "next/image";
+import dynamic from "next/dynamic";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import logo from "public/assets/imgs/terminal.png";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
+import useSWR from "swr";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { NavbarProps } from "../../types";
-import useAuthorized from "../AuthorizationHook/useAuthorized";
-import SearchModal from "../Modals/SearchModal";
-import SettingsModal from "../Modals/SettingsModal";
-import ProfileMenu from "../Menus/ProfileMenu";
-import NavbarSearchButton from "../Buttons/NavbarSearchButton";
-import { NavbarButton } from "../Buttons/NavbarButton";
-import NotificationsModal, {
-	checkForUnreadRecentNotifications,
-	notificationsApiFetcher,
-} from "../Modals/NotificationsModal";
-import useSWR from "swr";
-import useStickyState from "../../utils/useStickyState";
 import { userSignOut } from "../../utils/signOut";
-import AboutModal from "../Modals/AboutModal";
+import useStickyState from "../../utils/useStickyState";
+import useAuthorized from "../AuthorizationHook/useAuthorized";
+import { NavbarButton } from "../Buttons/NavbarButton";
+import NavbarSearchButton from "../Buttons/NavbarSearchButton";
+import { MenuIcon } from "../Icons/MenuIcon";
+import ProfileMenu from "../Menus/ProfileMenu";
+import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../Modals/NotificationsModal";
+// Modals can be dynamically imported
+import SearchModal from "../Modals/SearchModal"; // For listening to hotkeys on render, not rerender
+// const SearchModal = dynamic(() => import("../Modals/SearchModal"));
+const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
+const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const { theme, setTheme } = useTheme();
@@ -75,16 +65,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const [openSearchModal, setOpenSearchModal] = useState(false);
 	const handleSearchModalOpen = () => setOpenSearchModal(true);
 	const handleSearchModalClose = () => setOpenSearchModal(false);
-	useHotkeys(["Control+k", "Meta+k"], event => {
+	useHotkeys(["Control+k", "Meta+k"], (event) => {
 		event.preventDefault();
 		handleSearchModalOpen();
 	});
+	// Theme
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const sm = useMediaQuery(theme.breakpoints.only("sm"));
-	const md = useMediaQuery(theme.breakpoints.only("md"));
-	const lg = useMediaQuery(theme.breakpoints.only("lg"));
-	const xl = useMediaQuery(theme.breakpoints.only("xl"));
-	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
 	// Navigation
@@ -93,10 +79,12 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		router.push(path);
 	};
 
+	// Theme change
 	const handleThemeChange = (event: any) => {
 		setTheme(event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark, true);
 	};
 
+	// Notifications and badge
 	useEffect(() => {
 		const unreadNotifications = checkForUnreadRecentNotifications(
 			data,
@@ -112,12 +100,16 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		return () => {};
 	}, [data, notificationsRead, notificationsFilterDays]);
 
-	if (!props.posts)
+	// Account page navbar
+	if (!props.posts) {
+		const AboutModal = dynamic(() => import("../Modals/AboutModal"));
 		return (
 			<Box
 				width={"100%"}
-				pt={isMobile ? 4.75 : 2}
-				pb={isMobile ? 0.75 : 2}
+				pt={isMobile ? 4.75 : 1.5}
+				pb={isMobile ? 0.75 : 1.5}
+				// pt={2}
+				// pb={2}
 				position={"fixed"}
 				display="flex"
 				alignItems="center"
@@ -140,25 +132,40 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				>
 					{/* Home button */}
 					<Link
+						component={NextLink}
 						href="/"
 						sx={{
 							display: "flex",
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
+							color: props.textColor || theme.palette.text.primary,
+							"&:focus-visible": {
+								// color: theme.palette.secondary.main,
+								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+							},
+							"&:hover": {
+								// color: theme.palette.secondary.main,
+								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+							},
 						}}
 						underline="none"
 					>
-						<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
+						<MenuIcon
+							alt="Website logo"
+							width={22}
+							height={22}
+							fill={props.textColor ? props.textColor : theme.palette.text.primary}
+							style={{ fillRule: "evenodd" }}
+						/>
 						<Typography
 							// variant={"h5"}
 							fontFamily={theme.typography.fontFamily}
-							color={props.textColor || theme.palette.text.primary}
 							fontWeight={700}
 							fontSize={22}
 							textAlign="left"
 							pl={0.5}
-							sx={{ textDecoration: "none" }}
+							sx={{ textDecoration: "none", color: "inherit" }}
 						>
 							Blog
 						</Typography>
@@ -210,6 +217,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						)}
 					</Box>
 				</Box>
+
 				{/* Modals */}
 				<SettingsModal
 					open={openSettingsModal}
@@ -238,11 +246,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				/>
 			</Box>
 		);
+	}
+
+	// Default navbar
 	return (
 		<Box
 			width={"100%"}
-			pt={isMobile ? 4.75 : 2}
-			pb={isMobile ? 0.75 : 2}
+			pt={isMobile ? 4.75 : 1.5}
+			pb={isMobile ? 0.75 : 1.5}
 			position={"fixed"}
 			display="flex"
 			alignItems="center"
@@ -268,6 +279,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 			>
 				{/* Home button */}
 				<ButtonBase
+					LinkComponent={NextLink}
 					onClick={() => handleNavigate("/")}
 					disableRipple
 					sx={{
@@ -275,29 +287,45 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						flexDirection: "row",
 						justifyContent: "center",
 						alignItems: "center",
+						color: props.textColor || theme.palette.text.primary,
+						"&:focus-visible": {
+							// color: theme.palette.secondary.main,
+							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+						},
+						"&:hover": {
+							// color: theme.palette.secondary.main,
+							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+						},
 					}}
 				>
-					<Image src={logo.src} alt="" width={32} height={32} style={{ borderRadius: "0" }} />
+					<MenuIcon
+						alt="Website logo"
+						width={22}
+						height={22}
+						fill={props.textColor ? props.textColor : theme.palette.text.primary}
+						style={{ fillRule: "evenodd" }}
+					/>
 					<Typography
 						fontFamily={theme.typography.fontFamily}
-						color={props.textColor || theme.palette.text.primary}
 						fontWeight={700}
 						fontSize={22}
 						textAlign="left"
 						pl={0.5}
+						color="inherit"
 					>
 						Blog
 					</Typography>
 				</ButtonBase>
 				<Box flexGrow={100} />
-				{isAuthorized ? (
+				{isAuthorized && (
 					<Box>
 						<NavbarButton
 							variant="outline"
 							// variant="base"
-							onClick={() => {
-								handleNavigate("/create");
-							}}
+							// onClick={() => {
+							// 	handleNavigate("/create");
+							// }}
+							href="/create"
 							icon={PostAdd}
 							tooltip="Upload new post"
 							sxButton={{
@@ -311,7 +339,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							}}
 						/>
 					</Box>
-				) : null}
+				)}
 				<Box mx={0.5}>
 					{isMobile || xs ? (
 						<NavbarButton
@@ -386,6 +414,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					/>
 				</Box>
 			</Box>
+
+			{/* Modals */}
 			<SearchModal
 				open={openSearchModal}
 				handleModalOpen={handleSearchModalOpen}

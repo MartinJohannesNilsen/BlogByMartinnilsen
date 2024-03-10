@@ -1,20 +1,19 @@
-import { Api, Create, Newspaper, Notifications } from "@mui/icons-material";
+import { Api, Bookmark, Create, Newspaper, Notifications } from "@mui/icons-material";
 import { Grid } from "@mui/material";
-import { useTheme } from "../styles/themes/ThemeProvider";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 import useAuthorized from "../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../components/Cards/AccountCard";
 import { TileButtonCard } from "../components/Cards/TileButtonCard";
-import SEO from "../components/SEO/SEO";
+import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../components/Modals/NotificationsModal";
 import Navbar from "../components/Navbar/Navbar";
-import { useEffect, useState } from "react";
-import PostTableModal from "../components/PostManagement/PostTableModal";
-import NotificationsModal, {
-	checkForUnreadRecentNotifications,
-	notificationsApiFetcher,
-} from "../components/Modals/NotificationsModal";
+import SEO from "../components/SEO/SEO";
+import { useTheme } from "../styles/themes/ThemeProvider";
 import useStickyState from "../utils/useStickyState";
-import useSWR from "swr";
-import SearchModal from "../components/Modals/SearchModal";
+import dynamic from "next/dynamic";
+// Modals can be dynamically imported
+const PostTableModal = dynamic(() => import("../components/Modals/PostTableModal"));
+const NotificationsModal = dynamic(() => import("../components/Modals/NotificationsModal"));
 
 export const Account = () => {
 	const { isAuthorized, session, status } =
@@ -60,6 +59,7 @@ export const Account = () => {
 		if (data) {
 			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
 			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // TODO Filter on day select option
 			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
 		}
 		return () => {};
@@ -125,7 +125,12 @@ export const Account = () => {
 								onClick={handlePostTableModalOpen}
 							/>
 						) : (
-							<TileButtonCard icon={<Newspaper sx={{ color: theme.palette.text.primary }} />} text="Posts" href="/" />
+							// <TileButtonCard icon={<Newspaper sx={{ color: theme.palette.text.primary }} />} text="Posts" href="/" />
+							<TileButtonCard
+								icon={<Bookmark sx={{ color: theme.palette.text.primary }} />}
+								text="Saved Posts"
+								href="/tags?name=Saved"
+							/>
 						)}
 					</Grid>
 					<Grid item xs={5.7}>
@@ -138,12 +143,8 @@ export const Account = () => {
 						/>
 					</Grid>
 				</Grid>
-				{/* TODO */}
-				{/* <SearchModal
-          open={openPostTableModal}
-          handleModalOpen={handlePostTableModalOpen}
-          handleModalClose={handlePostTableModalClose}
-        /> */}
+
+				{/* Modals */}
 				<PostTableModal
 					open={openPostTableModal}
 					handleModalOpen={handlePostTableModalOpen}
