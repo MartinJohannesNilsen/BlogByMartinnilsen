@@ -1,16 +1,15 @@
 {
 	"name": "blogbymartinnilsen",
-	"version": "2.6.0",
+	"version": "2.7.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
 		"setdevenv": "cp .env.development .env.local",
 		"setprodenv": "cp .env.production .env.local",
-		"start": "npm run setdevenv && next build && next start",
-		"deploy": "vercel",
-		"deploy-prod": "vercel deploy --prod",
-		"deploy-prebuilt": "npm run setprodenv && vercel build && vercel deploy --prebuilt"
+		"build-local": "npm run setdevenv && next build",
+		"build-vps": "npm run setprodenv && next build",
+		"start": "next start"
 	},
 	"dependencies": {
 		"@editorjs/checklist": "^1.6.0",

@@ -83,12 +83,6 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 		return () => {};
 	}, [props.open, props.notificationsFilterDays]);
 
-	useEffect(() => {
-		console.log("Read", props.notificationsRead);
-		console.log("Unread", props.unreadNotificationsIds);
-		return () => {};
-	}, [props.notificationsRead]);
-
 	const style = {
 		position: "absolute" as "absolute",
 		top: "50%",

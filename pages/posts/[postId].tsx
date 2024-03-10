@@ -44,6 +44,7 @@ import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
 import PostNavbar from "../../components/Navbar/PostNavbar";
 import PostViews from "../../components/PostViews/PostViews";
+import { IDiscussionData, IMetadataMessage } from "../../utils/giscus";
 
 export async function getStaticPaths() {
 	const idList = await getAllPostIds(false); // Not filter on visibility
@@ -176,6 +177,27 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		window.location.href = path;
 	};
 	const [currentSection, setCurrentSection] = useState(post.title);
+	const [discussionData, setDiscussionData] = useState<IDiscussionData>({
+		id: "",
+		url: "",
+		locked: true,
+		repository: {
+			nameWithOwner: "",
+		},
+		reactionCount: 0,
+		totalCommentCount: 0,
+		totalReplyCount: 0,
+		reactions: {
+			THUMBS_UP: { count: 0, viewerHasReacted: false },
+			THUMBS_DOWN: { count: 0, viewerHasReacted: false },
+			LAUGH: { count: 0, viewerHasReacted: false },
+			HOORAY: { count: 0, viewerHasReacted: false },
+			CONFUSED: { count: 0, viewerHasReacted: false },
+			HEART: { count: 0, viewerHasReacted: false },
+			ROCKET: { count: 0, viewerHasReacted: false },
+			EYES: { count: 0, viewerHasReacted: false },
+		},
+	});
 
 	const OutputElement = useMemo(() => {
 		if (post && post.data && post.data.blocks && Array.isArray(post.data.blocks)) {
@@ -231,8 +253,28 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	// ShareModal
 	const [openShareModal, setOpenShareModal] = useState(false);
 
-	// Ref
-	// const container = useRef();
+	// Giscus reactions and comments
+	useEffect(() => {
+		// Function for handling event message
+		const handleMessage = (event) => {
+			// Check that the message comes from giscus
+			if (event.origin !== "https://giscus.app") return;
+			if (!(typeof event.data === "object" && event.data.giscus)) return;
+
+			const giscusData = event.data.giscus;
+
+			if ("discussion" in giscusData) {
+				const metadataMessage: IMetadataMessage = giscusData;
+				setDiscussionData(metadataMessage.discussion);
+			}
+		};
+
+		// Configure and clean up event listener
+		window.addEventListener("message", handleMessage);
+		return () => {
+			window.removeEventListener("message", handleMessage);
+		};
+	}, []);
 
 	if (!post.published && !isAuthorized) return <></>;
 	return (
@@ -567,22 +609,24 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 									</Box>
 									{/* Comment section */}
 									<Box mb={3}>
-										<Toggle title={"Reactions & Comments"}>
+										<Toggle
+											title={`${discussionData.reactionCount} Reactions & ${discussionData.totalCommentCount} Comments`}
+										>
 											<Giscus
 												repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
 												repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
 												categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
 												id="comments"
 												category="Comments"
-												mapping="url"
-												term="Welcome to the comment section!"
+												mapping="specific"
+												term={`Post: ${props.postId}`}
 												strict="1"
 												reactionsEnabled="1"
-												emitMetadata="0"
+												emitMetadata="1"
 												inputPosition="top"
 												theme={theme.palette.mode === "light" ? "light" : "dark"}
 												lang="en"
-												loading="lazy"
+												// loading="lazy"
 											/>
 										</Toggle>
 									</Box>
