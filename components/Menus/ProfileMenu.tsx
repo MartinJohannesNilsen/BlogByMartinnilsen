@@ -26,7 +26,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 						user: {
 							name: "Martin the developer",
 							email: "martinjnilsen@gmail.com",
-							image: "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+							image: null,
 						},
 						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
 					},

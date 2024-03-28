@@ -253,15 +253,7 @@ export type NotificationProps = {
 };
 
 export type NotificationsModalProps = ModalProps & {
-	lastRead: number;
-	setLastRead: (date: number) => void;
-	notificationsRead: number[];
-	setNotificationsRead: (ids: number[]) => void;
-	allNotificationsFilteredOnDate: NotificationProps[];
-	unreadNotificationsIds: number[];
 	setVisibleBadgeNotifications: (value: boolean) => void;
-	notificationsFilterDays: number;
-	setNotificationsFilterDays: (value: number) => void;
 };
 
 // Buttons

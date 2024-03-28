@@ -4,11 +4,9 @@ import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { FC, MutableRefObject, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import useSWR from "swr";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Menus/ProfileMenu";
-import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../../components/Modals/NotificationsModal";
 import { extractHeaders } from "../../components/Modals/TOCModal";
 import { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -44,7 +42,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						user: {
 							name: "Martin the developer",
 							email: "martinjnilsen@gmail.com",
-							image: "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+							image: null,
 						},
 						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
 					},
@@ -56,6 +54,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	const handleNavigate = (path: string) => {
 		window.location.href = path;
 	};
+
 	// Modals
 	const [openTOCModal, setOpenTOCModal] = useState(false);
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
@@ -77,28 +76,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
 	const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
 	const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
-	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
 	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
-	const [notifications, setNotifications] = useState([]);
-	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
-	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
-	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
-	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
-	useEffect(() => {
-		const unreadNotifications = checkForUnreadRecentNotifications(
-			data,
-			lastRead,
-			notificationsFilterDays,
-			notificationsRead
-		);
-		if (data) {
-			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
-			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
-			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // TODO Filter on day select option
-			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
-		}
-		return () => {};
-	}, [data, notificationsRead, notificationsFilterDays]);
 
 	// SavedModal
 	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", []);
@@ -488,15 +466,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 				open={openNotificationsModal}
 				handleModalOpen={handleNotificationsModalOpen}
 				handleModalClose={handleNotificationsModalClose}
-				lastRead={lastRead}
-				setLastRead={setLastRead}
-				notificationsRead={notificationsRead}
-				setNotificationsRead={setNotificationsRead}
-				allNotificationsFilteredOnDate={notifications}
-				unreadNotificationsIds={unreadNotificationsIds}
 				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-				notificationsFilterDays={notificationsFilterDays}
-				setNotificationsFilterDays={setNotificationsFilterDays}
 			/>
 			{/* Settings */}
 			<SettingsModal

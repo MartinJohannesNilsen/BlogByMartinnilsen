@@ -159,7 +159,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 						user: {
 							name: "Martin the developer",
 							email: "martinjnilsen@gmail.com",
-							image: "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+							image: null,
 						},
 						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
 					},
@@ -180,22 +180,22 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const [discussionData, setDiscussionData] = useState<IDiscussionData>({
 		id: "",
 		url: "",
-		locked: true,
+		locked: null,
 		repository: {
 			nameWithOwner: "",
 		},
-		reactionCount: 0,
-		totalCommentCount: 0,
-		totalReplyCount: 0,
+		reactionCount: null,
+		totalCommentCount: null,
+		totalReplyCount: null,
 		reactions: {
-			THUMBS_UP: { count: 0, viewerHasReacted: false },
-			THUMBS_DOWN: { count: 0, viewerHasReacted: false },
-			LAUGH: { count: 0, viewerHasReacted: false },
-			HOORAY: { count: 0, viewerHasReacted: false },
-			CONFUSED: { count: 0, viewerHasReacted: false },
-			HEART: { count: 0, viewerHasReacted: false },
-			ROCKET: { count: 0, viewerHasReacted: false },
-			EYES: { count: 0, viewerHasReacted: false },
+			THUMBS_UP: { count: null, viewerHasReacted: false },
+			THUMBS_DOWN: { count: null, viewerHasReacted: false },
+			LAUGH: { count: null, viewerHasReacted: false },
+			HOORAY: { count: null, viewerHasReacted: false },
+			CONFUSED: { count: null, viewerHasReacted: false },
+			HEART: { count: null, viewerHasReacted: false },
+			ROCKET: { count: null, viewerHasReacted: false },
+			EYES: { count: null, viewerHasReacted: false },
 		},
 	});
 
@@ -610,24 +610,48 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 									{/* Comment section */}
 									<Box mb={3}>
 										<Toggle
-											title={`${discussionData.reactionCount} Reactions & ${discussionData.totalCommentCount} Comments`}
+											title={`${discussionData.reactionCount || ""}
+													Reaction${discussionData.reactionCount !== 1 ? "s" : ""} 
+													& ${discussionData.totalCommentCount || ""}
+													Comment${discussionData.totalCommentCount !== 1 ? "s" : ""}`}
+											accordionSx={
+												discussionData.locked === true && {
+													".MuiAccordionDetails-root": {
+														maxHeight: "250px",
+													},
+												}
+											}
 										>
-											<Giscus
-												repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
-												repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
-												categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
-												id="comments"
-												category="Comments"
-												mapping="specific"
-												term={`Post: ${props.postId}`}
-												strict="1"
-												reactionsEnabled="1"
-												emitMetadata="1"
-												inputPosition="top"
-												theme={theme.palette.mode === "light" ? "light" : "dark"}
-												lang="en"
-												// loading="lazy"
-											/>
+											<Box sx={discussionData.locked === true && { position: "relative", maxHeight: "250px" }}>
+												<Giscus
+													repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
+													repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
+													categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
+													id="comments"
+													category="Comments"
+													mapping="specific"
+													term={`Post: ${props.postId}`}
+													strict="1"
+													reactionsEnabled="1"
+													emitMetadata="1"
+													inputPosition="top"
+													theme={theme.palette.mode === "light" ? "light" : "dark"}
+													lang="en"
+													// loading="lazy"
+												/>
+												{discussionData.locked === true && (
+													<Typography
+														my={1}
+														textAlign="center"
+														fontFamily={theme.typography.fontFamily}
+														variant="body1"
+														fontWeight="600"
+														sx={{ color: theme.palette.text.disabled, position: "absolute", bottom: 2 }}
+													>
+														The comment section has been deactivated for this post.
+													</Typography>
+												)}
+											</Box>
 										</Toggle>
 									</Box>
 								</Stack>

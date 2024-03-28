@@ -3,9 +3,11 @@ import { Divider, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { NotificationProps, NotificationsModalProps } from "../../types";
+import useStickyState from "../../utils/useStickyState";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
 import StyledControlledSelect, { SelectOption } from "../StyledMUI/StyledControlledSelect";
 
@@ -71,18 +73,50 @@ export const checkForUnreadRecentNotifications = (
 export const NotificationsModal = (props: NotificationsModalProps) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
+	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
+	const [notifications, setNotifications] = useState([]);
+	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
+	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
+	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
+	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
 
+	// Update modal when data is fetched, when modal is opened or select value is changed
 	useEffect(() => {
-		if (props.open) {
-			props.setLastRead(Date.now());
-			// Await to set read for seeing the notifications count
+		if (!data) return;
+
+		// Logic for finding unread notifications
+		const unreadNotifications = checkForUnreadRecentNotifications(
+			data,
+			lastRead,
+			notificationsFilterDays,
+			notificationsRead
+		);
+
+		// Set all notifications
+		setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
+
+		// Set badge visibility
+		props.setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
+
+		// Set unread ids
+		setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
+
+		// Set last read
+		setLastRead(Date.now());
+
+		// If open and has unread, we (1) update read notifications, (2) clear list of unread ids, and (3) remove icon badge
+		if (props.open && unreadNotifications.hasUnreadNotifications) {
 			setTimeout(() => {
-				props.setNotificationsRead([...props.notificationsRead, ...props.unreadNotificationsIds]);
+				setNotificationsRead([...notificationsRead, ...unreadNotifications.unreadNotificationsIds]);
+				setUnreadNotificationsIds([]);
+				props.setVisibleBadgeNotifications(false);
 			}, 5000);
 		}
-		return () => {};
-	}, [props.open, props.notificationsFilterDays]);
 
+		return () => {};
+	}, [data, props.open, notificationsFilterDays]);
+
+	// Modal style
 	const style = {
 		position: "absolute" as "absolute",
 		top: "50%",
@@ -126,11 +160,10 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 						color={theme.palette.text.primary}
 						mb={1}
 					>
-						Notifications{" "}
-						{props.unreadNotificationsIds.length !== 0 ? `‎ • ‎ ${props.unreadNotificationsIds.length}` : null}
+						Notifications {unreadNotificationsIds.length !== 0 && `‎ • ‎ ${unreadNotificationsIds.length}`}
 					</Typography>
 					{/* <UnstyledSelect value={props.notificationsFilterDays} setValue={props.setNotificationsFilterDays} /> */}
-					<StyledControlledSelect value={props.notificationsFilterDays} setValue={props.setNotificationsFilterDays}>
+					<StyledControlledSelect value={notificationsFilterDays} setValue={setNotificationsFilterDays}>
 						<SelectOption value={7}>Last 7 days</SelectOption>
 						<SelectOption value={14}>Last 14 days</SelectOption>
 						<SelectOption value={30}>Last 30 days</SelectOption>
@@ -143,14 +176,21 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 							border: "1px solid" + (theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[300]),
 							borderRadius: "5px",
 							backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[200],
-							padding: "5px 15px 8px 15px",
+							padding: "5px 15px 8px 0px",
 							overflowY: "scroll",
 						}}
 					>
-						{props.allNotificationsFilteredOnDate.length > 0 ? (
-							props.allNotificationsFilteredOnDate.map((notification, index) => (
+						{notifications.length > 0 ? (
+							notifications.map((notification, index) => (
 								<>
-									<Box my={1}>
+									<Box
+										my={1}
+										sx={
+											!notificationsRead.includes(notification.id)
+												? { borderLeft: "3px solid " + theme.palette.text.disabled, pl: "12px" }
+												: { pl: "15px" }
+										}
+									>
 										<CustomParagraph
 											data={{
 												text: notification.title,
@@ -186,7 +226,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 											classNames={null}
 										/>
 									</Box>
-									{index !== props.allNotificationsFilteredOnDate.length - 1 && <Divider sx={{ mt: 2, mb: 1.5 }} />}
+									{index !== notifications.length - 1 && <Divider sx={{ mt: 2, mb: 1.5 }} />}
 								</>
 							))
 						) : (
@@ -197,7 +237,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 								fontWeight="500"
 								color={theme.palette.text.primary}
 							>
-								No notifications for the past {props.notificationsFilterDays} days
+								No notifications for the past {notificationsFilterDays} days
 							</Typography>
 						)}
 					</Box>

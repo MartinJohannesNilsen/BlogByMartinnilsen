@@ -3,21 +3,18 @@ import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material"
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import useSWR from "swr";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { NavbarProps } from "../../types";
 import { userSignOut } from "../../utils/signOut";
-import useStickyState from "../../utils/useStickyState";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../Buttons/NavbarButton";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { MenuIcon } from "../Icons/MenuIcon";
 import ProfileMenu from "../Menus/ProfileMenu";
-import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../Modals/NotificationsModal";
 // Modals can be dynamically imported
 import SearchModal from "../Modals/SearchModal"; // For listening to hotkeys on render, not rerender
 // const SearchModal = dynamic(() => import("../Modals/SearchModal"));
@@ -46,13 +43,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
 	const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
 	const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
-	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
 	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
-	const [notifications, setNotifications] = useState([]);
-	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
-	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
-	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
-	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
 	// SettingsModal
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
 	const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -83,22 +74,6 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const handleThemeChange = (event: any) => {
 		setTheme(event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark, true);
 	};
-
-	// Notifications and badge
-	useEffect(() => {
-		const unreadNotifications = checkForUnreadRecentNotifications(
-			data,
-			lastRead,
-			notificationsFilterDays,
-			notificationsRead
-		);
-		if (data) {
-			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
-			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
-			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
-		}
-		return () => {};
-	}, [data, notificationsRead, notificationsFilterDays]);
 
 	// Account page navbar
 	if (!props.posts) {
@@ -234,15 +209,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					open={openNotificationsModal}
 					handleModalOpen={handleNotificationsModalOpen}
 					handleModalClose={handleNotificationsModalClose}
-					lastRead={lastRead}
-					setLastRead={setLastRead}
-					notificationsRead={notificationsRead}
-					setNotificationsRead={setNotificationsRead}
-					allNotificationsFilteredOnDate={notifications}
-					unreadNotificationsIds={unreadNotificationsIds}
 					setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-					notificationsFilterDays={notificationsFilterDays}
-					setNotificationsFilterDays={setNotificationsFilterDays}
 				/>
 			</Box>
 		);
@@ -442,15 +409,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				open={openNotificationsModal}
 				handleModalOpen={handleNotificationsModalOpen}
 				handleModalClose={handleNotificationsModalClose}
-				lastRead={lastRead}
-				setLastRead={setLastRead}
-				notificationsRead={notificationsRead}
-				setNotificationsRead={setNotificationsRead}
-				allNotificationsFilteredOnDate={notifications}
-				unreadNotificationsIds={unreadNotificationsIds}
 				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-				notificationsFilterDays={notificationsFilterDays}
-				setNotificationsFilterDays={setNotificationsFilterDays}
 			/>
 		</Box>
 	);
