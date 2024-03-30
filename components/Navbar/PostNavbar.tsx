@@ -2,7 +2,7 @@ import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, MenuBook }
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import { FC, MutableRefObject, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
@@ -11,7 +11,7 @@ import { extractHeaders } from "../../components/Modals/TOCModal";
 import { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { FullPost } from "../../types";
+import { PostNavbarProps } from "../../types";
 import useStickyState from "../../utils/useStickyState";
 import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
@@ -19,19 +19,6 @@ const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"))
 const TOCModal = dynamic(() => import("../Modals/TOCModal"));
 const ShareModal = dynamic(() => import("../Modals/ShareModal"));
 const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
-
-// GSAP Trial
-// import gsap from "gsap";
-// import { useGSAP } from "@gsap/react";
-// import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-// gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-type PostNavbarProps = {
-	post: FullPost & { id: string };
-	toc: { content: string; currentSection: string };
-	shareModal: { open: boolean; setOpen: (value: boolean) => void };
-	ref?: MutableRefObject<undefined>;
-};
 
 export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	const { isAuthorized, session, status } =
@@ -89,33 +76,14 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 		return () => {};
 	}, [, savedPosts]);
 
-	// GSAP animate
-	// useGSAP(
-	// 	() => {
-	// 		const box = document.getElementById("computer-navbar");
-	// 		ScrollTrigger.create({
-	// 			trigger: box,
-	// 			start: "top top",
-	// 			end: "bottom bottom",
-	// 			scrub: 1,
-	// 			onUpdate: (self) => {
-	// 				const progress = self.progress;
-	// 				const totalDistance = box.clientHeight;
-	// 				const pixelsPerScroll = totalDistance / 100; // Adjust this value for the desired speed
-
-	// 				gsap.set(box, { y: -progress * totalDistance });
-	// 			},
-	// 		});
-	// 	},
-	// 	{ scope: props.ref }
-	// );
-
 	return (
 		<>
 			{/* Navbar based on mobile device or not */}
 			{isMobile ? (
 				// Mobile
 				<Box
+					className={props.className}
+					ref={props.ref}
 					width={"100%"}
 					pt={4.75}
 					pb={0.75}
@@ -296,6 +264,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 			) : (
 				// Not mobile
 				<Box
+					className={props.className}
 					ref={props.ref}
 					id="computer-navbar"
 					display="flex"

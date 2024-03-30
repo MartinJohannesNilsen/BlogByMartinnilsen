@@ -1,13 +1,13 @@
-import { Box, Link, styled, Tooltip, tooltipClasses, TooltipProps, Typography, useMediaQuery } from "@mui/material";
+import { Box, Link, Typography, useMediaQuery } from "@mui/material";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { FooterProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";
-import NextLink from "next/link";
 
-const Footer: FC<FooterProps> = (props) => {
+const Footer: FC<FooterProps> = (props: FooterProps) => {
 	const { theme } = useTheme();
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 	const scrollPosition = usePercentageScrollPosition();

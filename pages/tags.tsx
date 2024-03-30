@@ -1,5 +1,7 @@
 import { Box, Button, Grid, Typography, useMediaQuery } from "@mui/material";
+import { WebPageJsonLd } from "next-seo";
 import ErrorPage from "next/error";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -12,8 +14,6 @@ import { getTags } from "../database/tags";
 import { useTheme } from "../styles/themes/ThemeProvider";
 import { StoredPost, TagsPageProps } from "../types";
 import colorLumincance from "../utils/colorLuminance";
-import NextLink from "next/link";
-import { WebPageJsonLd } from "next-seo";
 
 // Next.js functions
 // On-demand Revalidation, thus no defined revalidation interval
@@ -161,11 +161,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 						background: theme.palette.primary.main,
 					}}
 				>
-					<Navbar
-						backgroundColor={theme.palette.primary.main}
-						textColor={theme.palette.text.primary}
-						posts={isAuthorized ? props.posts : _filterListOfStoredPostsOnPublished(props.posts, "published")}
-					/>
+					<Navbar posts={isAuthorized ? props.posts : _filterListOfStoredPostsOnPublished(props.posts, "published")} />
 					<Box
 						display="flex"
 						flexDirection="column"

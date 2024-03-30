@@ -4,6 +4,7 @@ import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { SxProps, styled } from "@mui/material/styles";
+import { MutableRefObject } from "react";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
 
 // Accordion styled
@@ -36,9 +37,10 @@ const Toggle = (props: {
 	children: JSX.Element;
 	accordionSx?: SxProps;
 	boxSx?: SxProps;
+	ref?: MutableRefObject<any>;
 }) => {
 	return (
-		<Box sx={{ my: 1, ...props.boxSx }} display="flex" flexDirection="column" textAlign="center">
+		<Box sx={{ my: 1, ...props.boxSx }} ref={props.ref} display="flex" flexDirection="column" textAlign="center">
 			<Accordion expanded={props.open} onChange={props.handleClick} sx={{ ...props.accordionSx }}>
 				<AccordionSummary aria-controls="toggle text">
 					<CustomParagraph data={{ text: props.title }} style={null} config={null} classNames={null} />

@@ -58,11 +58,7 @@ export const Account = () => {
 					background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
 				}}
 			>
-				<Navbar
-					backgroundColor={theme.palette.primary.contrastText}
-					textColor={theme.palette.primary.main}
-					accountPage={true}
-				/>
+				<Navbar />
 				<Grid
 					container
 					sx={{ width: "350px" }}

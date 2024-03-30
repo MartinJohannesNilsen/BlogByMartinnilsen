@@ -1,8 +1,9 @@
 import { OutputData } from "@editorjs/editorjs";
 import { SvgIconTypeMap, SxProps } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
+import { ButtonBarButtonProps } from "./components/ButtonBar/ButtonBar";
 
 // Object types
 
@@ -157,17 +158,19 @@ export type TablePost = StoredPost & {
 	views: number | string;
 };
 
-export type NavbarSection = {
-	name: string;
-	path: string;
-};
-
 export type NavbarProps = {
 	posts?: StoredPost[];
-	textColor?: string;
-	backgroundColor: string;
-	accountPage?: boolean;
 	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
+	ref?: MutableRefObject<undefined>;
+	className?: string;
+};
+
+export type PostNavbarProps = {
+	post: FullPost & { id: string };
+	toc: { content: string; currentSection: string };
+	shareModal: { open: boolean; setOpen: (value: boolean) => void };
+	ref?: MutableRefObject<undefined>;
+	className?: string;
 };
 
 // Component types

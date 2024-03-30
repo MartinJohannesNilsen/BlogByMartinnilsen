@@ -1,8 +1,8 @@
 import Giscus from "@giscus/react";
-import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
+import { AccessTime, ArrowUpward, CalendarMonth, Comment, ThumbUpAlt, Visibility } from "@mui/icons-material";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -23,8 +23,16 @@ import { ReadArticleViewProps } from "../../types";
 import Output from "editorjs-react-renderer";
 import { ArticleJsonLd } from "next-seo";
 import { useEventListener } from "usehooks-ts";
+import ButtonBar, { ButtonBarButtonProps } from "../../components/ButtonBar/ButtonBar";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
+import PostNavbar from "../../components/Navbar/PostNavbar";
+import PostViews from "../../components/PostViews/PostViews";
 import Toggle from "../../components/Toggles/Toggle";
+import { IDiscussionData, IMetadataMessage } from "../../utils/giscus";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // EditorJS renderers
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
@@ -42,9 +50,6 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
-import PostNavbar from "../../components/Navbar/PostNavbar";
-import PostViews from "../../components/PostViews/PostViews";
-import { IDiscussionData, IMetadataMessage } from "../../utils/giscus";
 
 export async function getStaticPaths() {
 	const idList = await getAllPostIds(false); // Not filter on visibility
@@ -198,6 +203,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			EYES: { count: null, viewerHasReacted: false },
 		},
 	});
+	const toggleRef = useRef<null | HTMLDivElement>(null);
+	const [toggleRCOpen, setToggleRCOpen] = useState<boolean>(false);
 
 	const OutputElement = useMemo(() => {
 		if (post && post.data && post.data.blocks && Array.isArray(post.data.blocks)) {
@@ -207,6 +214,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		return null;
 	}, [post]);
 
+	// Views
 	useEffect(() => {
 		// Increase view count in supabase db
 		// Esure not on localhost
@@ -217,7 +225,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			(status === "unauthenticated" ||
 				(status === "authenticated" && session && session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
 			// All criterias are met, run POST request to increment counter
-			// TODO uncomment
 			fetch(`/api/views/${props.postId}`, {
 				method: "POST",
 				headers: {
@@ -228,16 +235,19 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		setIsLoading(false);
 	}, [session]);
 
+	// Go to hash if defined on load
 	useEffect(() => {
 		if (typeof window !== "undefined" && window.location.hash) {
 			handleNavigate(window.location.hash);
 		}
 	}, [isLoading]);
 
+	// Render markup for toc
 	const OutputString = useMemo(() => {
 		return renderToStaticMarkup(OutputElement);
 	}, [OutputElement]);
 
+	// Get current section for toc
 	useEventListener("scroll", () => {
 		const sectionEls = document.querySelectorAll(".anchorHeading");
 		sectionEls.forEach((sectionEl) => {
@@ -276,6 +286,95 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		};
 	}, []);
 
+	// ButtonBar
+	const buttonBarButtons: ButtonBarButtonProps[] = [
+		{
+			icon: ThumbUpAlt,
+			fetched: discussionData.reactionCount !== null ? true : false,
+			text: isMobile
+				? discussionData?.reactionCount?.toString()
+				: `${discussionData?.reactionCount?.toString()}
+				reaction${discussionData.reactionCount !== 1 ? "s" : ""}`,
+			onClick: () => {
+				setToggleRCOpen(true);
+				setTimeout(() => {
+					toggleRef.current.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
+				}, 250);
+			},
+		},
+		{
+			icon: Comment,
+			fetched: discussionData.totalCommentCount !== null ? true : false,
+			text: isMobile
+				? discussionData?.totalCommentCount?.toString()
+				: `${discussionData?.totalCommentCount?.toString()} 
+				comment${discussionData.totalCommentCount !== 1 ? "s" : ""}`,
+			onClick: () => {
+				setToggleRCOpen(true);
+				setTimeout(() => {
+					toggleRef.current.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
+				}, 250);
+			},
+		},
+		{
+			icon: ArrowUpward,
+			text: isMobile ? "" : discussionData.totalCommentCount === null ? "" : "Back to top",
+			onClick: () => {
+				window.scrollTo({
+					top: 0,
+					behavior: "smooth",
+				});
+			},
+		},
+	];
+
+	// Animations with GSAP
+	const containerRef = useRef();
+	useEffect(() => {
+		ScrollTrigger.refresh();
+
+		return () => {};
+	}, [isLoading, toggleRCOpen]);
+	useGSAP(
+		() => {
+			// navBar
+			const navBarAnimation = gsap.to(".navBar", {
+				y: "-60px",
+				paused: true,
+				duration: 0.4,
+			});
+			ScrollTrigger.create({
+				start: "bottom bottom",
+				// As both "max" or a dynamic value in document.body.scrollheight (as state) did not work as expected, setting an arbitrary high number
+				end: `123456789px`,
+				scrub: true,
+				onUpdate: (self) => {
+					self.direction === -1 ? navBarAnimation.reverse() : navBarAnimation.play();
+				},
+			});
+
+			// ButtonBar
+			const buttonBarAnimation = gsap.to(".buttonBar", {
+				y: "-60px",
+				paused: true,
+				duration: 0.4,
+				reversed: true, // Start in reverse
+			});
+			ScrollTrigger.create({
+				start: "top top",
+				end: `123456789px`,
+				scrub: true,
+				onUpdate: (self) => {
+					self.direction === -1 ? buttonBarAnimation.play() : buttonBarAnimation.reverse();
+				},
+			});
+
+			// Ensure to reverse the animation on component unmount
+			return () => buttonBarAnimation.reverse();
+		},
+		{ dependencies: [isLoading], scope: containerRef }
+	);
+
 	if (!post.published && !isAuthorized) return <></>;
 	return (
 		<SEO
@@ -310,7 +409,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/yjdttN68e7V3E8SKIupT`,
 				}}
 			/>
-			<Box width="100%">
+			<Box width="100%" height="100%" position="relative" className="page">
 				{isLoading ? (
 					<></>
 				) : !post ? (
@@ -319,6 +418,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 					<></>
 				) : (
 					<Box
+						height="100%"
 						width="100%"
 						display="flex"
 						flexDirection="column"
@@ -326,14 +426,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 						justifyContent="center"
 						justifyItems="center"
 						sx={{ backgroundColor: theme.palette.primary.main }}
-						// ref={container}
+						ref={containerRef}
 					>
 						{/* Navbar */}
 						<PostNavbar
+							className="navBar"
 							post={{ ...post, id: props.postId }}
 							toc={{ content: OutputString, currentSection: currentSection }}
 							shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
-							// ref={container}
 						/>
 						{/* Content */}
 						<Grid
@@ -608,12 +708,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 											)}
 									</Box>
 									{/* Comment section */}
-									<Box mb={3}>
+									<Box mb={3} ref={toggleRef}>
 										<Toggle
-											title={`${discussionData.reactionCount || ""}
-													Reaction${discussionData.reactionCount !== 1 ? "s" : ""} 
-													& ${discussionData.totalCommentCount || ""}
-													Comment${discussionData.totalCommentCount !== 1 ? "s" : ""}`}
+											open={toggleRCOpen}
+											handleClick={() => {
+												setToggleRCOpen(!toggleRCOpen);
+											}}
+											title={"Reactions & Comments"}
 											accordionSx={
 												discussionData.locked === true && {
 													".MuiAccordionDetails-root": {
@@ -622,7 +723,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 												}
 											}
 										>
-											<Box sx={discussionData.locked === true && { position: "relative", maxHeight: "250px" }}>
+											<Box
+												sx={
+													discussionData.locked === true
+														? { position: "relative", maxHeight: "250px", height: "250px" }
+														: { height: "100%" }
+												}
+											>
 												<Giscus
 													repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
 													repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
@@ -680,6 +787,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 							</Box>
 						)}
 						<Footer />
+						{/* Render buttonBar */}
+						<Box height="100%" ref={containerRef} sx={{ width: "100vw", display: "flex", justifyContent: "center" }}>
+							<ButtonBar
+								className="buttonBar"
+								sx={{ position: "fixed", bottom: "-45px", zIndex: 9999 }}
+								buttons={buttonBarButtons}
+							/>
+						</Box>
 					</Box>
 				)}
 			</Box>

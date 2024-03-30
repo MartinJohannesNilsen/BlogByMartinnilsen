@@ -80,17 +80,17 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		const AboutModal = dynamic(() => import("../Modals/AboutModal"));
 		return (
 			<Box
+				className={props.className}
+				ref={props.ref}
 				width={"100%"}
 				pt={isMobile ? 4.75 : 1.5}
 				pb={isMobile ? 0.75 : 1.5}
-				// pt={2}
-				// pb={2}
 				position={"fixed"}
 				display="flex"
 				alignItems="center"
 				justifyContent="center"
 				sx={{
-					backgroundColor: props.backgroundColor,
+					backgroundColor: theme.palette.primary.contrastText,
 					top: 0,
 					zIndex: 1000,
 					marginTop: isMobile ? "-34px" : 0,
@@ -114,14 +114,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-							color: props.textColor || theme.palette.text.primary,
+							color: theme.palette.text.secondary,
 							"&:focus-visible": {
 								// color: theme.palette.secondary.main,
-								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+								color: theme.palette.text.secondary + "BB",
 							},
 							"&:hover": {
 								// color: theme.palette.secondary.main,
-								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+								color: theme.palette.text.secondary + "BB",
 							},
 						}}
 						underline="none"
@@ -130,7 +130,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							alt="Website logo"
 							width={22}
 							height={22}
-							fill={props.textColor ? props.textColor : theme.palette.text.primary}
+							fill={theme.palette.text.secondary}
 							style={{ fillRule: "evenodd" }}
 						/>
 						<Typography
@@ -218,6 +218,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	// Default navbar
 	return (
 		<Box
+			className={props.className}
+			ref={props.ref}
 			width={"100%"}
 			pt={isMobile ? 4.75 : 1.5}
 			pb={isMobile ? 0.75 : 1.5}
@@ -254,14 +256,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						flexDirection: "row",
 						justifyContent: "center",
 						alignItems: "center",
-						color: props.textColor || theme.palette.text.primary,
+						color: theme.palette.text.primary,
 						"&:focus-visible": {
 							// color: theme.palette.secondary.main,
-							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+							color: theme.palette.text.primary + "BB",
 						},
 						"&:hover": {
 							// color: theme.palette.secondary.main,
-							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+							color: theme.palette.text.primary + "BB",
 						},
 					}}
 				>
@@ -269,7 +271,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						alt="Website logo"
 						width={22}
 						height={22}
-						fill={props.textColor ? props.textColor : theme.palette.text.primary}
+						fill={theme.palette.text.primary}
 						style={{ fillRule: "evenodd" }}
 					/>
 					<Typography
@@ -288,11 +290,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					<Box>
 						<NavbarButton
 							variant="outline"
-							// variant="base"
-							// onClick={() => {
-							// 	handleNavigate("/create");
-							// }}
-							href="/create"
+							onClick={() => {
+								handleNavigate("/create");
+							}}
+							// TODO This seem to be a problem
+							// href="/create"
 							icon={PostAdd}
 							tooltip="Upload new post"
 							sxButton={{
@@ -318,6 +320,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 								height: "34px",
 								width: "34px",
 								backgroundColor: theme.palette.primary.main + "50",
+								color: theme.palette.text.primary,
 							}}
 							sxIcon={{
 								height: "24px",
@@ -332,6 +335,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							sxButton={{
 								height: "34px",
 								backgroundColor: theme.palette.primary.main + "50",
+								color: theme.palette.text.primary,
 							}}
 							sxIcon={{
 								height: "24px",
@@ -350,6 +354,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							height: "34px",
 							width: "34px",
 							backgroundColor: theme.palette.primary.main + "50",
+							color: theme.palette.text.primary,
 						}}
 						sxIcon={{
 							height: "24px",
@@ -364,7 +369,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						handleMenuOpen={handleProfileMenuClick}
 						handleMenuClose={handleProfileMenuClose}
 						accountButtonSx={{
-							color: props.textColor || theme.palette.text.primary,
+							color: theme.palette.text.primary,
 							backgroundColor: theme.palette.primary.main + "50",
 						}}
 						showNotificationsBadge={visibleBadgeNotifications}

@@ -42,9 +42,9 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 					onClick={props.handleMenuOpen}
 					icon={Person}
 					tooltip="Profile menu"
-					aria-controls={open ? "profile-menu" : undefined}
+					aria-controls={props.open ? "profile-menu" : undefined}
 					aria-haspopup="true"
-					aria-expanded={open ? "true" : undefined}
+					aria-expanded={props.open ? "true" : undefined}
 					sxButton={{
 						minWidth: "34px",
 						minHeight: "34px",
