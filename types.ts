@@ -3,7 +3,6 @@ import { SvgIconTypeMap, SxProps } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { CSSProperties, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
-import { ButtonBarButtonProps } from "./components/ButtonBar/ButtonBar";
 
 // Object types
 
@@ -72,6 +71,7 @@ export type EditorjsRendererProps = {
 		textwrap?: boolean;
 		filename?: string;
 		render?: boolean;
+		highlightLines?: number[];
 		// Callout
 		icon?: string;
 		type?: string;

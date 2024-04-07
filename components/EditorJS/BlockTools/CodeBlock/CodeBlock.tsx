@@ -1,9 +1,8 @@
-import React from "react";
-import { Box, Typography, Checkbox, Autocomplete, TextField, Input, useMediaQuery } from "@mui/material";
+import { Autocomplete, Box, Checkbox, Input, TextField, Typography, useMediaQuery } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import { EDITORTHEME } from "../../Renderers/CustomCode";
-import SyntaxHighlighter from "react-syntax-highlighter";
 import { allowedLanguages } from "./allowedLanguages";
 import { InputElement, TextareaAutosizeElement } from "./styledMuiComponents";
 
@@ -26,6 +25,7 @@ type CodeBlockDataProps = {
 	filename: string;
 	caption: string;
 	render: boolean;
+	highlightLines: number[];
 };
 type CodeBlockProps = {
 	data: CodeBlockDataProps;
@@ -48,6 +48,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
 			filename: "",
 			caption: "",
 			render: false,
+			highlightLines: [],
 		}
 	);
 
@@ -243,18 +244,26 @@ export const CodeBlock = (props: CodeBlockProps) => {
 					{/* Editor */}
 					<Box
 						sx={{
-							"& .language-plaintext code": {
-								userSelect: "none",
-								margin: "-15px 10px -15px -15px",
-								padding: "15px 0px 15px 15px",
-								backgroundColor: "rgb(30, 30, 30)",
-								// TODO Remove scrollbar on unwrapped codeblocks on render
-								// "& > div": {
-								// 	scrollbarWidth: "none",
-								// },
-								// "& > div::-webkit-scrollbar": {
-								// 	display: "none",
-								// },
+							"& pre": {
+								// margin: 0,
+								// padding: "0px",
+								// backgroundColor: "#f7f7f7",
+								// Add scrollbar styles
+								// marginY: "10px",
+								"&::-webkit-scrollbar": {
+									height: "0px",
+									// width: "20px !important",
+								},
+								"&::-webkit-scrollbar-thumb": {
+									backgroundColor: "#888",
+									borderRadius: "6px",
+								},
+								"&::-webkit-scrollbar-thumb:hover": {
+									backgroundColor: "#555",
+								},
+								"&::-webkit-scrollbar-track": {
+									marginY: "10px",
+								},
 							},
 						}}
 					>
@@ -262,19 +271,40 @@ export const CodeBlock = (props: CodeBlockProps) => {
 							<SyntaxHighlighter
 								language={stateData.language && stateData.language !== "" ? stateData.language : "plaintext"}
 								showLineNumbers={stateData.linenumbers}
-								showInlineLineNumbers={false}
+								lineNumberStyle={{ color: "#ffffff20", minWidth: "45px" }}
 								style={EDITORTHEME}
 								wrapLongLines={stateData.textwrap}
 								customStyle={{
 									height: !stateData.multiline && "54px",
 									overflowY: "hidden",
-									// overflowX: "scroll",
 									backgroundColor: "rgb(36, 39, 46)",
 									margin: "0px",
 									marginBottom: 0,
 									padding: "15px",
 									borderRadius: "0 0 10px 10px",
 								}}
+								lineProps={(lineNumber) => ({
+									style: {
+										backgroundColor: stateData.highlightLines.includes(lineNumber) ? "#ffffff15" : "transparent",
+									},
+									onClick() {
+										if (
+											stateData.highlightLines &&
+											Array.isArray(stateData.highlightLines) &&
+											stateData.highlightLines.includes(lineNumber)
+										) {
+											setStateData({
+												...stateData,
+												highlightLines: stateData.highlightLines.filter((line) => line !== lineNumber),
+											});
+										} else {
+											setStateData({
+												...stateData,
+												highlightLines: [...stateData.highlightLines, lineNumber],
+											});
+										}
+									},
+								})}
 							>
 								{stateData.multiline ? stateData.code : stateData.code.replace(/(\r\n|\n|\r)/gm, "")}
 							</SyntaxHighlighter>

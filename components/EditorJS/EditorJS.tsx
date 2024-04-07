@@ -5,7 +5,7 @@ import Undo from "editorjs-undo";
 import { memo, useEffect, useRef } from "react";
 import { EDITOR_JS_TOOLS } from "./tools";
 
-//props
+// props
 type Props = {
 	data?: OutputData;
 	onChange(val: OutputData): void;

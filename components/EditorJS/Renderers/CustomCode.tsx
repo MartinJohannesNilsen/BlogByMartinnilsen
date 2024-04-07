@@ -1,10 +1,10 @@
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
+import NextLink from "next/link";
 import { useState } from "react";
 import { IoCheckmark, IoCopyOutline } from "react-icons/io5";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
-import NextLink from "next/link";
 
 // Themes
 import { enqueueSnackbar } from "notistack";
@@ -120,23 +120,52 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							</Button>
 						</Box>
 					</Box>
-					{/* Editor (highlighted) */}
-					<SyntaxHighlighter
-						language={props.data.language && props.data.language !== "" ? props.data.language : "plaintext"}
-						style={EDITORTHEME}
-						showLineNumbers={props.data.linenumbers}
-						// showInlineLineNumbers={true}
-						showInlineLineNumbers={false}
-						wrapLongLines={props.data.textwrap}
-						customStyle={{
-							backgroundColor: "rgb(36, 39, 46)",
-							margin: "0px",
-							padding: "15px",
-							borderRadius: "0 0 10px 10px",
+					{/* Editor */}
+					<Box
+						sx={{
+							"& pre": {
+								"&::-webkit-scrollbar": {
+									height: "0px",
+								},
+								"&::-webkit-scrollbar-thumb": {
+									backgroundColor: "#888",
+									borderRadius: "6px",
+								},
+								"&::-webkit-scrollbar-thumb:hover": {
+									backgroundColor: "#555",
+								},
+								"&::-webkit-scrollbar-track": {
+									marginY: "10px",
+								},
+							},
 						}}
 					>
-						{props.data.code}
-					</SyntaxHighlighter>
+						<SyntaxHighlighter
+							language={props.data.language && props.data.language !== "" ? props.data.language : "plaintext"}
+							style={EDITORTHEME}
+							showLineNumbers={props.data.linenumbers}
+							lineNumberStyle={{ color: "#ffffff20", minWidth: "45px" }}
+							wrapLongLines={props.data.textwrap}
+							customStyle={{
+								backgroundColor: "rgb(36, 39, 46)",
+								margin: "0px",
+								padding: "15px",
+								borderRadius: "0 0 10px 10px",
+							}}
+							lineProps={(lineNumber) => ({
+								style: {
+									backgroundColor:
+										props.data.highlightLines &&
+										Array.isArray(props.data.highlightLines) &&
+										props.data.highlightLines.includes(lineNumber)
+											? "#ffffff15"
+											: "transparent",
+								},
+							})}
+						>
+							{props.data.code}
+						</SyntaxHighlighter>
+					</Box>
 				</Box>
 			) : (
 				// Singleline codeblock

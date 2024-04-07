@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from 'react-dom';
 import CodeBlock from './CodeBlock';
-import { createRoot } from "react-dom/client";
+// import { createRoot } from "react-dom/client";
 
 const dataDefaults = {
   code: "",
@@ -12,6 +12,7 @@ const dataDefaults = {
   filename: "",
   caption: "",
   render: false,
+  highlightLines: []
 }
 
 export default class Tool extends React.Component{
@@ -29,6 +30,7 @@ export default class Tool extends React.Component{
       filename: data.filename || this.dataDefaults.filename,
       caption: data.caption || this.dataDefaults.caption,
       render: data.render !== undefined && data.render !== "" ? data.render : this.dataDefaults.render,
+      highlightLines: data.highlightLines || this.dataDefaults.highlightLines,
       ...config.data
     };
 
