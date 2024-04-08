@@ -153,14 +153,17 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 								borderRadius: "0 0 10px 10px",
 							}}
 							lineProps={(lineNumber) => ({
-								style: {
-									backgroundColor:
-										props.data.highlightLines &&
-										Array.isArray(props.data.highlightLines) &&
-										props.data.highlightLines.includes(lineNumber)
-											? "#ffffff15"
-											: "transparent",
-								},
+								style:
+									props.data.highlightLines &&
+									Array.isArray(props.data.highlightLines) &&
+									props.data.highlightLines.includes(lineNumber)
+										? {
+												backgroundColor: "#ffffff15",
+												margin: "0 -15px",
+												padding: "0 13px",
+												borderLeft: "2px solid grey",
+										  }
+										: { backgroundColor: "transparent" },
 							})}
 						>
 							{props.data.code}

@@ -284,9 +284,14 @@ export const CodeBlock = (props: CodeBlockProps) => {
 									borderRadius: "0 0 10px 10px",
 								}}
 								lineProps={(lineNumber) => ({
-									style: {
-										backgroundColor: stateData.highlightLines.includes(lineNumber) ? "#ffffff15" : "transparent",
-									},
+									style: stateData.highlightLines.includes(lineNumber)
+										? {
+												backgroundColor: "#ffffff15",
+												margin: "0 -15px",
+												padding: "0 13px",
+												borderLeft: "2px solid grey",
+										  }
+										: { backgroundColor: "transparent" },
 									onClick() {
 										if (
 											stateData.highlightLines &&
