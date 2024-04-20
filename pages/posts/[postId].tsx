@@ -50,6 +50,7 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
+import { useRouter } from "next/router";
 
 export async function getStaticPaths() {
 	const idList = await getAllPostIds(false); // Not filter on visibility
@@ -156,6 +157,7 @@ export function processJsonToggleBlocks(inputJson) {
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const post = props.post;
+	const router = useRouter();
 	const { isAuthorized, session, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
 			? {
@@ -178,9 +180,6 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const sm = useMediaQuery(theme.breakpoints.only("sm"));
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
-	const handleNavigate = (path: string) => {
-		window.location.href = path;
-	};
 	const [currentSection, setCurrentSection] = useState(post.title);
 	const [discussionData, setDiscussionData] = useState<IDiscussionData>({
 		id: "",
@@ -214,14 +213,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		return null;
 	}, [post]);
 
-	// Views
+	// On session update, we can update views and go to hash if present
 	useEffect(() => {
-		// Increase view count in supabase db
-		// Esure not on localhost
+		// Increase view count in supabase db if: (1) not on localhost, (2) post is published and (3) unauthenticated or non-admin
 		process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
-			// Ensure published post
 			post.published &&
-			// Ensure either unauthenticated or authenticated without being admin
 			(status === "unauthenticated" ||
 				(status === "authenticated" && session && session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
 			// All criterias are met, run POST request to increment counter
@@ -231,16 +227,45 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 					apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
 				},
 			});
+
 		// When session is updated, not loading anymore
 		setIsLoading(false);
 	}, [session]);
 
-	// Go to hash if defined on load
 	useEffect(() => {
+		// Go to hash if present
 		if (typeof window !== "undefined" && window.location.hash) {
-			handleNavigate(window.location.hash);
+			router.replace(window.location.hash);
+
+			// Alternate approach with instant scroll
+			// const targetElement = document.querySelector(hash);
+			// if (targetElement) {
+			// 	targetElement.scrollIntoView({ behavior: "instant" });
+			// }
 		}
 	}, [isLoading]);
+
+	useEffect(() => {
+		if (
+			!isLoading &&
+			((process.env.NEXT_PUBLIC_HIDE_NAVBAR_DESKTOP === "true" && !isMobile) ||
+				(process.env.NEXT_PUBLIC_HIDE_NAVBAR_MOBILE === "true" && isMobile))
+		) {
+			const navBarAnimation = gsap.to(".navBar", {
+				y: "-60px",
+				paused: true,
+				duration: 0.4,
+			});
+			navBarAnimation.play();
+			// Hide button bar as well?
+			// const buttonBarAnimation = gsap.to(".buttonBar", {
+			// 	y: "60px",
+			// 	paused: true,
+			// 	duration: 0.4,
+			// });
+			// buttonBarAnimation.reverse();
+		}
+	}, [router]);
 
 	// Render markup for toc
 	const OutputString = useMemo(() => {
@@ -337,40 +362,87 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	}, [isLoading, toggleRCOpen]);
 	useGSAP(
 		() => {
-			// navBar
+			// Animations
 			const navBarAnimation = gsap.to(".navBar", {
 				y: "-60px",
 				paused: true,
 				duration: 0.4,
 			});
-			ScrollTrigger.create({
-				start: "bottom bottom",
-				// As both "max" or a dynamic value in document.body.scrollheight (as state) did not work as expected, setting an arbitrary high number
-				end: `123456789px`,
-				scrub: true,
-				onUpdate: (self) => {
-					self.direction === -1 ? navBarAnimation.reverse() : navBarAnimation.play();
-				},
-			});
-
-			// ButtonBar
 			const buttonBarAnimation = gsap.to(".buttonBar", {
 				y: "-60px",
 				paused: true,
 				duration: 0.4,
 				reversed: true, // Start in reverse
 			});
-			ScrollTrigger.create({
-				start: "top top",
-				end: `123456789px`,
-				scrub: true,
-				onUpdate: (self) => {
-					self.direction === -1 ? buttonBarAnimation.play() : buttonBarAnimation.reverse();
-				},
-			});
 
-			// Ensure to reverse the animation on component unmount
-			return () => buttonBarAnimation.reverse();
+			// Scrolltrigger approach
+			// ScrollTrigger.create({
+			// 	start: "bottom bottom",
+			// 	// As both "max" or a dynamic value in document.body.scrollheight (as state) did not work as expected, setting an arbitrary high number
+			// 	end: `123456789px`,
+			// 	scrub: true, // Number for smoother connection between scrollbar and animation
+			// 	onUpdate: (self) => {
+			// 		self.direction === -1 ? navBarAnimation.reverse() : navBarAnimation.play();
+			// 	},
+			// });
+			// ScrollTrigger.create({
+			// 	start: "top top",
+			// 	end: `123456789px`,
+			// 	scrub: true, // Number for smoother connection between scrollbar and animation
+			// 	onUpdate: (self) => {
+			// 		self.direction === -1 ? buttonBarAnimation.play() : buttonBarAnimation.reverse();
+			// 	},
+			// });
+			// return () => {
+			// 	buttonBarAnimation.reverse();
+			// };
+
+			// Await scroll in same direction for some time to trigger
+			let lastScrollTop = 0;
+			let scrollDistance = 0;
+			let distanceToTrigger = parseInt(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DISTANCE_IN_PX);
+			let lastScrollDirection = 0;
+			window.addEventListener("scroll", function () {
+				// if (event.isTrusted) {} else {} // Differentiate between user and scripted user scroll (trusted => user)
+				const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+				const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
+				const scrollDelta = Math.abs(scrollTop - lastScrollTop);
+
+				// Update scroll distance only if direction remains the same
+				if (scrollDirection === lastScrollDirection) {
+					scrollDistance += scrollDelta;
+				} else {
+					// Direction changed, reset scroll distance
+					scrollDistance = 0;
+					lastScrollDirection = scrollDirection;
+				}
+
+				if (scrollDirection === -1 && scrollDistance >= distanceToTrigger) {
+					// Scrolling upwards
+					if (
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DESKTOP === "true" && !isMobile) ||
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_MOBILE === "true" && isMobile)
+					) {
+						navBarAnimation.reverse();
+					}
+					buttonBarAnimation.play();
+				} else if (scrollDirection === 1 && scrollDistance >= distanceToTrigger) {
+					// Scrolling downwards
+					if (
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DESKTOP === "true" && !isMobile) ||
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_MOBILE === "true" && isMobile)
+					) {
+						navBarAnimation.play();
+					}
+					buttonBarAnimation.reverse();
+				}
+
+				lastScrollTop = scrollTop;
+			});
+			return () => {
+				buttonBarAnimation.reverse();
+				removeEventListener("scroll", this);
+			};
 		},
 		{ dependencies: [isLoading], scope: containerRef }
 	);
@@ -791,7 +863,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 						<Box height="100%" ref={containerRef} sx={{ width: "100vw", display: "flex", justifyContent: "center" }}>
 							<ButtonBar
 								className="buttonBar"
-								sx={{ position: "fixed", bottom: "-45px", zIndex: 9999 }}
+								sx={{ position: "fixed", bottom: "-45px", zIndex: 1000 }}
 								buttons={buttonBarButtons}
 							/>
 						</Box>

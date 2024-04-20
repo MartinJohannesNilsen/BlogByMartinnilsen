@@ -4,11 +4,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import DOMPurify from "dompurify";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TOCModalProps } from "../../types";
-import NextLink from "next/link";
 
 export function extractHeaders(html: string) {
 	const regex = /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
@@ -101,6 +101,11 @@ export const TOCModal = (props: TOCModalProps) => {
 					onClick={() => {
 						props.handleModalClose();
 						router.replace("#" + id);
+						// Instant scroll
+						// var targetElement = document.getElementById(id);
+						// if (targetElement) {
+						// 	targetElement.scrollIntoView({ behavior: "instant" });
+						// }
 					}}
 					sx={{
 						maxWidth: "100%",
