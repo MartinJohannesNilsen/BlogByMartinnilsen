@@ -1,5 +1,5 @@
 import { OutputData } from "@editorjs/editorjs";
-import { Clear, Delete, Home, Launch, MoreVert, Save, Update } from "@mui/icons-material";
+import { Clear, Close, Delete, Home, Launch, MoreVert, Save, Update } from "@mui/icons-material";
 import {
 	Autocomplete,
 	Box,
@@ -12,6 +12,7 @@ import {
 	Divider,
 	FormControlLabel,
 	Grid,
+	IconButton,
 	RadioGroup,
 	Typography,
 	useMediaQuery,
@@ -20,7 +21,7 @@ import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
+import { closeSnackbar, useSnackbar } from "notistack";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -423,6 +424,16 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		setData({ ...data, published: event.target.value === "true" });
 	};
 
+	const revalidateAction = (snackbarId, postId) => (
+		<>
+			<IconButton size="small" disableRipple onClick={() => (window.location.href = `/posts/${postId}`)}>
+				<Launch fontSize="small" sx={{ color: "white" }} />
+			</IconButton>
+			<IconButton size="small" disableRipple onClick={() => closeSnackbar(snackbarId)}>
+				<Close fontSize="small" sx={{ color: "white" }} />
+			</IconButton>
+		</>
+	);
 	const handleRevalidate = (postId) => {
 		enqueueSnackbar("Revalidating pages ...", {
 			variant: "default",
@@ -431,6 +442,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
 			if (res.status === 200) {
 				enqueueSnackbar("Revalidated pages!", {
+					action: (id) => revalidateAction(id, postId),
 					variant: "success",
 					preventDuplicate: true,
 				});
