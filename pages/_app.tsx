@@ -1,6 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { CssBaseline, IconButton, StyledEngineProvider } from "@mui/material";
-import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 import { SessionProvider } from "next-auth/react";
 import { SnackbarProvider, closeSnackbar } from "notistack";
 import "../styles/editorJS.scss";
@@ -30,7 +30,13 @@ function MyApp({ Component, pageProps, session }) {
 						)}
 					>
 						<CssBaseline />
-						{process.env.NEXT_PUBLIC_LOCALHOST === "false" && <Analytics />}
+						{process.env.NEXT_PUBLIC_LOCALHOST === "false" && (
+							<Script
+								defer
+								src="https://analytics.mjntech.dev/script.js"
+								data-website-id="ea67c45e-6f9e-47f5-b459-6923cfb179a8"
+							/>
+						)}
 						<Component {...pageProps} />
 					</SnackbarProvider>
 				</ThemeProvider>
