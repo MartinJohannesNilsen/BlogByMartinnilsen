@@ -1,4 +1,4 @@
-import { Bookmark, Notifications, Person } from "@mui/icons-material";
+import { Bookmark, Notifications, Person, RssFeed } from "@mui/icons-material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import { Badge, Typography } from "@mui/material";
@@ -160,6 +160,14 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 						<Typography fontFamily={theme.typography.fontFamily}>Settings</Typography>
 					</MenuItem>
 				)}
+
+				{/* RSS Feed */}
+				<MenuItem onClick={() => (window.location.href = "/rss.xml")}>
+					<ListItemIcon sx={{ mr: 0.25 }}>
+						<RssFeed fontSize="medium" sx={{ color: theme.palette.text.primary }} />
+					</ListItemIcon>
+					<Typography fontFamily={theme.typography.fontFamily}>Subscribe</Typography>
+				</MenuItem>
 
 				{/* Sign out */}
 				{status === "authenticated" && (

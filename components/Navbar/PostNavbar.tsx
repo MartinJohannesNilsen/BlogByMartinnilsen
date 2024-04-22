@@ -8,7 +8,7 @@ import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Menus/ProfileMenu";
 import { extractHeaders } from "../../components/Modals/TOCModal";
-import { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
+import { DATA_DEFAULTS } from "../../components/SEO/SEO";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { PostNavbarProps } from "../../types";
@@ -197,7 +197,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 											url: typeof window !== "undefined" ? window.location.href : "",
 											title: props.post.title,
 											text: "",
-											icon: props.post.ogImage || DEFAULT_OGIMAGE,
+											icon: props.post.ogImage || DATA_DEFAULTS.ogImage,
 											fallback: () => props.shareModal.setOpen(true),
 										});
 									}}
@@ -467,7 +467,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						props.post.ogImage && props.post.ogImage.src && props.post.ogImage.src.trim() !== ""
 							? props.post.ogImage
 							: {
-									src: DEFAULT_OGIMAGE,
+									src: DATA_DEFAULTS.ogImage,
 									height: 630,
 									width: 1200,
 									blurhash: "U00l#at7D%M{ofj[WBayD%Rj-;xuRjayt7of",

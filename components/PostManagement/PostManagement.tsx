@@ -40,7 +40,7 @@ import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString"
 import { NavbarButton } from "../Buttons/NavbarButton";
 import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
 import OptionMenu from "../Menus/OptionMenu";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
+import { DATA_DEFAULTS } from "../SEO/SEO";
 import EditableTypography from "../StyledMUI/EditableTypography";
 import { BpRadio } from "../StyledMUI/RadioButton";
 import { StyledTextField } from "../StyledMUI/TextInput";
@@ -961,7 +961,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																			...data,
 																			ogImage: {
 																				...data.ogImage,
-																				src: DEFAULT_OGIMAGE,
+																				src: DATA_DEFAULTS.ogImage,
 																				fileRef: null,
 																				fileSize: null,
 																			},

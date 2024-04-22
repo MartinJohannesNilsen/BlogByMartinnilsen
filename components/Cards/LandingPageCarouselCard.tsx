@@ -1,14 +1,14 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import NextLink from "next/link";
 import { FC } from "react";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
-import { DEFAULT_OGIMAGE } from "../SEO/SEO";
-import NextLink from "next/link";
+import { DATA_DEFAULTS } from "../SEO/SEO";
 
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
@@ -48,7 +48,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 			>
 				<CardMedia sx={{ height: xs ? 250 : 230 }}>
 					<BlurHashHTMLImage
-						src={props.ogImage.src || DEFAULT_OGIMAGE}
+						src={props.ogImage.src || DATA_DEFAULTS.ogImage}
 						blurhash={{ encoded: props.ogImage.blurhash }}
 						alt={`OpenGraph image for post titled "${props.title}"`}
 						style={{

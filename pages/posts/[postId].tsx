@@ -12,7 +12,7 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/style";
 import Footer from "../../components/Footer/Footer";
-import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
+import SEO, { DATA_DEFAULTS } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -457,7 +457,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 				canonical: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
 				openGraph: {
 					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
-					image: post.ogImage.src || DEFAULT_OGIMAGE,
+					image: post.ogImage.src || DATA_DEFAULTS.ogImage,
 					type: "article",
 					article: {
 						published: new Date(post.createdAt),
@@ -691,7 +691,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 																		url: typeof window !== "undefined" ? window.location.href : "",
 																		title: post.title,
 																		text: "",
-																		icon: post.ogImage.src || DEFAULT_OGIMAGE,
+																		icon: post.ogImage.src || DATA_DEFAULTS.ogImage,
 																		fallback: () => setOpenShareModal(true),
 																  })
 																: setOpenShareModal(true);

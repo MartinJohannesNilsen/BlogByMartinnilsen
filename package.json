@@ -55,6 +55,7 @@
 		"editorjs-toggle-block": "^0.3.14",
 		"editorjs-undo": "^2.0.26",
 		"emoji-picker-react": "^4.5.16",
+		"feed": "^4.2.2",
 		"firebase": "^10.7.0",
 		"formidable-serverless": "^1.1.1",
 		"gsap": "^3.12.3",
