@@ -120,7 +120,6 @@ const LandingPage: FC<LandingPageProps> = (props) => {
 
 	useEffect(() => {
 		setIsLoading(false);
-		// console.log(posts[0]);
 		instanceRef && instanceRef.current?.update;
 		return () => {};
 	}, [posts]);

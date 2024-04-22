@@ -28,6 +28,7 @@ function generateSiteMap(posts: StoredPost[]) {
        <url>
            <loc>${`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${post.id}`}</loc>
            <lastmod>${getFormatedLastmodDate(new Date(post.updatedAt || post.createdAt))}</lastmod>
+		   <name>${post.title}</name>
        </url>
      `;
 				})
@@ -48,13 +49,12 @@ export async function getServerSideProps({ res }) {
 			apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
 		},
 	});
-	const posts = await request.json();
+	const posts: StoredPost[] = await request.json();
 
 	// We generate the XML sitemap with the posts data
 	const sitemap = generateSiteMap(posts.filter((post) => post.published));
 
 	res.setHeader("Content-Type", "text/xml");
-	// we send the XML to the browser
 	res.write(sitemap);
 	res.end();
 

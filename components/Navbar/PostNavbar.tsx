@@ -2,18 +2,16 @@ import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, MenuBook }
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import { FC, MutableRefObject, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import useSWR from "swr";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Menus/ProfileMenu";
-import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../../components/Modals/NotificationsModal";
 import { extractHeaders } from "../../components/Modals/TOCModal";
-import { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
+import { DATA_DEFAULTS } from "../../components/SEO/SEO";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { FullPost } from "../../types";
+import { PostNavbarProps } from "../../types";
 import useStickyState from "../../utils/useStickyState";
 import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
@@ -21,19 +19,6 @@ const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"))
 const TOCModal = dynamic(() => import("../Modals/TOCModal"));
 const ShareModal = dynamic(() => import("../Modals/ShareModal"));
 const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
-
-// GSAP Trial
-// import gsap from "gsap";
-// import { useGSAP } from "@gsap/react";
-// import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-// gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-type PostNavbarProps = {
-	post: FullPost & { id: string };
-	toc: { content: string; currentSection: string };
-	shareModal: { open: boolean; setOpen: (value: boolean) => void };
-	ref?: MutableRefObject<undefined>;
-};
 
 export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	const { isAuthorized, session, status } =
@@ -44,7 +29,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						user: {
 							name: "Martin the developer",
 							email: "martinjnilsen@gmail.com",
-							image: "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+							image: null,
 						},
 						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
 					},
@@ -56,6 +41,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	const handleNavigate = (path: string) => {
 		window.location.href = path;
 	};
+
 	// Modals
 	const [openTOCModal, setOpenTOCModal] = useState(false);
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
@@ -77,28 +63,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
 	const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
 	const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
-	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
 	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
-	const [notifications, setNotifications] = useState([]);
-	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
-	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
-	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
-	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
-	useEffect(() => {
-		const unreadNotifications = checkForUnreadRecentNotifications(
-			data,
-			lastRead,
-			notificationsFilterDays,
-			notificationsRead
-		);
-		if (data) {
-			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
-			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
-			// setUnreadNotificationsIds(unreadNotifications.unreadNotificationsFilteredOnDateIds); // TODO Filter on day select option
-			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
-		}
-		return () => {};
-	}, [data, notificationsRead, notificationsFilterDays]);
 
 	// SavedModal
 	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", []);
@@ -111,33 +76,14 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 		return () => {};
 	}, [, savedPosts]);
 
-	// GSAP animate
-	// useGSAP(
-	// 	() => {
-	// 		const box = document.getElementById("computer-navbar");
-	// 		ScrollTrigger.create({
-	// 			trigger: box,
-	// 			start: "top top",
-	// 			end: "bottom bottom",
-	// 			scrub: 1,
-	// 			onUpdate: (self) => {
-	// 				const progress = self.progress;
-	// 				const totalDistance = box.clientHeight;
-	// 				const pixelsPerScroll = totalDistance / 100; // Adjust this value for the desired speed
-
-	// 				gsap.set(box, { y: -progress * totalDistance });
-	// 			},
-	// 		});
-	// 	},
-	// 	{ scope: props.ref }
-	// );
-
 	return (
 		<>
 			{/* Navbar based on mobile device or not */}
 			{isMobile ? (
 				// Mobile
 				<Box
+					className={props.className}
+					ref={props.ref}
 					width={"100%"}
 					pt={4.75}
 					pb={0.75}
@@ -251,7 +197,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 											url: typeof window !== "undefined" ? window.location.href : "",
 											title: props.post.title,
 											text: "",
-											icon: props.post.ogImage || DEFAULT_OGIMAGE,
+											icon: props.post.ogImage || DATA_DEFAULTS.ogImage,
 											fallback: () => props.shareModal.setOpen(true),
 										});
 									}}
@@ -318,6 +264,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 			) : (
 				// Not mobile
 				<Box
+					className={props.className}
 					ref={props.ref}
 					id="computer-navbar"
 					display="flex"
@@ -488,15 +435,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 				open={openNotificationsModal}
 				handleModalOpen={handleNotificationsModalOpen}
 				handleModalClose={handleNotificationsModalClose}
-				lastRead={lastRead}
-				setLastRead={setLastRead}
-				notificationsRead={notificationsRead}
-				setNotificationsRead={setNotificationsRead}
-				allNotificationsFilteredOnDate={notifications}
-				unreadNotificationsIds={unreadNotificationsIds}
 				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-				notificationsFilterDays={notificationsFilterDays}
-				setNotificationsFilterDays={setNotificationsFilterDays}
 			/>
 			{/* Settings */}
 			<SettingsModal
@@ -528,7 +467,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						props.post.ogImage && props.post.ogImage.src && props.post.ogImage.src.trim() !== ""
 							? props.post.ogImage
 							: {
-									src: DEFAULT_OGIMAGE,
+									src: DATA_DEFAULTS.ogImage,
 									height: 630,
 									width: 1200,
 									blurhash: "U00l#at7D%M{ofj[WBayD%Rj-;xuRjayt7of",

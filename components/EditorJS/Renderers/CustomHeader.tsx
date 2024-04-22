@@ -107,9 +107,14 @@ const HeaderOutput = ({ data, style, classNames, config }: EditorjsRendererProps
 					position: "absolute",
 					zIndex: -1,
 					// top: isMobile ? -50 : -10,
-					top: isMobile ? -48 : -65,
+					top:
+						process.env.NEXT_PUBLIC_HIDE_NAVBAR_MOBILE === "false" && isMobile
+							? -48
+							: process.env.NEXT_PUBLIC_HIDE_NAVBAR_DESKTOP === "false" && !isMobile
+							? -65
+							: 0,
 					visibility: "hidden",
-					scrollBehavior: "smooth",
+					// scrollBehavior: "smooth",
 				}}
 			></a>
 			<Box display="flex" alignItems="center">

@@ -1,6 +1,6 @@
 {
 	"name": "blogbymartinnilsen",
-	"version": "2.7.0",
+	"version": "2.8.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
@@ -13,7 +13,7 @@
 	},
 	"dependencies": {
 		"@editorjs/checklist": "^1.6.0",
-		"@editorjs/editorjs": "^2.29.0-rc.8",
+		"@editorjs/editorjs": "^2.29.1",
 		"@editorjs/embed": "^2.7.0",
 		"@editorjs/header": "^2.8.1",
 		"@editorjs/inline-code": "^1.5.0",
@@ -55,6 +55,7 @@
 		"editorjs-toggle-block": "^0.3.14",
 		"editorjs-undo": "^2.0.26",
 		"emoji-picker-react": "^4.5.16",
+		"feed": "^4.2.2",
 		"firebase": "^10.7.0",
 		"formidable-serverless": "^1.1.1",
 		"gsap": "^3.12.3",

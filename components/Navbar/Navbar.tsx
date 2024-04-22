@@ -3,21 +3,18 @@ import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material"
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import useSWR from "swr";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { NavbarProps } from "../../types";
 import { userSignOut } from "../../utils/signOut";
-import useStickyState from "../../utils/useStickyState";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../Buttons/NavbarButton";
 import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { MenuIcon } from "../Icons/MenuIcon";
 import ProfileMenu from "../Menus/ProfileMenu";
-import { checkForUnreadRecentNotifications, notificationsApiFetcher } from "../Modals/NotificationsModal";
 // Modals can be dynamically imported
 import SearchModal from "../Modals/SearchModal"; // For listening to hotkeys on render, not rerender
 // const SearchModal = dynamic(() => import("../Modals/SearchModal"));
@@ -46,13 +43,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const [openNotificationsModal, setOpenNotificationsModal] = useState(false);
 	const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
 	const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
-	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
 	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
-	const [notifications, setNotifications] = useState([]);
-	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
-	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
-	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
-	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
 	// SettingsModal
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
 	const handleSettingsModalOpen = () => setOpenSettingsModal(true);
@@ -84,38 +75,22 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 		setTheme(event.target.checked === true ? ThemeEnum.Light : ThemeEnum.Dark, true);
 	};
 
-	// Notifications and badge
-	useEffect(() => {
-		const unreadNotifications = checkForUnreadRecentNotifications(
-			data,
-			lastRead,
-			notificationsFilterDays,
-			notificationsRead
-		);
-		if (data) {
-			setNotifications(unreadNotifications.allNotificationsFilteredOnDate);
-			setUnreadNotificationsIds(unreadNotifications.unreadNotificationsIds);
-			setVisibleBadgeNotifications(unreadNotifications.hasUnreadNotifications);
-		}
-		return () => {};
-	}, [data, notificationsRead, notificationsFilterDays]);
-
 	// Account page navbar
 	if (!props.posts) {
 		const AboutModal = dynamic(() => import("../Modals/AboutModal"));
 		return (
 			<Box
+				className={props.className}
+				ref={props.ref}
 				width={"100%"}
 				pt={isMobile ? 4.75 : 1.5}
 				pb={isMobile ? 0.75 : 1.5}
-				// pt={2}
-				// pb={2}
 				position={"fixed"}
 				display="flex"
 				alignItems="center"
 				justifyContent="center"
 				sx={{
-					backgroundColor: props.backgroundColor,
+					backgroundColor: theme.palette.primary.contrastText,
 					top: 0,
 					zIndex: 1000,
 					marginTop: isMobile ? "-34px" : 0,
@@ -139,14 +114,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-							color: props.textColor || theme.palette.text.primary,
+							color: theme.palette.text.secondary,
 							"&:focus-visible": {
 								// color: theme.palette.secondary.main,
-								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+								color: theme.palette.text.secondary + "BB",
 							},
 							"&:hover": {
 								// color: theme.palette.secondary.main,
-								color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+								color: theme.palette.text.secondary + "BB",
 							},
 						}}
 						underline="none"
@@ -155,7 +130,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							alt="Website logo"
 							width={22}
 							height={22}
-							fill={props.textColor ? props.textColor : theme.palette.text.primary}
+							fill={theme.palette.text.secondary}
 							style={{ fillRule: "evenodd" }}
 						/>
 						<Typography
@@ -234,15 +209,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					open={openNotificationsModal}
 					handleModalOpen={handleNotificationsModalOpen}
 					handleModalClose={handleNotificationsModalClose}
-					lastRead={lastRead}
-					setLastRead={setLastRead}
-					notificationsRead={notificationsRead}
-					setNotificationsRead={setNotificationsRead}
-					allNotificationsFilteredOnDate={notifications}
-					unreadNotificationsIds={unreadNotificationsIds}
 					setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-					notificationsFilterDays={notificationsFilterDays}
-					setNotificationsFilterDays={setNotificationsFilterDays}
 				/>
 			</Box>
 		);
@@ -251,6 +218,8 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	// Default navbar
 	return (
 		<Box
+			className={props.className}
+			ref={props.ref}
 			width={"100%"}
 			pt={isMobile ? 4.75 : 1.5}
 			pb={isMobile ? 0.75 : 1.5}
@@ -287,14 +256,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						flexDirection: "row",
 						justifyContent: "center",
 						alignItems: "center",
-						color: props.textColor || theme.palette.text.primary,
+						color: theme.palette.text.primary,
 						"&:focus-visible": {
 							// color: theme.palette.secondary.main,
-							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+							color: theme.palette.text.primary + "BB",
 						},
 						"&:hover": {
 							// color: theme.palette.secondary.main,
-							color: (props.textColor ? props.textColor : theme.palette.text.primary) + "BB",
+							color: theme.palette.text.primary + "BB",
 						},
 					}}
 				>
@@ -302,7 +271,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						alt="Website logo"
 						width={22}
 						height={22}
-						fill={props.textColor ? props.textColor : theme.palette.text.primary}
+						fill={theme.palette.text.primary}
 						style={{ fillRule: "evenodd" }}
 					/>
 					<Typography
@@ -321,11 +290,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					<Box>
 						<NavbarButton
 							variant="outline"
-							// variant="base"
-							// onClick={() => {
-							// 	handleNavigate("/create");
-							// }}
-							href="/create"
+							onClick={() => {
+								handleNavigate("/create");
+							}}
+							// TODO This seem to be a problem
+							// href="/create"
 							icon={PostAdd}
 							tooltip="Upload new post"
 							sxButton={{
@@ -351,6 +320,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 								height: "34px",
 								width: "34px",
 								backgroundColor: theme.palette.primary.main + "50",
+								color: theme.palette.text.primary,
 							}}
 							sxIcon={{
 								height: "24px",
@@ -365,6 +335,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							sxButton={{
 								height: "34px",
 								backgroundColor: theme.palette.primary.main + "50",
+								color: theme.palette.text.primary,
 							}}
 							sxIcon={{
 								height: "24px",
@@ -383,6 +354,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							height: "34px",
 							width: "34px",
 							backgroundColor: theme.palette.primary.main + "50",
+							color: theme.palette.text.primary,
 						}}
 						sxIcon={{
 							height: "24px",
@@ -397,7 +369,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						handleMenuOpen={handleProfileMenuClick}
 						handleMenuClose={handleProfileMenuClose}
 						accountButtonSx={{
-							color: props.textColor || theme.palette.text.primary,
+							color: theme.palette.text.primary,
 							backgroundColor: theme.palette.primary.main + "50",
 						}}
 						showNotificationsBadge={visibleBadgeNotifications}
@@ -442,15 +414,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				open={openNotificationsModal}
 				handleModalOpen={handleNotificationsModalOpen}
 				handleModalClose={handleNotificationsModalClose}
-				lastRead={lastRead}
-				setLastRead={setLastRead}
-				notificationsRead={notificationsRead}
-				setNotificationsRead={setNotificationsRead}
-				allNotificationsFilteredOnDate={notifications}
-				unreadNotificationsIds={unreadNotificationsIds}
 				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-				notificationsFilterDays={notificationsFilterDays}
-				setNotificationsFilterDays={setNotificationsFilterDays}
 			/>
 		</Box>
 	);

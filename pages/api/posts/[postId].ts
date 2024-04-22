@@ -1,11 +1,10 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { validateAuthAPIToken } from "..";
 import { deletePostsOverview, updatePostsOverview } from "../../../database/overview";
 import { deletePost, getPost, updatePost } from "../../../database/posts";
 import { db } from "../../../lib/firebaseConfig";
 
-// TODO
 /**
  * @swagger
  * /api/posts/{postId}:
@@ -374,8 +373,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 							revalidatePagesAfterDeleting.toLowerCase() === "true"
 						) {
 							try {
-								// this should be the actual path not a rewritten path
-								// e.g. for "/blog/[slug]" this should be "/blog/idOfBlogPost"
 								await res.revalidate("/");
 								await res.revalidate("/tags");
 								await res.revalidate("/posts/" + postId);
@@ -384,7 +381,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 									reason:
 										"Successfully deleted post '" +
 										postId +
-										"' and revalidated pages '/', '/tags' and '/posts/" +
+										"' and revalidated pages '/', '/tags', and '/posts/" +
 										postId +
 										"'",
 								});
@@ -395,7 +392,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						} else {
 							return res.status(200).json({
 								code: 200,
-								reason: "Successfully deleted post '" + postId + "' without revalidating pages",
+								reason: "Successfully deleted post '" + postId + "' without page revalidation",
 							});
 						}
 					} else {

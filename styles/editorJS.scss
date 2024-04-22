@@ -1,17 +1,5 @@
 @import 'katex/dist/katex.min.css';
 
-.codeflask.codeflask--has-line-numbers:before, .codeflask__lines, .codeflask__flatten{
-    z-index: 0 !important;
-}
-.editorjs-codeFlask_Wrapper .editorjs-codeFlask_LangDisplay{
-    height: auto !important;
-}
-
-.editorjs-codeFlask_Wrapper {
-    margin-top: 8px !important;
-    margin-bottom: 8px !important;
-}
-
 // editorjs-latex
 .math-input-wrapper{display:flex;flex-direction:column;width:100%;padding:5px}.math-preview{min-height:50px;width:100%;padding:10px;border:1px solid #d3d3d3;font-size:20px;text-align:center}.math-preview *{font-family:Katex_Math}.math-input{border:1px solid #d3d3d3;background:0 0;width:100%;padding:10px;margin-top:5px}.errorMessage{color:red}
 
@@ -57,3 +45,5 @@
     color: #aaa; /* Placeholder text color */
     /* Additional placeholder styles (e.g., font-style: italic) */
   }
+
+

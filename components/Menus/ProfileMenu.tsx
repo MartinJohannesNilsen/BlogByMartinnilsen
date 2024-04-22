@@ -1,4 +1,4 @@
-import { Bookmark, Notifications, Person } from "@mui/icons-material";
+import { Bookmark, Notifications, Person, RssFeed } from "@mui/icons-material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import { Badge, Typography } from "@mui/material";
@@ -26,7 +26,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 						user: {
 							name: "Martin the developer",
 							email: "martinjnilsen@gmail.com",
-							image: "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+							image: null,
 						},
 						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
 					},
@@ -42,9 +42,9 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 					onClick={props.handleMenuOpen}
 					icon={Person}
 					tooltip="Profile menu"
-					aria-controls={open ? "profile-menu" : undefined}
+					aria-controls={props.open ? "profile-menu" : undefined}
 					aria-haspopup="true"
-					aria-expanded={open ? "true" : undefined}
+					aria-expanded={props.open ? "true" : undefined}
 					sxButton={{
 						minWidth: "34px",
 						minHeight: "34px",
@@ -160,6 +160,14 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 						<Typography fontFamily={theme.typography.fontFamily}>Settings</Typography>
 					</MenuItem>
 				)}
+
+				{/* RSS Feed */}
+				<MenuItem onClick={() => (window.location.href = "/rss.xml")}>
+					<ListItemIcon sx={{ mr: 0.25 }}>
+						<RssFeed fontSize="medium" sx={{ color: theme.palette.text.primary }} />
+					</ListItemIcon>
+					<Typography fontFamily={theme.typography.fontFamily}>Subscribe</Typography>
+				</MenuItem>
 
 				{/* Sign out */}
 				{status === "authenticated" && (

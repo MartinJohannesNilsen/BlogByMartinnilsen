@@ -1,8 +1,8 @@
 import Giscus from "@giscus/react";
-import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
+import { AccessTime, ArrowUpward, CalendarMonth, Comment, ThumbUpAlt, Visibility } from "@mui/icons-material";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -12,7 +12,7 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { style } from "../../components/EditorJS/style";
 import Footer from "../../components/Footer/Footer";
-import SEO, { DEFAULT_OGIMAGE } from "../../components/SEO/SEO";
+import SEO, { DATA_DEFAULTS } from "../../components/SEO/SEO";
 import { getAllPostIds } from "../../database/overview";
 import { getPost } from "../../database/posts";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -23,8 +23,16 @@ import { ReadArticleViewProps } from "../../types";
 import Output from "editorjs-react-renderer";
 import { ArticleJsonLd } from "next-seo";
 import { useEventListener } from "usehooks-ts";
+import ButtonBar, { ButtonBarButtonProps } from "../../components/ButtonBar/ButtonBar";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
+import PostNavbar from "../../components/Navbar/PostNavbar";
+import PostViews from "../../components/PostViews/PostViews";
 import Toggle from "../../components/Toggles/Toggle";
+import { IDiscussionData, IMetadataMessage } from "../../utils/giscus";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // EditorJS renderers
 import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
@@ -42,9 +50,7 @@ import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
-import PostNavbar from "../../components/Navbar/PostNavbar";
-import PostViews from "../../components/PostViews/PostViews";
-import { IDiscussionData, IMetadataMessage } from "../../utils/giscus";
+import { useRouter } from "next/router";
 
 export async function getStaticPaths() {
 	const idList = await getAllPostIds(false); // Not filter on visibility
@@ -151,6 +157,7 @@ export function processJsonToggleBlocks(inputJson) {
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const post = props.post;
+	const router = useRouter();
 	const { isAuthorized, session, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
 			? {
@@ -159,7 +166,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 						user: {
 							name: "Martin the developer",
 							email: "martinjnilsen@gmail.com",
-							image: "https://mjntech.dev/_next/image?url=%2Fassets%2Fimgs%2Fmjntechdev.png&w=256&q=75",
+							image: null,
 						},
 						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
 					},
@@ -173,31 +180,30 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const sm = useMediaQuery(theme.breakpoints.only("sm"));
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
-	const handleNavigate = (path: string) => {
-		window.location.href = path;
-	};
 	const [currentSection, setCurrentSection] = useState(post.title);
 	const [discussionData, setDiscussionData] = useState<IDiscussionData>({
 		id: "",
 		url: "",
-		locked: true,
+		locked: null,
 		repository: {
 			nameWithOwner: "",
 		},
-		reactionCount: 0,
-		totalCommentCount: 0,
-		totalReplyCount: 0,
+		reactionCount: null,
+		totalCommentCount: null,
+		totalReplyCount: null,
 		reactions: {
-			THUMBS_UP: { count: 0, viewerHasReacted: false },
-			THUMBS_DOWN: { count: 0, viewerHasReacted: false },
-			LAUGH: { count: 0, viewerHasReacted: false },
-			HOORAY: { count: 0, viewerHasReacted: false },
-			CONFUSED: { count: 0, viewerHasReacted: false },
-			HEART: { count: 0, viewerHasReacted: false },
-			ROCKET: { count: 0, viewerHasReacted: false },
-			EYES: { count: 0, viewerHasReacted: false },
+			THUMBS_UP: { count: null, viewerHasReacted: false },
+			THUMBS_DOWN: { count: null, viewerHasReacted: false },
+			LAUGH: { count: null, viewerHasReacted: false },
+			HOORAY: { count: null, viewerHasReacted: false },
+			CONFUSED: { count: null, viewerHasReacted: false },
+			HEART: { count: null, viewerHasReacted: false },
+			ROCKET: { count: null, viewerHasReacted: false },
+			EYES: { count: null, viewerHasReacted: false },
 		},
 	});
+	const toggleRef = useRef<null | HTMLDivElement>(null);
+	const [toggleRCOpen, setToggleRCOpen] = useState<boolean>(false);
 
 	const OutputElement = useMemo(() => {
 		if (post && post.data && post.data.blocks && Array.isArray(post.data.blocks)) {
@@ -207,37 +213,66 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		return null;
 	}, [post]);
 
+	// On session update, we can update views and go to hash if present
 	useEffect(() => {
-		// Increase view count in supabase db
-		// Esure not on localhost
+		// Increase view count in supabase db if: (1) not on localhost, (2) post is published and (3) unauthenticated or non-admin
 		process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
-			// Ensure published post
 			post.published &&
-			// Ensure either unauthenticated or authenticated without being admin
 			(status === "unauthenticated" ||
 				(status === "authenticated" && session && session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
 			// All criterias are met, run POST request to increment counter
-			// TODO uncomment
 			fetch(`/api/views/${props.postId}`, {
 				method: "POST",
 				headers: {
 					apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
 				},
 			});
+
 		// When session is updated, not loading anymore
 		setIsLoading(false);
 	}, [session]);
 
 	useEffect(() => {
+		// Go to hash if present
 		if (typeof window !== "undefined" && window.location.hash) {
-			handleNavigate(window.location.hash);
+			router.replace(window.location.hash);
+
+			// Alternate approach with instant scroll
+			// const targetElement = document.querySelector(hash);
+			// if (targetElement) {
+			// 	targetElement.scrollIntoView({ behavior: "instant" });
+			// }
 		}
 	}, [isLoading]);
 
+	useEffect(() => {
+		if (
+			!isLoading &&
+			((process.env.NEXT_PUBLIC_HIDE_NAVBAR_DESKTOP === "true" && !isMobile) ||
+				(process.env.NEXT_PUBLIC_HIDE_NAVBAR_MOBILE === "true" && isMobile))
+		) {
+			const navBarAnimation = gsap.to(".navBar", {
+				y: "-60px",
+				paused: true,
+				duration: 0.4,
+			});
+			navBarAnimation.play();
+			// Hide button bar as well?
+			// const buttonBarAnimation = gsap.to(".buttonBar", {
+			// 	y: "60px",
+			// 	paused: true,
+			// 	duration: 0.4,
+			// });
+			// buttonBarAnimation.reverse();
+		}
+	}, [router]);
+
+	// Render markup for toc
 	const OutputString = useMemo(() => {
 		return renderToStaticMarkup(OutputElement);
 	}, [OutputElement]);
 
+	// Get current section for toc
 	useEventListener("scroll", () => {
 		const sectionEls = document.querySelectorAll(".anchorHeading");
 		sectionEls.forEach((sectionEl) => {
@@ -276,6 +311,142 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		};
 	}, []);
 
+	// ButtonBar
+	const buttonBarButtons: ButtonBarButtonProps[] = [
+		{
+			icon: ThumbUpAlt,
+			fetched: discussionData.reactionCount !== null ? true : false,
+			text: isMobile
+				? discussionData?.reactionCount?.toString()
+				: `${discussionData?.reactionCount?.toString()}
+				reaction${discussionData.reactionCount !== 1 ? "s" : ""}`,
+			onClick: () => {
+				setToggleRCOpen(true);
+				setTimeout(() => {
+					toggleRef.current.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
+				}, 250);
+			},
+		},
+		{
+			icon: Comment,
+			fetched: discussionData.totalCommentCount !== null ? true : false,
+			text: isMobile
+				? discussionData?.totalCommentCount?.toString()
+				: `${discussionData?.totalCommentCount?.toString()} 
+				comment${discussionData.totalCommentCount !== 1 ? "s" : ""}`,
+			onClick: () => {
+				setToggleRCOpen(true);
+				setTimeout(() => {
+					toggleRef.current.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
+				}, 250);
+			},
+		},
+		{
+			icon: ArrowUpward,
+			text: isMobile ? "" : discussionData.totalCommentCount === null ? "" : "Back to top",
+			onClick: () => {
+				window.scrollTo({
+					top: 0,
+					behavior: "smooth",
+				});
+			},
+		},
+	];
+
+	// Animations with GSAP
+	const containerRef = useRef();
+	useEffect(() => {
+		ScrollTrigger.refresh();
+
+		return () => {};
+	}, [isLoading, toggleRCOpen]);
+	useGSAP(
+		() => {
+			// Animations
+			const navBarAnimation = gsap.to(".navBar", {
+				y: "-60px",
+				paused: true,
+				duration: 0.4,
+			});
+			const buttonBarAnimation = gsap.to(".buttonBar", {
+				y: "-60px",
+				paused: true,
+				duration: 0.4,
+				reversed: true, // Start in reverse
+			});
+
+			// Scrolltrigger approach
+			// ScrollTrigger.create({
+			// 	start: "bottom bottom",
+			// 	// As both "max" or a dynamic value in document.body.scrollheight (as state) did not work as expected, setting an arbitrary high number
+			// 	end: `123456789px`,
+			// 	scrub: true, // Number for smoother connection between scrollbar and animation
+			// 	onUpdate: (self) => {
+			// 		self.direction === -1 ? navBarAnimation.reverse() : navBarAnimation.play();
+			// 	},
+			// });
+			// ScrollTrigger.create({
+			// 	start: "top top",
+			// 	end: `123456789px`,
+			// 	scrub: true, // Number for smoother connection between scrollbar and animation
+			// 	onUpdate: (self) => {
+			// 		self.direction === -1 ? buttonBarAnimation.play() : buttonBarAnimation.reverse();
+			// 	},
+			// });
+			// return () => {
+			// 	buttonBarAnimation.reverse();
+			// };
+
+			// Await scroll in same direction for some time to trigger
+			let lastScrollTop = 0;
+			let scrollDistance = 0;
+			let distanceToTrigger = parseInt(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DISTANCE_IN_PX);
+			let lastScrollDirection = 0;
+			window.addEventListener("scroll", function () {
+				// if (event.isTrusted) {} else {} // Differentiate between user and scripted user scroll (trusted => user)
+				const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+				const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
+				const scrollDelta = Math.abs(scrollTop - lastScrollTop);
+
+				// Update scroll distance only if direction remains the same
+				if (scrollDirection === lastScrollDirection) {
+					scrollDistance += scrollDelta;
+				} else {
+					// Direction changed, reset scroll distance
+					scrollDistance = 0;
+					lastScrollDirection = scrollDirection;
+				}
+
+				if (scrollDirection === -1 && scrollDistance >= distanceToTrigger) {
+					// Scrolling upwards
+					if (
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DESKTOP === "true" && !isMobile) ||
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_MOBILE === "true" && isMobile)
+					) {
+						navBarAnimation.reverse();
+					}
+					buttonBarAnimation.play();
+				} else if (scrollDirection === 1 && scrollDistance >= distanceToTrigger) {
+					// Scrolling downwards
+					if (
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DESKTOP === "true" && !isMobile) ||
+						(process.env.NEXT_PUBLIC_HIDE_NAVBAR_MOBILE === "true" && isMobile)
+					) {
+						navBarAnimation.play();
+					}
+					buttonBarAnimation.reverse();
+				}
+
+				lastScrollTop = scrollTop;
+			});
+			return () => {
+				buttonBarAnimation.reverse();
+				removeEventListener("scroll", this);
+			};
+		},
+		{ dependencies: [isLoading], scope: containerRef }
+	);
+
 	if (!post.published && !isAuthorized) return <></>;
 	return (
 		<SEO
@@ -286,7 +457,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 				canonical: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
 				openGraph: {
 					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`,
-					image: post.ogImage.src || DEFAULT_OGIMAGE,
+					image: post.ogImage.src || DATA_DEFAULTS.ogImage,
 					type: "article",
 					article: {
 						published: new Date(post.createdAt),
@@ -310,7 +481,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/yjdttN68e7V3E8SKIupT`,
 				}}
 			/>
-			<Box width="100%">
+			<Box width="100%" height="100%" position="relative" className="page">
 				{isLoading ? (
 					<></>
 				) : !post ? (
@@ -319,6 +490,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 					<></>
 				) : (
 					<Box
+						height="100%"
 						width="100%"
 						display="flex"
 						flexDirection="column"
@@ -326,14 +498,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 						justifyContent="center"
 						justifyItems="center"
 						sx={{ backgroundColor: theme.palette.primary.main }}
-						// ref={container}
+						ref={containerRef}
 					>
 						{/* Navbar */}
 						<PostNavbar
+							className="navBar"
 							post={{ ...post, id: props.postId }}
 							toc={{ content: OutputString, currentSection: currentSection }}
 							shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
-							// ref={container}
 						/>
 						{/* Content */}
 						<Grid
@@ -519,7 +691,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 																		url: typeof window !== "undefined" ? window.location.href : "",
 																		title: post.title,
 																		text: "",
-																		icon: post.ogImage.src || DEFAULT_OGIMAGE,
+																		icon: post.ogImage.src || DATA_DEFAULTS.ogImage,
 																		fallback: () => setOpenShareModal(true),
 																  })
 																: setOpenShareModal(true);
@@ -608,26 +780,57 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 											)}
 									</Box>
 									{/* Comment section */}
-									<Box mb={3}>
+									<Box mb={3} ref={toggleRef}>
 										<Toggle
-											title={`${discussionData.reactionCount} Reactions & ${discussionData.totalCommentCount} Comments`}
+											open={toggleRCOpen}
+											handleClick={() => {
+												setToggleRCOpen(!toggleRCOpen);
+											}}
+											title={"Reactions & Comments"}
+											accordionSx={
+												discussionData.locked === true && {
+													".MuiAccordionDetails-root": {
+														maxHeight: "250px",
+													},
+												}
+											}
 										>
-											<Giscus
-												repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
-												repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
-												categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
-												id="comments"
-												category="Comments"
-												mapping="specific"
-												term={`Post: ${props.postId}`}
-												strict="1"
-												reactionsEnabled="1"
-												emitMetadata="1"
-												inputPosition="top"
-												theme={theme.palette.mode === "light" ? "light" : "dark"}
-												lang="en"
-												// loading="lazy"
-											/>
+											<Box
+												sx={
+													discussionData.locked === true
+														? { position: "relative", maxHeight: "250px", height: "250px" }
+														: { height: "100%" }
+												}
+											>
+												<Giscus
+													repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
+													repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
+													categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
+													id="comments"
+													category="Comments"
+													mapping="specific"
+													term={`Post: ${props.postId}`}
+													strict="1"
+													reactionsEnabled="1"
+													emitMetadata="1"
+													inputPosition="top"
+													theme={theme.palette.mode === "light" ? "light" : "dark"}
+													lang="en"
+													// loading="lazy"
+												/>
+												{discussionData.locked === true && (
+													<Typography
+														my={1}
+														textAlign="center"
+														fontFamily={theme.typography.fontFamily}
+														variant="body1"
+														fontWeight="600"
+														sx={{ color: theme.palette.text.disabled, position: "absolute", bottom: 2 }}
+													>
+														The comment section has been deactivated for this post.
+													</Typography>
+												)}
+											</Box>
 										</Toggle>
 									</Box>
 								</Stack>
@@ -656,6 +859,14 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 							</Box>
 						)}
 						<Footer />
+						{/* Render buttonBar */}
+						<Box height="100%" ref={containerRef} sx={{ width: "100vw", display: "flex", justifyContent: "center" }}>
+							<ButtonBar
+								className="buttonBar"
+								sx={{ position: "fixed", bottom: "-45px", zIndex: 1000 }}
+								buttons={buttonBarButtons}
+							/>
+						</Box>
 					</Box>
 				)}
 			</Box>

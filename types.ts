@@ -1,7 +1,7 @@
 import { OutputData } from "@editorjs/editorjs";
 import { SvgIconTypeMap, SxProps } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
 
 // Object types
@@ -71,6 +71,7 @@ export type EditorjsRendererProps = {
 		textwrap?: boolean;
 		filename?: string;
 		render?: boolean;
+		highlightLines?: number[];
 		// Callout
 		icon?: string;
 		type?: string;
@@ -157,17 +158,19 @@ export type TablePost = StoredPost & {
 	views: number | string;
 };
 
-export type NavbarSection = {
-	name: string;
-	path: string;
-};
-
 export type NavbarProps = {
 	posts?: StoredPost[];
-	textColor?: string;
-	backgroundColor: string;
-	accountPage?: boolean;
 	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
+	ref?: MutableRefObject<undefined>;
+	className?: string;
+};
+
+export type PostNavbarProps = {
+	post: FullPost & { id: string };
+	toc: { content: string; currentSection: string };
+	shareModal: { open: boolean; setOpen: (value: boolean) => void };
+	ref?: MutableRefObject<undefined>;
+	className?: string;
 };
 
 // Component types
@@ -253,15 +256,7 @@ export type NotificationProps = {
 };
 
 export type NotificationsModalProps = ModalProps & {
-	lastRead: number;
-	setLastRead: (date: number) => void;
-	notificationsRead: number[];
-	setNotificationsRead: (ids: number[]) => void;
-	allNotificationsFilteredOnDate: NotificationProps[];
-	unreadNotificationsIds: number[];
 	setVisibleBadgeNotifications: (value: boolean) => void;
-	notificationsFilterDays: number;
-	setNotificationsFilterDays: (value: number) => void;
 };
 
 // Buttons

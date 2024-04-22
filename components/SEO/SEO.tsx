@@ -24,8 +24,21 @@ type SEOProps = {
 	pageMeta: MetaProps;
 };
 
-export const DEFAULT_OGIMAGE = "https://blog.mjntech.dev/assets/icons/ogimage.png";
-export const DEFAULT_ICON = "https://mjntech.dev/assets/imgs/mjntechdev.png";
+export const DATA_DEFAULTS = {
+	url: "https://blog.MJNTech.dev",
+	title: "Blog by MJNTech",
+	description:
+		"A tech blog by Martin Johannes Nilsen, a Software Engineer with an M.Sc. in Computer Science and a passionate problem solver.",
+	author: {
+		name: "Martin Johannes Nilsen",
+		email: "martinjnilsen@icloud.com",
+		link: "https://martinjohannesnilsen.no",
+	},
+	ogImage: "https://blog.mjntech.dev/assets/icons/ogimage.png",
+	icon: "https://blog.mjntech.dev/assets/icons/logo512.png",
+	copyright: `All rights reserved ${new Date().getFullYear()}, Martin Johannes Nilsen`,
+	twitterHandle: "@MartinJNilsen",
+};
 
 export const SEO = ({ children, pageMeta }: SEOProps) => {
 	const { theme } = useTheme();
@@ -33,16 +46,15 @@ export const SEO = ({ children, pageMeta }: SEOProps) => {
 	const meta: MetaProps = {
 		themeColor: theme.palette.primary.main,
 		// title: "Tech blog | Martin Johannes Nilsen",
-		title: "Blog by MJNTech",
-		description:
-			"A tech blog by Martin Johannes Nilsen, a Software Engineer with an M.Sc. degree and a passionate problem solver.",
-		author: "Martin Johannes Nilsen",
+		title: DATA_DEFAULTS.title,
+		description: DATA_DEFAULTS.description,
+		author: DATA_DEFAULTS.author.name,
 		openGraph: {
 			type: "website",
-			url: "https://blog.MJNTech.dev",
-			image: DEFAULT_OGIMAGE,
+			url: DATA_DEFAULTS.url,
+			image: DATA_DEFAULTS.ogImage,
 		},
-		twitter: { handle: "@MartinJNilsen", cardType: "summary" },
+		twitter: { handle: DATA_DEFAULTS.twitterHandle, cardType: "summary" },
 		...pageMeta,
 	};
 
