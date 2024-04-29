@@ -1,3 +1,4 @@
+"use client";
 import Radio, { RadioProps } from "@mui/material/Radio";
 import { styled } from "@mui/material/styles";
 

@@ -1,3 +1,4 @@
+"use client";
 import { Autocomplete, Box, Checkbox, Input, TextField, Typography, useMediaQuery } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
@@ -209,7 +210,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
 								}}
 								size="small"
 								renderInput={(params) => (
-									<TextField {...params} label="Language" InputLabelProps={null} variant="outlined" />
+									<TextField {...params} label="Language" InputLabelProps={undefined} variant="outlined" />
 								)}
 								value={{
 									language: stateData.language,
@@ -275,7 +276,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
 								style={EDITORTHEME}
 								wrapLongLines={stateData.textwrap}
 								customStyle={{
-									height: !stateData.multiline && "54px",
+									height: !stateData.multiline ? "54px" : "default",
 									overflowY: "hidden",
 									backgroundColor: "rgb(36, 39, 46)",
 									margin: "0px",

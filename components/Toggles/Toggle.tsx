@@ -1,3 +1,4 @@
+"use client";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { Box } from "@mui/material";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
@@ -43,7 +44,7 @@ const Toggle = (props: {
 		<Box sx={{ my: 1, ...props.boxSx }} ref={props.ref} display="flex" flexDirection="column" textAlign="center">
 			<Accordion expanded={props.open} onChange={props.handleClick} sx={{ ...props.accordionSx }}>
 				<AccordionSummary aria-controls="toggle text">
-					<CustomParagraph data={{ text: props.title }} style={null} config={null} classNames={null} />
+					<CustomParagraph data={{ text: props.title }} />
 				</AccordionSummary>
 				<AccordionDetails sx={{ paddingTop: 0, paddingBottom: 1 }}>{props.children}</AccordionDetails>
 			</Accordion>

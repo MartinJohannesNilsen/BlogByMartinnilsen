@@ -1,3 +1,4 @@
+"use client";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Fragment, useRef, useState } from "react";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";

@@ -1,3 +1,4 @@
+"use client";
 import { Close, Facebook, LinkedIn, Mail, Reddit, Telegram, WhatsApp } from "@mui/icons-material";
 import X from "@mui/icons-material/X";
 import { Box, ClickAwayListener, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";

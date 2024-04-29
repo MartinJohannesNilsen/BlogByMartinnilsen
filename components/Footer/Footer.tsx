@@ -1,3 +1,4 @@
+"use client";
 import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import NextLink from "next/link";
 import { useRouter } from "next/router";

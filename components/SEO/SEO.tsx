@@ -1,3 +1,4 @@
+"use client";
 import Head from "next/head";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 
@@ -61,46 +62,29 @@ export const SEO = ({ children, pageMeta }: SEOProps) => {
 	return (
 		<>
 			<Head>
-				{/* Standard */}
-				<meta charSet="UTF-8" />
-				<title>{meta.title}</title>
-				<meta name="author" content={meta.author} />
-				<meta name="description" content={meta.description} />
-				<meta name="theme-color" content={meta.themeColor} />
-				{meta.canonical && <link rel="canonical" href={meta.canonical} />}
-				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<meta name="viewport" content="width=device-width, initial-scale=1" />
-
 				{/* Open Graph */}
 				<meta property="og:title" content={meta.title} />
 				<meta property="og:description" content={meta.description} />
-				<meta property="og:url" content={meta.openGraph.url} />
-				<meta property="og:image" content={meta.openGraph.image} />
-				{meta.openGraph.type === "website" ? (
-					<meta property="og:type" content={meta.openGraph.type} />
-				) : meta.openGraph.type === "article" && meta.openGraph.article ? (
+				<meta property="og:url" content={meta.openGraph!.url} />
+				<meta property="og:image" content={meta.openGraph!.image} />
+				{meta.openGraph!.type === "website" ? (
+					<meta property="og:type" content={meta.openGraph!.type} />
+				) : meta.openGraph!.type === "article" && meta.openGraph!.article ? (
 					<>
-						<meta property="og:type" content={meta.openGraph.type} />
+						<meta property="og:type" content={meta.openGraph!.type} />
 						<meta
 							property="article:published_time"
 							content={
-								meta.openGraph.article.published.getFullYear() +
+								meta.openGraph!.article.published.getFullYear() +
 								"-" +
-								("0" + (meta.openGraph.article.published.getMonth() + 1)).slice(-2) +
+								("0" + (meta.openGraph!.article.published.getMonth() + 1)).slice(-2) +
 								"-" +
-								("0" + meta.openGraph.article.published.getDate()).slice(-2)
+								("0" + meta.openGraph!.article.published.getDate()).slice(-2)
 							}
 						/>
-						<meta name="keywords" content={meta.openGraph.article.keywords.join(", ")} />
+						<meta name="keywords" content={meta.openGraph!.article!.keywords!.join(", ")} />
 					</>
 				) : null}
-
-				{/* Twitter */}
-				<meta name="twitter:title" content={meta.title} />
-				<meta name="twitter:description" content={meta.description} />
-				<meta name="twitter:image" content={meta.openGraph.image} />
-				<meta name="twitter:card" content={meta.twitter.cardType} />
-				<meta name="twitter:creator" content={meta.twitter.handle} />
 			</Head>
 			{children}
 		</>

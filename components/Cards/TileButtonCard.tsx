@@ -1,7 +1,18 @@
-import { Badge, Box, Card, CardActionArea, CardContent, IconButton, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+"use client";
+import {
+	Badge,
+	Box,
+	Card,
+	CardActionArea,
+	CardContent,
+	Icon,
+	IconButton,
+	Typography,
+	useMediaQuery,
+} from "@mui/material";
 import { FC, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
+import colors from "../../styles/colors";
 
 type TileButtonCard = {
 	icon: any;
@@ -19,35 +30,20 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
 	const [state, setState] = useState({
 		raised: false,
 	});
-	const useStyles = makeStyles({
-		root: {
-			transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-			boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
-			width: "100%",
-			height: "100%",
-		},
-		cardHovered: {
-			cursor: "pointer",
-			transform: xl ? "scale3d(1.02, 1.02, 1)" : lg ? "scale3d(1.04, 1.04, 1)" : "scale3d(1.05, 1.05, 1)",
-		},
-		link: {
-			color: theme.palette.text.primary,
-			textDecoration: "none",
-			borderBottom: "2px solid " + theme.palette.secondary.main,
-		},
-	});
-	const classes = useStyles();
 
 	// Locked card
 	if (props.disabled)
 		return (
-			<Card className={classes.root}>
+			<Card>
 				<Box
 					sx={{
-						display: "flex",
-						flexDirection: "column",
+						transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
+						backgroundColor: theme.palette.primary.main,
+						boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
 						width: "100%",
 						height: "100%",
+						display: "flex",
+						flexDirection: "column",
 						alignItems: "center",
 						alignContent: "center",
 						justifyItems: "center",
@@ -63,8 +59,23 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
 	// Regular card
 	return (
 		<Card
-			className={classes.root}
-			classes={{ root: state.raised ? classes.cardHovered : "" }}
+			sx={
+				state.raised
+					? {
+							boxackgroundColor: theme.palette.mode === "light" ? colors.white : colors.lightGrey,
+							transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
+							boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
+							cursor: "pointer",
+							transform: xl ? "scale3d(1.02, 1.02, 1)" : lg ? "scale3d(1.04, 1.04, 1)" : "scale3d(1.05, 1.05, 1)",
+					  }
+					: {
+							boxackgroundColor: theme.palette.mode === "light" ? colors.white : colors.lightGrey,
+							transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
+							boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
+							width: "100%",
+							height: "100%",
+					  }
+			}
 			onMouseOver={() => setState({ raised: true })}
 			onMouseOut={() => setState({ raised: false })}
 		>
@@ -89,8 +100,7 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
 								top: "5px",
 							}}
 						>
-							<IconButton
-								disabled
+							<Icon
 								sx={{
 									position: "relative", // Use relative positioning
 									right: "-6px", // Adjust left position as needed
@@ -98,10 +108,10 @@ export const TileButtonCard: FC<TileButtonCard> = (props) => {
 								}}
 							>
 								{props.icon}
-							</IconButton>
+							</Icon>
 						</Badge>
 					) : (
-						<IconButton disabled>{props.icon}</IconButton>
+						<Icon>{props.icon}</Icon>
 					)}
 				</Box>
 				<CardContent>

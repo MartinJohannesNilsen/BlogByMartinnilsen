@@ -1,3 +1,4 @@
+"use client";
 import InputBase, { InputBaseProps } from "@mui/material/InputBase";
 import Typography, { TypographyProps } from "@mui/material/Typography";
 import * as React from "react";

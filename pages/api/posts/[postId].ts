@@ -1,8 +1,8 @@
 import { doc, getDoc } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { validateAuthAPIToken } from "..";
-import { deletePostsOverview, updatePostsOverview } from "../../../database/overview";
-import { deletePost, getPost, updatePost } from "../../../database/posts";
+import { deletePostsOverview, updatePostsOverview } from "../../../data/db/firebase/overview";
+import { deletePost, getPost, updatePost } from "../../../data/db/firebase/posts";
 import { db } from "../../../lib/firebaseConfig";
 
 /**

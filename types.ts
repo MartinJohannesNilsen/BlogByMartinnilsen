@@ -84,7 +84,7 @@ export type EditorjsRendererProps = {
 		fileref?: string;
 		fileSize?: number;
 	};
-	style: {
+	style?: {
 		typography?: SxProps;
 		box?: SxProps;
 		h1?: CSSProperties;
@@ -94,7 +94,7 @@ export type EditorjsRendererProps = {
 		h5?: CSSProperties;
 		h6?: CSSProperties;
 	};
-	classNames: {
+	classNames?: {
 		h1?: string;
 		h2?: string;
 		h3?: string;
@@ -102,7 +102,7 @@ export type EditorjsRendererProps = {
 		h5?: string;
 		h6?: string;
 	};
-	config: { disableDefaultStyle?: any };
+	config?: { disableDefaultStyle?: any };
 };
 
 export type SharePreviewCardProps = {
@@ -132,7 +132,7 @@ type PostProps = {
 	createdAt: number;
 	description: string;
 	ogImage: ImageProps;
-	updatedAt: number;
+	updatedAt?: number;
 	published: boolean;
 	readTime: string;
 	tags: string[];
@@ -146,7 +146,6 @@ export type FullPost = PostProps & {
 };
 
 export type FirestoreFullPost = PostProps & {
-	// data: string;
 	data: any;
 };
 
@@ -291,7 +290,9 @@ export type ManageArticleViewProps = {
 	post?: FullPost;
 };
 export type ReadArticleViewProps = { post: FullPost; postId: string };
-export type LandingPageProps = { posts: StoredPost[] };
+// export type LandingPageProps = { posts: StoredPost[] };
+export type LandingPageProps = {};
+// export type TagsPageProps = {};
 export type TagsPageProps = { posts: StoredPost[]; tags: string[] };
 export type ListViewProps = {};
 export type FooterProps = {};

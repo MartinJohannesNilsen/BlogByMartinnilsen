@@ -1,8 +1,6 @@
+"use client";
 import { Close } from "@mui/icons-material";
-import { Divider, IconButton, useMediaQuery } from "@mui/material";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
+import { Box, Divider, IconButton, Modal, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -14,7 +12,7 @@ import StyledControlledSelect, { SelectOption } from "../StyledMUI/StyledControl
 export const notificationsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
 
 	// Fetch and return
 	const res: Response = await fetch(url, {
@@ -38,7 +36,7 @@ export const checkForUnreadRecentNotifications = (
 	notificationsFilterDays: number,
 	notificationsRead: number[]
 ): UnreadFunctionProps => {
-	if (!data) return;
+	// if (!data) return;
 	// Would need to have the filter option days in milliseconds for later
 	const notificationDaysInMilliseconds = notificationsFilterDays * 24 * 60 * 60 * 1000;
 	// Find all notifications which are either not read or is important, and should should be shown
@@ -74,8 +72,8 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
-	const [notifications, setNotifications] = useState([]);
-	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState([]);
+	const [notifications, setNotifications] = useState<NotificationProps[]>([]);
+	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState<number[]>([]);
 	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
 	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
 	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
@@ -205,8 +203,6 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 												},
 												box: { my: 0, mb: 0.2 },
 											}}
-											config={null}
-											classNames={null}
 										/>
 										<CustomParagraph
 											data={{
@@ -222,8 +218,6 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 												},
 												box: { my: 0 },
 											}}
-											config={null}
-											classNames={null}
 										/>
 									</Box>
 									{index !== notifications.length - 1 && <Divider sx={{ mt: 2, mb: 1.5 }} />}

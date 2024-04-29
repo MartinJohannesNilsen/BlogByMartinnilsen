@@ -1,3 +1,4 @@
+"use client";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
 import NextLink from "next/link";
@@ -26,7 +27,7 @@ export const LandingPageGridCard: FC<PostCardProps> = (props) => {
 			<CardMedia>
 				<BlurHashHTMLImage
 					src={props.ogImage.src || DATA_DEFAULTS.ogImage}
-					blurhash={{ encoded: props.ogImage.blurhash, width: 100, height: 100 }}
+					blurhash={{ encoded: props.ogImage.blurhash!, width: 100, height: 100 }}
 					alt={`OpenGraph image for post titled "${props.title}"`}
 					style={{
 						width: "100%",

@@ -1,3 +1,4 @@
+"use client";
 import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, MenuBook } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
@@ -234,7 +235,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 										width: "34px",
 										backgroundColor: theme.palette.primary.main + "99",
 									}}
-									sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published && "0.5" }}
+									sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
 								/>
 							</Box>
 							{/* Account */}
@@ -383,7 +384,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 									width: "34px",
 									backgroundColor: theme.palette.primary.main + "99",
 								}}
-								sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published && "0.5" }}
+								sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
 							/>
 						</Box>
 						{/* ShareModal */}
@@ -399,7 +400,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 									width: "34px",
 									backgroundColor: theme.palette.primary.main + "99",
 								}}
-								sxIcon={{ height: "18px", width: "22px", opacity: !props.post.published && "0.5" }}
+								sxIcon={{ height: "18px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
 							/>
 						</Box>
 						{/* Profile Menu */}

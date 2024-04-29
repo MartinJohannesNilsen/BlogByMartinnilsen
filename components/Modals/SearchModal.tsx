@@ -1,3 +1,4 @@
+"use client";
 import {
 	Api,
 	Bookmark,
@@ -134,7 +135,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Open settings",
 			onClick: () => {
-				props.handleSettingsModalOpen();
+				props.handleSettingsModalOpen && props.handleSettingsModalOpen();
 			},
 			keywords: ["settings", "configure", "tune", "accent", "color", "mode", "light", "dark", "font"],
 			iconElement: <Settings sx={{ color: theme.palette.text.primary }} />,
@@ -145,7 +146,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Open notifications",
 			onClick: () => {
-				props.handleNotificationsModalOpen();
+				props.handleNotificationsModalOpen && props.handleNotificationsModalOpen();
 			},
 			keywords: ["notifications", "messages"],
 			iconElement: props.notificationsBadgeVisible ? (
@@ -182,7 +183,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Sign out",
 			onClick: () => {
-				userSignOut(window.location.pathname === "/account" ? "/" : null, true);
+				userSignOut(window.location.pathname === "/account" ? "/" : undefined, true);
 			},
 			keywords: ["logout", "log", "out"],
 			iconElement: <Logout sx={{ color: theme.palette.text.primary }} />,
@@ -217,7 +218,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Layout: Switch to carousel view",
 			onClick: () => {
-				props.setCardLayout("carousel");
+				props.setCardLayout && props.setCardLayout("carousel");
 			},
 			keywords: ["layout", "carousel", "view", "cards"],
 			iconElement: <ViewWeekSharp sx={{ color: theme.palette.text.primary }} />,
@@ -228,7 +229,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Layout: Switch to swipe view",
 			onClick: () => {
-				props.setCardLayout("swipe");
+				props.setCardLayout && props.setCardLayout("swipe");
 			},
 			keywords: ["layout", "swipe", "view", "cards"],
 			iconElement: <ViewCarousel sx={{ color: theme.palette.text.primary }} />,
@@ -239,7 +240,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Layout: Switch to grid view",
 			onClick: () => {
-				props.setCardLayout("grid");
+				props.setCardLayout && props.setCardLayout("grid");
 			},
 			keywords: ["layout", "grid", "view", "cards"],
 			iconElement: <GridViewSharp sx={{ color: theme.palette.text.primary }} />,
@@ -250,7 +251,7 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Layout: Switch to list view",
 			onClick: () => {
-				props.setCardLayout("list");
+				props.setCardLayout && props.setCardLayout("list");
 			},
 			keywords: ["layout", "list", "view", "cards"],
 			iconElement: <TableRowsSharp sx={{ color: theme.palette.text.primary }} />,
@@ -319,9 +320,10 @@ export const SearchModal = (props: SearchModalProps) => {
 
 	props.onOpen &&
 		useEffect(() => {
-			if (props.open) props.onOpen();
-			if (textFieldRef.current) {
-				textFieldRef.current.focus();
+			if (props.open && props.onOpen) props.onOpen();
+			const currentTextField: any = textFieldRef.current;
+			if (currentTextField) {
+				currentTextField.focus();
 			}
 			return () => {};
 		}, [props.open, isActions]);
@@ -361,8 +363,9 @@ export const SearchModal = (props: SearchModalProps) => {
 	useHotkeys(
 		"Tab",
 		() => {
-			if (textFieldRef.current) {
-				textFieldRef.current.focus();
+			const currentTextField: any = textFieldRef.current;
+			if (currentTextField) {
+				currentTextField.focus();
 			}
 			if (!isPulsating) {
 				handlePulsate();
@@ -459,8 +462,9 @@ export const SearchModal = (props: SearchModalProps) => {
 														border: "1px solid rgba( 255, 255, 255, 0.18 )",
 													}}
 													onClick={() => {
-														if (textFieldRef.current) {
-															textFieldRef.current.focus();
+														const currentTextField: any = textFieldRef.current;
+														if (currentTextField) {
+															currentTextField.focus();
 														}
 														if (!isPulsating) {
 															handlePulsate();
@@ -516,8 +520,9 @@ export const SearchModal = (props: SearchModalProps) => {
 											}
 										} else if (e.key === "Tab") {
 											e.preventDefault();
-											if (textFieldRef.current) {
-												textFieldRef.current.focus();
+											const currentTextField: any = textFieldRef.current;
+											if (currentTextField) {
+												currentTextField.focus();
 											}
 											if (!isPulsating) {
 												handlePulsate();
@@ -707,7 +712,7 @@ export const SearchModal = (props: SearchModalProps) => {
 														>
 															<BlurHashHTMLImage
 																src={post.ogImage.src}
-																blurhash={{ encoded: post.ogImage.blurhash }}
+																blurhash={{ encoded: post.ogImage.blurhash! }}
 																alt={'OpenGraph image for article titled "' + post.title + '"'}
 																style={{
 																	width: "125px",

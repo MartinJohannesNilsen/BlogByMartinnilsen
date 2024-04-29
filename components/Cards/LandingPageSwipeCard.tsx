@@ -1,3 +1,4 @@
+"use client";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, Typography, useMediaQuery } from "@mui/material";
 import NextLink from "next/link";
@@ -37,7 +38,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 				<Box display="flex" flexDirection="column" sx={{ height: xs ? 250 : 230 }}>
 					<BlurHashHTMLImage
 						src={props.ogImage.src || DATA_DEFAULTS.ogImage}
-						blurhash={{ encoded: props.ogImage.blurhash }}
+						blurhash={{ encoded: props.ogImage.blurhash! }}
 						alt={`OpenGraph image for post titled "${props.title}"`}
 						style={{
 							width: "100%",

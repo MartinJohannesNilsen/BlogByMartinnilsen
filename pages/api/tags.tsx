@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	if (req.method === "GET") {
 		// Get tags
 		try {
-			const data = await getDoc(doc(db, "administrative", "tags")).then((data) => data.data().values);
+			const data = await getDoc(doc(db, "administrative", "tags")).then((data) => data.data()!.values);
 			if (!data) return res.status(404).send("Tags not found!");
 			return res.status(200).send(data);
 		} catch (error) {

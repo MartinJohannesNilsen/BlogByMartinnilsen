@@ -1,3 +1,4 @@
+"use client";
 import Giscus from "@giscus/react";
 import { AccessTime, ArrowUpward, CalendarMonth, Comment, ThumbUpAlt, Visibility } from "@mui/icons-material";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
@@ -9,73 +10,45 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
-import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
-import { style } from "../../components/EditorJS/style";
-import Footer from "../../components/Footer/Footer";
-import SEO, { DATA_DEFAULTS } from "../../components/SEO/SEO";
-import { getAllPostIds } from "../../database/overview";
-import { getPost } from "../../database/posts";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ReadArticleViewProps } from "../../types";
+import useAuthorized from "../../../components/AuthorizationHook/useAuthorized";
+import { style } from "../../../components/EditorJS/style";
+import Footer from "../../../components/Footer/Footer";
+import SEO, { DATA_DEFAULTS } from "../../../components/SEO/SEO";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
+import { ReadArticleViewProps } from "../../../types";
 // import dynamic from "next/dynamic";
 // Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
-import Output from "editorjs-react-renderer";
-import { ArticleJsonLd } from "next-seo";
-import { useEventListener } from "usehooks-ts";
-import ButtonBar, { ButtonBarButtonProps } from "../../components/ButtonBar/ButtonBar";
-import { NavbarButton } from "../../components/Buttons/NavbarButton";
-import PostNavbar from "../../components/Navbar/PostNavbar";
-import PostViews from "../../components/PostViews/PostViews";
-import Toggle from "../../components/Toggles/Toggle";
-import { IDiscussionData, IMetadataMessage } from "../../utils/giscus";
 import { useGSAP } from "@gsap/react";
+import Output from "editorjs-react-renderer";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { ArticleJsonLd } from "next-seo";
+import { useEventListener } from "usehooks-ts";
+import ButtonBar, { ButtonBarButtonProps } from "../../../components/ButtonBar/ButtonBar";
+import { NavbarButton } from "../../../components/Buttons/NavbarButton";
+import PostNavbar from "../../../components/Navbar/PostNavbar";
+import PostViews from "../../../components/PostViews/PostViews";
+import Toggle from "../../../components/Toggles/Toggle";
+import { IDiscussionData, IMetadataMessage } from "../../../utils/giscus";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // EditorJS renderers
-import CustomCallout from "../../components/EditorJS/Renderers/CustomCallout";
-import CustomChecklist from "../../components/EditorJS/Renderers/CustomChecklist";
-import CustomCode from "../../components/EditorJS/Renderers/CustomCode";
-import CustomDivider from "../../components/EditorJS/Renderers/CustomDivider";
-import CustomHeader from "../../components/EditorJS/Renderers/CustomHeader";
-import CustomIframe from "../../components/EditorJS/Renderers/CustomIframe";
-import CustomImage from "../../components/EditorJS/Renderers/CustomImage";
-import CustomLinkTool from "../../components/EditorJS/Renderers/CustomLinkTool";
-import CustomList from "../../components/EditorJS/Renderers/CustomList";
-import CustomMath from "../../components/EditorJS/Renderers/CustomMath";
-import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
-import CustomQuote from "../../components/EditorJS/Renderers/CustomQuote";
-import CustomTable from "../../components/EditorJS/Renderers/CustomTable";
-import CustomToggle from "../../components/EditorJS/Renderers/CustomToggle";
-import CustomVideo from "../../components/EditorJS/Renderers/CustomVideo";
-import { useRouter } from "next/router";
-
-export async function getStaticPaths() {
-	const idList = await getAllPostIds(false); // Not filter on visibility
-	const paths: string[] = [];
-	idList.forEach((id) => {
-		paths.push(`/posts/${id}`);
-	});
-	return { paths, fallback: "blocking" };
-}
-
-export const getStaticProps = async (context: any) => {
-	const postId = context.params.postId as string;
-	const post = await getPost(postId);
-	if (!post) {
-		return {
-			notFound: true, //redirects to 404 page
-		};
-	}
-	return {
-		props: {
-			post,
-			postId,
-		},
-	};
-};
+import CustomCallout from "../../../components/EditorJS/Renderers/CustomCallout";
+import CustomChecklist from "../../../components/EditorJS/Renderers/CustomChecklist";
+import CustomCode from "../../../components/EditorJS/Renderers/CustomCode";
+import CustomDivider from "../../../components/EditorJS/Renderers/CustomDivider";
+import CustomHeader from "../../../components/EditorJS/Renderers/CustomHeader";
+import CustomIframe from "../../../components/EditorJS/Renderers/CustomIframe";
+import CustomImage from "../../../components/EditorJS/Renderers/CustomImage";
+import CustomLinkTool from "../../../components/EditorJS/Renderers/CustomLinkTool";
+import CustomList from "../../../components/EditorJS/Renderers/CustomList";
+import CustomMath from "../../../components/EditorJS/Renderers/CustomMath";
+import CustomParagraph from "../../../components/EditorJS/Renderers/CustomParagraph";
+// import CustomQuote from "../../../components/EditorJS/Renderers/CustomQuote";
+import CustomTable from "../../../components/EditorJS/Renderers/CustomTable";
+// import CustomToggle from "../../../components/EditorJS/Renderers/CustomToggle";
+import CustomVideo from "../../../components/EditorJS/Renderers/CustomVideo";
 
 // Pass your custom renderers to Output
 export const renderers = {
@@ -85,14 +58,14 @@ export const renderers = {
 	divider: CustomDivider,
 	image: CustomImage,
 	linktool: CustomLinkTool,
-	quote: CustomQuote,
+	// quote: CustomQuote,
 	video: CustomVideo,
 	checklist: CustomChecklist,
 	table: CustomTable,
 	math: CustomMath,
 	list: CustomList,
 	iframe: CustomIframe,
-	toggle: CustomToggle,
+	// toggle: CustomToggle,
 	callout: CustomCallout,
 };
 
@@ -121,7 +94,7 @@ export function processJsonToggleBlocks(inputJson) {
 
 	if (Array.isArray(json.blocks)) {
 		// Initialize a new array for processed blocks
-		let newBlocks = [];
+		let newBlocks: any = [];
 
 		// Iterate over the blocks
 		for (let i = 0; i < json.blocks.length; i++) {
@@ -157,7 +130,7 @@ export function processJsonToggleBlocks(inputJson) {
 
 export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const post = props.post;
-	const router = useRouter();
+	// const router = useRouter();
 	const { isAuthorized, session, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
 			? {
@@ -184,22 +157,22 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	const [discussionData, setDiscussionData] = useState<IDiscussionData>({
 		id: "",
 		url: "",
-		locked: null,
+		locked: undefined,
 		repository: {
 			nameWithOwner: "",
 		},
-		reactionCount: null,
-		totalCommentCount: null,
-		totalReplyCount: null,
+		reactionCount: undefined,
+		totalCommentCount: undefined,
+		totalReplyCount: undefined,
 		reactions: {
-			THUMBS_UP: { count: null, viewerHasReacted: false },
-			THUMBS_DOWN: { count: null, viewerHasReacted: false },
-			LAUGH: { count: null, viewerHasReacted: false },
-			HOORAY: { count: null, viewerHasReacted: false },
-			CONFUSED: { count: null, viewerHasReacted: false },
-			HEART: { count: null, viewerHasReacted: false },
-			ROCKET: { count: null, viewerHasReacted: false },
-			EYES: { count: null, viewerHasReacted: false },
+			THUMBS_UP: { count: undefined, viewerHasReacted: false },
+			THUMBS_DOWN: { count: undefined, viewerHasReacted: false },
+			LAUGH: { count: undefined, viewerHasReacted: false },
+			HOORAY: { count: undefined, viewerHasReacted: false },
+			CONFUSED: { count: undefined, viewerHasReacted: false },
+			HEART: { count: undefined, viewerHasReacted: false },
+			ROCKET: { count: undefined, viewerHasReacted: false },
+			EYES: { count: undefined, viewerHasReacted: false },
 		},
 	});
 	const toggleRef = useRef<null | HTMLDivElement>(null);
@@ -219,12 +192,12 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 		process.env.NEXT_PUBLIC_LOCALHOST === "false" &&
 			post.published &&
 			(status === "unauthenticated" ||
-				(status === "authenticated" && session && session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
+				(status === "authenticated" && session && session.user!.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL)) &&
 			// All criterias are met, run POST request to increment counter
 			fetch(`/api/views/${props.postId}`, {
 				method: "POST",
 				headers: {
-					apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
+					apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!,
 				},
 			});
 
@@ -235,7 +208,8 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 	useEffect(() => {
 		// Go to hash if present
 		if (typeof window !== "undefined" && window.location.hash) {
-			router.replace(window.location.hash);
+			// router.replace(window.location.hash);
+			window.location.href = window.location.hash;
 
 			// Alternate approach with instant scroll
 			// const targetElement = document.querySelector(hash);
@@ -265,11 +239,11 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			// });
 			// buttonBarAnimation.reverse();
 		}
-	}, [router]);
+	}, []);
 
 	// Render markup for toc
 	const OutputString = useMemo(() => {
-		return renderToStaticMarkup(OutputElement);
+		if (OutputElement) return renderToStaticMarkup(OutputElement);
 	}, [OutputElement]);
 
 	// Get current section for toc
@@ -323,7 +297,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			onClick: () => {
 				setToggleRCOpen(true);
 				setTimeout(() => {
-					toggleRef.current.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
+					toggleRef.current!.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
 				}, 250);
 			},
 		},
@@ -337,7 +311,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			onClick: () => {
 				setToggleRCOpen(true);
 				setTimeout(() => {
-					toggleRef.current.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
+					toggleRef.current!.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
 				}, 250);
 			},
 		},
@@ -400,7 +374,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			// Await scroll in same direction for some time to trigger
 			let lastScrollTop = 0;
 			let scrollDistance = 0;
-			let distanceToTrigger = parseInt(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DISTANCE_IN_PX);
+			let distanceToTrigger = parseInt(process.env.NEXT_PUBLIC_HIDE_NAVBAR_DISTANCE_IN_PX!);
 			let lastScrollDirection = 0;
 			window.addEventListener("scroll", function () {
 				// if (event.isTrusted) {} else {} // Differentiate between user and scripted user scroll (trusted => user)
@@ -441,7 +415,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 			});
 			return () => {
 				buttonBarAnimation.reverse();
-				removeEventListener("scroll", this);
+				removeEventListener("scroll", this!);
 			};
 		},
 		{ dependencies: [isLoading], scope: containerRef }
@@ -471,7 +445,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${props.postId}`}
 				images={[props.post.ogImage.src]}
 				datePublished={new Date(props.post.createdAt).toISOString()}
-				dateModified={props.post.updatedAt ? new Date(props.post.updatedAt).toISOString() : null}
+				dateModified={props.post.updatedAt ? new Date(props.post.updatedAt).toISOString() : undefined}
 				title={post.title}
 				description={post.description}
 				// authorName={post.author}
@@ -504,7 +478,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 						<PostNavbar
 							className="navBar"
 							post={{ ...post, id: props.postId }}
-							toc={{ content: OutputString, currentSection: currentSection }}
+							toc={{ content: OutputString!, currentSection: currentSection }}
 							shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
 						/>
 						{/* Content */}
@@ -703,7 +677,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 															width: "36px",
 															// "&:disabled": { opacity: "0.5" },
 														}}
-														styleIcon={{ height: "22px", width: "24px", opacity: !post.published && "0.5" }}
+														styleIcon={{ height: "22px", width: "24px", opacity: !post.published ? "0.5" : "1" }}
 													/>
 												</Box>
 
@@ -724,7 +698,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 															height: "36px",
 															width: "36px",
 														}}
-														styleIcon={{ height: "22px", width: "24px", opacity: isExploding && "0.5" }}
+														styleIcon={{ height: "22px", width: "24px", opacity: isExploding ? "0.5" : "1" }}
 													/>
 												</Box>
 
@@ -788,11 +762,13 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 											}}
 											title={"Reactions & Comments"}
 											accordionSx={
-												discussionData.locked === true && {
-													".MuiAccordionDetails-root": {
-														maxHeight: "250px",
-													},
-												}
+												discussionData.locked === true
+													? {
+															".MuiAccordionDetails-root": {
+																maxHeight: "250px",
+															},
+													  }
+													: {}
 											}
 										>
 											<Box
@@ -804,7 +780,7 @@ export const ReadArticleView: FC<ReadArticleViewProps> = (props) => {
 											>
 												<Giscus
 													repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
-													repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID}
+													repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID!}
 													categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
 													id="comments"
 													category="Comments"

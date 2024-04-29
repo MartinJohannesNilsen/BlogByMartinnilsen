@@ -1,3 +1,4 @@
+"use client";
 import { Bookmark, Notifications, Person, RssFeed } from "@mui/icons-material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
@@ -97,8 +98,8 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				{/* Account */}
 				{status === "authenticated" ? (
 					<MenuItem onClick={() => (window.location.href = "/account")}>
-						<Avatar src={(session.user && session.user.image) || null} sx={{ width: 10, height: 10 }}>
-							{session.user ? session.user.name[0] : null}
+						<Avatar src={(session!.user && session!.user.image) || undefined} sx={{ width: 10, height: 10 }}>
+							{session!.user ? session!.user.name![0] : undefined}
 						</Avatar>
 						<Typography fontFamily={theme.typography.fontFamily}>My account</Typography>
 					</MenuItem>
@@ -109,7 +110,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 							props.handleMenuClose();
 						}}
 					>
-						<Avatar src={null} sx={{ width: 10, height: 10 }} />
+						<Avatar src={undefined} sx={{ width: 10, height: 10 }} />
 						{/* Log in */}
 						<Typography fontFamily={theme.typography.fontFamily}>Sign in</Typography>
 					</MenuItem>
@@ -121,7 +122,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				{props.notifications && (
 					<MenuItem
 						onClick={() => {
-							props.notifications.handleModalOpen();
+							props.notifications!.handleModalOpen();
 							props.handleMenuClose();
 						}}
 					>
@@ -150,7 +151,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				{props.settings && (
 					<MenuItem
 						onClick={() => {
-							props.settings.handleModalOpen();
+							props.settings!.handleModalOpen();
 							props.handleMenuClose();
 						}}
 					>
@@ -162,7 +163,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				)}
 
 				{/* RSS Feed */}
-				<MenuItem onClick={() => (window.location.href = "/rss.xml")}>
+				<MenuItem onClick={() => (window.location.href = "/feed/rss.xml")}>
 					<ListItemIcon sx={{ mr: 0.25 }}>
 						<RssFeed fontSize="medium" sx={{ color: theme.palette.text.primary }} />
 					</ListItemIcon>
@@ -173,7 +174,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				{status === "authenticated" && (
 					<MenuItem
 						onClick={() => {
-							userSignOut(null, true);
+							userSignOut("", true);
 							props.handleMenuClose();
 						}}
 					>

@@ -1,4 +1,4 @@
-//./components/Editor
+"use client";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
 import DragDrop from "editorjs-drag-drop";
 import Undo from "editorjs-undo";

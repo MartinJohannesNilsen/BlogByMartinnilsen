@@ -1,3 +1,4 @@
+"use client";
 import { buttonClasses } from "@mui/base/Button";
 import { Tab as BaseTab, tabClasses } from "@mui/base/Tab";
 import { TabPanel as BaseTabPanel } from "@mui/base/TabPanel";

@@ -1,3 +1,4 @@
+"use client";
 import React, { useRef } from "react";
 import { Box, Card, IconButton, InputBase, MenuItem, Modal, Select, Typography, useMediaQuery } from "@mui/material";
 import EmojiPicker, { EmojiClickData, SkinTonePickerLocation } from "emoji-picker-react";
@@ -47,7 +48,8 @@ export const Callout = (props: CalloutProps) => {
 
 	// Set message value on stateData.type change
 	useEffect(() => {
-		messageRef.current.innerHTML = stateData.message;
+		const currentMessage: any = messageRef.current;
+		currentMessage.innerHTML = stateData.message;
 	}, [stateData.type]);
 
 	// Change Editorjs state on state change
@@ -169,7 +171,7 @@ export const Callout = (props: CalloutProps) => {
 											paddingBottom: 6,
 										}}
 										onInputCapture={(e) => {
-											const currentDiv = messageRef.current;
+											const currentDiv: any = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;
@@ -254,7 +256,7 @@ export const Callout = (props: CalloutProps) => {
 											outline: "none",
 										}}
 										onInputCapture={(e) => {
-											const currentDiv = messageRef.current;
+											const currentDiv: any = messageRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;

@@ -1,40 +1,19 @@
+"use client";
 import { Box, Button, Grid, Typography, useMediaQuery } from "@mui/material";
 import { WebPageJsonLd } from "next-seo";
 import ErrorPage from "next/error";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import useAuthorized from "../components/AuthorizationHook/useAuthorized";
-import TagsPageCard from "../components/Cards/TagsPageCard";
-import Navbar from "../components/Navbar/Navbar";
-import SEO from "../components/SEO/SEO";
-import { _filterListOfStoredPostsOnPublished, getPostsOverview } from "../database/overview";
-import { getTags } from "../database/tags";
-import { useTheme } from "../styles/themes/ThemeProvider";
-import { StoredPost, TagsPageProps } from "../types";
-import colorLumincance from "../utils/colorLuminance";
-
-// Next.js functions
-// On-demand Revalidation, thus no defined revalidation interval
-// This means we only revalidate (build) when updating/creating/deleting posts
-// https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration
-export const getStaticProps = async (context: any) => {
-	const db_posts = await getPostsOverview(
-		"desc",
-		false // Do not filter on published
-		// process.env.NEXT_PUBLIC_LOCALHOST === "false"
-	);
-	const posts = db_posts;
-	const tags = await getTags();
-
-	return {
-		props: {
-			posts,
-			tags,
-		},
-	};
-};
+import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
+import TagsPageCard from "../../components/Cards/TagsPageCard";
+import Navbar from "../../components/Navbar/Navbar";
+import SEO from "../../components/SEO/SEO";
+import { _filterListOfStoredPostsOnPublished } from "../../data/db/firebase/overview";
+import { useTheme } from "../../styles/themes/ThemeProvider";
+import { StoredPost, TagsPageProps } from "../../types";
+import colorLumincance from "../../utils/colorLuminance";
 
 export const _caseInsensitiveIncludes = (list: string[], word: string, removeSpace?: boolean) => {
 	const lowerCaseList = list.map((e) => e.toLowerCase());
@@ -62,10 +41,11 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 			  }
 			: useAuthorized();
 	const { theme } = useTheme();
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();
-	const [tag, setTag] = useState<string>("loading");
-	const { query, isReady } = useRouter();
+	const [tag, setTag] = useState<string | null>("loading");
+	// const { query, isReady } = useRouter();
+	const searchParams = useSearchParams();
 	const [posts, setPosts] = useState<StoredPost[]>(props.posts);
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
@@ -84,10 +64,10 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 		} else {
 			setPosts(
 				isAuthorized
-					? _filterListOfStoredPostsOnTag(props.posts, _getCaseInsensitiveElement(props.tags, tag))
+					? _filterListOfStoredPostsOnTag(props.posts, _getCaseInsensitiveElement(props.tags, tag)!)
 					: _filterListOfStoredPostsOnTag(
 							_filterListOfStoredPostsOnPublished(props.posts, "published"),
-							_getCaseInsensitiveElement(props.tags, tag)
+							_getCaseInsensitiveElement(props.tags, tag)!
 					  )
 			);
 		}
@@ -99,19 +79,15 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 	}, [isAuthorized]);
 
 	useEffect(() => {
-		if (isReady) {
-			if (query.name as string) {
-				setTag(query.name as string);
-			} else {
-				setTag(null);
-			}
+		if (searchParams) {
+			setTag(searchParams.get("name"));
 		}
-	}, [isReady]);
+	}, [searchParams]);
 
 	useEffect(() => {
-		if (isReady) {
-			updateData();
-		}
+		// if (searchParams) {
+		updateData();
+		// }
 	}, [tag]);
 
 	useEffect(() => {
@@ -139,7 +115,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 				title: tag
 					? tag.toLowerCase() === "published" || tag.toLowerCase() === "unpublished" || tag.toLowerCase() === "saved"
 						? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
-						: "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
+						: "#" + _getCaseInsensitiveElement(props.tags, tag)!.replace(" ", "")
 					: "All posts",
 				description: "Navigate the full collection of posts, filtering based on their associated tag(s).",
 			}}
@@ -153,7 +129,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 					name: "Martin Johannes Nilsen",
 				}}
 			/>
-			{!isLoading && (
+			{!isLoading ? (
 				<Box
 					sx={{
 						height: "100%",
@@ -187,7 +163,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 									  tag.toLowerCase() === "unpublished" ||
 									  tag.toLowerCase() === "saved"
 										? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
-										: "#" + _getCaseInsensitiveElement(props.tags, tag).replace(" ", "")
+										: "#" + _getCaseInsensitiveElement(props.tags, tag)!.replace(" ", "")
 									: "All posts"}
 								{/* {" (" + posts.length + ")"} */}
 							</Typography>
@@ -204,7 +180,13 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 						{/* Grid of tags and posts */}
 						<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={8} rowSpacing={xs ? 2 : 4}>
 							{/* Tags */}
-							<Grid item xs={12} lg={3} order={{ lg: 3, xl: 3 }} sx={lgUp && { position: "fixed", right: 30, mt: -10 }}>
+							<Grid
+								item
+								xs={12}
+								lg={3}
+								order={{ lg: 3, xl: 3 }}
+								sx={lgUp ? { position: "fixed", right: 30, mt: -10 } : {}}
+							>
 								<Box>
 									<Button
 										LinkComponent={NextLink}
@@ -213,7 +195,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 										sx={{
 											width: "fit-content",
 											border: "1px solid " + theme.palette.secondary.main,
-											backgroundColor: !tag && theme.palette.secondary.main,
+											backgroundColor: !tag ? theme.palette.secondary.main : "default",
 											"&:hover": {
 												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 												backgroundColor: !tag
@@ -248,14 +230,16 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 												LinkComponent={NextLink}
 												key={index}
 												size="small"
-												disabled={tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")}
+												disabled={
+													tag ? tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") : false
+												}
 												sx={{
 													width: "fit-content",
 													border: "1px solid " + theme.palette.secondary.main,
 													backgroundColor:
-														tag &&
-														tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") &&
-														theme.palette.secondary.main,
+														tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+															? theme.palette.secondary.main
+															: "default",
 													"&:hover": {
 														border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 														backgroundColor:
@@ -283,7 +267,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 												>
 													{element === "Published" || element === "Unpublished" || element === "Saved"
 														? element
-														: "#" + _getCaseInsensitiveElement(props.tags, element).replace(" ", "")}
+														: "#" + _getCaseInsensitiveElement(props.tags, element)!.replace(" ", "")}
 												</Typography>
 											</Button>
 										))}
@@ -344,6 +328,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 						</Grid>
 					</Box>
 				</Box>
+			) : (
+				<></>
 			)}
 		</SEO>
 	);

@@ -1,3 +1,4 @@
+"use client";
 import { createTheme } from "@mui/material";
 import { baseTheme } from "./themeDefaults";
 

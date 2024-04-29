@@ -1,6 +1,6 @@
+"use client";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { FC, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
@@ -12,27 +12,18 @@ export const LandingPageListCard: FC<PostCardProps> = (props) => {
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lg = useMediaQuery(theme.breakpoints.only("lg"));
 	const xl = useMediaQuery(theme.breakpoints.only("xl"));
-	const [state, setState] = useState({
-		raised: false,
-	});
-	const useStyles = makeStyles({
-		root: {
-			width: "100%",
-			"&:hover": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			"&:active": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			backgroundColor: theme.palette.primary.light,
-		},
-	});
-	const classes = useStyles();
 
 	return (
 		<Card
-			className={classes.root}
 			sx={{
+				width: "100%",
+				"&:hover": {
+					backgroundColor: theme.palette.primary.light,
+				},
+				"&:active": {
+					backgroundColor: theme.palette.primary.light,
+				},
+				backgroundColor: theme.palette.primary.light,
 				borderRadius: 4,
 				boxShadow: "none",
 			}}

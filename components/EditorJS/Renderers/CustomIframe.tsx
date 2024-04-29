@@ -1,3 +1,4 @@
+"use client";
 import { Box, useMediaQuery } from "@mui/material";
 import Parser from "html-react-parser";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
@@ -8,6 +9,6 @@ const CustomIframe = (props: EditorjsRendererProps) => {
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const sm = useMediaQuery(theme.breakpoints.only("sm"));
 
-	return <Box>{Parser(props.data.frame)}</Box>;
+	return <Box>{Parser(props.data.frame!)}</Box>;
 };
 export default CustomIframe;

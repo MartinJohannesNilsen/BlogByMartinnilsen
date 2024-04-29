@@ -1,3 +1,4 @@
+"use client";
 import { Box, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";

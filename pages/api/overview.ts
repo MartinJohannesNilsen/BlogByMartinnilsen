@@ -106,7 +106,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	if (req.method === "GET") {
 		try {
-			const data = await getDoc(doc(db, "administrative", "overview")).then((data) => data.data().values);
+			const data = await getDoc(doc(db, "administrative", "overview")).then((data) => data.data()!.values);
 			if (!data) return res.status(404).send("Overview not found!");
 			return res.status(200).send(data);
 		} catch (error) {

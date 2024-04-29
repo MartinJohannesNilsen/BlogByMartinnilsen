@@ -81,7 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	if (req.method === "GET") {
 		// Get all posts
 		try {
-			const response = {
+			const response: { posts: any[]; overview: any[] } = {
 				posts: [],
 				overview: [],
 			};
@@ -101,7 +101,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				});
 			});
 			const postOverviewSnapshot = await getDoc(doc(db, "administrative", "overview"));
-			response.overview = postOverviewSnapshot.data().values;
+			response.overview = postOverviewSnapshot.data()!.values;
 			return res.status(200).json(response);
 		} catch (error) {
 			return res.status(500).json({ code: 500, reason: error });

@@ -28,10 +28,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
-import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../database/overview";
-import { addPost, deletePost, updatePost } from "../../database/posts";
-import { addTag, getTags } from "../../database/tags";
-import { renderers } from "../../pages/posts/[postId]";
+import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../data/db/firebase/overview";
+import { addPost, deletePost, updatePost } from "../../data/db/firebase/posts";
+import { addTag, getTags } from "../../data/db/firebase/tags";
+import { renderers } from "../../pages/_posts/[postId]";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManageArticleViewProps } from "../../types";
@@ -64,7 +64,7 @@ const revalidatePages = async (pages: string[]) => {
 				return fetch("/api/revalidate?path=" + page, {
 					headers: {
 						accept: "application/json",
-						apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
+						apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!,
 					},
 				});
 			})
@@ -83,7 +83,7 @@ const revalidatePages = async (pages: string[]) => {
 			}
 			res.requests.push({
 				status: response.status,
-				path: new URL(response.url).searchParams.get("path"),
+				path: new URL(response.url).searchParams.get("path")!,
 				revalidated: response.status === 200,
 			});
 		});
@@ -110,7 +110,7 @@ export const uploadImage = async (file, postId, name) => {
 
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
 
 	// Options for the fetch request
 	const fetchOptions = {
@@ -142,7 +142,7 @@ export const uploadImage = async (file, postId, name) => {
 export const deleteImage = async (fileRef) => {
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
 
 	// Options for the fetch request
 	const fetchOptions = {
@@ -176,7 +176,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 	const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const router = useRouter();
-	const [postId, setPostId] = useState<string>(props.post ? (router.query.postId[0] as string) : "");
+	const [postId, setPostId] = useState<string>(props.post ? (router.query.postId![0] as string) : "");
 	const [tagOptions, setTagOptions] = useState<{ value: string; label: string }[]>([]);
 	const [editorJSContent, setEditorJSContent] = useState<OutputData>(props.post ? props.post.data : { blocks: [] });
 	const [data, setData] = useState<FullPost>({
@@ -188,16 +188,16 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		description: "",
 		ogImage: {
 			src: "https://blog.mjntech.dev/assets/icons/ogimage.png",
-			blurhash: null,
-			height: null,
-			width: null,
-			fileRef: null,
-			fileSize: null,
+			// blurhash: null,
+			// height: null,
+			// width: null,
+			// // fileRef: null,
+			// fileSize: null,
 		},
 		data: { blocks: [] },
 		author: "Martin Johannes Nilsen",
 		createdAt: Date.now(),
-		updatedAt: null,
+		// updatedAt: null,
 		readTime: "",
 	});
 	const handleNavigate = (path: string) => {
@@ -440,7 +440,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 			preventDuplicate: true,
 		});
 		revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
-			if (res.status === 200) {
+			if (res?.status === 200) {
 				enqueueSnackbar("Revalidated pages!", {
 					action: (id) => revalidateAction(id, postId),
 					variant: "success",
@@ -620,7 +620,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 							sx={{
 								my: 1,
 								width: width,
-								opacity: data.title.trim() == "" && 0.3,
+								opacity: data.title.trim() == "" ? 0.3 : 1,
 								color:
 									data.title.length > OGDEFAULTS.titleOptimal
 										? data.title.length > OGDEFAULTS.titleMax
@@ -686,7 +686,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 															text: "Revert",
 															disabled: !props.post,
 															onClick: () => {
-																setData({ ...data, createdAt: props.post.createdAt });
+																setData({ ...data, createdAt: props.post!.createdAt });
 																setCreatedAtEditable(false);
 															},
 														},
@@ -776,7 +776,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 															text: "Set editable",
 															disabled: updatedAtEditable,
 															onClick: () => {
-																setData({ ...data, updatedAt: props.post.updatedAt || data.createdAt });
+																setData({ ...data, updatedAt: props.post!.updatedAt || data.createdAt });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(true);
 															},
@@ -785,7 +785,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 															text: "Revert",
 															disabled: !props.post,
 															onClick: () => {
-																setData({ ...data, updatedAt: props.post.updatedAt });
+																setData({ ...data, updatedAt: props.post!.updatedAt });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(false);
 															},
@@ -801,7 +801,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 															text: "Remove",
 															disabled: !props.post?.updatedAt,
 															onClick: () => {
-																setData({ ...data, updatedAt: null });
+																setData({ ...data, updatedAt: undefined });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(false);
 															},
@@ -948,7 +948,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																},
 															},
 															{
-																text: `Size: ${(data.ogImage.fileSize / 1024).toFixed(2)}kb`,
+																text: `Size: ${(data.ogImage.fileSize! / 1024).toFixed(2)}kb`,
 																disabled: true,
 																onClick: () => {},
 															},
@@ -962,8 +962,8 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																			ogImage: {
 																				...data.ogImage,
 																				src: DATA_DEFAULTS.ogImage,
-																				fileRef: null,
-																				fileSize: null,
+																				fileRef: undefined,
+																				fileSize: undefined,
 																			},
 																		});
 																		enqueueSnackbar(`Open Graph Image successfully deleted`, {
@@ -988,7 +988,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													// accept="image/*,video/*"
 													accept="image/*"
 													onChange={async (e) => {
-														const file = e.target.files[0];
+														const file = e.target.files && e.target.files[0];
 														const uploadResponse = await uploadImage(file, postId, "ogImage");
 														if (uploadResponse.hasOwnProperty("data")) {
 															const details = await imageDetailsApiFetcher(
@@ -1005,10 +1005,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																	width: details.width,
 																	blurhash: details.encoded,
 																	fileRef: uploadResponse.data.fileRef,
-																	fileSize: file.size,
+																	fileSize: file!.size,
 																},
 															});
-															enqueueSnackbar(`Open Graph Image uploaded (${(file.size / 1024).toFixed(2)}kb)`, {
+															enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
 																variant: "success",
 																preventDuplicate: true,
 															});
@@ -1152,7 +1152,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										sx={{ backgroundColor: theme.palette.primary.main }}
 										onKeyPress={(e) => {
 											if (e.key === "Enter") {
-												event.preventDefault();
+												event!.preventDefault();
 											}
 										}}
 										inputProps={{

@@ -1,3 +1,4 @@
+"use client";
 import { CheckCircle, RadioButtonUnchecked } from "@mui/icons-material";
 import { Box, Checkbox, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";

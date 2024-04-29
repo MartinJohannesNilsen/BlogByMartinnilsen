@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	if (req.method === "GET") {
 		try {
-			const data = await getDoc(doc(db, "administrative", "overview")).then((data) => data.data().values);
+			const data = await getDoc(doc(db, "administrative", "overview")).then((data) => data.data()!.values);
 
 			// Return all ids if query param published not present
 			let outputJson = {};

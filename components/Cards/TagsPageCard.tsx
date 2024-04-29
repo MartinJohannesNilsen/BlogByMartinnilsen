@@ -1,3 +1,4 @@
+"use client";
 import { AccessTime, CalendarMonth, Edit, Visibility } from "@mui/icons-material";
 import { Box, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
 import { FC } from "react";
@@ -81,7 +82,7 @@ export const TagsPageCard: FC<PostCardProps> = (props) => {
 						<Box flexGrow={1} />
 						<BlurHashHTMLImage
 							src={props.ogImage.src || DATA_DEFAULTS.ogImage}
-							blurhash={{ encoded: props.ogImage.blurhash }}
+							blurhash={{ encoded: props.ogImage.blurhash! }}
 							alt={'OpenGraph image for article titled "' + props.title + '"'}
 							style={{ borderRadius: 2, objectFit: "cover", width: xs ? 70 : 125, height: xs ? 70 : 82 }}
 						/>

@@ -1,3 +1,4 @@
+"use client";
 import { Close } from "@mui/icons-material";
 import { ButtonBase, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -12,7 +13,7 @@ import { TOCModalProps } from "../../types";
 
 export function extractHeaders(html: string) {
 	const regex = /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
-	const headings = [];
+	const headings: { type: string; id: string; text: string }[] = [];
 	let match;
 	while ((match = regex.exec(html))) {
 		headings.push({

@@ -23,6 +23,7 @@
 		"@editorjs/paragraph": "^2.11.3",
 		"@editorjs/quote": "^2.6.0",
 		"@editorjs/underline": "^1.1.0",
+		"@emotion/cache": "^11.11.0",
 		"@emotion/react": "^11.11.1",
 		"@emotion/styled": "^11.11.0",
 		"@giscus/react": "^2.3.0",
@@ -32,6 +33,7 @@
 		"@mui/base": "^5.0.0-beta.27",
 		"@mui/icons-material": "^5.15.2",
 		"@mui/material": "^5.14.19",
+		"@mui/material-nextjs": "^5.15.11",
 		"@mui/styles": "^5.14.19",
 		"@mui/x-data-grid": "^6.18.2",
 		"@react-spring/web": "^9.7.3",
@@ -43,6 +45,7 @@
 		"@types/react": "^18.2.41",
 		"@types/react-dom": "^18.2.17",
 		"@types/react-katex": "^3.0.3",
+		"@types/react-router-dom": "^5.3.3",
 		"@types/react-syntax-highlighter": "^15.5.10",
 		"@types/tinycolor2": "^1.4.6",
 		"@vercel/analytics": "^1.1.2",
@@ -66,7 +69,7 @@
 		"jquery": "^3.7.1",
 		"keen-slider": "^6.8.6",
 		"match-sorter": "^6.3.1",
-		"next": "^14.0.3",
+		"next": "^14.2.3",
 		"next-auth": "^4.24.5",
 		"next-seo": "^6.4.0",
 		"next-swagger-doc": "^0.4.0",
@@ -114,5 +117,8 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
+	},
+	"devDependencies": {
+		"eslint-config-next": "^14.2.2"
 	}
 }

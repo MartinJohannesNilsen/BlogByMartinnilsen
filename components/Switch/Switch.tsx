@@ -1,3 +1,4 @@
+"use client";
 import { styled } from "@mui/material";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import withStyles from "@mui/styles/withStyles";

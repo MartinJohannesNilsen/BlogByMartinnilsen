@@ -45,7 +45,7 @@ import Quote from "./BlockTools/Quote/tool";
 // import ImageOnPaste from "./BlockTools/ImageOnPaste/tool"; // TODO Trial at implementing SimpleImage, but focus on ImageBlock first
 import Image from "./BlockTools/ImageBlock/tool";
 
-export const EDITOR_JS_TOOLS = {
+export const EDITOR_JS_TOOLS: any = {
 	underline: { class: Underline, shortcut: "CMD+U" },
 	paragraph: {
 		class: Paragraph,

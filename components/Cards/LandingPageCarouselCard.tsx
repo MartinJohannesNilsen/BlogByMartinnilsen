@@ -1,6 +1,6 @@
+"use client";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import NextLink from "next/link";
 import { FC } from "react";
 import { isMobile } from "react-device-detect";
@@ -13,25 +13,19 @@ import { DATA_DEFAULTS } from "../SEO/SEO";
 export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const useStyles = makeStyles({
-		root: {
-			// transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-			width: "100%",
-			"&:hover": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			"&:active": {
-				backgroundColor: theme.palette.primary.light,
-			},
-			backgroundColor: theme.palette.primary.light,
-		},
-	});
-	const classes = useStyles();
 
 	return (
 		<Card
-			className={classes.root}
 			sx={{
+				// transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
+				width: "100%",
+				"&:hover": {
+					backgroundColor: theme.palette.primary.light,
+				},
+				"&:active": {
+					backgroundColor: theme.palette.primary.light,
+				},
+				backgroundColor: theme.palette.primary.light,
 				borderRadius: 4,
 				boxShadow: "none",
 			}}
@@ -49,7 +43,7 @@ export const LandingPageCarouselCard: FC<PostCardProps> = (props) => {
 				<CardMedia sx={{ height: xs ? 250 : 230 }}>
 					<BlurHashHTMLImage
 						src={props.ogImage.src || DATA_DEFAULTS.ogImage}
-						blurhash={{ encoded: props.ogImage.blurhash }}
+						blurhash={{ encoded: props.ogImage.blurhash! }}
 						alt={`OpenGraph image for post titled "${props.title}"`}
 						style={{
 							width: "100%",

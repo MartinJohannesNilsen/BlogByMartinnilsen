@@ -1,3 +1,4 @@
+"use client";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import NextLink from "next/link";
 import { useState } from "react";
@@ -166,7 +167,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 										: { backgroundColor: "transparent" },
 							})}
 						>
-							{props.data.code}
+							{props.data.code!}
 						</SyntaxHighlighter>
 					</Box>
 				</Box>
@@ -215,7 +216,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 										}}
 										onClick={() =>
 											handleButtonClick(
-												props.data.multiline ? props.data.code : props.data.code.replace(/(\r\n|\n|\r)/gm, "")
+												props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "")
 											)
 										}
 									>
@@ -236,7 +237,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							borderRadius: "10px 10px",
 						}}
 					>
-						{props.data.multiline ? props.data.code : props.data.code.replace(/(\r\n|\n|\r)/gm, "")}
+						{props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "")}
 					</SyntaxHighlighter>
 				</Box>
 			)}

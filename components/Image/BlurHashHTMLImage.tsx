@@ -1,3 +1,4 @@
+"use client";
 import { Box } from "@mui/material";
 import { CSSProperties } from "@mui/styles";
 import { useEffect, useState } from "react";
@@ -27,9 +28,9 @@ export const BlurHashImage = (props: BlurHashImageProps) => {
 			<Box style={{ display: !loaded ? "inline" : "none" }}>
 				<Blurhash
 					hash={props.blurhash.encoded}
-					width={props.blurhash.width || null}
-					height={props.blurhash.height || null}
-					punch={props.blurhash.punch || null}
+					width={props.blurhash.width || undefined}
+					height={props.blurhash.height || undefined}
+					punch={props.blurhash.punch || undefined}
 					style={props.style}
 				/>
 			</Box>

@@ -1,3 +1,4 @@
+"use client";
 import { ButtonBase, Tooltip, Typography } from "@mui/material";
 import { ButtonProps } from "../../types";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -7,21 +8,28 @@ import NextLink from "next/link";
 export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
 	const button = (
-		<ButtonBase LinkComponent={NextLink} aria-label={props.tooltip} onClick={props.onClick} href={props.href}>
-			<props.icon
-				sx={{
-					color: theme.palette.text.primary,
-					height: "30px",
-					width: "30px",
-					"&:focus-visible": {
-						color: theme.palette.secondary.main,
-					},
-					"&:hover": {
-						color: theme.palette.secondary.main,
-					},
-					...props.sxIcon,
-				}}
-			/>
+		<ButtonBase
+			LinkComponent={NextLink}
+			aria-label={props.tooltip}
+			onClick={props.onClick}
+			// href={props.href} //TODO fix
+		>
+			{props.icon && (
+				<props.icon
+					sx={{
+						color: theme.palette.text.primary,
+						height: "30px",
+						width: "30px",
+						"&:focus-visible": {
+							color: theme.palette.secondary.main,
+						},
+						"&:hover": {
+							color: theme.palette.secondary.main,
+						},
+						...props.sxIcon,
+					}}
+				/>
+			)}
 		</ButtonBase>
 	);
 	const outlineButton = (
@@ -29,7 +37,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 			LinkComponent={NextLink}
 			aria-label={props.tooltip}
 			onClick={props.onClick}
-			href={props.href}
+			// href={props.href} // TODO fix
 			disabled={props.disabled || false}
 			sx={{
 				p: 0.5,
@@ -90,7 +98,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 
 	return props.tooltip ? (
 		<Tooltip enterDelay={2000} title={props.tooltip}>
-			{props.variant === "outline" ? outlineButton : props.variant === "base" ? button : null}
+			{props.variant === "outline" ? outlineButton : props.variant === "base" ? button : <></>}
 		</Tooltip>
 	) : (
 		button

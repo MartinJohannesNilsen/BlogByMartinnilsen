@@ -1,3 +1,4 @@
+"use client";
 import { SvgIconTypeMap, SxProps, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { MutableRefObject } from "react";
@@ -61,7 +62,7 @@ export const ButtonBar = (props: ButtonBarProps) => {
 					}}
 					value=""
 					onClick={button.onClick}
-					href={button.href}
+					// href={button.href} // TODO fix
 				>
 					{button.icon && (
 						<button.icon

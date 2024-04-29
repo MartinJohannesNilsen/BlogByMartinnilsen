@@ -1,3 +1,4 @@
+"use client";
 import { Popper } from "@mui/base/Popper";
 import { DropdownContext, useDropdown } from "@mui/base/useDropdown";
 import { MenuProvider, useMenu } from "@mui/base/useMenu";

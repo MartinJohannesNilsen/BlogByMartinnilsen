@@ -1,3 +1,4 @@
+"use client";
 import { Close, Gradient, Square } from "@mui/icons-material";
 import { Box, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { withStyles } from "@mui/styles";
@@ -38,7 +39,7 @@ const defaultColors = [
 	{ title: "Pink", color: "#df487f" },
 	{ title: "Purple", color: "#ba68c8" },
 	{ title: "Teal", color: "#29939b" },
-	{ title: "Custom", color: null },
+	{ title: "Custom", color: undefined },
 ];
 
 const TransparentTooltip = withStyles({
@@ -51,7 +52,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 	const { theme, setTheme, setDefaultTheme, accentColor, setAccentColor, fontFamily, setFontFamily } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const [colorPickerOpen, setColorPickerOpen] = useState(false);
-	const [themeUserConfigurationExist, setThemeUserConfugurationExist] = useState(null);
+	const [themeUserConfigurationExist, setThemeUserConfigurationExist] = useState<boolean>();
 
 	const style = {
 		position: "absolute" as "absolute",
@@ -74,7 +75,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 	useEffect(() => {
 		// Check if localStorage is defined (only in the browser environment)
 		if (typeof window !== "undefined" && window.localStorage) {
-			setThemeUserConfugurationExist(localStorage.getItem("theme") !== null);
+			setThemeUserConfigurationExist(localStorage.getItem("theme") !== null);
 		}
 	}, [, theme]);
 

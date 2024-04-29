@@ -1,5 +1,5 @@
-import { Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+"use client";
+import { Box, styled, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
@@ -13,24 +13,19 @@ const maxWidth = 760;
 
 const CustomImage = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
-	const useStyles = makeStyles(() => ({
-		link: {
-			color: theme.palette.text.primary,
-			textDecoration: "none",
-			borderBottom: "2px solid " + colorLuminance(theme.palette.secondary.main, 0.15),
-			"&:hover": {
-				borderBottom: "2px solid " + theme.palette.secondary.main,
-			},
+	const StyledLink = styled("a")({
+		color: theme.palette.text.primary,
+		textDecoration: "none",
+		borderBottom: `2px solid ${colorLuminance(theme.palette.secondary.main, 0.15)}`,
+		"&:hover": {
+			borderBottom: `2px solid ${theme.palette.secondary.main}`,
 		},
-		imgStretched: {},
-	}));
-	const style = useStyles();
-
+	});
 	const [loaded, setLoaded] = useState(false);
 
 	useEffect(() => {
 		const img = new Image();
-		img.src = props.data.url;
+		img.src = props.data.url!;
 		img.onload = () => setLoaded(true);
 	}, [props.data.url]);
 
@@ -72,7 +67,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
 						maxHeight: props.data.withBackground ? (isMobile ? 215 : 400) : "none",
 						objectFit: "contain",
 					}}
-					src={props.data.url ? props.data.url : props.data.file.url ? props.data.file.url : ""}
+					src={props.data.url ? props.data.url : props.data.file!.url ? props.data.file!.url : ""}
 				/>
 			)}
 
@@ -86,8 +81,8 @@ const CustomImage = (props: EditorjsRendererProps) => {
 						dangerouslySetInnerHTML={{
 							__html: props.data.unsplash
 								? DOMPurify.sanitize(
-										props.data.caption! +
-											` 📷 <a class=${style.link} href="${props.data.unsplash?.profileLink}">${props.data.unsplash?.author}</a>`
+										props.data.caption! + ` 📷 ` +
+										<StyledLink href={props.data.unsplash?.profileLink}>{props.data.unsplash?.author}</StyledLink>
 								  )
 								: DOMPurify.sanitize(props.data.caption!),
 						}}
@@ -102,7 +97,7 @@ const CustomImage = (props: EditorjsRendererProps) => {
 						sx={{ opacity: 0.8 }}
 						dangerouslySetInnerHTML={{
 							__html: DOMPurify.sanitize(
-								`📷 <a class=${style.link} href="${props.data.unsplash?.profileLink}">${props.data.unsplash?.author}</a>`
+								`📷 ` + <StyledLink href={props.data.unsplash?.profileLink}>{props.data.unsplash?.author}</StyledLink>
 							),
 						}}
 					/>

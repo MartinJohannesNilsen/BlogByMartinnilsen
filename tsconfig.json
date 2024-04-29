@@ -17,15 +17,23 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", 
-    "lib/*", 
-    "lib/supabase-admin"
-, "components/Buttons/SearchNavbarButtontsx"  ],
+    "**/*.tsx",
+    "lib/*",
+    "lib/supabase-admin",
+    "components/Buttons/SearchNavbarButtontsx",
+    ".next/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

@@ -3,7 +3,7 @@ import { useMediaQuery } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { getPostsOverview } from "../../database/overview";
+import { getPostsOverview } from "../../data/db/firebase/overview";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TablePost } from "../../types";
 import { NavbarButton } from "../Buttons/NavbarButton";
@@ -19,7 +19,7 @@ const fetchPosts = async () => {
 const apiFetcher = async (url: RequestInfo) => {
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
 
 	// Fetch and return
 	const res: Response = await fetch(url, {

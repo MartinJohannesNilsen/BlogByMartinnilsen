@@ -1,3 +1,4 @@
+"use client";
 import { Close } from "@mui/icons-material";
 import { Button, IconButton, Tooltip, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -78,8 +79,6 @@ export const AboutModal = (props: ModalProps) => {
 								box: { my: 0 },
 								typography: { ...theme.typography.body2, fontWeight: 600 },
 							}}
-							config={null}
-							classNames={null}
 						/>
 						<CustomParagraph
 							data={{
@@ -89,8 +88,6 @@ export const AboutModal = (props: ModalProps) => {
 								box: { my: 1 },
 								typography: { ...theme.typography.body2, fontWeight: 600 },
 							}}
-							config={null}
-							classNames={null}
 						/>
 						{/* Services */}
 						<Toggle
@@ -117,8 +114,6 @@ export const AboutModal = (props: ModalProps) => {
 										box: { mt: -0.5, my: 0.5 },
 										typography: { ...theme.typography.body2, fontWeight: 600 },
 									}}
-									config={null}
-									classNames={null}
 								/>
 								<CustomParagraph
 									data={{
@@ -128,8 +123,6 @@ export const AboutModal = (props: ModalProps) => {
 										box: { my: 0.5 },
 										typography: { ...theme.typography.body2, fontWeight: 600 },
 									}}
-									config={null}
-									classNames={null}
 								/>
 								<CustomParagraph
 									data={{
@@ -139,8 +132,6 @@ export const AboutModal = (props: ModalProps) => {
 										box: { my: 0.5 },
 										typography: { ...theme.typography.body2, fontWeight: 600 },
 									}}
-									config={null}
-									classNames={null}
 								/>
 								<CustomParagraph
 									data={{
@@ -150,8 +141,6 @@ export const AboutModal = (props: ModalProps) => {
 										box: { my: 0.5 },
 										typography: { ...theme.typography.body2, fontWeight: 600 },
 									}}
-									config={null}
-									classNames={null}
 								/>
 							</>
 						</Toggle>
@@ -186,8 +175,6 @@ export const AboutModal = (props: ModalProps) => {
 											userSelect: "none",
 										},
 									}}
-									config={null}
-									classNames={null}
 								/>
 								<CustomParagraph
 									data={{
@@ -201,8 +188,6 @@ export const AboutModal = (props: ModalProps) => {
 											userSelect: "none",
 										},
 									}}
-									config={null}
-									classNames={null}
 								/>
 								<CustomParagraph
 									data={{
@@ -216,8 +201,6 @@ export const AboutModal = (props: ModalProps) => {
 											userSelect: "none",
 										},
 									}}
-									config={null}
-									classNames={null}
 								/>
 								<Tooltip
 									title="Cleared! Refresh browser to see changes"

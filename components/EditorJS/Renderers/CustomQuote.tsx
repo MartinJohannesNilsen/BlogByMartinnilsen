@@ -1,9 +1,10 @@
+"use client";
 import { IosShare } from "@mui/icons-material";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { useState } from "react";
 import { BiSolidQuoteRight } from "react-icons/bi";
-import { handleSharing } from "../../../pages/posts/[postId]";
+import { handleSharing } from "../../../pages/_posts/[postId]";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import { NavbarButton } from "../../Buttons/NavbarButton";

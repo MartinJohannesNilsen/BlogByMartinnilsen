@@ -1,5 +1,6 @@
-import { Box, Modal, useMediaQuery } from "@mui/material";
+"use client";
 import { FC } from "react";
+import { Box, Modal, useMediaQuery } from "@mui/material";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ModalProps } from "../../types";
 import PostTable from "../PostManagement/PostTable";

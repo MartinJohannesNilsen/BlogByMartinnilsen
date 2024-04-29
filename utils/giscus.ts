@@ -46,22 +46,22 @@ export interface IMetadataMessage {
 
 export type IReactionGroups = {
 	[key in keyof typeof Reactions]: {
-		count: number;
+		count?: number;
 		viewerHasReacted: boolean;
 	};
 };
 
 export interface IDiscussionData {
 	id: string;
-	url: string;
-	locked: boolean;
+	url?: string;
+	locked?: boolean;
 	repository: {
-		nameWithOwner: string;
+		nameWithOwner?: string;
 	};
-	reactionCount: number;
-	totalCommentCount: number;
-	totalReplyCount: number;
-	reactions: IReactionGroups;
+	reactionCount?: number;
+	totalCommentCount?: number;
+	totalReplyCount?: number;
+	reactions?: IReactionGroups;
 }
 
 export interface ISetConfigMessage {

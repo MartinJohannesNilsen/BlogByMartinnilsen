@@ -1,11 +1,11 @@
-import { Avatar, Box, Card, CardActions, CardContent, IconButton, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Avatar, Box, Card, CardContent, Typography, useMediaQuery } from "@mui/material";
 import { Session } from "next-auth";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
+import colors from "../../styles/colors";
 
 type AccountCard = {
-	session: Session;
+	session: Session | null;
 	isAuthorized: boolean;
 };
 
@@ -16,36 +16,40 @@ export const AccountCard: FC<AccountCard> = (props) => {
 	const [state, setState] = useState({
 		raised: false,
 	});
-	const useStyles = makeStyles({
-		root: {
-			transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
-			boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
-			width: "350px",
-		},
-		cardHovered: {
-			transform: xl ? "scale3d(1.02, 1.02, 1)" : lg ? "scale3d(1.04, 1.04, 1)" : "scale3d(1.03, 1.03, 1)",
-			width: "350px",
-		},
-		link: {
-			color: theme.palette.text.primary,
-			textDecoration: "none",
-			borderBottom: "2px solid " + theme.palette.secondary.main,
-		},
-	});
-	const classes = useStyles();
+	const [isLoading, setIsLoading] = useState<boolean>();
 
+	useEffect(() => {
+		if (theme) setIsLoading(false);
+	}, [theme]);
+
+	if (isLoading) return <></>;
 	return (
 		<Card
-			className={classes.root}
-			classes={{ root: state.raised ? classes.cardHovered : "" }}
+			sx={
+				state.raised
+					? {
+							boxackgroundColor: theme.palette.mode === "light" ? colors.white : colors.lightGrey,
+							transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
+							transform: xl ? "scale3d(1.02, 1.02, 1)" : lg ? "scale3d(1.04, 1.04, 1)" : "scale3d(1.03, 1.03, 1)",
+							boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
+							width: "350px",
+							padding: 2,
+					  }
+					: {
+							boxackgroundColor: theme.palette.mode === "light" ? colors.white : colors.lightGrey,
+							transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
+							boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
+							width: "350px",
+							padding: 2,
+					  }
+			}
 			onMouseOver={() => setState({ raised: true })}
 			onMouseOut={() => setState({ raised: false })}
-			sx={{ padding: 2 }}
 		>
 			<Box display="flex" justifyContent="center" alignItems="center" p={2}>
-				{props.session.user.image ? (
+				{props.session?.user?.image ? (
 					<Avatar sx={{ bgcolor: "black", width: "150px", height: "150px" }} src={props.session.user.image} />
-				) : props.session.user.name ? (
+				) : props.session?.user?.name ? (
 					<Avatar
 						sx={{
 							bgcolor: theme.palette.text.primary,
@@ -98,7 +102,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
 							WebkitBoxOrient: "vertical",
 						}}
 					>
-						{props.session.user.name}
+						{props.session?.user?.name}
 					</Typography>
 					<Typography
 						variant="body1"
@@ -112,7 +116,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
 							WebkitBoxOrient: "vertical",
 						}}
 					>
-						{props.session.user.email}
+						{props.session?.user?.email}
 					</Typography>
 					<Typography
 						variant="body1"

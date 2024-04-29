@@ -1,3 +1,4 @@
+"use client";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import { FC, useState } from "react";

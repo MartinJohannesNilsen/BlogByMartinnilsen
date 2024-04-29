@@ -1,3 +1,4 @@
+"use client";
 import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
@@ -6,11 +7,12 @@ import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import { NavbarButton } from "../../../Buttons/NavbarButton";
 import { deleteImage, uploadImage } from "../../../PostManagement/PostManagement";
 import { StyledTextField } from "../../../StyledMUI/TextInput";
+import { FullPost } from "../../../../types";
 
 export const imageDetailsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
 
 	// Fetch and return
 	const res: Response = await fetch(url, {
@@ -54,9 +56,9 @@ export const ImageBlock = (props: ImageProps) => {
 			// unsplash: null,
 		}
 	);
-	const [postId, setPostId] = useState(null);
+	const [postId, setPostId] = useState<string>();
 	const [urlfieldInputValue, setUrlfieldInputValue] = useState("");
-	const [uploadfieldInputValue, setUploadfieldInputValue] = useState(null);
+	const [uploadfieldInputValue, setUploadfieldInputValue] = useState<{ type: string; size: number }>();
 	const [deleteButtonVisible, setDeleteButtonVisible] = useState(false);
 
 	useEffect(() => {
@@ -64,7 +66,7 @@ export const ImageBlock = (props: ImageProps) => {
 		const lastSegment = pathSegments.pop(); // Gets the last segment
 
 		// Check if the last segment is not "create"
-		if (lastSegment.toLowerCase() !== "create") {
+		if (lastSegment!.toLowerCase() !== "create") {
 			setPostId(lastSegment); // Store the last segment in postId
 		} else {
 			setStateData({ ...stateData, type: "url" }); // Cannot upload to path with postId if postId not present
@@ -104,7 +106,7 @@ export const ImageBlock = (props: ImageProps) => {
 										padding: "3px 6px",
 									}}
 								>
-									{`${(stateData.fileSize / 1024).toFixed(2)}kb`}
+									{`${(stateData.fileSize! / 1024).toFixed(2)}kb`}
 								</Typography>
 								<NavbarButton
 									variant="outline"
@@ -114,8 +116,8 @@ export const ImageBlock = (props: ImageProps) => {
 											setStateData({
 												...stateData,
 												url: "",
-												fileRef: null,
-												fileSize: null,
+												fileRef: undefined,
+												fileSize: undefined,
 											});
 										} else {
 											enqueueSnackbar(`(${response.code}) ${response.reason}`, {
@@ -169,7 +171,7 @@ export const ImageBlock = (props: ImageProps) => {
 							size="small"
 							onKeyPress={(e) => {
 								if (e.key === "Enter") {
-									event.preventDefault();
+									e.preventDefault();
 								}
 							}}
 							inputProps={{
@@ -197,7 +199,7 @@ export const ImageBlock = (props: ImageProps) => {
 									setUrlfieldInputValue("");
 								} else {
 									setStateData({ ...stateData, type: "upload" });
-									setUrlfieldInputValue(null);
+									setUrlfieldInputValue("");
 								}
 							}}
 							disabled={!postId} // Can only have url if no postId present
@@ -233,7 +235,7 @@ export const ImageBlock = (props: ImageProps) => {
 									// accept="image/*"
 									style={{ marginLeft: 10 }}
 									onChange={(e) => {
-										setUploadfieldInputValue(e.target.files[0]);
+										setUploadfieldInputValue(e.target.files![0]);
 									}}
 								/>
 								<Box flexGrow={1} />
@@ -248,7 +250,7 @@ export const ImageBlock = (props: ImageProps) => {
 								size="small"
 								onKeyPress={(e) => {
 									if (e.key === "Enter") {
-										event.preventDefault();
+										e.preventDefault();
 									}
 								}}
 								inputProps={{
@@ -273,7 +275,7 @@ export const ImageBlock = (props: ImageProps) => {
 									// Check if response was ok and we got data, else error snackbar
 									if (uploadResponse.hasOwnProperty("data")) {
 										// Check if image, then fetch details and blurhash
-										if (uploadfieldInputValue.type.startsWith("image/")) {
+										if (uploadfieldInputValue!.type.startsWith("image/")) {
 											const details = await imageDetailsApiFetcher(
 												process.env.NEXT_PUBLIC_SERVER_URL +
 													"/editorjs/imageblurhash?url=" +
@@ -290,19 +292,19 @@ export const ImageBlock = (props: ImageProps) => {
 													type: "upload",
 													url: uploadResponse.data.url,
 													fileRef: uploadResponse.data.fileRef,
-													fileSize: uploadfieldInputValue.size,
+													fileSize: uploadfieldInputValue!.size,
 													blurhash: details.encoded,
 													height: details.height,
 													width: details.width,
 												});
 											}
-										} else if (uploadfieldInputValue.type.startsWith("video/")) {
+										} else if (uploadfieldInputValue!.type.startsWith("video/")) {
 											await setStateData({
 												...stateData,
 												type: "upload",
 												url: uploadResponse.data.url,
 												fileRef: uploadResponse.data.fileRef,
-												fileSize: uploadfieldInputValue.size,
+												fileSize: uploadfieldInputValue!.size,
 											});
 										}
 									} else {

@@ -1,3 +1,4 @@
+"use client";
 import { Info, LogoutRounded, PostAdd, Search, SettingsRounded, Tag } from "@mui/icons-material";
 import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";

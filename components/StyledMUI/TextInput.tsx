@@ -1,3 +1,4 @@
+"use client";
 import { Input as BaseInput, InputProps } from "@mui/base/Input";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import { TextField } from "@mui/material";

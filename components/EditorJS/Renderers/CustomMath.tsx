@@ -1,3 +1,4 @@
+"use client";
 import { Box } from "@mui/material";
 import { BlockMath } from "react-katex";
 import { useTheme } from "../../../styles/themes/ThemeProvider";

@@ -1,3 +1,4 @@
+"use client";
 import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import parse from "html-react-parser";
 import { CSSProperties, useState } from "react";

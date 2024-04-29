@@ -1,4 +1,5 @@
-import { Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+"use client";
+import { CssBaseline, Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import React, { createContext, useContext, useMemo, useState } from "react";
 import useDidUpdate from "../../utils/useDidUpdate";
 import { defaultAccentColor, defaultFontFamily } from "./themeDefaults";
@@ -43,7 +44,7 @@ type CustomThemeProviderProps = {
 	children: React.ReactNode;
 };
 
-const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
+export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ children }) => {
 	const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
 	const [fontFamily, _setFontFamily] = useState(
 		typeof window !== "undefined"
@@ -138,7 +139,10 @@ const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
 				setFontFamily,
 			}}
 		>
-			<ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				{children}
+			</ThemeProvider>
 		</ThemeContext.Provider>
 	);
 };

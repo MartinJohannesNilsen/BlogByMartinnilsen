@@ -1,3 +1,4 @@
+"use client";
 import { Box, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import ReactPlayer from "react-player/lazy";

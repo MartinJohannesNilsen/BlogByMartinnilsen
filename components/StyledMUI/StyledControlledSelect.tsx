@@ -1,8 +1,9 @@
-import * as React from "react";
-import { Select as BaseSelect, SelectProps, selectClasses, SelectRootSlotProps } from "@mui/base/Select";
+"use client";
 import { Option as BaseOption, optionClasses } from "@mui/base/Option";
+import { Select as BaseSelect, selectClasses, SelectProps, SelectRootSlotProps } from "@mui/base/Select";
+import { UnfoldMoreRounded } from "@mui/icons-material";
 import { styled } from "@mui/system";
-import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
+import * as React from "react";
 
 type SelectContentProps = {
 	value: any;
@@ -47,7 +48,7 @@ const CustomButton = React.forwardRef(function CustomButton(
 			}}
 		>
 			<span>{other.children}</span>
-			<UnfoldMoreRoundedIcon />
+			<UnfoldMoreRounded />
 		</button>
 	);
 });

@@ -1,3 +1,4 @@
+"use client";
 import { Box, Card, IconButton, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
@@ -65,8 +66,6 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 									WebkitBoxOrient: "vertical",
 								},
 							}}
-							classNames={null}
-							config={null}
 						/>
 					</Box>
 				</Card>
@@ -125,8 +124,6 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 										WebkitBoxOrient: "vertical",
 									},
 								}}
-								classNames={null}
-								config={null}
 							/>
 						</Box>
 					</Box>

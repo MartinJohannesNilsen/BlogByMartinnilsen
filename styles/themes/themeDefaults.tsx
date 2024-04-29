@@ -1,4 +1,5 @@
-import { checkboxClasses, createTheme, radioClasses } from "@mui/material";
+"use client";
+import { createTheme } from "@mui/material";
 
 export const defaultFontFamily = "Cabinet Grotesk";
 export const defaultAccentColor = { hex: "#e9b384", name: "Beige" };

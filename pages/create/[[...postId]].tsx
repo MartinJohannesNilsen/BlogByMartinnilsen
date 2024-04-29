@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import CreatePost from "../../components/PostManagement/PostManagement";
-import { getPost } from "../../database/posts";
+import { getPost } from "../../data/db/firebase/posts";
 import { FullPost } from "../../types";
 
 const ManageArticleView: FC = (props) => {
@@ -14,7 +14,7 @@ const ManageArticleView: FC = (props) => {
 					status: "authenticated",
 			  }
 			: useAuthorized(true);
-	const [post, setPost] = useState<FullPost>(null);
+	const [post, setPost] = useState<FullPost>();
 	const [isLoading, setIsLoading] = useState(true);
 	const router = useRouter();
 	const { postId } = router.query;
@@ -24,10 +24,10 @@ const ManageArticleView: FC = (props) => {
 		if (!postId || postId.length > 1) {
 			return setIsLoading(false);
 		}
-		const id = router.query.postId[0];
+		const id = router.query.postId![0];
 		getPost(id)
 			.then((data) => {
-				setPost(data);
+				setPost(data!);
 			})
 			.catch((error) => console.log(error));
 		return () => {};

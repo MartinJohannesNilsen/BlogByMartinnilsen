@@ -1,3 +1,4 @@
+"use client";
 import { Box, Card, Typography, useMediaQuery } from "@mui/material";
 import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -22,7 +23,7 @@ export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
 			<Box display="flex" width="100%" height="100%">
 				<BlurHashHTMLImage
 					src={props.ogImage.src}
-					blurhash={{ encoded: props.ogImage.blurhash }}
+					blurhash={{ encoded: props.ogImage.blurhash! }}
 					alt={`Image for the post titled "${props.title}"`}
 					style={{
 						width: props.height,

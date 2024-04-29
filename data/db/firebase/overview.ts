@@ -1,6 +1,6 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../lib/firebaseConfig";
-import { StoredPost } from "../types";
+import { db } from "../../../lib/firebaseConfig";
+import { StoredPost } from "../../../types";
 const db_document = "overview";
 
 const _sortListOfStoredPostsOnTimestamp = (data: StoredPost[], asc?: boolean) => {
@@ -19,7 +19,7 @@ export const _filterListOfStoredPostsOnPublished = (
 	} else if (filter === "unpublished") {
 		return data.filter((post) => !post.published);
 	} else if (filter === "saved") {
-		const saved = JSON.parse(localStorage.getItem("savedPosts"));
+		const saved = JSON.parse(localStorage.getItem("savedPosts")!);
 		return data.filter((post) => saved.includes(post.id) && post.published);
 	}
 	return data;

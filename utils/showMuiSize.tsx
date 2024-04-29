@@ -1,3 +1,4 @@
+"use client";
 import { Box, Breakpoint, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "../styles/themes/ThemeProvider";
 

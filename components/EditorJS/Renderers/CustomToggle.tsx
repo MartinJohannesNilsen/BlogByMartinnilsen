@@ -1,7 +1,8 @@
+"use client";
 import { Box } from "@mui/material";
 import Output from "editorjs-react-renderer";
 import { useMemo, useState } from "react";
-import { processJsonToggleBlocks, renderers } from "../../../pages/posts/[postId]";
+import { processJsonToggleBlocks, renderers } from "../../../pages/_posts/[postId]";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import Toggle from "../../Toggles/Toggle";
@@ -26,7 +27,7 @@ const CustomToggle = (props: EditorjsRendererProps) => {
 	return (
 		<Box my={1} display="flex" flexDirection="column" textAlign="center">
 			<Toggle
-				title={props.data.text}
+				title={props.data.text!}
 				open={open}
 				handleClick={handleChange}
 				boxSx={{ my: 0 }}
@@ -35,7 +36,7 @@ const CustomToggle = (props: EditorjsRendererProps) => {
 					border: theme.palette.mode === "dark" ? "none" : "1px solid" + theme.palette.grey[200],
 				}}
 			>
-				{OutputElement}
+				{OutputElement!}
 			</Toggle>
 		</Box>
 	);
