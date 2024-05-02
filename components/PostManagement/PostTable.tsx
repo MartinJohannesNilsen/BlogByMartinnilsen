@@ -57,7 +57,7 @@ export const PostTable = (props) => {
 			width: 100,
 			align: "center",
 			type: "date",
-			valueGetter: (params) => new Date(params.value), // Transforming string to Date object
+			valueGetter: (params: any) => new Date(params.value), // Transforming string to Date object
 		},
 		{
 			field: "updatedAt",
@@ -65,7 +65,7 @@ export const PostTable = (props) => {
 			width: 100,
 			align: "center",
 			type: "date",
-			valueGetter: (params) => params.value && new Date(params.value), // Transforming string to Date object
+			valueGetter: (params: any) => params.value && new Date(params.value), // Transforming string to Date object
 		},
 		{
 			field: "readTime",

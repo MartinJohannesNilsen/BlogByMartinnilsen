@@ -105,6 +105,16 @@ export type EditorjsRendererProps = {
 	config?: { disableDefaultStyle?: any };
 };
 
+export type SearchActionProps = {
+	title: string;
+	iconElement: JSX.Element;
+	keywords: string[];
+	onClick?: () => void;
+	href?: string;
+	requirement?: () => boolean;
+	id?: string;
+};
+
 export type SharePreviewCardProps = {
 	title: string;
 	description: string;
@@ -166,7 +176,10 @@ export type NavbarProps = {
 
 export type PostNavbarProps = {
 	post: FullPost & { id: string };
+	postOverview?: StoredPost[];
 	toc: { content: string; currentSection: string };
+	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
+	tocModal: { open: boolean; setOpen: (value: boolean) => void };
 	shareModal: { open: boolean; setOpen: (value: boolean) => void };
 	ref?: MutableRefObject<undefined>;
 	className?: string;
@@ -202,6 +215,7 @@ export type ProfileMenuProps = MenuProps & {
 	showNotificationsBadge?: boolean;
 	notifications?: ModalProps;
 	settings?: ModalProps;
+	about?: ModalProps;
 };
 
 // Modals
@@ -221,6 +235,7 @@ export type ShareModalProps = ModalProps & {
 };
 
 export type SearchModalProps = ModalProps & {
+	extraActions?: SearchActionProps[];
 	postsOverview?: StoredPost[];
 	handleSettingsModalOpen?: () => void;
 	handleNotificationsModalOpen?: () => void;
@@ -268,7 +283,7 @@ export type ButtonProps = {
 		| IconType;
 	text?: string;
 	onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
-	href?: string;
+	href?: string | undefined;
 	disabled?: boolean;
 	sxButton?: SxProps & {};
 	sxIcon?: SxProps & {};
@@ -283,16 +298,37 @@ export type ButtonProps = {
 	replace?: any;
 };
 
+export type NavigatorShareProps = {
+	url?: string; // The URL of the webpage you want to share
+	title?: string; // The title of the shared content, although may be ignored by the target
+	text: string; // The description or text to accompany the shared content
+	icon?: string; // URL of the image for the preview
+	fallback?: () => void; // Fallback method
+};
+
 // export type SearchButtonProps = ButtonProps;
 
-// View props types
-export type ManageArticleViewProps = {
+// Page types
+export type LandingPageProps = {};
+export type ReadPostPageProps = {
+	post: FullPost;
+	postId: string;
+	postOverview?: StoredPost[];
+	isAuthorized: boolean;
+};
+export type ManagePostPageProps = {
 	post?: FullPost;
 };
-export type ReadArticleViewProps = { post: FullPost; postId: string };
-// export type LandingPageProps = { posts: StoredPost[] };
-export type LandingPageProps = {};
-// export type TagsPageProps = {};
-export type TagsPageProps = { posts: StoredPost[]; tags: string[] };
-export type ListViewProps = {};
+export type AccountPageProps = {
+	sessionUser:
+		| {
+				name?: string | null | undefined;
+				email?: string | null | undefined;
+				image?: string | null | undefined;
+		  }
+		| undefined;
+	isAuthorized: boolean;
+	postOverview?: StoredPost[];
+};
+export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean };
 export type FooterProps = {};

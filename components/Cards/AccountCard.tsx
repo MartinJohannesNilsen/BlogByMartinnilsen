@@ -1,15 +1,20 @@
 import { Avatar, Box, Card, CardContent, Typography, useMediaQuery } from "@mui/material";
-import { Session } from "next-auth";
 import { FC, useEffect, useState } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import colors from "../../styles/colors";
 
 type AccountCard = {
-	session: Session | null;
+	sessionUser:
+		| {
+				name?: string | null | undefined;
+				email?: string | null | undefined;
+				image?: string | null | undefined;
+		  }
+		| undefined;
 	isAuthorized: boolean;
 };
 
-export const AccountCard: FC<AccountCard> = (props) => {
+export const AccountCard: FC<AccountCard> = ({ sessionUser, isAuthorized }) => {
 	const { theme } = useTheme();
 	const lg = useMediaQuery(theme.breakpoints.only("lg"));
 	const xl = useMediaQuery(theme.breakpoints.only("xl"));
@@ -47,9 +52,10 @@ export const AccountCard: FC<AccountCard> = (props) => {
 			onMouseOut={() => setState({ raised: false })}
 		>
 			<Box display="flex" justifyContent="center" alignItems="center" p={2}>
-				{props.session?.user?.image ? (
-					<Avatar sx={{ bgcolor: "black", width: "150px", height: "150px" }} src={props.session.user.image} />
-				) : props.session?.user?.name ? (
+				{/* Image, or first letter of name or anonymous */}
+				{sessionUser?.image ? (
+					<Avatar sx={{ bgcolor: "black", width: "150px", height: "150px" }} src={sessionUser.image} />
+				) : sessionUser?.name ? (
 					<Avatar
 						sx={{
 							bgcolor: theme.palette.text.primary,
@@ -58,7 +64,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
 						}}
 					>
 						<Typography variant="h3" fontWeight={500} color="textSecondary" fontFamily={theme.typography.fontFamily}>
-							{props.session.user.name
+							{sessionUser.name
 								.split(" ")
 								.map((n) => n[0])
 								.join("")
@@ -74,7 +80,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
 						}}
 					>
 						<Typography variant="h3" fontWeight={500} color="textSecondary" fontFamily={theme.typography.fontFamily}>
-							ANON
+							A
 						</Typography>
 					</Avatar>
 				)}
@@ -102,7 +108,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
 							WebkitBoxOrient: "vertical",
 						}}
 					>
-						{props.session?.user?.name}
+						{sessionUser?.name || "Anonymous Reader"}
 					</Typography>
 					<Typography
 						variant="body1"
@@ -116,7 +122,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
 							WebkitBoxOrient: "vertical",
 						}}
 					>
-						{props.session?.user?.email}
+						{sessionUser?.email}
 					</Typography>
 					<Typography
 						variant="body1"
@@ -128,7 +134,7 @@ export const AccountCard: FC<AccountCard> = (props) => {
 						mt={4}
 						mb={-1}
 					>
-						{props.isAuthorized ? "Wordsmith" : "Adventurer"}
+						{isAuthorized ? "Wordsmith" : "Adventurer"}
 					</Typography>
 				</Box>
 			</CardContent>

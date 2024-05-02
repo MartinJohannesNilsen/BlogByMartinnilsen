@@ -1,9 +1,9 @@
 "use client";
-import { Info, LogoutRounded, PostAdd, Search, SettingsRounded, Tag } from "@mui/icons-material";
+import { Info, LogoutRounded, PostAdd, RssFeed, Search, SettingsRounded, Tag } from "@mui/icons-material";
 import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -21,6 +21,7 @@ import SearchModal from "../Modals/SearchModal"; // For listening to hotkeys on 
 // const SearchModal = dynamic(() => import("../Modals/SearchModal"));
 const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
 const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
+const AboutModal = dynamic(() => import("../Modals/AboutModal"));
 
 export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	const { theme, setTheme } = useTheme();
@@ -31,6 +32,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					status: "authenticated",
 			  }
 			: useAuthorized();
+	const pathname = usePathname();
 	// ProfileMenu
 	const [anchorElProfileMenu, setAnchorElProfileMenu] = useState<null | HTMLElement>(null);
 	const openProfileMenu = Boolean(anchorElProfileMenu);
@@ -77,15 +79,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 	};
 
 	// Account page navbar
-	if (!props.posts) {
-		const AboutModal = dynamic(() => import("../Modals/AboutModal"));
+	if (pathname === "/account") {
 		return (
 			<Box
 				className={props.className}
 				ref={props.ref}
 				width={"100%"}
-				pt={isMobile ? 4.75 : 1.5}
-				pb={isMobile ? 0.75 : 1.5}
+				pt={isMobile ? 4.75 : 1}
+				pb={isMobile ? 0.75 : 1}
 				position={"fixed"}
 				display="flex"
 				alignItems="center"
@@ -107,25 +108,31 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					}}
 				>
 					{/* Home button */}
-					<Link
-						component={NextLink}
-						href="/"
+					<ButtonBase
+						LinkComponent={NextLink}
+						onClick={() => handleNavigate("/")}
+						disableRipple
 						sx={{
+							border: "1px solid transparent",
+							p: "2px 8px",
+							borderRadius: "8px",
+							transition: "box-shadow 0.3s ease",
 							display: "flex",
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
 							color: theme.palette.text.secondary,
 							"&:focus-visible": {
-								// color: theme.palette.secondary.main,
-								color: theme.palette.text.secondary + "BB",
+								backgroundColor: theme.palette.primary.contrastText,
+								border: "1px solid" + theme.palette.grey[theme.palette.mode === "dark" ? 300 : 200],
+								boxShadow: "0 0 8px 10px" + theme.palette.text.secondary + "20", // Adjust the color and size as needed
 							},
 							"&:hover": {
-								// color: theme.palette.secondary.main,
-								color: theme.palette.text.secondary + "BB",
+								backgroundColor: theme.palette.primary.contrastText,
+								border: "1px solid" + theme.palette.grey[theme.palette.mode === "dark" ? 300 : 200],
+								boxShadow: "0 0 8px 10px" + theme.palette.text.secondary + "20", // Adjust the color and size as needed
 							},
 						}}
-						underline="none"
 					>
 						<MenuIcon
 							alt="Website logo"
@@ -145,48 +152,180 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 						>
 							Blog
 						</Typography>
-					</Link>
+					</ButtonBase>
 					<Box flexGrow={100} />
 					<Box display="flex" flexDirection="row">
-						<Box mr={1}>
+						<Box mr={0.5}>
 							<NavbarButton
-								variant="base"
-								onClick={handleSettingsModalOpen}
-								icon={SettingsRounded}
-								tooltip="Open settings"
-								sxIcon={{
+								variant="outline"
+								href="/tags"
+								icon={Tag}
+								tooltip="Go to tags"
+								sxIcon={{}}
+								sxButton={{
 									color: theme.palette.text.secondary,
-									height: "28px",
-									width: "28px",
+									backgroundColor: "inherit",
+									border:
+										"1px solid " + (theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[400]),
+									"&:focus-visible": {
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+									"&:hover": {
+										color: theme.palette.secondary.main,
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
 								}}
 							/>
 						</Box>
-						<Box mr={1}>
+						<Box mr={0.5}>
 							<NavbarButton
-								variant="base"
+								variant="outline"
+								onClick={handleSearchModalOpen}
+								icon={Search}
+								tooltip="Search"
+								sxIcon={{}}
+								sxButton={{
+									color: theme.palette.text.secondary,
+									backgroundColor: "inherit",
+									border:
+										"1px solid " + (theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[400]),
+									"&:focus-visible": {
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+									"&:hover": {
+										color: theme.palette.secondary.main,
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+								}}
+							/>
+						</Box>
+						<Box mr={0.5}>
+							<NavbarButton
+								variant="outline"
+								onClick={handleSettingsModalOpen}
+								icon={SettingsRounded}
+								tooltip="Open settings"
+								sxIcon={{}}
+								sxButton={{
+									color: theme.palette.text.secondary,
+									backgroundColor: "inherit",
+									border:
+										"1px solid " + (theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[400]),
+									"&:focus-visible": {
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+									"&:hover": {
+										color: theme.palette.secondary.main,
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+								}}
+							/>
+						</Box>
+						<Box mr={0.5}>
+							<NavbarButton
+								variant="outline"
 								onClick={handleAboutModalOpen}
 								icon={Info}
 								tooltip="Open about"
-								sxIcon={{
+								sxIcon={{}}
+								sxButton={{
 									color: theme.palette.text.secondary,
-									height: "28px",
-									width: "28px",
+									backgroundColor: "inherit",
+									border:
+										"1px solid " + (theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[400]),
+									"&:focus-visible": {
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+									"&:hover": {
+										color: theme.palette.secondary.main,
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+								}}
+							/>
+						</Box>
+						<Box mr={0.5}>
+							<NavbarButton
+								variant="outline"
+								onClick={() => (window.location.href = "/feed/rss.xml")}
+								icon={RssFeed}
+								tooltip="Subscribe"
+								sxIcon={{}}
+								sxButton={{
+									color: theme.palette.text.secondary,
+									backgroundColor: "inherit",
+									border:
+										"1px solid " + (theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[400]),
+									"&:focus-visible": {
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
+									"&:hover": {
+										color: theme.palette.secondary.main,
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+									},
 								}}
 							/>
 						</Box>
 						{status === "authenticated" && (
 							<Box>
 								<NavbarButton
-									variant="base"
+									variant="outline"
 									onClick={() => {
 										userSignOut("/", true);
 									}}
 									icon={LogoutRounded}
 									tooltip="Sign out"
-									sxIcon={{
+									sxIcon={{}}
+									sxButton={{
 										color: theme.palette.text.secondary,
-										height: "28px",
-										width: "28px",
+										backgroundColor: "inherit",
+										border:
+											"1px solid " +
+											(theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[400]),
+										"&:focus-visible": {
+											border:
+												"1px solid " +
+												(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+											backgroundColor:
+												theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+										},
+										"&:hover": {
+											color: theme.palette.secondary.main,
+											border:
+												"1px solid " +
+												(theme.palette.mode === "light" ? theme.palette.grey[600] : theme.palette.grey[300]),
+											backgroundColor:
+												theme.palette.mode === "light" ? theme.palette.grey[800] : theme.palette.grey[50],
+										},
 									}}
 								/>
 							</Box>
@@ -195,6 +334,22 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				</Box>
 
 				{/* Modals */}
+				<SearchModal
+					open={openSearchModal}
+					handleModalOpen={handleSearchModalOpen}
+					handleModalClose={handleSearchModalClose}
+					postsOverview={props.posts}
+					handleSettingsModalOpen={handleSettingsModalOpen}
+					handleNotificationsModalOpen={handleNotificationsModalOpen}
+					notificationsBadgeVisible={visibleBadgeNotifications}
+					setCardLayout={props.setCardLayout}
+					onOpen={() => {
+						handleSettingsModalClose();
+						handleNotificationsModalClose();
+						handleProfileMenuClose();
+						handleAboutModalClose();
+					}}
+				/>
 				<SettingsModal
 					open={openSettingsModal}
 					handleModalOpen={handleSettingsModalOpen}
@@ -215,15 +370,14 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 			</Box>
 		);
 	}
-
 	// Default navbar
 	return (
 		<Box
 			className={props.className}
 			ref={props.ref}
 			width={"100%"}
-			pt={isMobile ? 4.75 : 1.5}
-			pb={isMobile ? 0.75 : 1.5}
+			pt={isMobile ? 4.75 : 1}
+			pb={isMobile ? 0.75 : 1}
 			position={"fixed"}
 			display="flex"
 			alignItems="center"
@@ -253,18 +407,24 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					onClick={() => handleNavigate("/")}
 					disableRipple
 					sx={{
+						border: "1px solid transparent",
+						p: "2px 8px",
+						borderRadius: "8px",
+						transition: "box-shadow 0.3s ease",
 						display: "flex",
 						flexDirection: "row",
 						justifyContent: "center",
 						alignItems: "center",
 						color: theme.palette.text.primary,
 						"&:focus-visible": {
-							// color: theme.palette.secondary.main,
-							color: theme.palette.text.primary + "BB",
+							backgroundColor: theme.palette.primary.main,
+							border: "1px solid" + theme.palette.text.primary,
+							boxShadow: "0 0 8px 10px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 						},
 						"&:hover": {
-							// color: theme.palette.secondary.main,
-							color: theme.palette.text.primary + "BB",
+							backgroundColor: theme.palette.primary.main,
+							border: "1px solid" + theme.palette.text.primary,
+							boxShadow: "0 0 8px 10px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 						},
 					}}
 				>
@@ -294,8 +454,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							onClick={() => {
 								handleNavigate("/create");
 							}}
-							// TODO This seem to be a problem
-							// href="/create"
+							href="/create"
 							icon={PostAdd}
 							tooltip="Upload new post"
 							sxButton={{
@@ -384,6 +543,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							handleModalOpen: handleSettingsModalOpen,
 							handleModalClose: handleSettingsModalClose,
 						}}
+						about={{
+							open: openAboutModal,
+							handleModalOpen: handleAboutModalOpen,
+							handleModalClose: handleAboutModalClose,
+						}}
 					/>
 				</Box>
 			</Box>
@@ -402,7 +566,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 					handleSettingsModalClose();
 					handleNotificationsModalClose();
 					handleProfileMenuClose();
-					// handleAboutModalClose();
+					handleAboutModalClose();
 				}}
 			/>
 			<SettingsModal
@@ -416,6 +580,11 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 				handleModalOpen={handleNotificationsModalOpen}
 				handleModalClose={handleNotificationsModalClose}
 				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
+			/>
+			<AboutModal
+				open={openAboutModal}
+				handleModalOpen={handleAboutModalOpen}
+				handleModalClose={handleAboutModalClose}
 			/>
 		</Box>
 	);

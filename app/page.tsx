@@ -47,7 +47,7 @@ const LandingPage: FC<LandingPageProps> = () => {
 	const boxRef = useRef(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
-	const [cardLayout, setCardLayout] = useStickyState("cardLayout", mdDown ? "grid" : "plain");
+	const [cardLayout, setCardLayout] = useStickyState("cardLayout", "plain");
 	const [page, setPage] = useState(1);
 	const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>();
 	const [posts, setPosts] = useState<StoredPost[]>();

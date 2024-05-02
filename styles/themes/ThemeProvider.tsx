@@ -4,6 +4,7 @@ import React, { createContext, useContext, useMemo, useState } from "react";
 import useDidUpdate from "../../utils/useDidUpdate";
 import { defaultAccentColor, defaultFontFamily } from "./themeDefaults";
 import { ThemeEnum, themeCreator } from "./themeMap";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting
@@ -139,10 +140,12 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ childr
 				setFontFamily,
 			}}
 		>
-			<ThemeProvider theme={theme}>
-				<CssBaseline />
-				{children}
-			</ThemeProvider>
+			<AppRouterCacheProvider options={{ key: "mui" }}>
+				<ThemeProvider theme={theme}>
+					<CssBaseline /> {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+					{children}
+				</ThemeProvider>
+			</AppRouterCacheProvider>
 		</ThemeContext.Provider>
 	);
 };

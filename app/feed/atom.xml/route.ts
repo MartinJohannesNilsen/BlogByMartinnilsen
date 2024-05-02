@@ -1,5 +1,5 @@
 import { getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
-import { generateFeed } from "../rss.xml/route";
+import { generateFeed } from "../../../utils/generateFeed";
 
 export async function GET() {
 	const posts = await getCachedPublishedDescendingPostsOverview();

@@ -43,23 +43,24 @@ import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { SearchModalProps, StoredPost } from "../../types";
+import { SearchActionProps, SearchModalProps, StoredPost } from "../../types";
 import { userSignOut } from "../../utils/signOut";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import NextLink from "next/link";
 
-type ActionProps = {
-	title: string;
-	iconElement: JSX.Element;
-	keywords: string[];
-	onClick?: () => void;
-	href?: string;
-	requirement?: () => boolean;
-	id?: string;
-};
-
-export const SearchModal = (props: SearchModalProps) => {
+export const SearchModal = ({
+	open,
+	handleModalOpen,
+	handleModalClose,
+	extraActions,
+	postsOverview,
+	handleSettingsModalOpen,
+	handleNotificationsModalOpen,
+	notificationsBadgeVisible,
+	setCardLayout,
+	onOpen,
+}: SearchModalProps) => {
 	const { theme, setTheme, setDefaultTheme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
@@ -71,7 +72,7 @@ export const SearchModal = (props: SearchModalProps) => {
 	const [maxNumberOfItems, setMaxNumberOfItems] = useState(0);
 	const [activeItem, setActiveItem] = useState(isMobile ? -1 : 0);
 	const [matchedPosts, setMatchedPosts] = useState<StoredPost[]>([]);
-	const [matchedActions, setMatchedActions] = useState<ActionProps[]>([]);
+	const [matchedActions, setMatchedActions] = useState<SearchActionProps[]>([]);
 	const { isAuthorized, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
 			? {
@@ -80,7 +81,7 @@ export const SearchModal = (props: SearchModalProps) => {
 			  }
 			: useAuthorized(false);
 	const [isActions, setIsActions] = useState<boolean>(false);
-	const actions: ActionProps[] = [
+	let actions: SearchActionProps[] = [
 		{
 			title: "Go to landing page",
 			// href: "/",
@@ -135,21 +136,21 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Open settings",
 			onClick: () => {
-				props.handleSettingsModalOpen && props.handleSettingsModalOpen();
+				handleSettingsModalOpen && handleSettingsModalOpen();
 			},
 			keywords: ["settings", "configure", "tune", "accent", "color", "mode", "light", "dark", "font"],
 			iconElement: <Settings sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return props.handleSettingsModalOpen != null;
+				return handleSettingsModalOpen != null;
 			},
 		},
 		{
 			title: "Open notifications",
 			onClick: () => {
-				props.handleNotificationsModalOpen && props.handleNotificationsModalOpen();
+				handleNotificationsModalOpen && handleNotificationsModalOpen();
 			},
 			keywords: ["notifications", "messages"],
-			iconElement: props.notificationsBadgeVisible ? (
+			iconElement: notificationsBadgeVisible ? (
 				<Badge color="secondary" variant="dot" invisible={false} overlap="circular" badgeContent=" ">
 					<Notifications sx={{ color: theme.palette.text.primary }} />
 				</Badge>
@@ -157,7 +158,7 @@ export const SearchModal = (props: SearchModalProps) => {
 				<Notifications sx={{ color: theme.palette.text.primary }} />
 			),
 			requirement: () => {
-				return props.handleNotificationsModalOpen != null;
+				return handleNotificationsModalOpen != null;
 			},
 		},
 		{
@@ -218,48 +219,51 @@ export const SearchModal = (props: SearchModalProps) => {
 		{
 			title: "Layout: Switch to carousel view",
 			onClick: () => {
-				props.setCardLayout && props.setCardLayout("carousel");
+				setCardLayout && setCardLayout("carousel");
 			},
 			keywords: ["layout", "carousel", "view", "cards"],
 			iconElement: <ViewWeekSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return props.setCardLayout != null;
+				return setCardLayout != null;
 			},
 		},
 		{
 			title: "Layout: Switch to swipe view",
 			onClick: () => {
-				props.setCardLayout && props.setCardLayout("swipe");
+				setCardLayout && setCardLayout("swipe");
 			},
 			keywords: ["layout", "swipe", "view", "cards"],
 			iconElement: <ViewCarousel sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return props.setCardLayout != null;
+				return setCardLayout != null;
 			},
 		},
 		{
 			title: "Layout: Switch to grid view",
 			onClick: () => {
-				props.setCardLayout && props.setCardLayout("grid");
+				setCardLayout && setCardLayout("grid");
 			},
 			keywords: ["layout", "grid", "view", "cards"],
 			iconElement: <GridViewSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return props.setCardLayout != null;
+				return setCardLayout != null;
 			},
 		},
 		{
 			title: "Layout: Switch to list view",
 			onClick: () => {
-				props.setCardLayout && props.setCardLayout("list");
+				setCardLayout && setCardLayout("list");
 			},
 			keywords: ["layout", "list", "view", "cards"],
 			iconElement: <TableRowsSharp sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return props.setCardLayout != null;
+				return setCardLayout != null;
 			},
 		},
 	];
+	if (extraActions) {
+		actions = [...actions, ...extraActions];
+	}
 
 	// Animation
 	const [isPulsating, setIsPulsating] = useState(false);
@@ -306,7 +310,7 @@ export const SearchModal = (props: SearchModalProps) => {
 				setMatchedPosts([]);
 				setMaxNumberOfItems(0);
 			} else {
-				const bestMatch = matchSorter(props.postsOverview!, textFieldValue, {
+				const bestMatch = matchSorter(postsOverview!, textFieldValue, {
 					keys: ["title", "description", "type", "keywords", "tags"],
 				});
 				const min = Math.min(bestMatch.length, Number(process.env.NEXT_PUBLIC_SEARCH_MAX_RESULTS));
@@ -318,20 +322,20 @@ export const SearchModal = (props: SearchModalProps) => {
 		return () => {};
 	}, [textFieldValue]);
 
-	props.onOpen &&
+	onOpen &&
 		useEffect(() => {
-			if (props.open && props.onOpen) props.onOpen();
+			if (open && onOpen) onOpen();
 			const currentTextField: any = textFieldRef.current;
 			if (currentTextField) {
 				currentTextField.focus();
 			}
 			return () => {};
-		}, [props.open, isActions]);
+		}, [open, isActions]);
 
 	// Hotkeys
 	useHotkeys(["Control+k", "Meta+k"], (event) => {
 		event.preventDefault();
-		props.handleModalClose();
+		handleModalClose();
 	});
 	useHotkeys(
 		"ArrowUp",
@@ -350,7 +354,7 @@ export const SearchModal = (props: SearchModalProps) => {
 	useHotkeys(
 		"Enter",
 		() => {
-			props.handleModalClose();
+			handleModalClose();
 			setTextFieldValue("");
 			if (isActions) {
 				handleEnterClickActions();
@@ -392,8 +396,8 @@ export const SearchModal = (props: SearchModalProps) => {
 	return (
 		<Box>
 			<Modal
-				open={props.open}
-				onClose={props.handleModalClose}
+				open={open}
+				onClose={handleModalClose}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
 				disableAutoFocus
@@ -503,7 +507,7 @@ export const SearchModal = (props: SearchModalProps) => {
 									onKeyDown={(e) => {
 										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
 											e.preventDefault();
-											props.handleModalClose();
+											handleModalClose();
 										} else if (e.key === "ArrowUp") {
 											e.preventDefault();
 											setActiveItem(Math.max(0, activeItem - 1));
@@ -511,7 +515,7 @@ export const SearchModal = (props: SearchModalProps) => {
 											e.preventDefault();
 											setActiveItem(Math.min(maxNumberOfItems - 1, activeItem + 1));
 										} else if (e.key === "Enter") {
-											props.handleModalClose();
+											handleModalClose();
 											setTextFieldValue("");
 											if (isActions) {
 												handleEnterClickActions();
@@ -540,7 +544,7 @@ export const SearchModal = (props: SearchModalProps) => {
 							{isActions ? (
 								// <List sx={{ paddingY: 0, maxHeight: 297, overflowY: "scroll" }}>
 								<List sx={{ paddingY: 0 }}>
-									{matchedActions!.map((action: ActionProps, index: number) => (
+									{matchedActions!.map((action: SearchActionProps, index: number) => (
 										<ListItem
 											key={index}
 											sx={{
@@ -590,7 +594,7 @@ export const SearchModal = (props: SearchModalProps) => {
 												component="a"
 												href={action.href}
 												onClick={() => {
-													props.handleModalClose();
+													handleModalClose();
 													setTextFieldValue("");
 													handleEnterClickActions();
 												}}
@@ -643,7 +647,7 @@ export const SearchModal = (props: SearchModalProps) => {
 									))}
 								</List>
 							) : (
-								props.postsOverview && (
+								postsOverview && (
 									<List sx={{ paddingY: 0 }}>
 										{matchedPosts!.map((post: StoredPost, index: number) => (
 											<ListItem
@@ -695,7 +699,7 @@ export const SearchModal = (props: SearchModalProps) => {
 													component="a"
 													href={`/posts/${post.id}`}
 													onClick={() => {
-														props.handleModalClose();
+														handleModalClose();
 														setTextFieldValue("");
 														if (isMobile) setActiveItem(-1);
 													}}

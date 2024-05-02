@@ -1,10 +1,11 @@
 "use client";
-import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, MenuBook } from "@mui/icons-material";
+import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, Search } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
+import { useHotkeys } from "react-hotkeys-hook";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Menus/ProfileMenu";
@@ -12,9 +13,12 @@ import { extractHeaders } from "../../components/Modals/TOCModal";
 import { DATA_DEFAULTS } from "../../components/SEO/SEO";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { PostNavbarProps } from "../../types";
+import { PostNavbarProps, SearchActionProps } from "../../types";
+import { handleSharing } from "../../utils/handleSharing";
 import useStickyState from "../../utils/useStickyState";
+import NavbarSearchButton from "../Buttons/NavbarSearchButton";
 import { MenuIcon } from "../Icons/MenuIcon";
+import SearchModal from "../Modals/SearchModal";
 // Modals can be dynamically imported
 const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
 const TOCModal = dynamic(() => import("../Modals/TOCModal"));
@@ -44,8 +48,15 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 	};
 
 	// Modals
-	const [openTOCModal, setOpenTOCModal] = useState(false);
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
+	// SearchModal
+	const [openSearchModal, setOpenSearchModal] = useState(false);
+	const handleSearchModalOpen = () => setOpenSearchModal(true);
+	const handleSearchModalClose = () => setOpenSearchModal(false);
+	useHotkeys(["Control+k", "Meta+k"], (event) => {
+		event.preventDefault();
+		handleSearchModalOpen();
+	});
 
 	// ProfileMenu
 	const [anchorElProfileMenu, setAnchorElProfileMenu] = useState<null | HTMLElement>(null);
@@ -76,6 +87,23 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 		}
 		return () => {};
 	}, [, savedPosts]);
+
+	const extraActions: SearchActionProps[] = [
+		{
+			title: "Share post",
+			keywords: ["share", "post", "send", "twitter", "facebook", "message"],
+			iconElement: <IosShareOutlined sx={{ color: theme.palette.text.primary }} />,
+			onClick: () => {
+				handleSharing({
+					url: typeof window !== "undefined" ? window.location.href : "",
+					title: props.post.title,
+					text: "",
+					icon: props.post.ogImage.src || DATA_DEFAULTS.ogImage,
+					fallback: () => props.shareModal.setOpen(true),
+				});
+			},
+		},
+	];
 
 	return (
 		<>
@@ -149,26 +177,22 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 							/>
 						)}
 						<Box ml={0.5} mr={0.1}>
-							{props.toc.content ? (
-								<NavbarButton
-									variant="outline"
-									onClick={() => setOpenTOCModal(true)}
-									icon={MenuBook}
-									tooltip="Open table of contents"
-									sxButton={{
-										minWidth: "34px",
-										minHeight: "34px",
-										height: "34px",
-										width: "34px",
-									}}
-									sxIcon={{
-										height: "20px",
-										width: "24px",
-									}}
-								/>
-							) : (
-								<Box sx={{ width: "34px" }} />
-							)}
+							<NavbarButton
+								icon={Search}
+								variant="outline"
+								onClick={handleSearchModalOpen}
+								tooltip={"Search"}
+								sxButton={{
+									height: "34px",
+									width: "34px",
+									backgroundColor: theme.palette.primary.main + "99",
+									color: theme.palette.text.primary,
+								}}
+								sxIcon={{
+									height: "24px",
+									width: "24px",
+								}}
+							/>
 						</Box>
 						<Box flexGrow={100} />
 						<Typography
@@ -272,9 +296,9 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 					alignItems="center"
 					width={"100%"}
 					px={3}
-					pt={1.5}
-					pb={1.5}
-					position={"sticky"}
+					pt={1}
+					pb={1}
+					position={"fixed"}
 					sx={{
 						top: 0,
 						backgroundColor: isMobile ? theme.palette.primary.main : theme.palette.primary.main + "CC",
@@ -296,23 +320,31 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						onClick={() => handleNavigate("/")}
 						disableRipple
 						sx={{
+							border: "1px solid transparent",
+							p: "2px 8px",
+							borderRadius: "8px",
+							transition: "box-shadow 0.3s ease",
 							display: "flex",
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
 							color: theme.palette.text.primary,
 							"&:focus-visible": {
-								color: theme.palette.text.primary + "AA",
+								backgroundColor: theme.palette.primary.main,
+								border: "1px solid" + theme.palette.text.primary,
+								boxShadow: "0 0 8px 10px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 							},
 							"&:hover": {
-								color: theme.palette.text.primary + "AA",
+								backgroundColor: theme.palette.primary.main,
+								border: "1px solid" + theme.palette.text.primary,
+								boxShadow: "0 0 8px 10px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 							},
 						}}
 					>
 						<MenuIcon
 							alt="Website logo"
-							width={22}
-							height={22}
+							width={20}
+							height={20}
 							fill={theme.palette.text.primary}
 							style={{ fillRule: "evenodd" }}
 						/>
@@ -321,7 +353,7 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 							fontFamily={theme.typography.fontFamily}
 							color="inherit"
 							fontWeight={700}
-							fontSize={22}
+							fontSize={20}
 							textAlign="left"
 							pl={0.5}
 						>
@@ -329,7 +361,9 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 						</Typography>
 					</ButtonBase>
 					<Box flexGrow={100} />
+					{/* Right section */}
 					<Box display="flex">
+						{/* Edit */}
 						{isAuthorized && (
 							<NavbarButton
 								variant="outline"
@@ -350,10 +384,12 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 								}}
 							/>
 						)}
-						{props.toc.content && (
+
+						{/* TOC */}
+						{/* {props.toc.content && (
 							<NavbarButton
 								variant="outline"
-								onClick={() => setOpenTOCModal(true)}
+								onClick={() => props.tocModal.setOpen(true)}
 								icon={MenuBook}
 								tooltip="Open table of contents"
 								sxButton={{
@@ -366,7 +402,45 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 									width: "24px",
 								}}
 							/>
-						)}
+						)} */}
+
+						{/* Search */}
+						<Box ml={0.5}>
+							{xs ? (
+								<NavbarButton
+									icon={Search}
+									variant="outline"
+									onClick={handleSearchModalOpen}
+									tooltip={"Search"}
+									sxButton={{
+										height: "34px",
+										width: "34px",
+										backgroundColor: theme.palette.primary.main + "99",
+										color: theme.palette.text.primary,
+									}}
+									sxIcon={{
+										height: "24px",
+										width: "24px",
+									}}
+								/>
+							) : (
+								<NavbarSearchButton
+									variant="outline"
+									onClick={handleSearchModalOpen}
+									tooltip={"Search"}
+									sxButton={{
+										height: "34px",
+										backgroundColor: theme.palette.primary.main + "99",
+										color: theme.palette.text.primary,
+									}}
+									sxIcon={{
+										height: "24px",
+										width: "24px",
+									}}
+								/>
+							)}
+						</Box>
+
 						{/* Saved */}
 						<Box ml={0.5}>
 							<NavbarButton
@@ -431,6 +505,28 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 			)}
 
 			{/* Modals */}
+			{/* Search */}
+			{props.postOverview && (
+				<SearchModal
+					open={openSearchModal}
+					handleModalOpen={handleSearchModalOpen}
+					handleModalClose={handleSearchModalClose}
+					postsOverview={props.postOverview}
+					handleSettingsModalOpen={() => setOpenSettingsModal(true)}
+					handleNotificationsModalOpen={handleNotificationsModalOpen}
+					notificationsBadgeVisible={visibleBadgeNotifications}
+					setCardLayout={props.setCardLayout}
+					onOpen={() => {
+						setOpenSettingsModal(false);
+						setOpenNotificationsModal(false);
+						handleNotificationsModalClose();
+						handleProfileMenuClose();
+						// handleAboutModalClose();
+					}}
+					extraActions={extraActions}
+				/>
+			)}
+
 			{/* Notifications */}
 			<NotificationsModal
 				open={openNotificationsModal}
@@ -448,9 +544,9 @@ export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
 			{/* TOC */}
 			{props.toc.content && (
 				<TOCModal
-					open={openTOCModal}
-					handleModalOpen={() => setOpenTOCModal(true)}
-					handleModalClose={() => setOpenTOCModal(false)}
+					open={props.tocModal.open}
+					handleModalOpen={() => props.tocModal.setOpen(true)}
+					handleModalClose={() => props.tocModal.setOpen(false)}
 					headings={extractHeaders(props.toc.content)}
 					currentSection={props.toc.currentSection}
 					postTitle={props.post.title}

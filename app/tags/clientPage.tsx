@@ -14,6 +14,7 @@ import { _filterListOfStoredPostsOnPublished } from "../../data/db/firebase/over
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { StoredPost, TagsPageProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
+import useStickyState from "../../utils/useStickyState";
 
 export const _caseInsensitiveIncludes = (list: string[], word: string, removeSpace?: boolean) => {
 	const lowerCaseList = list.map((e) => e.toLowerCase());
@@ -33,50 +34,31 @@ export const _filterListOfStoredPostsOnTag = (data: StoredPost[], tag: string) =
 	return data.filter((post) => post.tags.includes(tag));
 };
 
-const TagsPage: FC<TagsPageProps> = (props) => {
-	const { isAuthorized } =
-		process.env.NEXT_PUBLIC_LOCALHOST === "true"
-			? {
-					isAuthorized: true,
-			  }
-			: useAuthorized();
+const TagsPage: FC<TagsPageProps> = ({ posts, tags, isAuthorized }) => {
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();
 	const [tag, setTag] = useState<string | null>("loading");
 	// const { query, isReady } = useRouter();
 	const searchParams = useSearchParams();
-	const [posts, setPosts] = useState<StoredPost[]>(props.posts);
+	const [statePosts, setStatePosts] = useState<StoredPost[]>(posts);
+	const [_, setCardLayout] = useStickyState("cardLayout", "plain");
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
 	const updateData = () => {
 		if (!tag) {
-			setPosts(isAuthorized ? props.posts : _filterListOfStoredPostsOnPublished(props.posts, "published"));
+			setStatePosts(posts);
 		} else if (tag.toLowerCase() === "published") {
-			setPosts(_filterListOfStoredPostsOnPublished(props.posts, "published"));
+			setStatePosts(_filterListOfStoredPostsOnPublished(posts, "published"));
 		} else if (tag.toLowerCase() === "unpublished") {
-			if (isAuthorized) {
-				setPosts(_filterListOfStoredPostsOnPublished(props.posts, "unpublished"));
-			}
+			setStatePosts(_filterListOfStoredPostsOnPublished(posts, "unpublished"));
 		} else if (tag.toLowerCase() === "saved") {
-			setPosts(_filterListOfStoredPostsOnPublished(props.posts, "saved"));
+			setStatePosts(_filterListOfStoredPostsOnPublished(posts, "saved"));
 		} else {
-			setPosts(
-				isAuthorized
-					? _filterListOfStoredPostsOnTag(props.posts, _getCaseInsensitiveElement(props.tags, tag)!)
-					: _filterListOfStoredPostsOnTag(
-							_filterListOfStoredPostsOnPublished(props.posts, "published"),
-							_getCaseInsensitiveElement(props.tags, tag)!
-					  )
-			);
+			setStatePosts(_filterListOfStoredPostsOnTag(posts, _getCaseInsensitiveElement(tags, tag)!));
 		}
 	};
-
-	useEffect(() => {
-		updateData();
-		return () => {};
-	}, [isAuthorized]);
 
 	useEffect(() => {
 		if (searchParams) {
@@ -93,18 +75,18 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 	useEffect(() => {
 		setIsLoading(false);
 		return () => {};
-	}, [posts]);
+	}, [statePosts]);
 
 	// Check if single tag is provided or if tag not in allowed list
 	if (tag === "loading") return <></>;
-	if (tag && (tag === "unpublished" || tag === "published") && !isAuthorized) {
+	if (tag && (tag.toLowerCase() === "unpublished" || tag.toLowerCase() === "published") && !isAuthorized) {
 		return <ErrorPage statusCode={403} title="Unauthorized access" />;
 	}
 	if (
 		// (tag && router.query.tag.length > 1) ||
 		tag &&
 		!["all", "published", "unpublished", "saved"]
-			.concat(props.tags)
+			.concat(tags)
 			.find((item) => tag.toLowerCase().replace(" ", "") === item.toLowerCase().replace(" ", ""))
 	) {
 		return <ErrorPage statusCode={404} title="This tag could not be found" />;
@@ -115,7 +97,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 				title: tag
 					? tag.toLowerCase() === "published" || tag.toLowerCase() === "unpublished" || tag.toLowerCase() === "saved"
 						? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
-						: "#" + _getCaseInsensitiveElement(props.tags, tag)!.replace(" ", "")
+						: "#" + _getCaseInsensitiveElement(tags, tag)!.replace(" ", "")
 					: "All posts",
 				description: "Navigate the full collection of posts, filtering based on their associated tag(s).",
 			}}
@@ -123,7 +105,9 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 			<WebPageJsonLd
 				description="Navigate the full collection of posts, filtering based on their associated tag(s)."
 				id={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/tags`}
-				lastReviewed={new Date(Math.max(...posts.map((post) => post.updatedAt || post.createdAt), 0)).toISOString()}
+				lastReviewed={new Date(
+					Math.max(...statePosts.map((post) => post.updatedAt || post.createdAt), 0)
+				).toISOString()}
 				reviewedBy={{
 					type: "Person",
 					name: "Martin Johannes Nilsen",
@@ -137,7 +121,10 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 						background: theme.palette.primary.main,
 					}}
 				>
-					<Navbar posts={isAuthorized ? props.posts : _filterListOfStoredPostsOnPublished(props.posts, "published")} />
+					<Navbar
+						posts={isAuthorized ? posts : _filterListOfStoredPostsOnPublished(posts, "published")}
+						setCardLayout={setCardLayout}
+					/>
 					<Box
 						display="flex"
 						flexDirection="column"
@@ -163,7 +150,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 									  tag.toLowerCase() === "unpublished" ||
 									  tag.toLowerCase() === "saved"
 										? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
-										: "#" + _getCaseInsensitiveElement(props.tags, tag)!.replace(" ", "")
+										: "#" + _getCaseInsensitiveElement(tags, tag)!.replace(" ", "")
 									: "All posts"}
 								{/* {" (" + posts.length + ")"} */}
 							</Typography>
@@ -192,11 +179,20 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 										LinkComponent={NextLink}
 										size="small"
 										disabled={!tag}
+										disableFocusRipple
 										sx={{
 											width: "fit-content",
 											border: "1px solid " + theme.palette.secondary.main,
 											backgroundColor: !tag ? theme.palette.secondary.main : "default",
 											"&:hover": {
+												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+												backgroundColor: !tag
+													? theme.palette.secondary.main
+													: theme.palette.mode == "dark"
+													? theme.palette.grey[900]
+													: theme.palette.grey[100],
+											},
+											"&:focus": {
 												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 												backgroundColor: !tag
 													? theme.palette.secondary.main
@@ -224,7 +220,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 										</Typography>
 									</Button>
 									{(isAuthorized ? ["Published", "Unpublished", "Saved"] : ["Saved"])
-										.concat(props.tags.sort())
+										.concat(tags.sort())
 										.map((element, index) => (
 											<Button
 												LinkComponent={NextLink}
@@ -233,6 +229,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 												disabled={
 													tag ? tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") : false
 												}
+												disableFocusRipple
 												sx={{
 													width: "fit-content",
 													border: "1px solid " + theme.palette.secondary.main,
@@ -241,6 +238,15 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 															? theme.palette.secondary.main
 															: "default",
 													"&:hover": {
+														border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+														backgroundColor:
+															tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+																? theme.palette.secondary.main
+																: theme.palette.mode == "dark"
+																? theme.palette.grey[900]
+																: theme.palette.grey[100],
+													},
+													"&:focus": {
 														border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 														backgroundColor:
 															tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
@@ -267,7 +273,7 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 												>
 													{element === "Published" || element === "Unpublished" || element === "Saved"
 														? element
-														: "#" + _getCaseInsensitiveElement(props.tags, element)!.replace(" ", "")}
+														: "#" + _getCaseInsensitiveElement(tags, element)!.replace(" ", "")}
 												</Typography>
 											</Button>
 										))}
@@ -278,8 +284,8 @@ const TagsPage: FC<TagsPageProps> = (props) => {
 							{/* Cards and pagination */}
 							<Grid item container xs={12} lg={7} order={{ lg: 1, xl: 1 }} rowSpacing={2.5}>
 								{/* Cards */}
-								{posts && posts.length > 0 ? (
-									posts.map((data, index) => {
+								{statePosts && statePosts.length > 0 ? (
+									statePosts.map((data, index) => {
 										return (
 											<Grid item key={index} xs={12}>
 												<TagsPageCard

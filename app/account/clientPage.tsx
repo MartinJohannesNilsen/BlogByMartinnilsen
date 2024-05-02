@@ -1,33 +1,20 @@
 "use client";
-import { Api, Bookmark, Create, Newspaper, Notifications } from "@mui/icons-material";
+import { Api, Bookmark, Create, Newspaper, Notifications, PostAddSharp } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { FC, useEffect, useState } from "react";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../../components/Cards/AccountCard";
 import { TileButtonCard } from "../../components/Cards/TileButtonCard";
 import Navbar from "../../components/Navbar/Navbar";
 import { useTheme } from "../../styles/themes/ThemeProvider";
+import { AccountPageProps } from "../../types";
+import useStickyState from "../../utils/useStickyState";
 // Modals can be dynamically imported
 const PostTableModal = dynamic(() => import("../../components/Modals/PostTableModal"));
 const NotificationsModal = dynamic(() => import("../../components/Modals/NotificationsModal"));
 
-const Account = () => {
-	const { isAuthorized, session, status } =
-		process.env.NEXT_PUBLIC_LOCALHOST === "true"
-			? {
-					isAuthorized: true,
-					session: {
-						user: {
-							name: "Martin the developer",
-							email: "martinjnilsen@gmail.com",
-							image: null,
-						},
-						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
-					},
-					status: "authenticated",
-			  }
-			: useAuthorized(true);
+const Account: FC<AccountPageProps> = ({ sessionUser, postOverview, isAuthorized }) => {
 	const { theme } = useTheme();
 	const backgroundBWBreakingPercentage = "45%";
 	// Post Table Modal
@@ -39,8 +26,16 @@ const Account = () => {
 	const handleNotificationsModalOpen = () => setOpenNotificationsModal(true);
 	const handleNotificationsModalClose = () => setOpenNotificationsModal(false);
 	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
+	const [_, setCardLayout] = useStickyState("cardLayout", "plain");
+	const [isLoading, setIsLoading] = useState(true);
 
-	if (status === "loading") {
+	useEffect(() => {
+		setIsLoading(false);
+
+		return () => {};
+	}, [isLoading]);
+
+	if (isLoading) {
 		return <></>;
 	}
 	return (
@@ -57,7 +52,7 @@ const Account = () => {
 				background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
 			}}
 		>
-			<Navbar />
+			<Navbar posts={postOverview} setCardLayout={setCardLayout} />
 			<Grid
 				container
 				sx={{ width: "350px" }}
@@ -67,7 +62,7 @@ const Account = () => {
 				alignContent="space-between"
 			>
 				<Grid item xs={12} mb={2}>
-					<AccountCard session={session} isAuthorized={isAuthorized} />
+					<AccountCard sessionUser={sessionUser} isAuthorized={isAuthorized} />
 				</Grid>
 				{isAuthorized && (
 					<>

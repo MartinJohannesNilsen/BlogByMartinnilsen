@@ -44,6 +44,7 @@ export const ButtonBar = (props: ButtonBarProps) => {
 			aria-label=""
 		>
 			{props.buttons.map((button) => (
+				// @ts-ignore
 				<ToggleButton
 					disableFocusRipple
 					sx={{
@@ -62,7 +63,7 @@ export const ButtonBar = (props: ButtonBarProps) => {
 					}}
 					value=""
 					onClick={button.onClick}
-					// href={button.href} // TODO fix
+					href={button.href}
 				>
 					{button.icon && (
 						<button.icon

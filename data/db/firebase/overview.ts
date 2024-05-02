@@ -20,7 +20,7 @@ export const _filterListOfStoredPostsOnPublished = (
 		return data.filter((post) => !post.published);
 	} else if (filter === "saved") {
 		const saved = JSON.parse(localStorage.getItem("savedPosts")!);
-		return data.filter((post) => saved.includes(post.id) && post.published);
+		return data.filter((post) => saved && saved.includes(post.id) && post.published);
 	}
 	return data;
 };

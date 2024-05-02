@@ -31,10 +31,10 @@ import { readingTime } from "reading-time-estimator";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../data/db/firebase/overview";
 import { addPost, deletePost, updatePost } from "../../data/db/firebase/posts";
 import { addTag, getTags } from "../../data/db/firebase/tags";
-import { renderers } from "../../pages/_posts/[postId]";
+import { renderers } from "../../migrating_pages/posts/[postId]";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
-import { FullPost, ManageArticleViewProps } from "../../types";
+import { FullPost, ManagePostPageProps } from "../../types";
 import { copyToClipboardV2 } from "../../utils/copyToClipboard";
 import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
 import { NavbarButton } from "../Buttons/NavbarButton";
@@ -170,7 +170,7 @@ export const deleteImage = async (fileRef) => {
 	}
 };
 
-const CreatePost: FC<ManageArticleViewProps> = (props) => {
+const CreatePost: FC<ManagePostPageProps> = (props) => {
 	const { theme, setTheme } = useTheme();
 	const [isSaved, setIsSaved] = useState<boolean>(false);
 	const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
@@ -204,12 +204,12 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		window.location.href = path;
 	};
 	const { enqueueSnackbar } = useSnackbar();
-	const [openTab, setOpenTab] = useState(postId ? 1 : 0);
-	const [toggleOpen, setToggleOpen] = useState(postId ? false : true);
-	// const [openTab, setOpenTab] = useState(1); // TODO remove before push
 	const [createdAtEditable, setCreatedAtEditable] = useState(false);
 	const [updatedAtEditable, setUpdatedAtEditable] = useState(false);
 	const [automaticallySetUpdatedAt, setAutomaticallySetUpdatedAt] = useState(true);
+	// Deprecated
+	// const [openTab, setOpenTab] = useState(postId ? 1 : 0);
+	// const [toggleOpen, setToggleOpen] = useState(postId ? false : true);
 
 	useEffect(() => {
 		setTheme(ThemeEnum.Light);

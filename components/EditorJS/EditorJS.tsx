@@ -26,8 +26,10 @@ const EditorBlock = ({ data, onChange, holder }: Props) => {
 				// @ts-ignore
 				logLevel: "ERROR",
 				onReady: () => {
-					new Undo({ editor });
-					new DragDrop(editor);
+					if (editor) {
+						new Undo({ editor });
+						new DragDrop(editor);
+					}
 				},
 				async onChange(api, event) {
 					const data = await api.saver.save();

@@ -40,24 +40,28 @@ export const checkForUnreadRecentNotifications = (
 	// Would need to have the filter option days in milliseconds for later
 	const notificationDaysInMilliseconds = notificationsFilterDays * 24 * 60 * 60 * 1000;
 	// Find all notifications which are either not read or is important, and should should be shown
-	const allFilteredOnDateOrImportant = data
-		.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
-		.filter(
-			// Only show new notifications for past (notificationFilterDays) days, but important should be visible as well
-			(notification) =>
-				Date.parse(notification.createdAt) > lastRead - notificationDaysInMilliseconds || notification.important
-		);
+	const allFilteredOnDateOrImportant =
+		data &&
+		data
+			.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+			.filter(
+				// Only show new notifications for past (notificationFilterDays) days, but important should be visible as well
+				(notification) =>
+					Date.parse(notification.createdAt) > lastRead - notificationDaysInMilliseconds || notification.important
+			);
 	// Find all notifications which are either not read, or is important - but only their id
 	const allFilteredOnDateIds = allFilteredOnDateOrImportant.map((notification) => notification.id);
 	// Find all notifications that are undread and visible based on notificationsFilterDays option
-	const unreadNotifications = data
-		.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
-		// .filter((notification) => !notificationsRead.includes(notification.id));
-		.filter(
-			(notification) =>
-				!notificationsRead.includes(notification.id) &&
-				(Date.parse(notification.createdAt) > Date.now() - notificationDaysInMilliseconds || notification.important) // Also count important in unread notifications as these are visible as well
-		); //Need to include the filtering if notificationsFilterDate is larger (thus not visible)
+	const unreadNotifications =
+		data &&
+		data
+			.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+			// .filter((notification) => !notificationsRead.includes(notification.id));
+			.filter(
+				(notification) =>
+					!notificationsRead.includes(notification.id) &&
+					(Date.parse(notification.createdAt) > Date.now() - notificationDaysInMilliseconds || notification.important) // Also count important in unread notifications as these are visible as well
+			); //Need to include the filtering if notificationsFilterDate is larger (thus not visible)
 	const unreadNotificationsIds = unreadNotifications.map((notification) => notification.id);
 	return {
 		allNotificationsFilteredOnDate: allFilteredOnDateOrImportant,

@@ -1,5 +1,5 @@
 "use client";
-import { Bookmark, Notifications, Person, RssFeed } from "@mui/icons-material";
+import { Bookmark, Info, Notifications, Person, RssFeed } from "@mui/icons-material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import { Badge, Typography } from "@mui/material";
@@ -159,6 +159,21 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 							<Settings fontSize="medium" sx={{ color: theme.palette.text.primary }} />
 						</ListItemIcon>
 						<Typography fontFamily={theme.typography.fontFamily}>Settings</Typography>
+					</MenuItem>
+				)}
+
+				{/* About */}
+				{props.about && (
+					<MenuItem
+						onClick={() => {
+							props.about!.handleModalOpen();
+							props.handleMenuClose();
+						}}
+					>
+						<ListItemIcon sx={{ mr: 0.25 }}>
+							<Info fontSize="medium" sx={{ color: theme.palette.text.primary }} />
+						</ListItemIcon>
+						<Typography fontFamily={theme.typography.fontFamily}>About</Typography>
 					</MenuItem>
 				)}
 

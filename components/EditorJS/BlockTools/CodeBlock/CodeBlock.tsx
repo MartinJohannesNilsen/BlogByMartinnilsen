@@ -175,7 +175,9 @@ export const CodeBlock = (props: CodeBlockProps) => {
 									}
 								}}
 								// TODO Might want to further investigate this yielding a warning
-								isOptionEqualToValue={(option, value) => option.language === value.language}
+								isOptionEqualToValue={(option: { language: string; firstLetter: string }, value) =>
+									option.language === value.language
+								}
 								options={allowedLanguagesOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
 								groupBy={(option) => option.firstLetter}
 								getOptionLabel={(option) => option.language}

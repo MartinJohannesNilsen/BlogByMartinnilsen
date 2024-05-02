@@ -7,15 +7,16 @@ import { ButtonProps } from "../../types";
 export const NavbarButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
 	const button = (
+		// @ts-ignore
 		<ButtonBase
 			LinkComponent={NextLink}
 			tabIndex={0}
 			aria-label={props.tooltip}
 			onClick={props.onClick}
-			// href={props.href} // TODO fix
+			href={props.href}
 			type={props.type || undefined}
 			sx={{ ...props.sxButton }}
-			disableRipple
+			disableFocusRipple
 		>
 			{props.icon && (
 				<props.icon
@@ -36,12 +37,13 @@ export const NavbarButton = (props: ButtonProps) => {
 		</ButtonBase>
 	);
 	const outlineButton = (
+		// @ts-ignore
 		<ButtonBase
 			LinkComponent={NextLink}
 			tabIndex={0}
 			aria-label={props.tooltip}
 			onClick={props.onClick}
-			// href={props.href} // TODO fix
+			href={props.href}
 			disabled={props.disabled || false}
 			sx={{
 				border: "1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),

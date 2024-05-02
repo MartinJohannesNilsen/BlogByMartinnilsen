@@ -1,12 +1,26 @@
+"use server";
 import { Metadata } from "next";
 import { defaultMetadata } from "../../data/metadata";
 import Account from "./clientPage";
+import { getServerSession } from "next-auth";
+import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-	...defaultMetadata,
-	title: "Account",
-};
+// export const metadata: Metadata = {
+// 	...defaultMetadata,
+// 	title: "Account",
+// };																																																																																																																																																																																																																																																																																																																																																																																																ss
 
 export default async function Page() {
-	return <Account />;
+	// Check authentication
+	const session = await getServerSession();
+	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.email === process.env.ADMIN_EMAIL;
+
+	// Get postOverview
+	const postOverview = isAuthorized
+		? await getCachedAllDescendingPostsOverview()
+		: await getCachedPublishedDescendingPostsOverview();
+
+	if (!isAuthorized && (!session || !session.user)) redirect("/api/auth/signin");
+	return <Account postOverview={postOverview} sessionUser={session?.user} isAuthorized={isAuthorized} />;
 }

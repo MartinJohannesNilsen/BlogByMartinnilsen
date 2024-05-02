@@ -167,4 +167,5 @@ export const baseTheme = createTheme({
 	},
 	breakpoints: defaultTheme.breakpoints,
 	palette: defaultTheme.palette,
+	spacing: 8,
 });

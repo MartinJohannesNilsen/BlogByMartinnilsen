@@ -267,75 +267,91 @@ export const ImageBlock = (props: ImageProps) => {
 						{/* Store image if upload and fetch image details */}
 						<NavbarButton
 							variant="outline"
-							onClick={async () => {
+							onClick={() => {
 								if (stateData.type === "upload") {
 									// Upload image or video
-									const uploadResponse = await uploadImage(uploadfieldInputValue, postId, null);
-
-									// Check if response was ok and we got data, else error snackbar
-									if (uploadResponse.hasOwnProperty("data")) {
-										// Check if image, then fetch details and blurhash
-										if (uploadfieldInputValue!.type.startsWith("image/")) {
-											const details = await imageDetailsApiFetcher(
-												process.env.NEXT_PUBLIC_SERVER_URL +
-													"/editorjs/imageblurhash?url=" +
-													encodeURIComponent(uploadResponse.data.url)
-											);
+									uploadImage(uploadfieldInputValue, postId, null)
+										.then((uploadResponse) => {
+											// Check if response was ok and we got data, else error snackbar
+											if (uploadResponse.hasOwnProperty("data")) {
+												// Check if image, then fetch details and blurhash
+												if (uploadfieldInputValue!.type.startsWith("image/")) {
+													imageDetailsApiFetcher(
+														process.env.NEXT_PUBLIC_SERVER_URL +
+															"/editorjs/imageblurhash?url=" +
+															encodeURIComponent(uploadResponse.data.url)
+													)
+														.then((details) => {
+															if (details.hasOwnProperty("code") && details.code !== 200) {
+																enqueueSnackbar(details.reason, {
+																	variant: "error",
+																	preventDuplicate: true,
+																});
+															} else {
+																setStateData({
+																	...stateData,
+																	type: "upload",
+																	url: uploadResponse.data.url,
+																	fileRef: uploadResponse.data.fileRef,
+																	fileSize: uploadfieldInputValue!.size,
+																	blurhash: details.encoded,
+																	height: details.height,
+																	width: details.width,
+																});
+															}
+														})
+														.catch((error) => {
+															// Handle error from imageDetailsApiFetcher
+															console.error("Error fetching image details:", error);
+														});
+												} else if (uploadfieldInputValue!.type.startsWith("video/")) {
+													setStateData({
+														...stateData,
+														type: "upload",
+														url: uploadResponse.data.url,
+														fileRef: uploadResponse.data.fileRef,
+														fileSize: uploadfieldInputValue!.size,
+													});
+												}
+											} else {
+												enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+													variant: "error",
+													preventDuplicate: true,
+												});
+											}
+										})
+										.catch((error) => {
+											// Handle error from uploadImage
+											console.error("Error uploading image:", error);
+										});
+								} else {
+									// Fetch image details
+									imageDetailsApiFetcher(
+										process.env.NEXT_PUBLIC_SERVER_URL +
+											"/editorjs/imageblurhash?url=" +
+											encodeURIComponent(urlfieldInputValue)
+									)
+										.then((details) => {
 											if (details.hasOwnProperty("code") && details.code !== 200) {
 												enqueueSnackbar(details.reason, {
 													variant: "error",
 													preventDuplicate: true,
 												});
 											} else {
-												await setStateData({
+												setStateData({
 													...stateData,
-													type: "upload",
-													url: uploadResponse.data.url,
-													fileRef: uploadResponse.data.fileRef,
-													fileSize: uploadfieldInputValue!.size,
+													type: "url",
+													url: urlfieldInputValue,
 													blurhash: details.encoded,
 													height: details.height,
 													width: details.width,
 												});
 											}
-										} else if (uploadfieldInputValue!.type.startsWith("video/")) {
-											await setStateData({
-												...stateData,
-												type: "upload",
-												url: uploadResponse.data.url,
-												fileRef: uploadResponse.data.fileRef,
-												fileSize: uploadfieldInputValue!.size,
-											});
-										}
-									} else {
-										enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
-											variant: "error",
-											preventDuplicate: true,
+										})
+										.catch((error) => {
+											// Handle error from imageDetailsApiFetcher
+											console.error("Error fetching image details:", error);
 										});
-									}
-								} else {
-									// Fetch image details
-									const details = await imageDetailsApiFetcher(
-										process.env.NEXT_PUBLIC_SERVER_URL +
-											"/editorjs/imageblurhash?url=" +
-											encodeURIComponent(urlfieldInputValue)
-									);
-									if (details.hasOwnProperty("code") && details.code !== 200) {
-										enqueueSnackbar(details.reason, {
-											// variant: "default",
-											variant: "error",
-											preventDuplicate: true,
-										});
-									} else {
-										setStateData({
-											...stateData,
-											type: "url",
-											url: urlfieldInputValue,
-											blurhash: details.encoded,
-											height: details.height,
-											width: details.width,
-										});
-									}
 								}
 							}}
 							icon={Add}
@@ -361,6 +377,104 @@ export const ImageBlock = (props: ImageProps) => {
 								},
 							}}
 						/>
+
+						{/* TODO Remove old method when tested */}
+						{/* <NavbarButton
+							variant="outline"
+							// onClick={async () => {
+							// 	if (stateData.type === "upload") {
+							// 		// Upload image or video
+							// 		const uploadResponse = await uploadImage(uploadfieldInputValue, postId, null);
+
+							// 		// Check if response was ok and we got data, else error snackbar
+							// 		if (uploadResponse.hasOwnProperty("data")) {
+							// 			// Check if image, then fetch details and blurhash
+							// 			if (uploadfieldInputValue!.type.startsWith("image/")) {
+							// 				const details = await imageDetailsApiFetcher(
+							// 					process.env.NEXT_PUBLIC_SERVER_URL +
+							// 						"/editorjs/imageblurhash?url=" +
+							// 						encodeURIComponent(uploadResponse.data.url)
+							// 				);
+							// 				if (details.hasOwnProperty("code") && details.code !== 200) {
+							// 					enqueueSnackbar(details.reason, {
+							// 						variant: "error",
+							// 						preventDuplicate: true,
+							// 					});
+							// 				} else {
+							// 					await setStateData({
+							// 						...stateData,
+							// 						type: "upload",
+							// 						url: uploadResponse.data.url,
+							// 						fileRef: uploadResponse.data.fileRef,
+							// 						fileSize: uploadfieldInputValue!.size,
+							// 						blurhash: details.encoded,
+							// 						height: details.height,
+							// 						width: details.width,
+							// 					});
+							// 				}
+							// 			} else if (uploadfieldInputValue!.type.startsWith("video/")) {
+							// 				await setStateData({
+							// 					...stateData,
+							// 					type: "upload",
+							// 					url: uploadResponse.data.url,
+							// 					fileRef: uploadResponse.data.fileRef,
+							// 					fileSize: uploadfieldInputValue!.size,
+							// 				});
+							// 			}
+							// 		} else {
+							// 			enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+							// 				variant: "error",
+							// 				preventDuplicate: true,
+							// 			});
+							// 		}
+							// 	} else {
+							// 		// Fetch image details
+							// 		const details = await imageDetailsApiFetcher(
+							// 			process.env.NEXT_PUBLIC_SERVER_URL +
+							// 				"/editorjs/imageblurhash?url=" +
+							// 				encodeURIComponent(urlfieldInputValue)
+							// 		);
+							// 		if (details.hasOwnProperty("code") && details.code !== 200) {
+							// 			enqueueSnackbar(details.reason, {
+							// 				// variant: "default",
+							// 				variant: "error",
+							// 				preventDuplicate: true,
+							// 			});
+							// 		} else {
+							// 			setStateData({
+							// 				...stateData,
+							// 				type: "url",
+							// 				url: urlfieldInputValue,
+							// 				blurhash: details.encoded,
+							// 				height: details.height,
+							// 				width: details.width,
+							// 			});
+							// 		}
+							// 	}
+							// }}
+							icon={Add}
+							tooltip={stateData.type === "upload" ? "Store image and fetch image details" : "Fetch image from url"}
+							sxButton={{
+								minWidth: "40px",
+								minHeight: "40px",
+								height: "40px",
+								width: "40px",
+								backgroundColor: theme.palette.text.primary,
+								borderColor: theme.palette.grey[400],
+								"&:hover": {
+									backgroundColor: theme.palette.grey[200],
+									borderColor: theme.palette.grey[300],
+								},
+							}}
+							sxIcon={{
+								height: "22px",
+								width: "22px",
+								color: theme.palette.text.secondary,
+								"&:hover": {
+									opacity: 0.8,
+								},
+							}}
+						/> */}
 					</Box>
 				)}
 			</Box>

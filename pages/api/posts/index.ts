@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { validateAuthAPIToken } from "..";
 import { db } from "../../../lib/firebaseConfig";
 
-// TODO
 /**
  * @swagger
  * /api/posts:

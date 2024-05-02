@@ -8,12 +8,8 @@ import NextLink from "next/link";
 export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
 	const button = (
-		<ButtonBase
-			LinkComponent={NextLink}
-			aria-label={props.tooltip}
-			onClick={props.onClick}
-			// href={props.href} //TODO fix
-		>
+		// @ts-ignore
+		<ButtonBase LinkComponent={NextLink} aria-label={props.tooltip} onClick={props.onClick} href={props.href}>
 			{props.icon && (
 				<props.icon
 					sx={{
@@ -33,11 +29,12 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 		</ButtonBase>
 	);
 	const outlineButton = (
+		// @ts-ignore
 		<ButtonBase
 			LinkComponent={NextLink}
 			aria-label={props.tooltip}
 			onClick={props.onClick}
-			// href={props.href} // TODO fix
+			href={props.href}
 			disabled={props.disabled || false}
 			sx={{
 				p: 0.5,
