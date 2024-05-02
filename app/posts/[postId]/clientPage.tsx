@@ -1,8 +1,13 @@
 "use client";
 import Giscus from "@giscus/react";
+import { useGSAP } from "@gsap/react";
 import { AccessTime, ArrowUpward, CalendarMonth, Comment, Menu, ThumbUpAlt, Visibility } from "@mui/icons-material";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import DOMPurify from "isomorphic-dompurify";
+import { ArticleJsonLd } from "next-seo";
+import { useSearchParams } from "next/navigation";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
@@ -10,23 +15,18 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
-import { style } from "../../../components/EditorJS/style";
-import Footer from "../../../components/Footer/Footer";
-import SEO, { DATA_DEFAULTS } from "../../../components/SEO/SEO";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ReadPostPageProps } from "../../../types";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import { ArticleJsonLd } from "next-seo";
 import { useEventListener } from "usehooks-ts";
 import ButtonBar, { ButtonBarButtonProps } from "../../../components/ButtonBar/ButtonBar";
 import { NavbarButton } from "../../../components/Buttons/NavbarButton";
+import { style } from "../../../components/EditorJS/style";
+import Footer from "../../../components/Footer/Footer";
 import PostNavbar from "../../../components/Navbar/PostNavbar";
 import PostViews from "../../../components/PostViews/PostViews";
+import SEO, { DATA_DEFAULTS } from "../../../components/SEO/SEO";
 import Toggle from "../../../components/Toggles/Toggle";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
+import { ReadPostPageProps } from "../../../types";
 import { IDiscussionData, IMetadataMessage } from "../../../utils/giscus";
-import { useRouter, useSearchParams } from "next/navigation";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Editorjs render
@@ -52,8 +52,8 @@ import CustomQuote from "../../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../../components/EditorJS/Renderers/CustomVideo";
-import useStickyState from "../../../utils/useStickyState";
 import { handleSharing } from "../../../utils/handleSharing";
+import useStickyState from "../../../utils/useStickyState";
 
 // Pass your custom renderers to Output
 export const renderers = {

@@ -1,9 +1,9 @@
 "use client";
-import { ButtonBase, Tooltip, Typography } from "@mui/material";
-import { ButtonProps } from "../../types";
-import { useTheme } from "../../styles/themes/ThemeProvider";
 import { Search } from "@mui/icons-material";
+import { ButtonBase, Tooltip, Typography } from "@mui/material";
 import NextLink from "next/link";
+import { useTheme } from "../../styles/themes/ThemeProvider";
+import { ButtonProps } from "../../types";
 
 export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();

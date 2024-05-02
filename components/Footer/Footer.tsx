@@ -7,7 +7,6 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { FooterProps } from "../../types";
 import colorLuminance from "../../utils/colorLuminance";
 import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";
-import { useSearchParam } from "react-use";
 
 const Footer: FC<FooterProps> = (props: FooterProps) => {
 	const { theme } = useTheme();

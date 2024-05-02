@@ -23,8 +23,6 @@ const apiFetcher = async (url: RequestInfo) => {
 
 const PostViews: FC<PostViewsProps> = ({ postId, sx }) => {
 	const { data } = useSWR(`/api/views/${postId}`, apiFetcher);
-	// const data = { viewCount: 10 };
-	// TODO FIX
 
 	return (
 		<>

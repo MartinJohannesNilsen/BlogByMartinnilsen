@@ -1,6 +1,6 @@
 "use server";
 import { unstable_cache } from "next/cache";
-import { getAllPostIds, getPostsOverview } from "./db/firebase/overview";
+import { getPostsOverview } from "./db/firebase/overview";
 import { getPost } from "./db/firebase/posts";
 import { getTags } from "./db/firebase/tags";
 

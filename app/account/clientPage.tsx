@@ -1,9 +1,8 @@
 "use client";
-import { Api, Bookmark, Create, Newspaper, Notifications, PostAddSharp } from "@mui/icons-material";
+import { Api, Bookmark, Create, Newspaper, Notifications } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import dynamic from "next/dynamic";
 import { FC, useEffect, useState } from "react";
-import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { AccountCard } from "../../components/Cards/AccountCard";
 import { TileButtonCard } from "../../components/Cards/TileButtonCard";
 import Navbar from "../../components/Navbar/Navbar";

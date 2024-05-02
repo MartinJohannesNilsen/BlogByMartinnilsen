@@ -1,10 +1,8 @@
 "use server";
-import { Metadata } from "next";
-import { defaultMetadata } from "../../data/metadata";
-import Account from "./clientPage";
 import { getServerSession } from "next-auth";
-import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
 import { redirect } from "next/navigation";
+import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
+import Account from "./clientPage";
 
 // export const metadata: Metadata = {
 // 	...defaultMetadata,

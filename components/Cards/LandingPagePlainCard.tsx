@@ -1,20 +1,14 @@
 "use client";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
-import { Box, Link, Typography, useMediaQuery } from "@mui/material";
-import { FC, useState } from "react";
+import { Box, Link, Typography } from "@mui/material";
+import NextLink from "next/link";
+import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import PostViews from "../PostViews/PostViews";
-import NextLink from "next/link";
 
 export const LandingPageListCard: FC<PostCardProps> = (props) => {
 	const { theme } = useTheme();
-	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const lg = useMediaQuery(theme.breakpoints.only("lg"));
-	const xl = useMediaQuery(theme.breakpoints.only("xl"));
-	const [state, setState] = useState({
-		raised: false,
-	});
 
 	return (
 		<Link href={`/posts/${props.id}`} component={NextLink}>

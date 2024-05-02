@@ -31,7 +31,6 @@ import { readingTime } from "reading-time-estimator";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../data/db/firebase/overview";
 import { addPost, deletePost, updatePost } from "../../data/db/firebase/posts";
 import { addTag, getTags } from "../../data/db/firebase/tags";
-import { renderers } from "../../migrating_pages/posts/[postId]";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManagePostPageProps } from "../../types";
@@ -44,6 +43,7 @@ import { DATA_DEFAULTS } from "../SEO/SEO";
 import EditableTypography from "../StyledMUI/EditableTypography";
 import { BpRadio } from "../StyledMUI/RadioButton";
 import { StyledTextField } from "../StyledMUI/TextInput";
+import { renderers } from "../../app/posts/[postId]/clientPage";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));

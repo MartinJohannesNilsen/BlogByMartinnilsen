@@ -11,19 +11,11 @@ import {
 	useMediaQuery,
 } from "@mui/material";
 import { FC, useState } from "react";
-import { useTheme } from "../../styles/themes/ThemeProvider";
 import colors from "../../styles/colors";
+import { useTheme } from "../../styles/themes/ThemeProvider";
+import { TileButtonCardProps } from "../../types";
 
-type TileButtonCard = {
-	icon: any;
-	text: string;
-	href?: string;
-	onClick?: () => void;
-	disabled?: boolean;
-	showBadge?: boolean;
-};
-
-export const TileButtonCard: FC<TileButtonCard> = (props) => {
+export const TileButtonCard: FC<TileButtonCardProps> = (props) => {
 	const { theme } = useTheme();
 	const lg = useMediaQuery(theme.breakpoints.only("lg"));
 	const xl = useMediaQuery(theme.breakpoints.only("xl"));

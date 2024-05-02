@@ -30,16 +30,13 @@ import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
 import LandingPageListCard from "../components/Cards/LandingPageListCard";
 import LandingPagePlainCard from "../components/Cards/LandingPagePlainCard";
 import Navbar from "../components/Navbar/Navbar";
-import SEO from "../components/SEO/SEO";
 import TinderSwipe from "../components/TinderSwipe/TinderSwipe";
-import { _filterListOfStoredPostsOnPublished, getPostsOverview } from "../data/db/firebase/overview";
+import { getCachedPublishedDescendingPostsOverview } from "../data/cache";
+import { _filterListOfStoredPostsOnPublished } from "../data/db/firebase/overview";
 import { useTheme } from "../styles/themes/ThemeProvider";
 import { LandingPageProps, StoredPost } from "../types";
-import useStickyState from "../utils/useStickyState";
-import { getCachedPublishedDescendingPostsOverview } from "../data/cache";
 import { splitChunks } from "../utils/postChunking";
-import { Metadata } from "next";
-import { defaultMetadata } from "../data/metadata";
+import useStickyState from "../utils/useStickyState";
 
 const LandingPage: FC<LandingPageProps> = () => {
 	const [fetchedPosts, setFetchedPosts] = useState<StoredPost[]>();

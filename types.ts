@@ -124,6 +124,15 @@ export type SharePreviewCardProps = {
 	height: number;
 };
 
+export type TileButtonCardProps = {
+	icon: any;
+	text: string;
+	href?: string;
+	onClick?: () => void;
+	disabled?: boolean;
+	showBadge?: boolean;
+};
+
 export type PostCardProps = PostProps & {
 	id: string;
 };

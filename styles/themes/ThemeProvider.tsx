@@ -1,10 +1,10 @@
 "use client";
 import { CssBaseline, Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import React, { createContext, useContext, useMemo, useState } from "react";
 import useDidUpdate from "../../utils/useDidUpdate";
 import { defaultAccentColor, defaultFontFamily } from "./themeDefaults";
 import { ThemeEnum, themeCreator } from "./themeMap";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting

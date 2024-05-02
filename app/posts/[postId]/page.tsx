@@ -1,11 +1,10 @@
 "use server";
-import { unstable_cache } from "next/cache";
-import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
-import ReadArticleView from "./clientPage";
-import { getPost } from "../../../data/db/firebase/posts";
-import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { _filterListOfStoredPostsOnPublished } from "../../../data/db/firebase/overview";
+import { unstable_cache } from "next/cache";
+import { notFound, redirect } from "next/navigation";
+import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
+import { getPost } from "../../../data/db/firebase/posts";
+import ReadArticleView from "./clientPage";
 
 export async function generateStaticParams() {
 	const posts = await getCachedAllDescendingPostsOverview();

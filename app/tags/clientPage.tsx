@@ -6,7 +6,6 @@ import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import TagsPageCard from "../../components/Cards/TagsPageCard";
 import Navbar from "../../components/Navbar/Navbar";
 import SEO from "../../components/SEO/SEO";

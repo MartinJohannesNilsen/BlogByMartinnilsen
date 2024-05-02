@@ -38,6 +38,7 @@ import {
 } from "@mui/material";
 import { matchSorter } from "match-sorter";
 import { signIn } from "next-auth/react";
+import NextLink from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -47,7 +48,6 @@ import { SearchActionProps, SearchModalProps, StoredPost } from "../../types";
 import { userSignOut } from "../../utils/signOut";
 import useAuthorized from "../AuthorizationHook/useAuthorized";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
-import NextLink from "next/link";
 
 export const SearchModal = ({
 	open,
