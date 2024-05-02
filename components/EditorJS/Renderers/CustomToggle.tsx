@@ -2,7 +2,7 @@
 import { Box } from "@mui/material";
 import Output from "editorjs-react-renderer";
 import { useMemo, useState } from "react";
-import { processJsonToggleBlocks, renderers } from "../../../migrating_pages/posts/[postId]";
+import { processJsonToggleBlocks, renderers } from "../../../app/posts/[postId]/clientPage";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import Toggle from "../../Toggles/Toggle";

@@ -1,6 +1,6 @@
 "use client";
 import { Info, LogoutRounded, PostAdd, RssFeed, Search, SettingsRounded, Tag } from "@mui/icons-material";
-import { Box, ButtonBase, Link, Typography, useMediaQuery } from "@mui/material";
+import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -134,13 +134,7 @@ export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
 							},
 						}}
 					>
-						<MenuIcon
-							alt="Website logo"
-							width={22}
-							height={22}
-							fill={theme.palette.text.secondary}
-							style={{ fillRule: "evenodd" }}
-						/>
+						<MenuIcon alt="Website logo" width={22} height={22} fill={theme.palette.text.secondary} style={{}} />
 						<Typography
 							// variant={"h5"}
 							fontFamily={theme.typography.fontFamily}

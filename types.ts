@@ -328,7 +328,9 @@ export type ReadPostPageProps = {
 export type ManagePostPageProps = {
 	post?: FullPost;
 };
-export type AccountPageProps = {
+export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean };
+export type FooterProps = {};
+export type ServerPageProps = {
 	sessionUser:
 		| {
 				name?: string | null | undefined;
@@ -339,5 +341,3 @@ export type AccountPageProps = {
 	isAuthorized: boolean;
 	postOverview?: StoredPost[];
 };
-export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean };
-export type FooterProps = {};

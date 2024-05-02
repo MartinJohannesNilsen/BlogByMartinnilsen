@@ -7,6 +7,7 @@ import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/Accord
 import { SxProps, styled } from "@mui/material/styles";
 import { MutableRefObject } from "react";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
+import colors from "../../styles/colors";
 
 // Accordion styled
 export const Accordion = styled((props: AccordionProps) => (
@@ -22,6 +23,9 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 ))(({ theme }) => ({
 	backgroundColor: "transparent",
 	flexDirection: "row-reverse",
+	"& .MuiAccordionSummary-expandIconWrapper": {
+		color: theme.palette.mode === "dark" ? colors.white : colors.black,
+	},
 	"& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
 		transform: "rotate(90deg)",
 	},

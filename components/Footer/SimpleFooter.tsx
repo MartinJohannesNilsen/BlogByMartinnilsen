@@ -17,7 +17,7 @@ const Footer: FC<FooterProps> = (props: FooterProps) => {
 
 	return (
 		<>
-			{/* Scrollbar */}
+			{/* Animated scrollbar progress line */}
 			{postId ? (
 				<Box
 					sx={{

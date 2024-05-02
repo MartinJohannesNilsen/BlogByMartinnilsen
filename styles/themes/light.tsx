@@ -4,6 +4,7 @@ import { baseTheme, defaultAccentColor } from "./themeDefaults";
 
 export const light = createTheme({
 	palette: {
+		...baseTheme.palette,
 		mode: "light",
 		background: {
 			// default: baseTheme.palette.background.default,
@@ -30,9 +31,9 @@ export const light = createTheme({
 				defaultAccentColor.hex,
 		},
 		grey: {
-			600: "#585d63",
-			700: "#3e4347",
-			800: "#25272D",
+			// 600: "#585d63",
+			// 700: "#3e4347",
+			// 800: "#25272D",
 		},
 	},
 	breakpoints: baseTheme.breakpoints,

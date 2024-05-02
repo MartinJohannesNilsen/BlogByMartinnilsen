@@ -19,7 +19,7 @@ import { useEventListener } from "usehooks-ts";
 import ButtonBar, { ButtonBarButtonProps } from "../../../components/ButtonBar/ButtonBar";
 import { NavbarButton } from "../../../components/Buttons/NavbarButton";
 import { style } from "../../../components/EditorJS/style";
-import Footer from "../../../components/Footer/Footer";
+import Footer from "../../../components/Footer/LinkFooter";
 import PostNavbar from "../../../components/Navbar/PostNavbar";
 import PostViews from "../../../components/PostViews/PostViews";
 import SEO, { DATA_DEFAULTS } from "../../../components/SEO/SEO";
@@ -329,7 +329,7 @@ export const ReadPostPage: FC<ReadPostPageProps> = ({ post, postId, postOverview
 				duration: 0.4,
 			});
 			const buttonBarAnimation = gsap.to(".buttonBar", {
-				y: "-60px",
+				y: "-120px",
 				paused: true,
 				duration: 0.4,
 				reversed: true, // Start in reverse
@@ -491,7 +491,7 @@ export const ReadPostPage: FC<ReadPostPageProps> = ({ post, postId, postOverview
 									className={"anchorHeading"}
 									display="flex"
 									alignItems="center"
-									mt={isMobile ? 6 : 3}
+									mt={isMobile ? 6 : 9}
 									mb={1}
 									pb={2}
 									sx={{ userSelect: "text" }}
@@ -819,7 +819,7 @@ export const ReadPostPage: FC<ReadPostPageProps> = ({ post, postId, postOverview
 					<Box height="100%" ref={containerRef} sx={{ width: "100vw", display: "flex", justifyContent: "center" }}>
 						<ButtonBar
 							className="buttonBar"
-							sx={{ position: "fixed", bottom: "-45px", zIndex: 1000 }}
+							sx={{ position: "fixed", bottom: "-100px", zIndex: 1000 }}
 							buttons={buttonBarButtons}
 						/>
 					</Box>
