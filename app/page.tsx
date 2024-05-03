@@ -23,7 +23,7 @@ import {
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import { FC, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import LandingPageCarouselCard from "../components/Cards/LandingPageCarouselCard";
 import LandingPageGridCard from "../components/Cards/LandingPageGridCard";
@@ -38,7 +38,7 @@ import { LandingPageProps, StoredPost } from "../types";
 import { splitChunks } from "../utils/postChunking";
 import useStickyState from "../utils/useStickyState";
 
-const LandingPage: FC<LandingPageProps> = () => {
+const LandingPage = ({}: LandingPageProps) => {
 	const [fetchedPosts, setFetchedPosts] = useState<StoredPost[]>();
 	const { theme } = useTheme();
 	const boxRef = useRef(null);

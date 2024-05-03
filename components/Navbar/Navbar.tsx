@@ -4,7 +4,7 @@ import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTheme } from "../../styles/themes/ThemeProvider";
@@ -23,7 +23,7 @@ const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"))
 const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
 const AboutModal = dynamic(() => import("../Modals/AboutModal"));
 
-export const Navbar: FC<NavbarProps> = (props: NavbarProps) => {
+export const Navbar = (props: NavbarProps) => {
 	const { theme, setTheme } = useTheme();
 	const { isAuthorized, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"

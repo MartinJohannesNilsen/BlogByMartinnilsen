@@ -10,7 +10,7 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { useTheme } from "@mui/system";
 import clsx from "clsx";
 import * as React from "react";
-import { ButtonProps } from "../../types";
+import { ButtonProps, OptionMenuProps } from "../../types";
 import { NavbarButton } from "../Buttons/NavbarButton";
 
 const Menu = React.forwardRef(function Menu(
@@ -99,18 +99,6 @@ const MenuButton = React.forwardRef(function MenuButton(
 	);
 });
 
-type OptionMenuProps = {
-	icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
-		muiName: string;
-	};
-	text?: string;
-	menuItems: OptionMenuItem[];
-};
-type OptionMenuItem = {
-	text: string;
-	onClick: () => void;
-	disabled?: boolean;
-};
 export const OptionMenu = (props: OptionMenuProps) => {
 	const { contextValue: dropdownContextValue } = useDropdown();
 

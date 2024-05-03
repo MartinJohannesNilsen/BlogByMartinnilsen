@@ -10,12 +10,12 @@ import {
 	Typography,
 	useMediaQuery,
 } from "@mui/material";
-import { FC, useState } from "react";
+import { useState } from "react";
 import colors from "../../styles/colors";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TileButtonCardProps } from "../../types";
 
-export const TileButtonCard: FC<TileButtonCardProps> = (props) => {
+export const TileButtonCard = (props: TileButtonCardProps) => {
 	const { theme } = useTheme();
 	const lg = useMediaQuery(theme.breakpoints.only("lg"));
 	const xl = useMediaQuery(theme.breakpoints.only("xl"));

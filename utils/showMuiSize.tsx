@@ -9,13 +9,12 @@ import { useTheme } from "../styles/themes/ThemeProvider";
  * breakpoints in theme is static. It will break once you change the number of
  * breakpoints. See https://reactjs.org/docs/hooks-rules.html#only-call-hooks-at-the-top-level
  */
-type BreakpointOrNull = Breakpoint | null;
 
 export const useWidth = (): Breakpoint => {
 	const { theme } = useTheme();
 	const keys: readonly Breakpoint[] = [...theme.breakpoints.keys].reverse();
 	return (
-		keys.reduce((output: BreakpointOrNull, key: Breakpoint) => {
+		keys.reduce((output: Breakpoint | null, key: Breakpoint) => {
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const matches = useMediaQuery(theme.breakpoints.up(key));
 			return output != null && matches ? key : output;

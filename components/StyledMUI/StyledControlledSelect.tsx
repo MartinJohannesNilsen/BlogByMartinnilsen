@@ -4,12 +4,7 @@ import { Select as BaseSelect, selectClasses, SelectProps, SelectRootSlotProps }
 import { UnfoldMoreRounded } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import * as React from "react";
-
-type SelectContentProps = {
-	value: any;
-	setValue: (value: any) => void;
-	children?: JSX.Element[];
-};
+import { SelectContentProps } from "../../types";
 
 export default function StyledControlledSelect(props: SelectContentProps) {
 	return (

@@ -1,8 +1,10 @@
 import { OutputData } from "@editorjs/editorjs";
-import { SvgIconTypeMap, SxProps } from "@mui/material";
+import { Breakpoint, SvgIconTypeMap, SxProps, Theme } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { CSSProperties, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
+import { ThemeEnum } from "./styles/themes/themeMap";
+import { Reactions } from "./utils/giscus";
 
 // Object types
 
@@ -105,6 +107,21 @@ export type EditorjsRendererProps = {
 	config?: { disableDefaultStyle?: any };
 };
 
+export type BlurHashImageProps = {
+	blurhash: { encoded: string; height?: number; width?: number; punch?: number };
+	src: string;
+	alt: string;
+	style: CSSProperties;
+};
+
+export type IconProps = {
+	fill?: string;
+	height?: string | number;
+	width?: string | number;
+	style?: CSSProperties;
+	alt?: string;
+};
+
 export type SearchActionProps = {
 	title: string;
 	iconElement: JSX.Element;
@@ -113,6 +130,99 @@ export type SearchActionProps = {
 	href?: string;
 	requirement?: () => boolean;
 	id?: string;
+};
+
+export type EditorBlockProps = {
+	data?: OutputData;
+	onChange(val: OutputData): void;
+	holder: string;
+};
+
+export type ButtonBarProps = {
+	buttons: ButtonBarButtonProps[];
+	sx?: SxProps & {};
+	ref?: MutableRefObject<any>;
+	className?: string;
+};
+
+export type ButtonBarButtonProps = {
+	fetched?: boolean;
+	icon?:
+		| (OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+				muiName: string;
+		  })
+		| IconType;
+	text?: string;
+	onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
+	href?: string;
+	disabled?: boolean;
+};
+
+export type BlockToolQuoteDataProps = {
+	text: string;
+	caption: string;
+};
+export type BlockToolQuoteProps = {
+	data: BlockToolQuoteDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type BlockToolImageDataProps = {
+	type: string; // url, upload, unsplash, paste?
+	url: string;
+	caption: string;
+	blurhash: string;
+	height: number;
+	width: number;
+	fileRef?: string;
+	fileSize?: number;
+	// unsplash?: { author: string; profileLink: string };
+};
+export type BlockToolImageProps = {
+	data: BlockToolImageDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type BlockToolCodeBlockDataProps = {
+	code: string;
+	language: string;
+	multiline: boolean;
+	linenumbers: boolean;
+	textwrap: boolean;
+	filename: string;
+	caption: string;
+	render: boolean;
+	highlightLines: number[];
+};
+export type BlockToolCodeBlockProps = {
+	data: BlockToolCodeBlockDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type BlockToolCalloutDataProps = {
+	type: string;
+	message: string;
+	title?: string;
+	icon?: string;
+};
+export type BlockToolCalloutProps = {
+	data: BlockToolCalloutDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type AccountCardProps = {
+	sessionUser:
+		| {
+				name?: string | null | undefined;
+				email?: string | null | undefined;
+				image?: string | null | undefined;
+		  }
+		| undefined;
+	isAuthorized: boolean;
 };
 
 export type SharePreviewCardProps = {
@@ -209,7 +319,49 @@ export type RevealProps = {
 	delay?: number;
 };
 
+export type ThemeContextType = {
+	theme: Theme;
+	setTheme: (Theme: ThemeEnum, persist?: boolean) => void;
+	setDefaultTheme: () => void;
+	accentColor: string;
+	setAccentColor: (accent: string) => void;
+	fontFamily: string;
+	setFontFamily: (font: string) => void;
+};
+
+export type directionType = "left" | "right" | "up" | "down";
+export type TinderSwipeType = {
+	posts: StoredPost[];
+};
+
+export type SelectContentProps = {
+	value: any;
+	setValue: (value: any) => void;
+	children?: JSX.Element[];
+};
+
+export type UnreadFunctionProps = {
+	allNotificationsFilteredOnDate: NotificationProps[];
+	allNotificationsFilteredOnDateIds: number[];
+	unreadNotifications: NotificationProps[];
+	unreadNotificationsIds: number[];
+	hasUnreadNotifications: boolean;
+};
+
 // Menus
+
+export type OptionMenuProps = {
+	icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+		muiName: string;
+	};
+	text?: string;
+	menuItems: OptionMenuItem[];
+};
+export type OptionMenuItem = {
+	text: string;
+	onClick: () => void;
+	disabled?: boolean;
+};
 
 export type MenuProps = {
 	open: boolean;
@@ -316,6 +468,10 @@ export type NavigatorShareProps = {
 };
 
 // export type SearchButtonProps = ButtonProps;
+
+export type CustomThemeProviderProps = {
+	children: React.ReactNode;
+};
 
 // Page types
 export type LandingPageProps = {};

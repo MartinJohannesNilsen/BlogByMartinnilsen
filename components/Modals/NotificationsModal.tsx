@@ -4,7 +4,7 @@ import { Box, Divider, IconButton, Modal, Typography, useMediaQuery } from "@mui
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { NotificationProps, NotificationsModalProps } from "../../types";
+import { NotificationProps, NotificationsModalProps, UnreadFunctionProps } from "../../types";
 import useStickyState from "../../utils/useStickyState";
 import CustomParagraph from "../EditorJS/Renderers/CustomParagraph";
 import StyledControlledSelect, { SelectOption } from "../StyledMUI/StyledControlledSelect";
@@ -20,14 +20,6 @@ export const notificationsApiFetcher = async (url: RequestInfo) => {
 		headers: headers,
 	});
 	return await res.json();
-};
-
-type UnreadFunctionProps = {
-	allNotificationsFilteredOnDate: NotificationProps[];
-	allNotificationsFilteredOnDateIds: number[];
-	unreadNotifications: NotificationProps[];
-	unreadNotificationsIds: number[];
-	hasUnreadNotifications: boolean;
 };
 
 export const checkForUnreadRecentNotifications = (

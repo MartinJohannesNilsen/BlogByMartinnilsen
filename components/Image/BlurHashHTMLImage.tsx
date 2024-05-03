@@ -1,15 +1,8 @@
 "use client";
 import { Box } from "@mui/material";
-import { CSSProperties } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { Blurhash } from "react-blurhash";
-
-type BlurHashImageProps = {
-	blurhash: { encoded: string; height?: number; width?: number; punch?: number };
-	src: string;
-	alt: string;
-	style: CSSProperties;
-};
+import { BlurHashImageProps } from "../../types";
 
 export const BlurHashImage = (props: BlurHashImageProps) => {
 	const [loaded, setLoaded] = useState(false);

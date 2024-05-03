@@ -2,14 +2,13 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
 import NextLink from "next/link";
-import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
 import { DATA_DEFAULTS } from "../SEO/SEO";
 
-export const LandingPageGridCard: FC<PostCardProps> = (props) => {
+export const LandingPageGridCard = (props: PostCardProps) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 

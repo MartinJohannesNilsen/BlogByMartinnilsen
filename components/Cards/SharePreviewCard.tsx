@@ -1,11 +1,10 @@
 "use client";
 import { Box, Card, Typography, useMediaQuery } from "@mui/material";
-import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { SharePreviewCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 
-export const SharePreviewCard: FC<SharePreviewCardProps> = (props) => {
+export const SharePreviewCard = (props: SharePreviewCardProps) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 

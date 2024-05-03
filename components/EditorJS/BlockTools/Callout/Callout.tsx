@@ -1,26 +1,12 @@
 "use client";
-import React, { useRef } from "react";
 import { Box, Card, IconButton, InputBase, MenuItem, Modal, Select, Typography, useMediaQuery } from "@mui/material";
 import EmojiPicker, { EmojiClickData, SkinTonePickerLocation } from "emoji-picker-react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import DOMPurify from "dompurify";
-
-// Types
-type CalloutDataProps = {
-	type: string;
-	message: string;
-	title?: string;
-	icon?: string;
-};
-type CalloutProps = {
-	data: CalloutDataProps;
-	onDataChange: (arg0: any) => void;
-	readOnly: boolean;
-};
+import { BlockToolCalloutProps } from "../../../../types";
 
 // Component
-export const Callout = (props: CalloutProps) => {
+export const Callout = (props: BlockToolCalloutProps) => {
 	const { theme } = useTheme();
 	const [emojiPickerModalOpen, setEmojiPickerModalOpen] = useState<boolean>(false);
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));

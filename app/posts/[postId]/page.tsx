@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
 import { getPost } from "../../../data/db/firebase/posts";
 import ReadArticleView from "./clientPage";
-import { DATA_DEFAULTS, defaultMetadata } from "../../../data/metadata";
+import { DATA_DEFAULTS, defaultMetadata, formatDate } from "../../../data/metadata";
 import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { postId: string } }) {
@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: { params: { postId: string } 
 		title: post.title,
 		description: post.description,
 		creator: "MJNTech",
+		keywords: post.tags,
 		openGraph: {
 			type: "article",
 			url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${params.postId}`,
@@ -28,8 +29,8 @@ export async function generateMetadata({ params }: { params: { postId: string } 
 			description: post.description,
 			siteName: "Tech Blog",
 			images: [{ url: post.ogImage.src || DATA_DEFAULTS.images.openGraph }],
-			publishedTime: new Date(post.createdAt).toUTCString(),
-			modifiedTime: post.updatedAt ? new Date(post.updatedAt).toUTCString() : undefined,
+			publishedTime: formatDate(new Date(post.createdAt)),
+			modifiedTime: post.updatedAt ? formatDate(new Date(post.updatedAt)) : undefined,
 			section: post.type,
 			tags: post.tags,
 		},

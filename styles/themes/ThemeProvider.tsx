@@ -1,7 +1,8 @@
 "use client";
-import { CssBaseline, Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import React, { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
+import { CustomThemeProviderProps, ThemeContextType } from "../../types";
 import useDidUpdate from "../../utils/useDidUpdate";
 import { defaultAccentColor, defaultFontFamily } from "./themeDefaults";
 import { ThemeEnum, themeCreator } from "./themeMap";
@@ -19,16 +20,6 @@ export function getSelectedTheme() {
 	}
 }
 
-export type ThemeContextType = {
-	theme: Theme;
-	setTheme: (Theme: ThemeEnum, persist?: boolean) => void;
-	setDefaultTheme: () => void;
-	accentColor: string;
-	setAccentColor: (accent: string) => void;
-	fontFamily: string;
-	setFontFamily: (font: string) => void;
-};
-
 export const ThemeContext = createContext<ThemeContextType>({
 	theme: getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light),
 	setTheme: (theme, persist) => {},
@@ -41,11 +32,7 @@ export const ThemeContext = createContext<ThemeContextType>({
 });
 export const useTheme = () => useContext(ThemeContext);
 
-type CustomThemeProviderProps = {
-	children: React.ReactNode;
-};
-
-export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ children }) => {
+export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 	const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
 	const [fontFamily, _setFontFamily] = useState(
 		typeof window !== "undefined"

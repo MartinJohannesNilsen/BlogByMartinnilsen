@@ -2,7 +2,7 @@
 import { Api, Bookmark, Create, Newspaper, Notifications } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import dynamic from "next/dynamic";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AccountCard } from "../../components/Cards/AccountCard";
 import { TileButtonCard } from "../../components/Cards/TileButtonCard";
 import Navbar from "../../components/Navbar/Navbar";

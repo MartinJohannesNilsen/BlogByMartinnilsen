@@ -21,6 +21,14 @@ export const DATA_DEFAULTS = {
 	twitterHandle: "@MartinJNilsen",
 };
 
+export function formatDate(date: Date) {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+
+	return `${year}-${month}-${day}`;
+}
+
 export const defaultMetadata: Metadata = {
 	// Icons
 	icons: {
@@ -85,7 +93,7 @@ export const defaultMetadata: Metadata = {
 		// creatorId: '1467726470533754880',
 		images: [DATA_DEFAULTS.images.openGraph], // Must be an absolute URL
 	},
-	viewport: { width: "device-width", initialScale: 1 },
+	// viewport: { width: "device-width", initialScale: 1 },
 };
 
 export const defaultViewport: Viewport = {

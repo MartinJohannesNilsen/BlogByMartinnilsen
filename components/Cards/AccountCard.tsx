@@ -1,20 +1,10 @@
 import { Avatar, Box, Card, CardContent, Typography, useMediaQuery } from "@mui/material";
-import { FC, useEffect, useState } from "react";
-import { useTheme } from "../../styles/themes/ThemeProvider";
+import { useEffect, useState } from "react";
 import colors from "../../styles/colors";
+import { useTheme } from "../../styles/themes/ThemeProvider";
+import { AccountCardProps } from "../../types";
 
-type AccountCard = {
-	sessionUser:
-		| {
-				name?: string | null | undefined;
-				email?: string | null | undefined;
-				image?: string | null | undefined;
-		  }
-		| undefined;
-	isAuthorized: boolean;
-};
-
-export const AccountCard: FC<AccountCard> = ({ sessionUser, isAuthorized }) => {
+export const AccountCard = ({ sessionUser, isAuthorized }: AccountCardProps) => {
 	const { theme } = useTheme();
 	const lg = useMediaQuery(theme.breakpoints.only("lg"));
 	const xl = useMediaQuery(theme.breakpoints.only("xl"));

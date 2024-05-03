@@ -2,12 +2,11 @@
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Link, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import PostViews from "../PostViews/PostViews";
 
-export const LandingPageListCard: FC<PostCardProps> = (props) => {
+export const LandingPageListCard = (props: PostCardProps) => {
 	const { theme } = useTheme();
 
 	return (

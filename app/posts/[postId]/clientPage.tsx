@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import DOMPurify from "isomorphic-dompurify";
 import { ArticleJsonLd } from "next-seo";
 import { useSearchParams } from "next/navigation";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -16,16 +16,16 @@ import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { useEventListener } from "usehooks-ts";
-import ButtonBar, { ButtonBarButtonProps } from "../../../components/ButtonBar/ButtonBar";
+import ButtonBar from "../../../components/ButtonBar/ButtonBar";
 import { NavbarButton } from "../../../components/Buttons/NavbarButton";
 import { style } from "../../../components/EditorJS/style";
 import Footer from "../../../components/Footer/LinkFooter";
 import PostNavbar from "../../../components/Navbar/PostNavbar";
 import PostViews from "../../../components/PostViews/PostViews";
-import SEO, { DATA_DEFAULTS } from "../../../components/SEO/SEO";
+import { DATA_DEFAULTS } from "../../../components/SEO/SEO";
 import Toggle from "../../../components/Toggles/Toggle";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ReadPostPageProps } from "../../../types";
+import { ButtonBarButtonProps, ReadPostPageProps } from "../../../types";
 import { IDiscussionData, IMetadataMessage } from "../../../utils/giscus";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -114,7 +114,7 @@ export function processJsonToggleBlocks(inputJson) {
 	return null;
 }
 
-export const ReadPostPage: FC<ReadPostPageProps> = ({ post, postId, postOverview, isAuthorized }) => {
+export const ReadPostPage = ({ post, postId, postOverview, isAuthorized }: ReadPostPageProps) => {
 	const searchParams = useSearchParams();
 	const { theme, setTheme } = useTheme();
 	const [isExploding, setIsExploding] = useState(false);

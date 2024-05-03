@@ -20,14 +20,14 @@ import {
 import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import { closeSnackbar, useSnackbar } from "notistack";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
 import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
+import { renderers } from "../../app/posts/[postId]/clientPage";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../data/db/firebase/overview";
 import { addPost, deletePost, updatePost } from "../../data/db/firebase/posts";
 import { addTag, getTags } from "../../data/db/firebase/tags";
@@ -43,7 +43,6 @@ import { DATA_DEFAULTS } from "../SEO/SEO";
 import EditableTypography from "../StyledMUI/EditableTypography";
 import { BpRadio } from "../StyledMUI/RadioButton";
 import { StyledTextField } from "../StyledMUI/TextInput";
-import { renderers } from "../../app/posts/[postId]/clientPage";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));

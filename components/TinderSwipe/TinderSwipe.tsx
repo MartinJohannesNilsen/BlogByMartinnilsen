@@ -4,26 +4,18 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { Box, Card, CardContent, IconButton, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { FC, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { BiCopy } from "react-icons/bi";
 import TinderCard from "react-tinder-card";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { StoredPost } from "../../types";
+import { directionType, StoredPost, TinderSwipeType } from "../../types";
 import { copyToClipboardV2 } from "../../utils/copyToClipboard";
 import LandingPageSwipeCard from "../Cards/LandingPageSwipeCard";
 
-export type directionType = "left" | "right" | "up" | "down";
-export type TinderSwipeType = {
-	posts: StoredPost[];
-};
-
-const TinderSwipe: FC<TinderSwipeType> = (props) => {
+const TinderSwipe = (props: TinderSwipeType) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const sm = useMediaQuery(theme.breakpoints.only("sm"));
-	const md = useMediaQuery(theme.breakpoints.only("md"));
-	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
 	// Tindercard
 	const [currentIndex, setCurrentIndex] = useState(props.posts.length - 1);

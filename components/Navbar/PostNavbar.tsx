@@ -3,7 +3,7 @@ import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, Search } f
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
@@ -25,7 +25,7 @@ const TOCModal = dynamic(() => import("../Modals/TOCModal"));
 const ShareModal = dynamic(() => import("../Modals/ShareModal"));
 const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
 
-export const PostNavbar: FC<PostNavbarProps> = (props: PostNavbarProps) => {
+export const PostNavbar = (props: PostNavbarProps) => {
 	const { isAuthorized, session, status } =
 		process.env.NEXT_PUBLIC_LOCALHOST === "true"
 			? {

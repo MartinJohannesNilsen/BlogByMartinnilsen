@@ -3,6 +3,7 @@ import { Autocomplete, Box, Checkbox, Input, TextField, Typography, useMediaQuer
 import { Fragment, useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
+import { BlockToolCodeBlockProps } from "../../../../types";
 import { EDITORTHEME } from "../../Renderers/CustomCode";
 import { allowedLanguages } from "./allowedLanguages";
 import { InputElement, TextareaAutosizeElement } from "./styledMuiComponents";
@@ -16,26 +17,8 @@ const allowedLanguagesOptions = allowedLanguages.map((option) => {
 	};
 });
 
-// Types
-type CodeBlockDataProps = {
-	code: string;
-	language: string;
-	multiline: boolean;
-	linenumbers: boolean;
-	textwrap: boolean;
-	filename: string;
-	caption: string;
-	render: boolean;
-	highlightLines: number[];
-};
-type CodeBlockProps = {
-	data: CodeBlockDataProps;
-	onDataChange: (arg0: any) => void;
-	readOnly: boolean;
-};
-
 // Component
-export const CodeBlock = (props: CodeBlockProps) => {
+export const CodeBlock = (props: BlockToolCodeBlockProps) => {
 	const { theme } = useTheme();
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));

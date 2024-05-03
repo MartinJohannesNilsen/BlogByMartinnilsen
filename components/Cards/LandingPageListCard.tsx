@@ -1,17 +1,13 @@
 "use client";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
-import { Box, Button, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Card, CardActionArea, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import PostViews from "../PostViews/PostViews";
 
-export const LandingPageListCard: FC<PostCardProps> = (props) => {
+export const LandingPageListCard = (props: PostCardProps) => {
 	const { theme } = useTheme();
-	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const lg = useMediaQuery(theme.breakpoints.only("lg"));
-	const xl = useMediaQuery(theme.breakpoints.only("xl"));
 
 	return (
 		<Card

@@ -7,7 +7,7 @@ import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import { NavbarButton } from "../../../Buttons/NavbarButton";
 import { deleteImage, uploadImage } from "../../../PostManagement/PostManagement";
 import { StyledTextField } from "../../../StyledMUI/TextInput";
-import { FullPost } from "../../../../types";
+import { BlockToolImageProps, FullPost } from "../../../../types";
 
 export const imageDetailsApiFetcher = async (url: RequestInfo) => {
 	// Add apikey header
@@ -22,26 +22,8 @@ export const imageDetailsApiFetcher = async (url: RequestInfo) => {
 	return await res.json();
 };
 
-// Types
-type ImageDataProps = {
-	type: string; // url, upload, unsplash, paste?
-	url: string;
-	caption: string;
-	blurhash: string;
-	height: number;
-	width: number;
-	fileRef?: string;
-	fileSize?: number;
-	// unsplash?: { author: string; profileLink: string };
-};
-type ImageProps = {
-	data: ImageDataProps;
-	onDataChange: (arg0: any) => void;
-	readOnly: boolean;
-};
-
 // Component
-export const ImageBlock = (props: ImageProps) => {
+export const ImageBlock = (props: BlockToolImageProps) => {
 	const { theme } = useTheme();
 	const [stateData, setStateData] = useState(
 		props.data || {

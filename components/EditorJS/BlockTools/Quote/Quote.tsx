@@ -3,20 +3,10 @@ import { Box, InputBase, useMediaQuery } from "@mui/material";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { BiSolidQuoteRight } from "react-icons/bi";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
-
-// Types
-type QuoteDataProps = {
-	text: string;
-	caption: string;
-};
-type QuoteProps = {
-	data: QuoteDataProps;
-	onDataChange: (arg0: any) => void;
-	readOnly: boolean;
-};
+import { BlockToolQuoteProps } from "../../../../types";
 
 // Component
-export const Quote = (props: QuoteProps) => {
+export const Quote = (props: BlockToolQuoteProps) => {
 	const { theme } = useTheme();
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));

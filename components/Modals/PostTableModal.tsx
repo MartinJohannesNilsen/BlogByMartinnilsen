@@ -1,11 +1,10 @@
 "use client";
 import { Box, Modal, useMediaQuery } from "@mui/material";
-import { FC } from "react";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ModalProps } from "../../types";
 import PostTable from "../PostManagement/PostTable";
 
-export const PostTableModal: FC<ModalProps> = (props) => {
+export const PostTableModal = (props: ModalProps) => {
 	const { theme } = useTheme();
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 

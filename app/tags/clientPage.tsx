@@ -4,7 +4,7 @@ import { WebPageJsonLd } from "next-seo";
 import ErrorPage from "next/error";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import TagsPageCard from "../../components/Cards/TagsPageCard";
 import Navbar from "../../components/Navbar/Navbar";
@@ -32,7 +32,7 @@ export const _filterListOfStoredPostsOnTag = (data: StoredPost[], tag: string) =
 	return data.filter((post) => post.tags.includes(tag));
 };
 
-const TagsPage: FC<TagsPageProps> = ({ posts, tags, isAuthorized }) => {
+const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();

@@ -1,30 +1,8 @@
 "use client";
-import { SvgIconTypeMap, SxProps, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { MutableRefObject } from "react";
+import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { isMobile } from "react-device-detect";
-import { IconType } from "react-icons/lib";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-
-export type ButtonBarProps = {
-	buttons: ButtonBarButtonProps[];
-	sx?: SxProps & {};
-	ref?: MutableRefObject<any>;
-	className?: string;
-};
-
-export type ButtonBarButtonProps = {
-	fetched?: boolean;
-	icon?:
-		| (OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
-				muiName: string;
-		  })
-		| IconType;
-	text?: string;
-	onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
-	href?: string;
-	disabled?: boolean;
-};
+import { ButtonBarProps } from "../../types";
 
 export const ButtonBar = (props: ButtonBarProps) => {
 	const { theme } = useTheme();

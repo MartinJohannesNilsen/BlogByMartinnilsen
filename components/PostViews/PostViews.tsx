@@ -1,6 +1,5 @@
 "use client";
 import { Skeleton } from "@mui/material";
-import { FC } from "react";
 import useSWR from "swr";
 
 interface PostViewsProps {
@@ -21,7 +20,7 @@ const apiFetcher = async (url: RequestInfo) => {
 	return await res.json();
 };
 
-const PostViews: FC<PostViewsProps> = ({ postId, sx }) => {
+const PostViews = ({ postId, sx }: PostViewsProps) => {
 	const { data } = useSWR(`/api/views/${postId}`, apiFetcher);
 
 	return (
