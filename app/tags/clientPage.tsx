@@ -8,7 +8,6 @@ import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import TagsPageCard from "../../components/Cards/TagsPageCard";
 import Navbar from "../../components/Navbar/Navbar";
-import SEO from "../../components/SEO/SEO";
 import { _filterListOfStoredPostsOnPublished } from "../../data/db/firebase/overview";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { StoredPost, TagsPageProps } from "../../types";
@@ -91,16 +90,7 @@ const TagsPage: FC<TagsPageProps> = ({ posts, tags, isAuthorized }) => {
 		return <ErrorPage statusCode={404} title="This tag could not be found" />;
 	}
 	return (
-		<SEO
-			pageMeta={{
-				title: tag
-					? tag.toLowerCase() === "published" || tag.toLowerCase() === "unpublished" || tag.toLowerCase() === "saved"
-						? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
-						: "#" + _getCaseInsensitiveElement(tags, tag)!.replace(" ", "")
-					: "All posts",
-				description: "Navigate the full collection of posts, filtering based on their associated tag(s).",
-			}}
-		>
+		<>
 			<WebPageJsonLd
 				description="Navigate the full collection of posts, filtering based on their associated tag(s)."
 				id={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/tags`}
@@ -336,7 +326,7 @@ const TagsPage: FC<TagsPageProps> = ({ posts, tags, isAuthorized }) => {
 			) : (
 				<></>
 			)}
-		</SEO>
+		</>
 	);
 };
 export default TagsPage;

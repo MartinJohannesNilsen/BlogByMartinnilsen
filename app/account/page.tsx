@@ -1,13 +1,16 @@
 "use server";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
 import Account from "./clientPage";
 
-// export const metadata: Metadata = {
-// 	...defaultMetadata,
-// 	title: "Account",
-// };																																																																																																																																																																																																																																																																																																																																																																																																ss
+export async function generateMetadata({ params, searchParams }) {
+	const metadata: Metadata = {
+		title: "Account",
+	};
+	return metadata;
+}
 
 export default async function Page() {
 	// Check authentication

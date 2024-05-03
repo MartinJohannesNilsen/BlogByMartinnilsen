@@ -163,6 +163,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				)}
 
 				{/* About */}
+				{/*
 				{props.about && (
 					<MenuItem
 						onClick={() => {
@@ -176,6 +177,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 						<Typography fontFamily={theme.typography.fontFamily}>About</Typography>
 					</MenuItem>
 				)}
+				*/}
 
 				{/* RSS Feed */}
 				<MenuItem onClick={() => (window.location.href = "/feed/rss.xml")}>

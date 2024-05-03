@@ -7,13 +7,13 @@ import { AccountCard } from "../../components/Cards/AccountCard";
 import { TileButtonCard } from "../../components/Cards/TileButtonCard";
 import Navbar from "../../components/Navbar/Navbar";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { AccountPageProps } from "../../types";
+import { ServerPageProps } from "../../types";
 import useStickyState from "../../utils/useStickyState";
 // Modals can be dynamically imported
 const PostTableModal = dynamic(() => import("../../components/Modals/PostTableModal"));
 const NotificationsModal = dynamic(() => import("../../components/Modals/NotificationsModal"));
 
-const Account: FC<AccountPageProps> = ({ sessionUser, postOverview, isAuthorized }) => {
+const Account = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) => {
 	const { theme } = useTheme();
 	const backgroundBWBreakingPercentage = "45%";
 	// Post Table Modal

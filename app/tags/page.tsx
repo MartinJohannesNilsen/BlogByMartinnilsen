@@ -1,4 +1,5 @@
 "use server";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import {
 	getCachedAllDescendingPostsOverview,
@@ -6,6 +7,14 @@ import {
 	getCachedTags,
 } from "../../data/cache";
 import TagsPage from "./clientPage";
+
+export async function generateMetadata({ params }: { params: { tag: string } }) {
+	const metadata: Metadata = {
+		title: "Tags",
+		description: "Navigate the full collection of posts, filtering based on their associated tag(s).",
+	};
+	return metadata;
+}
 
 export default async function Page() {
 	// Get tags

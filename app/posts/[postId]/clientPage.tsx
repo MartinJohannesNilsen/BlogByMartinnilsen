@@ -408,23 +408,7 @@ export const ReadPostPage: FC<ReadPostPageProps> = ({ post, postId, postOverview
 	);
 
 	return (
-		<SEO
-			pageMeta={{
-				title: post.title,
-				description: post.description,
-				themeColor: isMobile ? theme.palette.primary.dark : theme.palette.primary.main,
-				canonical: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${postId}`,
-				openGraph: {
-					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${postId}`,
-					image: post.ogImage.src || DATA_DEFAULTS.ogImage,
-					type: "article",
-					article: {
-						published: new Date(post.createdAt),
-						keywords: post.tags,
-					},
-				},
-			}}
-		>
+		<>
 			<ArticleJsonLd
 				type="BlogPosting"
 				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${postId}`}
@@ -825,7 +809,7 @@ export const ReadPostPage: FC<ReadPostPageProps> = ({ post, postId, postOverview
 					</Box>
 				</Box>
 			</Box>
-		</SEO>
+		</>
 	);
 };
 export default ReadPostPage;

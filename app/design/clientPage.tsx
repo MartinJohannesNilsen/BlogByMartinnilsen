@@ -1,12 +1,17 @@
 "use client";
 
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "../../styles/themes/ThemeProvider";
+import { Metadata } from "next";
 import { useEffect, useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import useStickyState from "../../utils/useStickyState";
-import { ServerPageProps } from "../../types";
 import { MenuIcon } from "../../components/Icons/MenuIcon";
+import Navbar from "../../components/Navbar/Navbar";
+import { useTheme } from "../../styles/themes/ThemeProvider";
+import { ServerPageProps } from "../../types";
+import useStickyState from "../../utils/useStickyState";
+
+export const metadata: Metadata = {
+	title: "Design",
+};
 
 const DesignPage = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) => {
 	const { theme } = useTheme();

@@ -6,6 +6,7 @@ import CustomSnackbarProvider from "../components/SnackbarProvider/CustomSnackba
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
 import { CustomThemeProvider } from "../styles/themes/ThemeProvider";
+import { defaultMetadata } from "../data/metadata";
 
 export const viewport: Viewport = {
 	themeColor: [
@@ -15,16 +16,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	icons: {
-		icon: "/favicon.ico",
-		apple: "/apple-touch-icon.png",
-		// shortcut: '/shortcut-icon.png',
-		// other: {
-		//   rel: 'apple-touch-icon-precomposed',
-		//   url: '/apple-touch-icon-precomposed.png',
-		// },
-	},
-	manifest: "/manifest.json",
+	...defaultMetadata,
 };
 
 export default async function RootLayout({

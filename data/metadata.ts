@@ -85,12 +85,13 @@ export const defaultMetadata: Metadata = {
 		// creatorId: '1467726470533754880',
 		images: [DATA_DEFAULTS.images.openGraph], // Must be an absolute URL
 	},
+	viewport: { width: "device-width", initialScale: 1 },
 };
 
 export const defaultViewport: Viewport = {
 	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "#fff" },
-		{ media: "(prefers-color-scheme: dark)", color: "#161518" },
+		{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, // TODO color
+		{ media: "(prefers-color-scheme: dark)", color: "#161518" }, // TODO color
 	],
 };
 
