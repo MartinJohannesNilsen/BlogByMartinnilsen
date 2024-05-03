@@ -20,7 +20,7 @@ import {
 import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { closeSnackbar, useSnackbar } from "notistack";
 import { FC, useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
@@ -170,15 +170,14 @@ export const deleteImage = async (fileRef) => {
 	}
 };
 
-const CreatePost: FC<ManagePostPageProps> = (props) => {
+const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	const { theme, setTheme } = useTheme();
 	const [isSaved, setIsSaved] = useState<boolean>(false);
 	const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const router = useRouter();
-	const [postId, setPostId] = useState<string>(props.post ? (router.query.postId![0] as string) : "");
+	const [postId, setPostId] = useState(id);
 	const [tagOptions, setTagOptions] = useState<{ value: string; label: string }[]>([]);
-	const [editorJSContent, setEditorJSContent] = useState<OutputData>(props.post ? props.post.data : { blocks: [] });
+	const [editorJSContent, setEditorJSContent] = useState<OutputData>(post ? post.data : { blocks: [] });
 	const [data, setData] = useState<FullPost>({
 		published: false,
 		type: "",
@@ -207,9 +206,6 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 	const [createdAtEditable, setCreatedAtEditable] = useState(false);
 	const [updatedAtEditable, setUpdatedAtEditable] = useState(false);
 	const [automaticallySetUpdatedAt, setAutomaticallySetUpdatedAt] = useState(true);
-	// Deprecated
-	// const [openTab, setOpenTab] = useState(postId ? 1 : 0);
-	// const [toggleOpen, setToggleOpen] = useState(postId ? false : true);
 
 	useEffect(() => {
 		setTheme(ThemeEnum.Light);
@@ -227,9 +223,9 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 	}, []);
 
 	useEffect(() => {
-		if (props.post) {
-			setData(props.post);
-			setEditorJSContent(props.post.data);
+		if (post) {
+			setData(post);
+			setEditorJSContent(post.data);
 			setIsLoading(false);
 		}
 		setIsLoading(false);
@@ -298,9 +294,9 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 				}
 
 				// If post exists, then update, or add new
-				if (postId !== "") {
+				if (postId) {
 					// Update field 'updatedAt' only when not localhost and not adjusted already
-					// if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && props.post.updatedAt === newObject.updatedAt) {
+					// if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && post.updatedAt === newObject.updatedAt) {
 					if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && automaticallySetUpdatedAt) {
 						newObject.updatedAt = Date.now();
 						setData({ ...data, updatedAt: newObject.updatedAt });
@@ -380,31 +376,33 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 			variant: "default",
 			preventDuplicate: true,
 		});
-		deletePost(postId).then((postWasDeleted) => {
-			if (postWasDeleted) {
-				deletePostsOverview(postId).then((overviewWasUpdated) => {
-					if (overviewWasUpdated) {
-						enqueueSnackbar("Successfully deleted post!", {
-							variant: "success",
-							preventDuplicate: true,
-						});
-						revalidatePages(["/", "/tags", "/posts/" + postId]).then(() => {
-							handleNavigate("/");
-						});
-					} else {
-						enqueueSnackbar("An error occured ...", {
-							variant: "error",
-							preventDuplicate: true,
-						});
-					}
-				});
-			} else {
-				enqueueSnackbar("An error occured ...", {
-					variant: "error",
-					preventDuplicate: true,
-				});
-			}
-		});
+		if (postId) {
+			deletePost(postId).then((postWasDeleted) => {
+				if (postWasDeleted) {
+					deletePostsOverview(postId).then((overviewWasUpdated) => {
+						if (overviewWasUpdated) {
+							enqueueSnackbar("Successfully deleted post!", {
+								variant: "success",
+								preventDuplicate: true,
+							});
+							revalidatePages(["/", "/tags", "/posts/" + postId]).then(() => {
+								handleNavigate("/");
+							});
+						} else {
+							enqueueSnackbar("An error occured ...", {
+								variant: "error",
+								preventDuplicate: true,
+							});
+						}
+					});
+				} else {
+					enqueueSnackbar("An error occured ...", {
+						variant: "error",
+						preventDuplicate: true,
+					});
+				}
+			});
+		}
 	};
 
 	const handleCreateTagOption = (inputValue: string) => {
@@ -533,7 +531,7 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 								)}
 								<Box flexGrow={1} />
 								{/* Delete */}
-								{props.post && (
+								{post && (
 									<>
 										<NavbarButton
 											variant="outline"
@@ -642,7 +640,7 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 							</Typography>
 							<Grid container alignItems="center" justifyContent="flex-start" rowGap={1}>
 								{/* Date and time */}
-								{props.post && (
+								{post && (
 									<>
 										<Grid item xs={3} md={2}>
 											<Typography sx={{ fontWeight: 600 }}>Created at</Typography>
@@ -684,9 +682,9 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 														},
 														{
 															text: "Revert",
-															disabled: !props.post,
+															disabled: !post,
 															onClick: () => {
-																setData({ ...data, createdAt: props.post!.createdAt });
+																setData({ ...data, createdAt: post!.createdAt });
 																setCreatedAtEditable(false);
 															},
 														},
@@ -762,7 +760,7 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 														}}
 														disabled
 														name="updatedAt"
-														value={props.post.updatedAt ? "Will be removed" : "Not yet updated"}
+														value={post.updatedAt ? "Will be removed" : "Not yet updated"}
 														onChange={(e) => {
 															setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
 														}}
@@ -776,16 +774,16 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 															text: "Set editable",
 															disabled: updatedAtEditable,
 															onClick: () => {
-																setData({ ...data, updatedAt: props.post!.updatedAt || data.createdAt });
+																setData({ ...data, updatedAt: post!.updatedAt || data.createdAt });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(true);
 															},
 														},
 														{
 															text: "Revert",
-															disabled: !props.post,
+															disabled: !post,
 															onClick: () => {
-																setData({ ...data, updatedAt: props.post!.updatedAt });
+																setData({ ...data, updatedAt: post!.updatedAt });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(false);
 															},
@@ -799,7 +797,7 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 														},
 														{
 															text: "Remove",
-															disabled: !props.post?.updatedAt,
+															disabled: !post?.updatedAt,
 															onClick: () => {
 																setData({ ...data, updatedAt: undefined });
 																setAutomaticallySetUpdatedAt(false);
@@ -811,7 +809,7 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 												{/* <NavbarButton
 													variant="outline"
 													onClick={() => {
-														setData({ ...data, updatedAt: props.post.updatedAt || data.createdAt });
+														setData({ ...data, updatedAt: post.updatedAt || data.createdAt });
 														setAutomaticallySetUpdatedAt(false);
 														setUpdatedAtEditable(true);
 													}}
@@ -833,11 +831,11 @@ const CreatePost: FC<ManagePostPageProps> = (props) => {
 												<NavbarButton
 													variant="outline"
 													onClick={() => {
-														setData({ ...data, updatedAt: props.post.updatedAt });
+														setData({ ...data, updatedAt: post.updatedAt });
 														setAutomaticallySetUpdatedAt(false);
 														setUpdatedAtEditable(false);
 													}}
-													disabled={!props.post}
+													disabled={!post}
 													icon={Restore}
 													tooltip="Revert"
 													sxButton={{

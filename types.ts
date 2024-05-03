@@ -327,6 +327,7 @@ export type ReadPostPageProps = {
 };
 export type ManagePostPageProps = {
 	post?: FullPost;
+	id?: string;
 };
 export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean };
 export type FooterProps = {};

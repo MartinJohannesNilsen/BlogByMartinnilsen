@@ -1,7 +1,7 @@
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { createdApiDocSpec } from "../../lib/swagger";
 import ApiDoc from "./clientPage";
-import { Metadata } from "next";
 
 export async function generateMetadata({ params, searchParams }) {
 	const metadata: Metadata = {
