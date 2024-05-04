@@ -7,11 +7,11 @@ import { Metadata } from "next";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { MenuIcon } from "../../components/Icons/MenuIcon";
-import Navbar from "../../components/Navbar/Navbar";
+import Navbar from "../../components/Navigation/Navbar";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ServerPageProps } from "../../types";
 import useStickyState from "../../utils/useStickyState";
-import Footer from "../../components/Footer/LinkFooter";
+import Footer from "../../components/Navigation/LinkFooter";
 
 export const metadata: Metadata = {
 	title: "Design",

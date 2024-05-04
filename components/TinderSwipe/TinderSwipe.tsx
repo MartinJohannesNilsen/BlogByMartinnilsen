@@ -11,7 +11,7 @@ import TinderCard from "react-tinder-card";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { directionType, StoredPost, TinderSwipeType } from "../../types";
 import { copyToClipboardV2 } from "../../utils/copyToClipboard";
-import LandingPageSwipeCard from "../Cards/LandingPageSwipeCard";
+import LandingPageSwipeCard from "../DesignLibrary/Cards/LandingPageSwipeCard";
 
 const TinderSwipe = (props: TinderSwipeType) => {
 	const { theme } = useTheme();

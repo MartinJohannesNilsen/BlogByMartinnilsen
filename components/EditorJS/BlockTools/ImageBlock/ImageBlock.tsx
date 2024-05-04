@@ -4,9 +4,9 @@ import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import { NavbarButton } from "../../../Buttons/NavbarButton";
+import { NavbarButton } from "../../../DesignLibrary/Buttons/NavbarButton";
 import { deleteImage, uploadImage } from "../../../PostManagement/PostManagement";
-import { StyledTextField } from "../../../StyledMUI/TextInput";
+import { StyledTextField } from "../../../DesignLibrary/Text/TextInput";
 import { BlockToolImageProps, FullPost } from "../../../../types";
 
 export const imageDetailsApiFetcher = async (url: RequestInfo) => {

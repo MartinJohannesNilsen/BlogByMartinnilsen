@@ -7,7 +7,7 @@ import { EditorjsRendererProps } from "../../../types";
 import colorLuminance from "../../../utils/colorLuminance";
 import { BlurhashCanvas } from "react-blurhash";
 import { useEffect, useState } from "react";
-import BlurHashHTMLImage from "../../Image/BlurHashHTMLImage";
+import BlurHashHTMLImage from "../../DesignLibrary/Image/BlurHashHTMLImage";
 
 const maxWidth = 760;
 

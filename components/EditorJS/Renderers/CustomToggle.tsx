@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { processJsonToggleBlocks, renderers } from "../../../app/posts/[postId]/clientPage";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
-import Toggle from "../../Toggles/Toggle";
+import Toggle from "../../DesignLibrary/Toggles/Toggle";
 import { style } from "../style";
 
 const CustomToggle = (props: EditorjsRendererProps) => {

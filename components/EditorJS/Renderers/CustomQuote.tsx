@@ -6,7 +6,7 @@ import { useState } from "react";
 import { BiSolidQuoteRight } from "react-icons/bi";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
-import { NavbarButton } from "../../Buttons/NavbarButton";
+import { NavbarButton } from "../../DesignLibrary/Buttons/NavbarButton";
 import { handleSharing } from "../../../utils/handleSharing";
 const { convert } = require("html-to-text");
 

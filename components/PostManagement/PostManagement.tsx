@@ -36,12 +36,12 @@ import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManagePostPageProps } from "../../types";
 import { copyToClipboardV2 } from "../../utils/copyToClipboard";
 import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
-import { NavbarButton } from "../Buttons/NavbarButton";
+import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
 import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
-import OptionMenu from "../Menus/OptionMenu";
-import EditableTypography from "../StyledMUI/EditableTypography";
-import { BpRadio } from "../StyledMUI/RadioButton";
-import { StyledTextField } from "../StyledMUI/TextInput";
+import OptionMenu from "../DesignLibrary/Menus/OptionMenu";
+import EditableTypography from "../DesignLibrary/Text/EditableTypography";
+import { BpRadio } from "../DesignLibrary/Buttons/RadioButton";
+import { StyledTextField } from "../DesignLibrary/Text/TextInput";
 import { DATA_DEFAULTS } from "../../data/metadata";
 let EditorBlock;
 if (typeof window !== "undefined") {

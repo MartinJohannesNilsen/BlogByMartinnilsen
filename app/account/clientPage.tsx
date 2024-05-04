@@ -3,15 +3,15 @@ import { Api, Bookmark, Create, Newspaper, Notifications } from "@mui/icons-mate
 import { Grid } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { AccountCard } from "../../components/Cards/AccountCard";
-import { TileButtonCard } from "../../components/Cards/TileButtonCard";
-import Navbar from "../../components/Navbar/Navbar";
+import { AccountCard } from "../../components/DesignLibrary/Cards/AccountCard";
+import { TileButtonCard } from "../../components/DesignLibrary/Cards/TileButtonCard";
+import Navbar from "../../components/Navigation/Navbar";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ServerPageProps } from "../../types";
 import useStickyState from "../../utils/useStickyState";
 // Modals can be dynamically imported
-const PostTableModal = dynamic(() => import("../../components/Modals/PostTableModal"));
-const NotificationsModal = dynamic(() => import("../../components/Modals/NotificationsModal"));
+const PostTableModal = dynamic(() => import("../../components/DesignLibrary/Modals/PostTableModal"));
+const NotificationsModal = dynamic(() => import("../../components/DesignLibrary/Modals/NotificationsModal"));
 
 const Account = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) => {
 	const { theme } = useTheme();

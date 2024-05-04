@@ -6,7 +6,7 @@ import useSWR from "swr";
 import { getPostsOverview } from "../../data/db/firebase/overview";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { TablePost } from "../../types";
-import { NavbarButton } from "../Buttons/NavbarButton";
+import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
 
 const fetchPosts = async () => {
 	const db_posts = await getPostsOverview(
