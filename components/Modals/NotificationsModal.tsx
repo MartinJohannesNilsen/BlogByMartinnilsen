@@ -144,7 +144,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 						style={{ position: "absolute", top: "5px", right: "5px" }}
 						onClick={() => props.handleModalClose()}
 					>
-						<Close />
+						<Close sx={{ color: theme.palette.text.primary }} />
 					</IconButton>
 					{/* Title */}
 					<Typography
@@ -222,6 +222,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 						) : (
 							<Typography
 								my={1}
+								px={1.5}
 								fontFamily={theme.typography.fontFamily}
 								variant="body2"
 								fontWeight="500"

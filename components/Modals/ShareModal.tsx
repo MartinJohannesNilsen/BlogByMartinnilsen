@@ -58,7 +58,7 @@ export const ShareModal = (props: ShareModalProps) => {
 							props.handleModalClose();
 						}}
 					>
-						<Close />
+						<Close sx={{ color: theme.palette.text.primary }} />
 					</IconButton>
 					{/* Title */}
 					<Typography

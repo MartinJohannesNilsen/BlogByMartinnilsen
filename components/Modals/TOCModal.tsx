@@ -171,7 +171,7 @@ export const TOCModal = (props: TOCModalProps) => {
 							style={{ position: "absolute", top: "5px", right: "5px" }}
 							onClick={() => props.handleModalClose()}
 						>
-							<Close />
+							<Close sx={{ color: theme.palette.text.primary }} />
 						</IconButton>
 						<Typography
 							fontFamily={theme.typography.fontFamily}
