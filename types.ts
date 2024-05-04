@@ -291,6 +291,8 @@ export type NavbarProps = {
 	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
 	ref?: MutableRefObject<undefined>;
 	className?: string;
+	isAuthorized: boolean;
+	centeredPadding?: boolean;
 };
 
 export type PostNavbarProps = {

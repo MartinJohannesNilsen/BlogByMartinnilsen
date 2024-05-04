@@ -3,6 +3,8 @@ import ErrorPage from "next/error";
 import { useEffect, useState } from "react";
 import CreatePost from "../../../components/PostManagement/PostManagement";
 import { FullPost } from "../../../types";
+import { useTheme } from "../../../styles/themes/ThemeProvider";
+import { ThemeEnum } from "../../../styles/themes/themeMap";
 
 const ManageArticlePage = ({
 	post,
@@ -14,10 +16,15 @@ const ManageArticlePage = ({
 	isAuthorized: boolean;
 }) => {
 	const [isLoading, setIsLoading] = useState(true);
+	const { theme, setTheme } = useTheme();
+
+	useEffect(() => {
+		setTheme(ThemeEnum.Light);
+	}, []);
 
 	useEffect(() => {
 		setIsLoading(false);
-	}, []);
+	}, [theme]);
 
 	if (!isAuthorized) return <ErrorPage statusCode={403} title="You've taken the wrong path! Please return home" />;
 	if (isLoading) return <></>;

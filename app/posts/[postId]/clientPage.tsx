@@ -22,12 +22,11 @@ import { style } from "../../../components/EditorJS/style";
 import Footer from "../../../components/Footer/LinkFooter";
 import PostNavbar from "../../../components/Navbar/PostNavbar";
 import PostViews from "../../../components/PostViews/PostViews";
-import { DATA_DEFAULTS } from "../../../components/SEO/SEO";
 import Toggle from "../../../components/Toggles/Toggle";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { ButtonBarButtonProps, ReadPostPageProps } from "../../../types";
 import { IDiscussionData, IMetadataMessage } from "../../../utils/giscus";
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+// gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Editorjs render
 import Output from "editorjs-react-renderer";
@@ -52,6 +51,7 @@ import CustomQuote from "../../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../../components/EditorJS/Renderers/CustomVideo";
+import { DATA_DEFAULTS } from "../../../data/metadata";
 import { handleSharing } from "../../../utils/handleSharing";
 import useStickyState from "../../../utils/useStickyState";
 
@@ -626,7 +626,7 @@ export const ReadPostPage = ({ post, postId, postOverview, isAuthorized }: ReadP
 																	url: typeof window !== "undefined" ? window.location.href : "",
 																	title: post.title,
 																	text: "",
-																	icon: post.ogImage.src || DATA_DEFAULTS.ogImage,
+																	icon: post.ogImage.src || DATA_DEFAULTS.images.openGraph,
 																	fallback: () => setOpenShareModal(true),
 															  })
 															: setOpenShareModal(true);

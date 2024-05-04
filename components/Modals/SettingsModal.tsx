@@ -1,6 +1,6 @@
 "use client";
 import { Close, Gradient, Square } from "@mui/icons-material";
-import { Box, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
@@ -100,7 +100,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							setColorPickerOpen(false);
 						}}
 					>
-						<Close />
+						<Close sx={{ color: theme.palette.text.primary }} />
 					</IconButton>
 					<Typography
 						fontFamily={theme.typography.fontFamily}
@@ -111,6 +111,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 					>
 						Settings
 					</Typography>
+					{/* Dark/light mode */}
 					<Box display="flex" gap="10px">
 						<Typography
 							fontFamily={theme.typography.fontFamily}
@@ -134,11 +135,15 @@ export const SettingsModal = (props: SettingsModalProps) => {
 										setDefaultTheme();
 									}}
 								>
-									<Close fontSize="inherit" />
+									<Close
+										fontSize="inherit"
+										sx={{ color: themeUserConfigurationExist ? theme.palette.text.primary : undefined }}
+									/>
 								</IconButton>
 							</Tooltip>
 						</Box>
 					</Box>
+					{/* Font family */}
 					<Box display="flex" mt={0.4} alignItems="baseline">
 						<Typography
 							mt={0.8}
@@ -164,6 +169,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							))}
 						</StyledControlledSelect>
 					</Box>
+					{/* Accent color */}
 					<Box display="flex" mt={0.2}>
 						<Typography
 							mt={0.8}
@@ -236,6 +242,45 @@ export const SettingsModal = (props: SettingsModalProps) => {
 								</StyledControlledSelect>
 							</Box>
 						</TransparentTooltip>
+					</Box>
+					{/* Clear localstorage */}
+					<Box display="flex" mt={0.2}>
+						<Typography
+							mt={0.8}
+							fontFamily={theme.typography.fontFamily}
+							variant="body1"
+							fontWeight="600"
+							color={theme.palette.text.primary}
+						>
+							Remove data:
+						</Typography>
+						<Box flexGrow="1" />
+
+						<Button
+							// disabled={buttonDisabled}
+							sx={{
+								border: "1px solid " + theme.palette.error.main,
+								backgroundColor: theme.palette.primary.main,
+								"&:hover": { backgroundColor: theme.palette.error.main },
+								"&:disabled": { opacity: 0.8 },
+								borderRadius: "5px",
+								p: "5px 10px",
+								mt: 0.4,
+							}}
+							onClick={() => {
+								localStorage.clear();
+							}}
+						>
+							<Typography
+								fontFamily={theme.typography.fontFamily}
+								variant="subtitle2"
+								sx={{ textTransform: "none" }}
+								fontWeight="600"
+								color={theme.palette.text.primary}
+							>
+								Clear local storage
+							</Typography>
+						</Button>
 					</Box>
 				</Box>
 			</Modal>

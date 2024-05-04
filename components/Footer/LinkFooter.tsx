@@ -162,7 +162,8 @@ const Footer = ({}: FooterProps) => {
 										"&:hover": { color: theme.palette.text.primary },
 									}}
 								>
-									Buy me a coffee
+									{/* Buy me a coffee */}
+									Buy me a cocoa
 								</Typography>
 							</Link>
 						</Box>

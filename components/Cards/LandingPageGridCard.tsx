@@ -6,7 +6,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { PostCardProps } from "../../types";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../PostViews/PostViews";
-import { DATA_DEFAULTS } from "../SEO/SEO";
+import { DATA_DEFAULTS } from "../../data/metadata";
 
 export const LandingPageGridCard = (props: PostCardProps) => {
 	const { theme } = useTheme();
@@ -25,7 +25,7 @@ export const LandingPageGridCard = (props: PostCardProps) => {
 		>
 			<CardMedia>
 				<BlurHashHTMLImage
-					src={props.ogImage.src || DATA_DEFAULTS.ogImage}
+					src={props.ogImage.src || DATA_DEFAULTS.images.openGraph}
 					blurhash={{ encoded: props.ogImage.blurhash!, width: 100, height: 100 }}
 					alt={`OpenGraph image for post titled "${props.title}"`}
 					style={{

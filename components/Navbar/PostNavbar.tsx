@@ -10,7 +10,7 @@ import useAuthorized from "../../components/AuthorizationHook/useAuthorized";
 import { NavbarButton } from "../../components/Buttons/NavbarButton";
 import ProfileMenu from "../../components/Menus/ProfileMenu";
 import { extractHeaders } from "../../components/Modals/TOCModal";
-import { DATA_DEFAULTS } from "../../components/SEO/SEO";
+import { DATA_DEFAULTS } from "../../data/metadata";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { PostNavbarProps, SearchActionProps } from "../../types";
@@ -98,7 +98,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 					url: typeof window !== "undefined" ? window.location.href : "",
 					title: props.post.title,
 					text: "",
-					icon: props.post.ogImage.src || DATA_DEFAULTS.ogImage,
+					icon: props.post.ogImage.src || DATA_DEFAULTS.images.openGraph,
 					fallback: () => props.shareModal.setOpen(true),
 				});
 			},
@@ -521,7 +521,6 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						setOpenNotificationsModal(false);
 						handleNotificationsModalClose();
 						handleProfileMenuClose();
-						// handleAboutModalClose();
 					}}
 					extraActions={extraActions}
 				/>
@@ -564,7 +563,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						props.post.ogImage && props.post.ogImage.src && props.post.ogImage.src.trim() !== ""
 							? props.post.ogImage
 							: {
-									src: DATA_DEFAULTS.ogImage,
+									src: DATA_DEFAULTS.images.openGraph,
 									height: 630,
 									width: 1200,
 									blurhash: "U00l#at7D%M{ofj[WBayD%Rj-;xuRjayt7of",

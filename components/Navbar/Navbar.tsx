@@ -21,17 +21,9 @@ import SearchModal from "../Modals/SearchModal"; // For listening to hotkeys on 
 // const SearchModal = dynamic(() => import("../Modals/SearchModal"));
 const NotificationsModal = dynamic(() => import("../Modals/NotificationsModal"));
 const SettingsModal = dynamic(() => import("../Modals/SettingsModal"));
-const AboutModal = dynamic(() => import("../Modals/AboutModal"));
 
-export const Navbar = (props: NavbarProps) => {
+export const Navbar = ({ posts, setCardLayout, ref, className, isAuthorized, centeredPadding }: NavbarProps) => {
 	const { theme, setTheme } = useTheme();
-	const { isAuthorized, status } =
-		process.env.NEXT_PUBLIC_LOCALHOST === "true"
-			? {
-					isAuthorized: true,
-					status: "authenticated",
-			  }
-			: useAuthorized();
 	const pathname = usePathname();
 	// ProfileMenu
 	const [anchorElProfileMenu, setAnchorElProfileMenu] = useState<null | HTMLElement>(null);
@@ -51,10 +43,6 @@ export const Navbar = (props: NavbarProps) => {
 	const [openSettingsModal, setOpenSettingsModal] = useState(false);
 	const handleSettingsModalOpen = () => setOpenSettingsModal(true);
 	const handleSettingsModalClose = () => setOpenSettingsModal(false);
-	// AboutModal
-	const [openAboutModal, setOpenAboutModal] = useState(false);
-	const handleAboutModalOpen = () => setOpenAboutModal(true);
-	const handleAboutModalClose = () => setOpenAboutModal(false);
 	// SearchModal
 	const [openSearchModal, setOpenSearchModal] = useState(false);
 	const handleSearchModalOpen = () => setOpenSearchModal(true);
@@ -82,8 +70,8 @@ export const Navbar = (props: NavbarProps) => {
 	if (pathname === "/account") {
 		return (
 			<Box
-				className={props.className}
-				ref={props.ref}
+				className={className}
+				ref={ref}
 				width={"100%"}
 				pt={isMobile ? 4.75 : 1}
 				pb={isMobile ? 0.75 : 1}
@@ -102,10 +90,14 @@ export const Navbar = (props: NavbarProps) => {
 				<Box
 					display="flex"
 					alignItems="center"
-					sx={{
-						width: "100%",
-						paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
-					}}
+					sx={
+						centeredPadding
+							? {
+									width: "100%",
+									paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
+							  }
+							: { width: "95%" }
+					}
 				>
 					{/* Home button */}
 					<ButtonBase
@@ -154,7 +146,7 @@ export const Navbar = (props: NavbarProps) => {
 								variant="outline"
 								href="/tags"
 								icon={Tag}
-								tooltip="Go to tags"
+								tooltip="Go to tags page"
 								sxIcon={{}}
 								sxButton={{
 									color: theme.palette.text.secondary,
@@ -236,9 +228,9 @@ export const Navbar = (props: NavbarProps) => {
 						<Box mr={0.5}>
 							<NavbarButton
 								variant="outline"
-								onClick={handleAboutModalOpen}
+								href="/about"
 								icon={Info}
-								tooltip="Open about"
+								tooltip="Go to about page"
 								sxIcon={{}}
 								sxButton={{
 									color: theme.palette.text.secondary,
@@ -332,16 +324,15 @@ export const Navbar = (props: NavbarProps) => {
 					open={openSearchModal}
 					handleModalOpen={handleSearchModalOpen}
 					handleModalClose={handleSearchModalClose}
-					postsOverview={props.posts}
+					postsOverview={posts}
 					handleSettingsModalOpen={handleSettingsModalOpen}
 					handleNotificationsModalOpen={handleNotificationsModalOpen}
 					notificationsBadgeVisible={visibleBadgeNotifications}
-					setCardLayout={props.setCardLayout}
+					setCardLayout={setCardLayout}
 					onOpen={() => {
 						handleSettingsModalClose();
 						handleNotificationsModalClose();
 						handleProfileMenuClose();
-						handleAboutModalClose();
 					}}
 				/>
 				<SettingsModal
@@ -349,11 +340,6 @@ export const Navbar = (props: NavbarProps) => {
 					handleModalOpen={handleSettingsModalOpen}
 					handleModalClose={handleSettingsModalClose}
 					handleThemeChange={handleThemeChange}
-				/>
-				<AboutModal
-					open={openAboutModal}
-					handleModalOpen={handleAboutModalOpen}
-					handleModalClose={handleAboutModalClose}
 				/>
 				<NotificationsModal
 					open={openNotificationsModal}
@@ -367,8 +353,8 @@ export const Navbar = (props: NavbarProps) => {
 	// Default navbar
 	return (
 		<Box
-			className={props.className}
-			ref={props.ref}
+			className={className}
+			ref={ref}
 			width={"100%"}
 			pt={isMobile ? 4.75 : 1}
 			pb={isMobile ? 0.75 : 1}
@@ -390,10 +376,14 @@ export const Navbar = (props: NavbarProps) => {
 			<Box
 				display="flex"
 				alignItems="center"
-				sx={{
-					width: "100%",
-					paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
-				}}
+				sx={
+					centeredPadding
+						? {
+								width: "100%",
+								paddingX: lgUp ? "150px" : xs ? "10px" : "80px",
+						  }
+						: { width: "95%" }
+				}
 			>
 				{/* Home button */}
 				<ButtonBase
@@ -503,7 +493,7 @@ export const Navbar = (props: NavbarProps) => {
 						variant="outline"
 						href="/tags"
 						icon={Tag}
-						tooltip="Go to tags"
+						tooltip="Go to tags page"
 						sxButton={{
 							height: "34px",
 							width: "34px",
@@ -537,11 +527,6 @@ export const Navbar = (props: NavbarProps) => {
 							handleModalOpen: handleSettingsModalOpen,
 							handleModalClose: handleSettingsModalClose,
 						}}
-						about={{
-							open: openAboutModal,
-							handleModalOpen: handleAboutModalOpen,
-							handleModalClose: handleAboutModalClose,
-						}}
 					/>
 				</Box>
 			</Box>
@@ -551,16 +536,15 @@ export const Navbar = (props: NavbarProps) => {
 				open={openSearchModal}
 				handleModalOpen={handleSearchModalOpen}
 				handleModalClose={handleSearchModalClose}
-				postsOverview={props.posts}
+				postsOverview={posts}
 				handleSettingsModalOpen={handleSettingsModalOpen}
 				handleNotificationsModalOpen={handleNotificationsModalOpen}
 				notificationsBadgeVisible={visibleBadgeNotifications}
-				setCardLayout={props.setCardLayout}
+				setCardLayout={setCardLayout}
 				onOpen={() => {
 					handleSettingsModalClose();
 					handleNotificationsModalClose();
 					handleProfileMenuClose();
-					handleAboutModalClose();
 				}}
 			/>
 			<SettingsModal
@@ -574,11 +558,6 @@ export const Navbar = (props: NavbarProps) => {
 				handleModalOpen={handleNotificationsModalOpen}
 				handleModalClose={handleNotificationsModalClose}
 				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
-			/>
-			<AboutModal
-				open={openAboutModal}
-				handleModalOpen={handleAboutModalOpen}
-				handleModalClose={handleAboutModalClose}
 			/>
 		</Box>
 	);

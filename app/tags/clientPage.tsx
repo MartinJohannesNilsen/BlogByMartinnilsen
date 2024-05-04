@@ -113,6 +113,7 @@ const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 					<Navbar
 						posts={isAuthorized ? posts : _filterListOfStoredPostsOnPublished(posts, "published")}
 						setCardLayout={setCardLayout}
+						isAuthorized={isAuthorized}
 					/>
 					<Box
 						display="flex"

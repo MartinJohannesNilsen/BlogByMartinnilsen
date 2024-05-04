@@ -43,10 +43,7 @@ export default async function Page({ params }: { params: { postId?: string[] } }
 	const id = params.postId && params.postId.length > 0 ? params.postId[0] : undefined;
 
 	// Get post
-	const getCachedPost = unstable_cache(async (postId: string) => getPost(postId), undefined, {
-		tags: [`post_${params.postId}`],
-	});
-	const post = id ? await getCachedPost(id) : undefined;
+	const post = id ? await getPost(id) : undefined;
 
 	// Check authentication
 	const session = await getServerSession();

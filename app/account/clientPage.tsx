@@ -51,7 +51,7 @@ const Account = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) =
 				background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
 			}}
 		>
-			<Navbar posts={postOverview} setCardLayout={setCardLayout} />
+			<Navbar posts={postOverview} setCardLayout={setCardLayout} isAuthorized={isAuthorized} />
 			<Grid
 				container
 				sx={{ width: "350px" }}
