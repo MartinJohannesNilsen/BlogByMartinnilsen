@@ -1,10 +1,9 @@
 import { OutputData } from "@editorjs/editorjs";
-import { Breakpoint, SvgIconTypeMap, SxProps, Theme } from "@mui/material";
+import { SvgIconTypeMap, SxProps, Theme } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { CSSProperties, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
 import { ThemeEnum } from "./styles/themes/themeMap";
-import { Reactions } from "./utils/giscus";
 
 // Object types
 
@@ -214,14 +213,15 @@ export type BlockToolCalloutProps = {
 	readOnly: boolean;
 };
 
+export type SessionUser = {
+	name?: string | null | undefined;
+	email?: string | null | undefined;
+	image?: string | null | undefined;
+	role?: string | null | undefined;
+};
+
 export type AccountCardProps = {
-	sessionUser:
-		| {
-				name?: string | null | undefined;
-				email?: string | null | undefined;
-				image?: string | null | undefined;
-		  }
-		| undefined;
+	sessionUser?: SessionUser;
 	isAuthorized: boolean;
 };
 
@@ -501,13 +501,7 @@ export type ManagePostPageProps = {
 export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean };
 export type FooterProps = {};
 export type ServerPageProps = {
-	sessionUser:
-		| {
-				name?: string | null | undefined;
-				email?: string | null | undefined;
-				image?: string | null | undefined;
-		  }
-		| undefined;
+	sessionUser?: SessionUser;
 	isAuthorized: boolean;
 	postsOverview?: StoredPost[];
 };

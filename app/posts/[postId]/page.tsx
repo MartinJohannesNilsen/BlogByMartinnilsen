@@ -1,12 +1,12 @@
 "use server";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { unstable_cache } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
 import { getPost } from "../../../data/db/posts";
-import ReadArticleView from "./clientPage";
 import { DATA_DEFAULTS, defaultMetadata, formatDate } from "../../../data/metadata";
-import { Metadata } from "next";
+import ReadArticleView from "./clientPage";
 
 export async function generateMetadata({ params }: { params: { postId: string } }) {
 	// Get post

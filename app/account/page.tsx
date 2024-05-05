@@ -23,10 +23,5 @@ export default async function Page() {
 		: await getCachedPublishedDescendingPostsOverview();
 
 	if (!isAuthorized && (!session || !session.user)) redirect("/api/auth/signin");
-	return (
-		<>
-			<h1>{session}</h1>
-			<Account postsOverview={postsOverview} sessionUser={session?.user} isAuthorized={isAuthorized} />
-		</>
-	);
+	return <Account postsOverview={postsOverview} sessionUser={session?.user} isAuthorized={isAuthorized} />;
 }

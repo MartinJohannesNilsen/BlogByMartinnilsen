@@ -1,6 +1,5 @@
 "use server";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
 import DesignPage from "./clientPage";
 

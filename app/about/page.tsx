@@ -1,9 +1,8 @@
 "use server";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
 import AboutPage from "./clientPage";
-import { Metadata } from "next";
 
 export async function generateMetadata({ params, searchParams }) {
 	const metadata: Metadata = {
