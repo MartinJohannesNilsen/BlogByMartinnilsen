@@ -22,7 +22,15 @@ import SearchModal from "../DesignLibrary/Modals/SearchModal"; // For listening 
 const NotificationsModal = dynamic(() => import("../DesignLibrary/Modals/NotificationsModal"));
 const SettingsModal = dynamic(() => import("../DesignLibrary/Modals/SettingsModal"));
 
-export const Navbar = ({ posts, setCardLayout, ref, className, isAuthorized, centeredPadding }: NavbarProps) => {
+export const Navbar = ({
+	posts,
+	setCardLayout,
+	ref,
+	className,
+	isAuthorized,
+	sessionUser,
+	centeredPadding,
+}: NavbarProps) => {
 	const { theme, setTheme } = useTheme();
 	const pathname = usePathname();
 	// ProfileMenu
@@ -281,7 +289,7 @@ export const Navbar = ({ posts, setCardLayout, ref, className, isAuthorized, cen
 								}}
 							/>
 						</Box>
-						{status === "authenticated" && (
+						{sessionUser && (
 							<Box>
 								<NavbarButton
 									variant="outline"

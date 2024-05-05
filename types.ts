@@ -302,6 +302,7 @@ export type NavbarProps = {
 	ref?: MutableRefObject<undefined>;
 	className?: string;
 	isAuthorized: boolean;
+	sessionUser?: SessionUser;
 	centeredPadding?: boolean;
 };
 
