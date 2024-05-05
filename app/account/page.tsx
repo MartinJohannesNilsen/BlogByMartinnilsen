@@ -16,7 +16,6 @@ export default async function Page() {
 	// Check authentication
 	const session: any = await getServerSession();
 	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
-	console.log(session); // TODO remove
 
 	// Get postsOverview
 	const postsOverview = isAuthorized
@@ -24,5 +23,10 @@ export default async function Page() {
 		: await getCachedPublishedDescendingPostsOverview();
 
 	if (!isAuthorized && (!session || !session.user)) redirect("/api/auth/signin");
-	return <Account postsOverview={postsOverview} sessionUser={session?.user} isAuthorized={isAuthorized} />;
+	return (
+		<>
+			<h1>{session}</h1>
+			<Account postsOverview={postsOverview} sessionUser={session?.user} isAuthorized={isAuthorized} />
+		</>
+	);
 }
