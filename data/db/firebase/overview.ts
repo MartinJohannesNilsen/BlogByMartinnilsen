@@ -26,9 +26,9 @@ export const _filterListOfStoredPostsOnPublished = (
 };
 
 const getAllPostIds = async (filterOnVisibility: boolean): Promise<string[]> => {
-	const postOverviewSnapshot = await getDoc(doc(db, "administrative", db_document));
-	if (postOverviewSnapshot.exists()) {
-		const data = postOverviewSnapshot.data().values;
+	const postsOverviewSnapshot = await getDoc(doc(db, "administrative", db_document));
+	if (postsOverviewSnapshot.exists()) {
+		const data = postsOverviewSnapshot.data().values;
 
 		const list: { id: string }[] = Object.values(
 			filterOnVisibility ? data.filter((post: StoredPost) => post.published) : data
@@ -41,9 +41,9 @@ const getAllPostIds = async (filterOnVisibility: boolean): Promise<string[]> => 
 };
 
 const getPostsOverview = async (sorted?: "asc" | "desc", filterOnPublished?: boolean): Promise<StoredPost[]> => {
-	const postOverviewSnapshot = await getDoc(doc(db, "administrative", db_document));
-	if (postOverviewSnapshot.exists()) {
-		let data = postOverviewSnapshot.data().values;
+	const postsOverviewSnapshot = await getDoc(doc(db, "administrative", db_document));
+	if (postsOverviewSnapshot.exists()) {
+		let data = postsOverviewSnapshot.data().values;
 		if (sorted) {
 			data = _sortListOfStoredPostsOnTimestamp(data, sorted === "asc");
 		}
@@ -58,9 +58,9 @@ const getPostsOverview = async (sorted?: "asc" | "desc", filterOnPublished?: boo
 
 const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
 	const docRef = doc(db, "administrative", db_document);
-	const postOverviewSnapshot = await getDoc(docRef);
-	if (postOverviewSnapshot.exists()) {
-		let values: StoredPost[] = postOverviewSnapshot.data().values;
+	const postsOverviewSnapshot = await getDoc(docRef);
+	if (postsOverviewSnapshot.exists()) {
+		let values: StoredPost[] = postsOverviewSnapshot.data().values;
 		values.map((post) => {
 			if (post.id === newPost.id) {
 				return false;

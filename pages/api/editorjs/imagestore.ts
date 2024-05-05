@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import formidable from "formidable-serverless";
 import * as fs from "fs";
-import { validateAuthAPIToken } from "..";
+import { validateAuthAPIToken } from "../tags";
 import { cloudStorage } from "../../../lib/firebaseConfig";
 
 const srcToFile = async (src: string) => await fs.readFileSync(src);

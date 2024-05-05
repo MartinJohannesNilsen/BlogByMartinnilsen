@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { validateAuthAPIToken } from "..";
+import { validateAuthAPIToken } from "../tags";
 import { db } from "../../../lib/firebaseConfig";
 
 /**
@@ -99,8 +99,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					data: { ...docData, data: dataField },
 				});
 			});
-			const postOverviewSnapshot = await getDoc(doc(db, "administrative", "overview"));
-			response.overview = postOverviewSnapshot.data()!.values;
+			const postsOverviewSnapshot = await getDoc(doc(db, "administrative", "overview"));
+			response.overview = postsOverviewSnapshot.data()!.values;
 			return res.status(200).json(response);
 		} catch (error) {
 			return res.status(500).json({ code: 500, reason: error });

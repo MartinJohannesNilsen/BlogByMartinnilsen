@@ -141,7 +141,7 @@ export const LandingPageGridCard = (props: PostCardProps) => {
 							sx={{ opacity: 0.6, fontSize: "default", color: "white" }}
 						>
 							<PostViews
-								postId={props.id}
+								viewCount={props.views ? props.views[props.id] : undefined}
 								sx={{
 									fontSize: theme.typography.fontSize,
 									color: "white",

@@ -7,6 +7,7 @@ import { NavbarButton } from "../Buttons/NavbarButton";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 import PostViews from "../../PostViews/PostViews";
 import { DATA_DEFAULTS } from "../../../data/metadata";
+import { useEffect } from "react";
 
 export const TagsPageCard = (props: PostCardProps) => {
 	const { theme } = useTheme();
@@ -143,7 +144,7 @@ export const TagsPageCard = (props: PostCardProps) => {
 										sx={{ opacity: 0.6, fontSize: "default" }}
 									>
 										<PostViews
-											postId={props.id}
+											viewCount={props.views ? props.views[props.id] : undefined}
 											sx={{
 												fontSize: theme.typography.fontSize,
 												color: theme.palette.text.primary,

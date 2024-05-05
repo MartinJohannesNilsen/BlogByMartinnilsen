@@ -132,6 +132,7 @@ const TinderSwipe = (props: TinderSwipeType) => {
 					>
 						{data && (
 							<LandingPageSwipeCard
+								views={props.views}
 								author={data.author}
 								readTime={data.readTime}
 								id={data.id}

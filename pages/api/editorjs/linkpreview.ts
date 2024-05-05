@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	if (req.method === "GET") {
 		try {
 			const api = await fetch(
-				"http://api.linkpreview.net/?key=" + process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY + "&q=" + req.query.url
+				"http://api.linkpreview.net/?key=" + process.env.LINKPREVIEW_API_KEY + "&q=" + req.query.url
 			).then((data) => data.json());
 			if (api.error === undefined) {
 				return res.json({ success: 1, meta: api });

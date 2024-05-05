@@ -100,7 +100,7 @@ export const LandingPageListCard = (props: PostCardProps) => {
 						sx={{ opacity: 0.6, fontSize: 12 }}
 					>
 						<PostViews
-							postId={props.id}
+							viewCount={props.views ? props.views[props.id] : undefined}
 							sx={{
 								fontSize: 12,
 								color: theme.palette.text.primary,

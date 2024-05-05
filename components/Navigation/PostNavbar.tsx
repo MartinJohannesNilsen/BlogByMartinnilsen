@@ -506,12 +506,12 @@ export const PostNavbar = (props: PostNavbarProps) => {
 
 			{/* Modals */}
 			{/* Search */}
-			{props.postOverview && (
+			{props.postsOverview && (
 				<SearchModal
 					open={openSearchModal}
 					handleModalOpen={handleSearchModalOpen}
 					handleModalClose={handleSearchModalClose}
-					postsOverview={props.postOverview}
+					postsOverview={props.postsOverview}
 					handleSettingsModalOpen={() => setOpenSettingsModal(true)}
 					handleNotificationsModalOpen={handleNotificationsModalOpen}
 					notificationsBadgeVisible={visibleBadgeNotifications}

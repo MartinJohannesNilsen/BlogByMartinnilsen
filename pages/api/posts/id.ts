@@ -1,6 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { validateAuthAPIToken } from "..";
+import { validateAuthAPIToken } from "../tags";
 import { db } from "../../../lib/firebaseConfig";
 
 /**

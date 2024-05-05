@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { SupabaseAdmin } from "../../../lib/supabase-admin";
-import { validateAuthAPIToken } from "..";
+import { SupabaseAdmin } from "../../../lib/supabaseAdmin";
+import { validateAuthAPIToken } from "../tags";
 
 /**
  * @swagger
@@ -88,51 +88,39 @@ import { validateAuthAPIToken } from "..";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Validate authorized access based on header field 'apikey'
-  const authValidation = validateAuthAPIToken(req);
-  if (!authValidation.isValid) {
-    return res
-      .status(authValidation.code)
-      .json({ code: authValidation.code, reason: authValidation.reason });
-  }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = validateAuthAPIToken(req);
+	if (!authValidation.isValid) {
+		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+	}
 
-  if (req.method === "GET") {
-    // Query the pages table in the database where slug equals the request params slug.
-    const { data } = await SupabaseAdmin.from("notifications").select(
-      "id, createdAt, title, content, action, important"
-    );
+	if (req.method === "GET") {
+		// Query the pages table in the database where slug equals the request params slug.
+		const { data } = await SupabaseAdmin.from("notifications").select(
+			"id, createdAt, title, content, action, important"
+		);
 
-    if (data) {
-      // let notifications = {};
-      // data.map((row) => (viewCounts[row.postId] = row.viewCount));
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(500)
-        .json({ code: 500, reason: "Internal server error" });
-    }
-  } else if (req.method === "POST") {
-    if (req.body.id)
-      return res.status(400).json({
-        code: 400,
-        reason: "Post not followed through. Id is set automatically!",
-      });
+		if (data) {
+			// let notifications = {};
+			// data.map((row) => (viewCounts[row.postId] = row.viewCount));
+			return res.status(200).json(data);
+		} else {
+			return res.status(500).json({ code: 500, reason: "Internal server error" });
+		}
+	} else if (req.method === "POST") {
+		if (req.body.id)
+			return res.status(400).json({
+				code: 400,
+				reason: "Post not followed through. Id is set automatically!",
+			});
 
-    // Insert data in database
-    const { data, error } = await SupabaseAdmin.from("notifications")
-      .insert(req.body)
-      .select()
-      .single();
-    return error || !data
-      ? res
-          .status(500)
-          .json({ code: 500, reason: "Could not insert to database" })
-      : res.status(200).json(data);
-  } else {
-    return res.status(501).json({ code: 501, reason: "Method not supported" });
-  }
+		// Insert data in database
+		const { data, error } = await SupabaseAdmin.from("notifications").insert(req.body).select().single();
+		return error || !data
+			? res.status(500).json({ code: 500, reason: "Could not insert to database" })
+			: res.status(200).json(data);
+	} else {
+		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	}
 }

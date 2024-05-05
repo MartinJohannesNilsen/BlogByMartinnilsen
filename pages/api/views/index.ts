@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { SupabaseAdmin } from "../../../lib/supabase-admin";
-import { validateAuthAPIToken } from "..";
+import { SupabaseAdmin } from "../../../lib/supabaseAdmin";
+import { validateAuthAPIToken } from "../tags";
 
 /**
  * @swagger
@@ -22,32 +22,25 @@ import { validateAuthAPIToken } from "..";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Validate authorized access based on header field 'apikey'
-  const authValidation = validateAuthAPIToken(req);
-  if (!authValidation.isValid) {
-    return res
-      .status(authValidation.code)
-      .json({ code: authValidation.code, reason: authValidation.reason });
-  }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = validateAuthAPIToken(req);
+	if (!authValidation.isValid) {
+		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+	}
 
-  if (req.method === "GET") {
-    // Query the pages table in the database where slug equals the request params slug.
-    const { data, error } = await SupabaseAdmin.from("views").select(
-      "postId, viewCount"
-    );
+	if (req.method === "GET") {
+		// Query the pages table in the database where slug equals the request params slug.
+		const { data, error } = await SupabaseAdmin.from("views").select("postId, viewCount");
 
-    if (data) {
-      let viewCounts = {};
-      data.map((row) => (viewCounts[row.postId] = row.viewCount));
-      return res.status(200).json(viewCounts || null);
-    } else if (error) {
-      console.log("Error:", error);
-    }
-  } else {
-    return res.status(501).json({ code: 501, reason: "Method not supported" });
-  }
+		if (data) {
+			let viewCounts = {};
+			data.map((row) => (viewCounts[row.postId] = row.viewCount));
+			return res.status(200).json(viewCounts || null);
+		} else if (error) {
+			console.log("Error:", error);
+		}
+	} else {
+		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	}
 }

@@ -1,6 +1,6 @@
 import { blurhashFromURL } from "blurhash-from-url";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { validateAuthAPIToken } from "..";
+import { validateAuthAPIToken } from "../tags";
 
 async function getBlurhash(url: string) {
 	// Default 32x32 size

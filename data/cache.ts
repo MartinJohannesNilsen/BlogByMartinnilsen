@@ -25,10 +25,5 @@ export const getCachedAllPostIds = unstable_cache(
 	}
 );
 
-// Cache post by id
-export const getCachedPost = (postId: string) => {
-	return unstable_cache(async () => getPost(postId), [], { tags: [postId] });
-};
-
 // Cache tags
 export const getCachedTags = unstable_cache(async () => getTags(), [], { tags: ["tags"] });

@@ -13,6 +13,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { StoredPost, TagsPageProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
 import useStickyState from "../../utils/useStickyState";
+import { getAllViewCounts } from "../../data/db/supabase/views/actions";
 
 export const _caseInsensitiveIncludes = (list: string[], word: string, removeSpace?: boolean) => {
 	const lowerCaseList = list.map((e) => e.toLowerCase());
@@ -43,6 +44,12 @@ const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 	const [_, setCardLayout] = useStickyState("cardLayout", "plain");
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
+	const [views, setViews] = useState();
+
+	useEffect(() => {
+		// Get views
+		getAllViewCounts().then((data) => setViews(data));
+	}, []);
 
 	const updateData = () => {
 		if (!tag) {
@@ -279,6 +286,7 @@ const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 										return (
 											<Grid item key={index} xs={12}>
 												<TagsPageCard
+													views={views}
 													author={data.author}
 													description={data.description}
 													id={data.id}

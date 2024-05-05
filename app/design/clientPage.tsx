@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 	title: "Design",
 };
 
-const DesignPage = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) => {
+const DesignPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps) => {
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState(true);
 	const [_, setCardLayout] = useStickyState("cardLayout", "plain");
@@ -105,7 +105,7 @@ const DesignPage = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps
 	if (isLoading) return <></>;
 	return (
 		<Box ref={containerRef} sx={{ minHeight: "100vh", width: "100vw", backgroundColor: theme.palette.primary.main }}>
-			<Navbar posts={postOverview} setCardLayout={setCardLayout} className="navBar" isAuthorized={isAuthorized} />
+			<Navbar posts={postsOverview} setCardLayout={setCardLayout} className="navBar" isAuthorized={isAuthorized} />
 			<Box pt={10} pb={6} sx={{ paddingX: lgUp ? "150px" : xs ? "10px" : "80px" }}>
 				<Typography
 					pb={2}

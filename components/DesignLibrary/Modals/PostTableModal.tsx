@@ -1,10 +1,10 @@
 "use client";
 import { Box, Modal, useMediaQuery } from "@mui/material";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ModalProps } from "../../../types";
+import { PostTableProps } from "../../../types";
 import PostTable from "../../PostManagement/PostTable";
 
-export const PostTableModal = (props: ModalProps) => {
+export const PostTableModal = ({ open, handleModalOpen, handleModalClose, postsOverview }: PostTableProps) => {
 	const { theme } = useTheme();
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
@@ -30,14 +30,14 @@ export const PostTableModal = (props: ModalProps) => {
 	return (
 		<Box>
 			<Modal
-				open={props.open}
-				onClose={props.handleModalClose}
+				open={open}
+				onClose={handleModalClose}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
 				disableAutoFocus
 			>
 				<Box sx={modalStyle}>
-					<PostTable />
+					<PostTable postsOverview={postsOverview} />
 				</Box>
 			</Modal>
 		</Box>

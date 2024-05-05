@@ -37,8 +37,9 @@ import { useTheme } from "../styles/themes/ThemeProvider";
 import { ServerPageProps, StoredPost } from "../types";
 import { splitChunks } from "../utils/postChunking";
 import useStickyState from "../utils/useStickyState";
+import { getAllViewCounts } from "../data/db/supabase/views/actions";
 
-const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProps) => {
+const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPageProps) => {
 	const { theme } = useTheme();
 	const boxRef = useRef(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -47,6 +48,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 	const [page, setPage] = useState(1);
 	const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>();
 	const [posts, setPosts] = useState<StoredPost[]>();
+	const [views, setViews] = useState<any>();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const sm = useMediaQuery(theme.breakpoints.only("sm"));
 	const md = useMediaQuery(theme.breakpoints.only("md"));
@@ -54,24 +56,21 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 	const xl = useMediaQuery(theme.breakpoints.only("xl"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
-	// const loadCachedPosts = async () => {
-	// 	const posts = await getCachedPublishedDescendingPostsOverview();
-	// 	setFetchedPosts(posts);
-	// };
-
-	// useEffect(() => {
-	// 	loadCachedPosts();
-	// }, []);
+	// Fetch views
+	useEffect(() => {
+		getAllViewCounts().then((data) => setViews(data));
+		return () => {};
+	}, []);
 
 	// Chunk posts
 	useEffect(() => {
-		if (postOverview) {
-			Promise.resolve(_filterListOfStoredPostsOnPublished(postOverview, "published")).then((data) => {
+		if (postsOverview) {
+			Promise.resolve(_filterListOfStoredPostsOnPublished(postsOverview, "published")).then((data) => {
 				setChunkedPosts(splitChunks(data, Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)));
 			});
 		}
 		return () => {};
-	}, [postOverview]);
+	}, [postsOverview]);
 
 	// Set posts
 	useEffect(() => {
@@ -163,7 +162,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 				userSelect: "none",
 			}}
 		>
-			<Navbar posts={postOverview} setCardLayout={setCardLayout} isAuthorized={isAuthorized} centeredPadding />
+			<Navbar posts={postsOverview} setCardLayout={setCardLayout} isAuthorized={isAuthorized} centeredPadding />
 			<Box
 				display="flex"
 				flexDirection="column"
@@ -420,6 +419,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 										>
 											{data && (
 												<LandingPageCarouselCard
+													views={views}
 													author={data.author}
 													readTime={data.readTime}
 													id={data.id}
@@ -484,7 +484,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 								paddingBottom: xs ? 2.5 : 0,
 							}}
 						>
-							<TinderSwipe posts={posts.slice().reverse()} />
+							<TinderSwipe posts={posts.slice().reverse()} views={views} />
 						</Box>
 					) : cardLayout === "grid" ? (
 						<Grid
@@ -510,6 +510,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 										// xl={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
 									>
 										<LandingPageGridCard
+											views={views}
 											author={data.author}
 											readTime={
 												// Remove read for the bottom third row
@@ -553,6 +554,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 										<Grid key={index} md={2} lg={3} />
 										<Grid key={index} xs={12} sm={12} md={8} lg={6}>
 											<LandingPageListCard
+												views={views}
 												author={data.author}
 												readTime={data.readTime}
 												id={data.id}
@@ -593,6 +595,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postOverview }: ServerPageProp
 										<Grid key={index} md={1} lg={2} />
 										<Grid key={index} xs={12} sm={12} md={8} lg={6}>
 											<LandingPagePlainCard
+												views={views}
 												author={data.author}
 												readTime={data.readTime}
 												id={data.id}

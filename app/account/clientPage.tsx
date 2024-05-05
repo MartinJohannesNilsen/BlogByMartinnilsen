@@ -13,7 +13,7 @@ import useStickyState from "../../utils/useStickyState";
 const PostTableModal = dynamic(() => import("../../components/DesignLibrary/Modals/PostTableModal"));
 const NotificationsModal = dynamic(() => import("../../components/DesignLibrary/Modals/NotificationsModal"));
 
-const Account = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) => {
+const Account = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps) => {
 	const { theme } = useTheme();
 	const backgroundBWBreakingPercentage = "45%";
 	// Post Table Modal
@@ -51,7 +51,7 @@ const Account = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) =
 				background: `linear-gradient(to bottom, ${theme.palette.primary.contrastText} 0%, ${theme.palette.primary.contrastText} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} ${backgroundBWBreakingPercentage}, ${theme.palette.primary.main} 100%)`,
 			}}
 		>
-			<Navbar posts={postOverview} setCardLayout={setCardLayout} isAuthorized={isAuthorized} />
+			<Navbar posts={postsOverview} setCardLayout={setCardLayout} isAuthorized={isAuthorized} />
 			<Grid
 				container
 				sx={{ width: "350px" }}
@@ -109,11 +109,14 @@ const Account = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) =
 			</Grid>
 
 			{/* Modals */}
-			<PostTableModal
-				open={openPostTableModal}
-				handleModalOpen={handlePostTableModalOpen}
-				handleModalClose={handlePostTableModalClose}
-			/>
+			{postsOverview && (
+				<PostTableModal
+					open={openPostTableModal}
+					handleModalOpen={handlePostTableModalOpen}
+					handleModalClose={handlePostTableModalClose}
+					postsOverview={postsOverview}
+				/>
+			)}
 			<NotificationsModal
 				open={openNotificationsModal}
 				handleModalOpen={handleNotificationsModalOpen}

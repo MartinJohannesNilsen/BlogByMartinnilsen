@@ -54,12 +54,14 @@ export default async function Page({ params }: { params: { postId: string } }) {
 	const session = await getServerSession();
 	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.email === process.env.ADMIN_EMAIL;
 
-	// Get postOverview
-	const postOverview = isAuthorized
+	// Get postsOverview
+	const postsOverview = isAuthorized
 		? await getCachedAllDescendingPostsOverview()
 		: await getCachedPublishedDescendingPostsOverview();
 
 	if (!post) return notFound();
 	else if (!post.published && !isAuthorized) redirect("/api/auth/signin");
-	return <ReadArticleView post={post} postId={params.postId} postOverview={postOverview} isAuthorized={isAuthorized} />;
+	return (
+		<ReadArticleView post={post} postId={params.postId} postsOverview={postsOverview} isAuthorized={isAuthorized} />
+	);
 }

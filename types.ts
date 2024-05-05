@@ -245,6 +245,7 @@ export type TileButtonCardProps = {
 
 export type PostCardProps = PostProps & {
 	id: string;
+	views: any;
 };
 
 export type ImageProps = {
@@ -286,6 +287,15 @@ export type TablePost = StoredPost & {
 	views: number | string;
 };
 
+export type PostTableProps = ModalProps & {
+	postsOverview: StoredPost[];
+};
+
+export type PostViewsProps = {
+	viewCount?: number;
+	sx?: {};
+};
+
 export type NavbarProps = {
 	posts?: StoredPost[];
 	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
@@ -297,7 +307,7 @@ export type NavbarProps = {
 
 export type PostNavbarProps = {
 	post: FullPost & { id: string };
-	postOverview?: StoredPost[];
+	postsOverview?: StoredPost[];
 	toc: { content: string; currentSection: string };
 	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
 	tocModal: { open: boolean; setOpen: (value: boolean) => void };
@@ -334,6 +344,7 @@ export type ThemeContextType = {
 export type directionType = "left" | "right" | "up" | "down";
 export type TinderSwipeType = {
 	posts: StoredPost[];
+	views: any;
 };
 
 export type SelectContentProps = {
@@ -480,7 +491,7 @@ export type LandingPageProps = {};
 export type ReadPostPageProps = {
 	post: FullPost;
 	postId: string;
-	postOverview?: StoredPost[];
+	postsOverview?: StoredPost[];
 	isAuthorized: boolean;
 };
 export type ManagePostPageProps = {
@@ -498,5 +509,5 @@ export type ServerPageProps = {
 		  }
 		| undefined;
 	isAuthorized: boolean;
-	postOverview?: StoredPost[];
+	postsOverview?: StoredPost[];
 };

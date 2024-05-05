@@ -1,36 +1,12 @@
 "use client";
 import { Skeleton } from "@mui/material";
-import useSWR from "swr";
+import { PostViewsProps } from "../../types";
 
-interface PostViewsProps {
-	postId: string;
-	sx?: {};
-}
-
-const apiFetcher = async (url: RequestInfo) => {
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
-
-	// Fetch and return
-	const res: Response = await fetch(url, {
-		method: "GET", // or 'POST', 'PUT', etc.
-		headers: headers,
-	});
-	return await res.json();
-};
-
-const PostViews = ({ postId, sx }: PostViewsProps) => {
-	const { data } = useSWR(`/api/views/${postId}`, apiFetcher);
-
-	return (
-		<>
-			{data?.viewCount ? (
-				`${data.viewCount} view` + (data.viewCount !== 1 ? "s" : "")
-			) : (
-				<Skeleton variant="text" sx={sx} width={60} />
-			)}
-		</>
+const PostViews = ({ viewCount, sx }: PostViewsProps) => {
+	return viewCount ? (
+		<>{`${viewCount} view` + (viewCount !== 1 ? "s" : "")}</>
+	) : (
+		<Skeleton variant="text" sx={sx} width={60} />
 	);
 };
 

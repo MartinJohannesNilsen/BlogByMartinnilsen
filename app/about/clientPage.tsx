@@ -13,7 +13,7 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ServerPageProps } from "../../types";
 import useStickyState from "../../utils/useStickyState";
 
-const AboutPage = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps) => {
+const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps) => {
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState(true);
 	const [_, setCardLayout] = useStickyState("cardLayout", "plain");
@@ -116,7 +116,7 @@ const AboutPage = ({ sessionUser, postOverview, isAuthorized }: ServerPageProps)
 			justifyContent="center"
 			alignItems="center"
 		>
-			<Navbar posts={postOverview} setCardLayout={setCardLayout} className="navBar" isAuthorized={isAuthorized} />
+			<Navbar posts={postsOverview} setCardLayout={setCardLayout} className="navBar" isAuthorized={isAuthorized} />
 			<Box pt={10} pb={6} px={2.5} sx={{ maxWidth: lgUp ? "750px" : xs ? "480px" : "600px" }}>
 				{/* Title */}
 				<Typography variant="h3" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>

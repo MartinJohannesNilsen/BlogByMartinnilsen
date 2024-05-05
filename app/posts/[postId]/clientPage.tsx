@@ -16,13 +16,13 @@ import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { useEventListener } from "usehooks-ts";
-import ButtonBar from "../../../components/Navigation/ButtonBar";
 import { NavbarButton } from "../../../components/DesignLibrary/Buttons/NavbarButton";
+import Toggle from "../../../components/DesignLibrary/Toggles/Toggle";
 import { style } from "../../../components/EditorJS/style";
+import ButtonBar from "../../../components/Navigation/ButtonBar";
 import Footer from "../../../components/Navigation/LinkFooter";
 import PostNavbar from "../../../components/Navigation/PostNavbar";
 import PostViews from "../../../components/PostViews/PostViews";
-import Toggle from "../../../components/DesignLibrary/Toggles/Toggle";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { ButtonBarButtonProps, ReadPostPageProps } from "../../../types";
 import { IDiscussionData, IMetadataMessage } from "../../../utils/giscus";
@@ -51,6 +51,7 @@ import CustomQuote from "../../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../../components/EditorJS/Renderers/CustomVideo";
+import { getViewCountsByPostId, incrementPostViews } from "../../../data/db/supabase/views/actions";
 import { DATA_DEFAULTS } from "../../../data/metadata";
 import { handleSharing } from "../../../utils/handleSharing";
 import useStickyState from "../../../utils/useStickyState";
@@ -114,7 +115,7 @@ export function processJsonToggleBlocks(inputJson) {
 	return null;
 }
 
-export const ReadPostPage = ({ post, postId, postOverview, isAuthorized }: ReadPostPageProps) => {
+export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized }: ReadPostPageProps) => {
 	const searchParams = useSearchParams();
 	const { theme, setTheme } = useTheme();
 	const [isExploding, setIsExploding] = useState(false);
@@ -148,6 +149,7 @@ export const ReadPostPage = ({ post, postId, postOverview, isAuthorized }: ReadP
 	});
 	const toggleRef = useRef<null | HTMLDivElement>(null);
 	const [toggleRCOpen, setToggleRCOpen] = useState<boolean>(false);
+	const [views, setViews] = useState<number>();
 
 	const OutputElement = useMemo(() => {
 		if (post && post.data && post.data.blocks && Array.isArray(post.data.blocks)) {
@@ -164,12 +166,12 @@ export const ReadPostPage = ({ post, postId, postOverview, isAuthorized }: ReadP
 			post.published &&
 			!isAuthorized &&
 			// All criterias are met, run POST request to increment counter
-			fetch(`/api/views/${postId}`, {
-				method: "POST",
-				headers: {
-					apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!,
-				},
-			});
+			incrementPostViews(postId);
+
+		// Get views
+		getViewCountsByPostId(postId).then((data) => {
+			setViews(data.viewCount);
+		});
 
 		// When session is updated, not loading anymore
 		setIsLoading(false);
@@ -443,7 +445,7 @@ export const ReadPostPage = ({ post, postId, postOverview, isAuthorized }: ReadP
 						toc={{ content: OutputString!, currentSection: currentSection }}
 						tocModal={{ open: openTOCModal, setOpen: setOpenTOCModal }}
 						shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
-						postOverview={postOverview}
+						postsOverview={postsOverview}
 						setCardLayout={setCardLayout}
 					/>
 					{/* Content */}
@@ -578,7 +580,7 @@ export const ReadPostPage = ({ post, postId, postOverview, isAuthorized }: ReadP
 											>
 												{post.published ? (
 													<PostViews
-														postId={postId}
+														viewCount={views}
 														sx={{
 															fontSize: theme.typography.fontSize,
 															color: theme.palette.text.primary,

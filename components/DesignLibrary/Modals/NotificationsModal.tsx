@@ -2,25 +2,12 @@
 import { Close } from "@mui/icons-material";
 import { Box, Divider, IconButton, Modal, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import { getAllNotifications } from "../../../data/db/supabase/notifications/actions";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { NotificationProps, NotificationsModalProps, UnreadFunctionProps } from "../../../types";
 import useStickyState from "../../../utils/useStickyState";
 import CustomParagraph from "../../EditorJS/Renderers/CustomParagraph";
 import StyledControlledSelect, { SelectOption } from "../Select/StyledControlledSelect";
-
-export const notificationsApiFetcher = async (url: RequestInfo) => {
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
-
-	// Fetch and return
-	const res: Response = await fetch(url, {
-		method: "GET", // or 'POST', 'PUT', etc.
-		headers: headers,
-	});
-	return await res.json();
-};
 
 export const checkForUnreadRecentNotifications = (
 	data: NotificationProps[],
@@ -67,20 +54,24 @@ export const checkForUnreadRecentNotifications = (
 export const NotificationsModal = (props: NotificationsModalProps) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
-	const { data } = useSWR(`/api/notifications`, notificationsApiFetcher);
+	const [fetchedNotifications, setFetchedNotifications] = useState<NotificationProps[]>([]);
 	const [notifications, setNotifications] = useState<NotificationProps[]>([]);
 	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState<number[]>([]);
 	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
 	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
 	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
 
+	useEffect(() => {
+		getAllNotifications().then((data) => setFetchedNotifications(data));
+	}, []);
+
 	// Update modal when data is fetched, when modal is opened or select value is changed
 	useEffect(() => {
-		if (!data) return;
+		if (!fetchedNotifications) return;
 
 		// Logic for finding unread notifications
 		const unreadNotifications = checkForUnreadRecentNotifications(
-			data,
+			fetchedNotifications,
 			lastRead,
 			notificationsFilterDays,
 			notificationsRead
@@ -108,7 +99,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 		}
 
 		return () => {};
-	}, [data, props.open, notificationsFilterDays]);
+	}, [fetchedNotifications, props.open, notificationsFilterDays]);
 
 	// Modal style
 	const style = {

@@ -1,52 +1,33 @@
 import { Check, Close, Edit, OpenInNewRounded } from "@mui/icons-material";
-import { useMediaQuery } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
-import { getPostsOverview } from "../../data/db/firebase/overview";
+import { getAllViewCounts } from "../../data/db/supabase/views/actions";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { TablePost } from "../../types";
+import { StoredPost, TablePost } from "../../types";
 import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
 
-const fetchPosts = async () => {
-	const db_posts = await getPostsOverview(
-		"desc",
-		false // Do not filter on published
-	);
-	return db_posts;
-};
-
-const apiFetcher = async (url: RequestInfo) => {
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
-
-	// Fetch and return
-	const res: Response = await fetch(url, {
-		method: "GET", // or 'POST', 'PUT', etc.
-		headers: headers,
-	});
-	return await res.json();
-};
-
-export const PostTable = (props) => {
+export const PostTable = ({ postsOverview }: { postsOverview: StoredPost[] }) => {
 	const { theme } = useTheme();
-	const lg = useMediaQuery(theme.breakpoints.only("lg"));
-	const xl = useMediaQuery(theme.breakpoints.only("xl"));
 	const [posts, setPosts] = useState<TablePost[]>([]);
-	const { data } = useSWR(`/api/views`, apiFetcher);
+	const [views, setViews] = useState<any>();
 
 	useEffect(() => {
-		fetchPosts().then((db_posts) => {
-			setPosts(
-				db_posts.map((post) => ({
-					...post, // This spreads the existing fields of the post
-					//   views: "—", // Adds the new field 'views' with a default value of "—"
-					views: data ? data[post.id] : "-", // Adds the new field 'views' with a default value of "—"
-				}))
-			);
+		getAllViewCounts().then((data) => {
+			setViews(data);
 		});
-	}, [data]);
+		return () => {};
+	}, []);
+
+	useEffect(() => {
+		setPosts(
+			postsOverview.map((post) => ({
+				...post, // This spreads the existing fields of the post
+				//   views: "—", // Adds the new field 'views' with a default value of "—"
+				views: views ? views[post.id] : "-", // Adds the new field 'views' with a default value of "—"
+			}))
+		);
+		return () => {};
+	}, [views]);
 
 	const columns: GridColDef[] = [
 		{ field: "title", headerName: "Title", width: 470, align: "left" },

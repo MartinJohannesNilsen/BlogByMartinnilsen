@@ -28,21 +28,22 @@ import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
 import { renderers } from "../../app/posts/[postId]/clientPage";
+import { revalidatePost, revalidatePostsOverview, revalidateTags } from "../../data/actions";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../data/db/firebase/overview";
 import { addPost, deletePost, updatePost } from "../../data/db/firebase/posts";
 import { addTag, getTags } from "../../data/db/firebase/tags";
+import { DATA_DEFAULTS } from "../../data/metadata";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManagePostPageProps } from "../../types";
 import { copyToClipboardV2 } from "../../utils/copyToClipboard";
 import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
 import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
-import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
+import { BpRadio } from "../DesignLibrary/Buttons/RadioButton";
 import OptionMenu from "../DesignLibrary/Menus/OptionMenu";
 import EditableTypography from "../DesignLibrary/Text/EditableTypography";
-import { BpRadio } from "../DesignLibrary/Buttons/RadioButton";
 import { StyledTextField } from "../DesignLibrary/Text/TextInput";
-import { DATA_DEFAULTS } from "../../data/metadata";
+import { deleteImage, getImageDetails, uploadImage } from "../../data/db/firebase/images";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -56,42 +57,6 @@ const OGDEFAULTS = {
 	descriptionMax: 160,
 };
 
-const revalidatePages = async (pages: string[]) => {
-	try {
-		const responses = await Promise.all(
-			pages.map((page) => {
-				return fetch("/api/revalidate?path=" + page, {
-					headers: {
-						accept: "application/json",
-						apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!,
-					},
-				});
-			})
-		);
-		const res: {
-			status: number;
-			requests: {
-				status: number;
-				path: string;
-				revalidated: boolean;
-			}[];
-		} = { status: 200, requests: [] };
-		responses.map((response) => {
-			if (response.status !== 200) {
-				res.status = response.status;
-			}
-			res.requests.push({
-				status: response.status,
-				path: new URL(response.url).searchParams.get("path")!,
-				revalidated: response.status === 200,
-			});
-		});
-		return res;
-	} catch (error) {
-		console.log(error);
-	}
-};
-
 export function isvalidHTTPUrl(string: string) {
 	let url;
 	try {
@@ -101,73 +66,6 @@ export function isvalidHTTPUrl(string: string) {
 	}
 	return url.protocol === "http:" || url.protocol === "https:";
 }
-
-export const uploadImage = async (file, postId, name) => {
-	// Prepare FormData
-	const formData = new FormData();
-	formData.append("file", file); // 'file' is the name expected by the server for the file
-
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
-
-	// Options for the fetch request
-	const fetchOptions = {
-		method: "POST",
-		body: formData, // Attach the FormData object
-		headers: headers,
-		// Don't set Content-Type header manually, so the browser can set the boundary parameter automatically
-	};
-
-	try {
-		// Make the HTTP request
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?directory=${postId}${name ? "&name=" + name : ""}`,
-			fetchOptions
-		);
-
-		if (!response.ok) {
-			return { code: response.status, reason: response.statusText };
-		}
-
-		// Process the response (assuming JSON response)
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		return { error: error };
-	}
-};
-
-export const deleteImage = async (fileRef) => {
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
-
-	// Options for the fetch request
-	const fetchOptions = {
-		method: "DELETE",
-		headers: headers,
-		// Don't set Content-Type header manually, so the browser can set the boundary parameter automatically
-	};
-
-	try {
-		// Make the HTTP request
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?fileRef=${fileRef}`,
-			fetchOptions
-		);
-
-		if (!response.ok) {
-			return { code: response.status, reason: response.statusText };
-		}
-
-		// Process the response (assuming JSON response)
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		return { error: error };
-	}
-};
 
 const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	const { theme, setTheme } = useTheme();
@@ -276,9 +174,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 				// Fetch blurhash if null
 				if (!data.ogImage.blurhash) {
 					// Get image details
-					const details = await imageDetailsApiFetcher(
-						process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/imageblurhash?url=" + encodeURIComponent(data.ogImage.src)
-					);
+					const details = await getImageDetails(data.ogImage.src);
 					if (details.hasOwnProperty("code") && details.code !== 200) {
 						enqueueSnackbar(`Open Graph Image: ${details.reason}`, {
 							variant: "error",
@@ -384,9 +280,16 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 								variant: "success",
 								preventDuplicate: true,
 							});
-							revalidatePages(["/", "/tags", "/posts/" + postId]).then(() => {
-								handleNavigate("/");
-							});
+							Promise.all([revalidatePost(postId), revalidatePostsOverview(), revalidateTags()])
+								.then(() => {
+									handleNavigate("/");
+								})
+								.catch((error) =>
+									enqueueSnackbar("Error during cache revalidation!", {
+										variant: "error",
+										preventDuplicate: true,
+									})
+								);
 						} else {
 							enqueueSnackbar("An error occured ...", {
 								variant: "error",
@@ -432,25 +335,25 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 		</>
 	);
 	const handleRevalidate = (postId) => {
-		enqueueSnackbar("Revalidating pages ...", {
+		enqueueSnackbar("Revalidating cache ...", {
 			variant: "default",
 			preventDuplicate: true,
 		});
-		revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
-			if (res?.status === 200) {
-				enqueueSnackbar("Revalidated pages!", {
+		Promise.all([revalidatePost(postId), revalidatePostsOverview(), revalidateTags()])
+			.then(() => {
+				enqueueSnackbar("Revalidated cache!", {
 					action: (id) => revalidateAction(id, postId),
 					variant: "success",
 					preventDuplicate: true,
 				});
 				setIsRevalidated(true);
-			} else {
-				enqueueSnackbar("Error during revalidation!", {
+			})
+			.catch((error) =>
+				enqueueSnackbar("Error during cache revalidation!", {
 					variant: "error",
 					preventDuplicate: true,
-				});
-			}
-		});
+				})
+			);
 	};
 
 	useHotkeys(["Control+s", "Meta+s"], (event) => {
@@ -988,11 +891,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 														const file = e.target.files && e.target.files[0];
 														const uploadResponse = await uploadImage(file, postId, "ogImage");
 														if (uploadResponse.hasOwnProperty("data")) {
-															const details = await imageDetailsApiFetcher(
-																process.env.NEXT_PUBLIC_SERVER_URL +
-																	"/editorjs/imageblurhash?url=" +
-																	encodeURIComponent(uploadResponse.data.url)
-															);
+															const details = await getImageDetails(uploadResponse.data.url);
 															setData({
 																...data,
 																ogImage: {
