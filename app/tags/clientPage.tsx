@@ -8,12 +8,12 @@ import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import TagsPageCard from "../../components/DesignLibrary/Cards/TagsPageCard";
 import Navbar from "../../components/Navigation/Navbar";
-import { _filterListOfStoredPostsOnPublished } from "../../data/db/firebase/overview";
+import { _filterListOfStoredPostsOnPublished } from "../../data/db/overview";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { StoredPost, TagsPageProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
 import useStickyState from "../../utils/useStickyState";
-import { getAllViewCounts } from "../../data/db/supabase/views/actions";
+import { getAllViewCounts } from "../../data/middleware/views/actions";
 
 export const _caseInsensitiveIncludes = (list: string[], word: string, removeSpace?: boolean) => {
 	const lowerCaseList = list.map((e) => e.toLowerCase());

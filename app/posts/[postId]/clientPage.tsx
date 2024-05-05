@@ -51,7 +51,7 @@ import CustomQuote from "../../../components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "../../../components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "../../../components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "../../../components/EditorJS/Renderers/CustomVideo";
-import { getViewCountsByPostId, incrementPostViews } from "../../../data/db/supabase/views/actions";
+import { getViewCountsByPostId, incrementPostViews } from "../../../data/middleware/views/actions";
 import { DATA_DEFAULTS } from "../../../data/metadata";
 import { handleSharing } from "../../../utils/handleSharing";
 import useStickyState from "../../../utils/useStickyState";

@@ -21,8 +21,8 @@ export default async function Page() {
 	const tags = await getCachedTags();
 
 	// Check authentication
-	const session = await getServerSession();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.email === process.env.ADMIN_EMAIL;
+	const session: any = await getServerSession();
+	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	// Get postsOverview
 	const postsOverview = isAuthorized

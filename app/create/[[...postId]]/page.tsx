@@ -2,7 +2,7 @@
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { unstable_cache } from "next/cache";
-import { getPost } from "../../../data/db/firebase/posts";
+import { getPost } from "../../../data/db/posts";
 import { DATA_DEFAULTS, defaultMetadata } from "../../../data/metadata";
 import ManageArticlePage from "./clientPage";
 
@@ -46,8 +46,8 @@ export default async function Page({ params }: { params: { postId?: string[] } }
 	const post = id ? await getPost(id) : undefined;
 
 	// Check authentication
-	const session = await getServerSession();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.email === process.env.ADMIN_EMAIL;
+	const session: any = await getServerSession();
+	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	return <ManageArticlePage post={post || undefined} postId={id} isAuthorized={isAuthorized} />;
 }

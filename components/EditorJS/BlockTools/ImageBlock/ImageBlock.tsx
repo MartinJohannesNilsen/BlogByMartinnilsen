@@ -3,7 +3,7 @@ import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-materia
 import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
-import { deleteImage, getImageDetails, uploadImage } from "../../../../data/db/firebase/images";
+import { deleteImage, getImageDetails, uploadImage } from "../../../../data/db/images";
 import { useTheme } from "../../../../styles/themes/ThemeProvider";
 import { BlockToolImageProps } from "../../../../types";
 import { NavbarButton } from "../../../DesignLibrary/Buttons/NavbarButton";

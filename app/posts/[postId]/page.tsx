@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { unstable_cache } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
-import { getPost } from "../../../data/db/firebase/posts";
+import { getPost } from "../../../data/db/posts";
 import ReadArticleView from "./clientPage";
 import { DATA_DEFAULTS, defaultMetadata, formatDate } from "../../../data/metadata";
 import { Metadata } from "next";
@@ -51,8 +51,8 @@ export default async function Page({ params }: { params: { postId: string } }) {
 	const post = await getCachedPost(params.postId);
 
 	// Check authentication
-	const session = await getServerSession();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.email === process.env.ADMIN_EMAIL;
+	const session: any = await getServerSession();
+	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	// Get postsOverview
 	const postsOverview = isAuthorized

@@ -2,7 +2,7 @@
 import { Close } from "@mui/icons-material";
 import { Box, Divider, IconButton, Modal, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllNotifications } from "../../../data/db/supabase/notifications/actions";
+import { getAllNotifications } from "../../../data/middleware/notifications/actions";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { NotificationProps, NotificationsModalProps, UnreadFunctionProps } from "../../../types";
 import useStickyState from "../../../utils/useStickyState";

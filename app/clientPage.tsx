@@ -32,12 +32,12 @@ import LandingPagePlainCard from "../components/DesignLibrary/Cards/LandingPageP
 import Navbar from "../components/Navigation/Navbar";
 import TinderSwipe from "../components/TinderSwipe/TinderSwipe";
 import { getCachedPublishedDescendingPostsOverview } from "../data/cache";
-import { _filterListOfStoredPostsOnPublished } from "../data/db/firebase/overview";
+import { _filterListOfStoredPostsOnPublished } from "../data/db/overview";
 import { useTheme } from "../styles/themes/ThemeProvider";
 import { ServerPageProps, StoredPost } from "../types";
 import { splitChunks } from "../utils/postChunking";
 import useStickyState from "../utils/useStickyState";
-import { getAllViewCounts } from "../data/db/supabase/views/actions";
+import { getAllViewCounts } from "../data/middleware/views/actions";
 
 const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPageProps) => {
 	const { theme } = useTheme();

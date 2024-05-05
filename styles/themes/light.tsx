@@ -31,9 +31,9 @@ export const light = createTheme({
 				defaultAccentColor.hex,
 		},
 		grey: {
-			// 600: "#585d63",
-			// 700: "#3e4347",
-			// 800: "#25272D",
+			600: "#585d63",
+			700: "#3e4347",
+			800: "#25272D",
 		},
 	},
 	breakpoints: baseTheme.breakpoints,

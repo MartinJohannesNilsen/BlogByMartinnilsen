@@ -14,8 +14,9 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page() {
 	// Check authentication
-	const session = await getServerSession();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.email === process.env.ADMIN_EMAIL;
+	const session: any = await getServerSession();
+	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
+	console.log(session); // TODO remove
 
 	// Get postsOverview
 	const postsOverview = isAuthorized
