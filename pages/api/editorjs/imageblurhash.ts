@@ -1,6 +1,7 @@
 import { blurhashFromURL } from "blurhash-from-url";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { validateAuthAPIToken } from "../tags";
+import { validateImagestoreAPIToken } from "./imagestore";
 
 async function getBlurhash(url: string) {
 	// Default 32x32 size
@@ -62,7 +63,8 @@ function isImgUrl(url) {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = validateAuthAPIToken(req);
-	if (!authValidation.isValid) {
+	const imagestoreValidation = validateImagestoreAPIToken(req);
+	if (!authValidation.isValid && !imagestoreValidation.isValid) {
 		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
 	}
 

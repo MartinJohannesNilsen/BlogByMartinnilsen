@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from tqdm import tqdm
 import urllib.parse
 load_dotenv()
-apikey = os.getenv('NEXT_PUBLIC_API_AUTHORIZATION_TOKEN')
+apikey = os.getenv('API_AUTHORIZATION_TOKEN')
 
 # Read backup file and create lists
 backup = Path("/Users/martinjohannesnilsen/Desktop/20240123.txt")

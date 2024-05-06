@@ -5,6 +5,31 @@ import * as fs from "fs";
 import { validateAuthAPIToken } from "../tags";
 import { cloudStorage } from "../../../lib/firebaseConfig";
 
+export function validateImagestoreAPIToken(req: NextApiRequest) {
+	// Extract the Authorization header
+	const apikey = req.headers.apikey;
+	// Check
+	if (!apikey) {
+		return {
+			isValid: false,
+			code: 401,
+			reason: "Unauthorized - Imagestore token 'apikey' missing in header",
+		};
+	} else if (apikey !== process.env.NEXT_PUBLIC_API_IMAGESTORE_TOKEN) {
+		return {
+			isValid: false,
+			code: 401,
+			reason: "Unauthorized - Invalid imagestore token",
+		};
+	} else {
+		return {
+			isValid: true,
+			code: 200,
+			reason: "Authorized - Successfully validated imagestore token",
+		};
+	}
+}
+
 const srcToFile = async (src: string) => await fs.readFileSync(src);
 
 const supportedMimeTypes = {
@@ -166,7 +191,8 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = validateAuthAPIToken(req);
-	if (!authValidation.isValid) {
+	const imagestoreValidation = validateImagestoreAPIToken(req);
+	if (!authValidation.isValid && !imagestoreValidation.isValid) {
 		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
 	}
 

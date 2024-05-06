@@ -6,7 +6,7 @@ export async function uploadImage(file, postId, name) {
 
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_IMAGESTORE_TOKEN!);
 
 	// Options for the fetch request
 	const fetchOptions = {
@@ -37,7 +37,7 @@ export async function uploadImage(file, postId, name) {
 export async function deleteImage(fileRef) {
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_IMAGESTORE_TOKEN!);
 
 	// Options for the fetch request
 	const fetchOptions = {
@@ -67,7 +67,7 @@ export async function deleteImage(fileRef) {
 export async function getImageDetails(imageUrl) {
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN!);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_IMAGESTORE_TOKEN!);
 
 	// Fetch and return
 	const res: Response = await fetch(
