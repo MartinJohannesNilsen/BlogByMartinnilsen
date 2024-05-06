@@ -99,7 +99,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				{status === "authenticated" ? (
 					<MenuItem onClick={() => (window.location.href = "/account")}>
 						<Avatar src={(session!.user && session!.user.image) || undefined} sx={{ width: 10, height: 10 }}>
-							{session!.user ? session!.user.name![0] : undefined}
+							{session?.user?.name ? session.user.name[0] : undefined}
 						</Avatar>
 						<Typography fontFamily={theme.typography.fontFamily}>My account</Typography>
 					</MenuItem>

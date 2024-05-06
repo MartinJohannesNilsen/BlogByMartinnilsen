@@ -218,6 +218,7 @@ export type SessionUser = {
 	email?: string | null | undefined;
 	image?: string | null | undefined;
 	role?: string | null | undefined;
+	provider?: string | null | undefined;
 };
 
 export type AccountCardProps = {

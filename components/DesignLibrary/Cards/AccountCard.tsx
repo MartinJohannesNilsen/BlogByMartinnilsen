@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import colors from "../../../styles/colors";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { AccountCardProps } from "../../../types";
+import { GitHub, Google } from "@mui/icons-material";
 
 export const AccountCard = ({ sessionUser, isAuthorized }: AccountCardProps) => {
 	const { theme } = useTheme();
@@ -41,6 +42,13 @@ export const AccountCard = ({ sessionUser, isAuthorized }: AccountCardProps) => 
 			onMouseOver={() => setState({ raised: true })}
 			onMouseOut={() => setState({ raised: false })}
 		>
+			{/* TODO Fix icon based on provider :) */}
+			{/* {sessionUser?.provider && (
+				<Box sx={{ position: "absolute", top: 5, left: 5 }}>
+					{sessionUser.provider === "GitHub" && <GitHub />}
+					{sessionUser.provider === "Google" && <Google />}
+				</Box>
+			)} */}
 			<Box display="flex" justifyContent="center" alignItems="center" p={2}>
 				{/* Image, or first letter of name or anonymous */}
 				{sessionUser?.image ? (
