@@ -1,5 +1,5 @@
+import { auth } from "@/auth";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { createdApiDocSpec } from "../../lib/swagger";
 import ApiDoc from "./clientPage";
 
@@ -12,7 +12,7 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page() {
 	// Check authentication
-	const session: any = await getServerSession();
+	const session: any = await auth();
 	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	// Generate spec

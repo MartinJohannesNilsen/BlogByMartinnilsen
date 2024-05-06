@@ -1,8 +1,10 @@
 "use server";
+import { auth } from "@/auth";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { signIn } from "next-auth/react";
+import { ArticleJsonLd } from "next-seo";
 import { unstable_cache } from "next/cache";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
 import { getPost } from "../../../data/db/posts";
 import { DATA_DEFAULTS, defaultMetadata, formatDate } from "../../../data/metadata";
@@ -44,15 +46,15 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }: { params: { postId: string } }) {
+	// Check authentication
+	const session: any = await auth();
+	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
+
 	// Get post
 	const getCachedPost = unstable_cache(async (postId: string) => getPost(postId), undefined, {
 		tags: [`post_${params.postId}`],
 	});
 	const post = await getCachedPost(params.postId);
-
-	// Check authentication
-	const session: any = await getServerSession();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	// Get postsOverview
 	const postsOverview = isAuthorized
@@ -60,8 +62,26 @@ export default async function Page({ params }: { params: { postId: string } }) {
 		: await getCachedPublishedDescendingPostsOverview();
 
 	if (!post) return notFound();
-	else if (!post.published && !isAuthorized) redirect("/api/auth/signin");
+	else if (!post.published && !isAuthorized) signIn();
 	return (
-		<ReadArticleView post={post} postId={params.postId} postsOverview={postsOverview} isAuthorized={isAuthorized} />
+		<>
+			<ArticleJsonLd
+				useAppDir={true}
+				type="BlogPosting"
+				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${params.postId}`}
+				images={[post.ogImage.src]}
+				datePublished={new Date(post.createdAt).toISOString()}
+				dateModified={post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined}
+				title={post.title}
+				description={post.description}
+				// authorName={post.author}
+				authorName={{
+					"@type": "Person",
+					name: post.author,
+					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/yjdttN68e7V3E8SKIupT`,
+				}}
+			/>
+			<ReadArticleView post={post} postId={params.postId} postsOverview={postsOverview} isAuthorized={isAuthorized} />
+		</>
 	);
 }

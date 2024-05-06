@@ -1,11 +1,11 @@
 "use server";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../data/cache";
 import LandingPage from "./clientPage";
 
 export default async function Page() {
 	// Check authentication
-	const session: any = await getServerSession();
+	const session: any = await auth();
 	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	// Get postsOverview

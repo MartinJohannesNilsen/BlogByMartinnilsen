@@ -1,6 +1,5 @@
 "use client";
 import { Box, Button, Grid, Typography, useMediaQuery } from "@mui/material";
-import { WebPageJsonLd } from "next-seo";
 import ErrorPage from "next/error";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -96,62 +95,49 @@ const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 	) {
 		return <ErrorPage statusCode={404} title="This tag could not be found" />;
 	}
-	return (
-		<>
-			<WebPageJsonLd
-				description="Navigate the full collection of posts, filtering based on their associated tag(s)."
-				id={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/tags`}
-				lastReviewed={new Date(
-					Math.max(...statePosts.map((post) => post.updatedAt || post.createdAt), 0)
-				).toISOString()}
-				reviewedBy={{
-					type: "Person",
-					name: "Martin Johannes Nilsen",
-				}}
+	return !isLoading ? (
+		<Box
+			sx={{
+				height: "100%",
+				width: "100%",
+				background: theme.palette.primary.main,
+			}}
+		>
+			<Navbar
+				posts={isAuthorized ? posts : _filterListOfStoredPostsOnPublished(posts, "published")}
+				setCardLayout={setCardLayout}
+				isAuthorized={isAuthorized}
 			/>
-			{!isLoading ? (
-				<Box
-					sx={{
-						height: "100%",
-						width: "100%",
-						background: theme.palette.primary.main,
-					}}
-				>
-					<Navbar
-						posts={isAuthorized ? posts : _filterListOfStoredPostsOnPublished(posts, "published")}
-						setCardLayout={setCardLayout}
-						isAuthorized={isAuthorized}
-					/>
-					<Box
-						display="flex"
-						flexDirection="column"
-						sx={{
-							minHeight: "100vh",
-							height: "100%",
-							width: "100%",
-							paddingX: lgUp ? "150px" : xs ? "20px" : "80px",
-							paddingTop: isMobile ? "55px" : "80px",
-							backgroundColor: theme.palette.primary.main,
-						}}
+			<Box
+				display="flex"
+				flexDirection="column"
+				sx={{
+					minHeight: "100vh",
+					height: "100%",
+					width: "100%",
+					paddingX: lgUp ? "150px" : xs ? "20px" : "80px",
+					paddingTop: isMobile ? "55px" : "80px",
+					backgroundColor: theme.palette.primary.main,
+				}}
+			>
+				{/* Header */}
+				<Box display="flex" alignItems="center">
+					<Typography
+						variant={xs ? "h4" : "h3"}
+						fontFamily={theme.typography.fontFamily}
+						color={theme.palette.text.primary}
+						fontWeight={600}
 					>
-						{/* Header */}
-						<Box display="flex" alignItems="center">
-							<Typography
-								variant={xs ? "h4" : "h3"}
-								fontFamily={theme.typography.fontFamily}
-								color={theme.palette.text.primary}
-								fontWeight={600}
-							>
-								{tag
-									? tag.toLowerCase() === "published" ||
-									  tag.toLowerCase() === "unpublished" ||
-									  tag.toLowerCase() === "saved"
-										? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
-										: "#" + _getCaseInsensitiveElement(tags, tag)!.replace(" ", "")
-									: "All posts"}
-								{/* {" (" + posts.length + ")"} */}
-							</Typography>
-							{/* <Typography
+						{tag
+							? tag.toLowerCase() === "published" ||
+							  tag.toLowerCase() === "unpublished" ||
+							  tag.toLowerCase() === "saved"
+								? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
+								: "#" + _getCaseInsensitiveElement(tags, tag)!.replace(" ", "")
+							: "All posts"}
+						{/* {" (" + posts.length + ")"} */}
+					</Typography>
+					{/* <Typography
 								ml={1}
 								variant={xs ? "h6" : "h5"}
 								fontFamily={theme.typography.fontFamily}
@@ -160,49 +146,98 @@ const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 							>
 								{"⋅ " + posts.length}
 							</Typography> */}
-						</Box>
-						{/* Grid of tags and posts */}
-						<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={8} rowSpacing={xs ? 2 : 4}>
-							{/* Tags */}
-							<Grid
-								item
-								xs={12}
-								lg={3}
-								order={{ lg: 3, xl: 3 }}
-								sx={lgUp ? { position: "fixed", right: 30, mt: -10 } : {}}
+				</Box>
+				{/* Grid of tags and posts */}
+				<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={8} rowSpacing={xs ? 2 : 4}>
+					{/* Tags */}
+					<Grid item xs={12} lg={3} order={{ lg: 3, xl: 3 }} sx={lgUp ? { position: "fixed", right: 30, mt: -10 } : {}}>
+						<Box>
+							<Button
+								LinkComponent={NextLink}
+								size="small"
+								disabled={!tag}
+								disableFocusRipple
+								sx={{
+									width: "fit-content",
+									border: "1px solid " + theme.palette.secondary.main,
+									backgroundColor: !tag ? theme.palette.secondary.main : "default",
+									"&:hover": {
+										border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+										backgroundColor: !tag
+											? theme.palette.secondary.main
+											: theme.palette.mode == "dark"
+											? theme.palette.grey[900]
+											: theme.palette.grey[100],
+									},
+									"&:focus": {
+										border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+										backgroundColor: !tag
+											? theme.palette.secondary.main
+											: theme.palette.mode == "dark"
+											? theme.palette.grey[900]
+											: theme.palette.grey[100],
+									},
+									margin: 0.5,
+									padding: "5px 6px",
+								}}
+								onClick={() => {
+									router.replace("/tags");
+									setTag(null);
+								}}
 							>
-								<Box>
+								<Typography
+									fontFamily={theme.typography.fontFamily}
+									color={theme.palette.text.primary}
+									variant="body2"
+									fontSize={xs ? "11px" : "13px"}
+									textTransform="none"
+									fontWeight={600}
+								>
+									All posts
+								</Typography>
+							</Button>
+							{(isAuthorized ? ["Published", "Unpublished", "Saved"] : ["Saved"])
+								.concat(tags.sort())
+								.map((element, index) => (
 									<Button
 										LinkComponent={NextLink}
+										key={index}
 										size="small"
-										disabled={!tag}
+										disabled={
+											tag ? tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") : false
+										}
 										disableFocusRipple
 										sx={{
 											width: "fit-content",
 											border: "1px solid " + theme.palette.secondary.main,
-											backgroundColor: !tag ? theme.palette.secondary.main : "default",
+											backgroundColor:
+												tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+													? theme.palette.secondary.main
+													: "default",
 											"&:hover": {
 												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
-												backgroundColor: !tag
-													? theme.palette.secondary.main
-													: theme.palette.mode == "dark"
-													? theme.palette.grey[900]
-													: theme.palette.grey[100],
+												backgroundColor:
+													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+														? theme.palette.secondary.main
+														: theme.palette.mode == "dark"
+														? theme.palette.grey[900]
+														: theme.palette.grey[100],
 											},
 											"&:focus": {
 												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
-												backgroundColor: !tag
-													? theme.palette.secondary.main
-													: theme.palette.mode == "dark"
-													? theme.palette.grey[900]
-													: theme.palette.grey[100],
+												backgroundColor:
+													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+														? theme.palette.secondary.main
+														: theme.palette.mode == "dark"
+														? theme.palette.grey[900]
+														: theme.palette.grey[100],
 											},
 											margin: 0.5,
 											padding: "5px 6px",
 										}}
 										onClick={() => {
-											router.replace("/tags");
-											setTag(null);
+											router.replace("/tags?name=" + element.replace(" ", ""));
+											setTag(element);
 										}}
 									>
 										<Typography
@@ -213,129 +248,73 @@ const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 											textTransform="none"
 											fontWeight={600}
 										>
-											All posts
+											{element === "Published" || element === "Unpublished" || element === "Saved"
+												? element
+												: "#" + _getCaseInsensitiveElement(tags, element)!.replace(" ", "")}
 										</Typography>
 									</Button>
-									{(isAuthorized ? ["Published", "Unpublished", "Saved"] : ["Saved"])
-										.concat(tags.sort())
-										.map((element, index) => (
-											<Button
-												LinkComponent={NextLink}
-												key={index}
-												size="small"
-												disabled={
-													tag ? tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") : false
-												}
-												disableFocusRipple
-												sx={{
-													width: "fit-content",
-													border: "1px solid " + theme.palette.secondary.main,
-													backgroundColor:
-														tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-															? theme.palette.secondary.main
-															: "default",
-													"&:hover": {
-														border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
-														backgroundColor:
-															tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-																? theme.palette.secondary.main
-																: theme.palette.mode == "dark"
-																? theme.palette.grey[900]
-																: theme.palette.grey[100],
-													},
-													"&:focus": {
-														border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
-														backgroundColor:
-															tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-																? theme.palette.secondary.main
-																: theme.palette.mode == "dark"
-																? theme.palette.grey[900]
-																: theme.palette.grey[100],
-													},
-													margin: 0.5,
-													padding: "5px 6px",
-												}}
-												onClick={() => {
-													router.replace("/tags?name=" + element.replace(" ", ""));
-													setTag(element);
-												}}
-											>
-												<Typography
-													fontFamily={theme.typography.fontFamily}
-													color={theme.palette.text.primary}
-													variant="body2"
-													fontSize={xs ? "11px" : "13px"}
-													textTransform="none"
-													fontWeight={600}
-												>
-													{element === "Published" || element === "Unpublished" || element === "Saved"
-														? element
-														: "#" + _getCaseInsensitiveElement(tags, element)!.replace(" ", "")}
-												</Typography>
-											</Button>
-										))}
-								</Box>
-							</Grid>
-							{/* Separator */}
-							<Grid item xs={0} lg={1} order={{ lg: 2, xl: 2 }} />
-							{/* Cards and pagination */}
-							<Grid item container xs={12} lg={7} order={{ lg: 1, xl: 1 }} rowSpacing={2.5}>
-								{/* Cards */}
-								{statePosts && statePosts.length > 0 ? (
-									statePosts.map((data, index) => {
-										return (
-											<Grid item key={index} xs={12}>
-												<TagsPageCard
-													views={views}
-													author={data.author}
-													description={data.description}
-													id={data.id}
-													ogImage={data.ogImage}
-													published={data.published}
-													readTime={data.readTime}
-													tags={data.tags}
-													keywords={data.keywords}
-													createdAt={data.createdAt}
-													updatedAt={data.updatedAt}
-													title={data.title}
-													type={data.type}
-												/>
-											</Grid>
-										);
-									})
-								) : (
-									<Box my={5}>
-										<Typography
-											variant={"h6"}
-											fontFamily={theme.typography.fontFamily}
-											color={theme.palette.text.primary}
-											fontWeight={600}
-											sx={{ opacity: 0.5 }}
-										>
-											{tag &&
-												(tag.toLowerCase() === "published"
-													? // "Currently, the author is in deep contemplation (or maybe just daydreaming). Posts will appear as soon as thoughts transform into words!"
-													  //   "The author's pen is still busy at work. No published posts yet, but great stories are on the way!"
-													  "It appears the author (that's me!) is still warming up their keyboard. Stay tuned for posts coming soon!"
-													: tag.toLowerCase() === "unpublished"
-													? "No unpublished posts at the moment, what should we write about next?"
-													: tag.toLowerCase() === "saved"
-													? // ? "Are your saved posts section playing hide and seek?"
-													  "Your list of saved posts is waiting to be filled!"
-													: "No posts yet with this tag, but check back soon!")}
-										</Typography>
-									</Box>
-								)}
-								{/* Push items down */}
-								{/* <Grid item xs={12} /> */}
-							</Grid>
-						</Grid>
-					</Box>
-				</Box>
-			) : (
-				<></>
-			)}
-		</>
+								))}
+						</Box>
+					</Grid>
+					{/* Separator */}
+					<Grid item xs={0} lg={1} order={{ lg: 2, xl: 2 }} />
+					{/* Cards and pagination */}
+					<Grid item container xs={12} lg={7} order={{ lg: 1, xl: 1 }} rowSpacing={2.5}>
+						{/* Cards */}
+						{statePosts && statePosts.length > 0 ? (
+							statePosts.map((data, index) => {
+								return (
+									<Grid item key={index} xs={12}>
+										<TagsPageCard
+											views={views}
+											author={data.author}
+											description={data.description}
+											id={data.id}
+											ogImage={data.ogImage}
+											published={data.published}
+											readTime={data.readTime}
+											tags={data.tags}
+											keywords={data.keywords}
+											createdAt={data.createdAt}
+											updatedAt={data.updatedAt}
+											title={data.title}
+											type={data.type}
+										/>
+									</Grid>
+								);
+							})
+						) : (
+							<Box my={5}>
+								<Typography
+									variant={"h6"}
+									fontFamily={theme.typography.fontFamily}
+									color={theme.palette.text.primary}
+									fontWeight={600}
+									sx={{ opacity: 0.5 }}
+								>
+									{tag &&
+										(tag.toLowerCase() === "published"
+											? // "Currently, the author is in deep contemplation (or maybe just daydreaming). Posts will appear as soon as thoughts transform into words!"
+											  //   "The author's pen is still busy at work. No published posts yet, but great stories are on the way!"
+											  "It appears the author (that's me!) is still warming up their keyboard. Stay tuned for posts coming soon!"
+											: tag.toLowerCase() === "unpublished"
+											? "No unpublished posts at the moment, what should we write about next?"
+											: tag.toLowerCase() === "saved"
+											? // ? "Are your saved posts section playing hide and seek?"
+											  "Your list of saved posts is waiting to be filled!"
+											: "No posts yet with this tag, but check back soon!")}
+								</Typography>
+							</Box>
+						)}
+						{/* Push items down */}
+						{/* <Grid item xs={12} /> */}
+					</Grid>
+				</Grid>
+			</Box>
+		</Box>
+	) : (
+		<></>
 	);
 };
+
 export default TagsPage;

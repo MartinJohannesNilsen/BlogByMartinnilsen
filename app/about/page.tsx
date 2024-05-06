@@ -1,8 +1,8 @@
 "use server";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
 import AboutPage from "./clientPage";
+import { auth } from "@/auth";
 
 export async function generateMetadata({ params, searchParams }) {
 	const metadata: Metadata = {
@@ -13,7 +13,7 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page() {
 	// Check authentication
-	const session: any = await getServerSession();
+	const session: any = await auth();
 	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	// Get postsOverview

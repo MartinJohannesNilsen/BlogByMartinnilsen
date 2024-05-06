@@ -1,12 +1,12 @@
+import { auth } from "@/auth";
 import { Metadata, Viewport } from "next";
-import { getServerSession } from "next-auth";
 import Script from "next/script";
 import SessionProvider from "../components/Auth/SessionProvider";
 import CustomSnackbarProvider from "../components/SnackbarProvider/CustomSnackbarProvider";
+import { defaultMetadata } from "../data/metadata";
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
 import { CustomThemeProvider } from "../styles/themes/ThemeProvider";
-import { defaultMetadata } from "../data/metadata";
 
 export const viewport: Viewport = {
 	themeColor: [
@@ -26,7 +26,7 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const session = await getServerSession();
+	const session = await auth();
 
 	return (
 		<html lang="en">
