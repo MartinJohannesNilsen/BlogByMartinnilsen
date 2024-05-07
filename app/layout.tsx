@@ -35,13 +35,14 @@ export default async function RootLayout({
 				<SessionProvider session={session}>
 					<CustomThemeProvider>
 						<CustomSnackbarProvider>
-							{process.env.NEXT_PUBLIC_LOCALHOST === "false" && (
-								<Script
-									defer
-									src="https://analytics.mjntech.dev/script.js"
-									data-website-id="ea67c45e-6f9e-47f5-b459-6923cfb179a8"
-								/>
-							)}
+							{(!process.env.NEXT_PUBLIC_LOCALHOST || process.env.NEXT_PUBLIC_LOCALHOST === "false") &&
+								(!session?.user?.role || session.user.role !== "admin") && (
+									<Script
+										defer
+										src="https://analytics.mjntech.dev/script.js"
+										data-website-id="ea67c45e-6f9e-47f5-b459-6923cfb179a8"
+									/>
+								)}
 							{children}
 						</CustomSnackbarProvider>
 					</CustomThemeProvider>
