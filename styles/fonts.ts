@@ -1,15 +1,11 @@
 import {
 	Bricolage_Grotesque,
-	Dancing_Script,
 	Fira_Code,
-	Josefin_Sans,
 	MedievalSharp,
-	Merriweather_Sans,
 	Montserrat,
 	Noto_Sans_Display,
 	Noto_Serif,
 	Open_Sans,
-	Pixelify_Sans,
 	Playfair_Display,
 	Rubik,
 	Source_Sans_3,
@@ -32,21 +28,21 @@ export const open_sans = Open_Sans({
 	variable: "--font-open-sans",
 	// display: 'swap',
 });
-export const josefin_sans = Josefin_Sans({
-	subsets: ["latin"],
-	variable: "--font-josefin-sans",
-	// display: 'swap',
-});
+// export const josefin_sans = Josefin_Sans({
+// 	subsets: ["latin"],
+// 	variable: "--font-josefin-sans",
+// 	// display: 'swap',
+// });
 export const noto_sans_display = Noto_Sans_Display({
 	subsets: ["latin"],
 	variable: "--font-noto-sans-display",
 	// display: 'swap',
 });
-export const merriweather_sans = Merriweather_Sans({
-	subsets: ["latin"],
-	variable: "--font-merriweather-sans",
-	// display: 'swap',
-});
+// export const merriweather_sans = Merriweather_Sans({
+// 	subsets: ["latin"],
+// 	variable: "--font-merriweather-sans",
+// 	// display: 'swap',
+// });
 export const noto_serif = Noto_Serif({
 	subsets: ["latin"],
 	variable: "--font-noto-serif",
@@ -62,11 +58,11 @@ export const playfair_display = Playfair_Display({
 	variable: "--font-playfair-display",
 	// display: 'swap',
 });
-export const dancing_script = Dancing_Script({
-	subsets: ["latin"],
-	variable: "--font-dancing-script",
-	// display: 'swap',
-});
+// export const dancing_script = Dancing_Script({
+// 	subsets: ["latin"],
+// 	variable: "--font-dancing-script",
+// 	// display: 'swap',
+// });
 export const rubik = Rubik({
 	subsets: ["latin"],
 	variable: "--font-rubik",
@@ -77,11 +73,11 @@ export const montserrat = Montserrat({
 	variable: "--font-monteserrat",
 	// display: 'swap',
 });
-export const pixelify_sans = Pixelify_Sans({
-	subsets: ["latin"],
-	variable: "--font-pixelify-sans",
-	// display: 'swap',
-});
+// export const pixelify_sans = Pixelify_Sans({
+// 	subsets: ["latin"],
+// 	variable: "--font-pixelify-sans",
+// 	// display: 'swap',
+// });
 // Not variable
 export const medieval_sharp = MedievalSharp({
 	subsets: ["latin"],
@@ -96,16 +92,16 @@ export const cabinet_grotesk = localFont({
 	variable: "--font-cabinet-grotesk",
 	// display: 'swap',
 });
-export const chillax = localFont({
-	src: "../public/assets/fonts/Chillax/Chillax-Variable.woff2",
-	variable: "--font-chillax",
-	// display: 'swap',
-});
-export const general_sans = localFont({
-	src: "../public/assets/fonts/GeneralSans/GeneralSans-Variable.woff2",
-	variable: "--font-general-sans",
-	// display: 'swap',
-});
+// export const chillax = localFont({
+// 	src: "../public/assets/fonts/Chillax/Chillax-Variable.woff2",
+// 	variable: "--font-chillax",
+// 	// display: 'swap',
+// });
+// export const general_sans = localFont({
+// 	src: "../public/assets/fonts/GeneralSans/GeneralSans-Variable.woff2",
+// 	variable: "--font-general-sans",
+// 	// display: 'swap',
+// });
 export const merriweather = localFont({
 	src: "../public/assets/fonts/Merriweather/MerriweatherSans-Variable.woff2",
 	variable: "--font-merriweather",
