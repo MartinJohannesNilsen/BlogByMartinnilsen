@@ -24,7 +24,7 @@ export const AccountCard = ({ sessionUser, isAuthorized }: AccountCardProps) => 
 			sx={
 				state.raised
 					? {
-							boxackgroundColor: theme.palette.mode === "light" ? colors.white : colors.lightGrey,
+							// backgroundColor: theme.palette.primary.main,
 							transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
 							transform: xl ? "scale3d(1.02, 1.02, 1)" : lg ? "scale3d(1.04, 1.04, 1)" : "scale3d(1.03, 1.03, 1)",
 							boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
@@ -32,7 +32,7 @@ export const AccountCard = ({ sessionUser, isAuthorized }: AccountCardProps) => 
 							padding: 2,
 					  }
 					: {
-							boxackgroundColor: theme.palette.mode === "light" ? colors.white : colors.lightGrey,
+							// backgroundColor: theme.palette.primary.main,
 							transition: "transform 0.15s ease-in-out, box-shadow 0.15s",
 							boxShadow: theme.palette.mode === "light" ? "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" : "",
 							width: "350px",
@@ -42,14 +42,15 @@ export const AccountCard = ({ sessionUser, isAuthorized }: AccountCardProps) => 
 			onMouseOver={() => setState({ raised: true })}
 			onMouseOut={() => setState({ raised: false })}
 		>
-			{/* TODO Fix icon based on provider :) */}
-			{/* {sessionUser?.provider && (
-				<Box sx={{ position: "absolute", top: 5, left: 5 }}>
-					{sessionUser.provider === "GitHub" && <GitHub />}
-					{sessionUser.provider === "Google" && <Google />}
+			{sessionUser && (
+				<Box sx={{ position: "relative" }}>
+					<Box sx={{ position: "absolute", top: -5, left: -5 }}>
+						{sessionUser.provider === "GitHub" && <GitHub sx={{ color: theme.palette.text.primary }} />}
+						{sessionUser.provider === "Google" && <Google sx={{ color: theme.palette.text.primary }} />}
+					</Box>
 				</Box>
-			)} */}
-			<Box display="flex" justifyContent="center" alignItems="center" p={2}>
+			)}
+			<Box display="flex" justifyContent="center" alignItems="center" pt={4} pb={2}>
 				{/* Image, or first letter of name or anonymous */}
 				{sessionUser?.image ? (
 					<Avatar sx={{ bgcolor: "black", width: "150px", height: "150px" }} src={sessionUser.image} />

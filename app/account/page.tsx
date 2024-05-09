@@ -1,6 +1,8 @@
 "use server";
 import { auth } from "@/auth";
+import getMockSession from "@/components/Auth/MockSession";
 import { Metadata } from "next";
+import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
 import Account from "./clientPage";
@@ -14,8 +16,8 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page() {
 	// Check authentication
-	const session: any = await auth();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
+	const session: Session | null = process.env.NEXT_PUBLIC_LOCALHOST === "true" ? await getMockSession() : await auth();
+	const isAuthorized = session?.user?.role === "admin";
 
 	// Get postsOverview
 	const postsOverview = isAuthorized

@@ -32,7 +32,7 @@ export const _filterListOfStoredPostsOnTag = (data: StoredPost[], tag: string) =
 	return data.filter((post) => post.tags.includes(tag));
 };
 
-const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
+const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => {
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();
@@ -107,6 +107,7 @@ const TagsPage = ({ posts, tags, isAuthorized }: TagsPageProps) => {
 				posts={isAuthorized ? posts : _filterListOfStoredPostsOnPublished(posts, "published")}
 				setCardLayout={setCardLayout}
 				isAuthorized={isAuthorized}
+				sessionUser={sessionUser}
 			/>
 			<Box
 				display="flex"

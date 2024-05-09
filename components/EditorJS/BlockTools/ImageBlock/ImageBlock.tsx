@@ -292,7 +292,6 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 									// Fetch image details
 									getImageDetails(urlfieldInputValue)
 										.then((details) => {
-											console.log(details);
 											if (details.hasOwnProperty("code") && details.code !== 200) {
 												enqueueSnackbar(details.reason, {
 													variant: "error",

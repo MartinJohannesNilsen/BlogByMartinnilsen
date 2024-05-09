@@ -316,6 +316,8 @@ export type PostNavbarProps = {
 	shareModal: { open: boolean; setOpen: (value: boolean) => void };
 	ref?: MutableRefObject<undefined>;
 	className?: string;
+	isAuthorized?: boolean;
+	sessionUser?: SessionUser;
 };
 
 // Component types
@@ -341,6 +343,8 @@ export type ThemeContextType = {
 	setAccentColor: (accent: string) => void;
 	fontFamily: string;
 	setFontFamily: (font: string) => void;
+	fontScale: string;
+	setFontScale: (scale: string) => void;
 };
 
 export type directionType = "left" | "right" | "up" | "down";
@@ -392,6 +396,8 @@ export type ProfileMenuProps = MenuProps & {
 	notifications?: ModalProps;
 	settings?: ModalProps;
 	about?: ModalProps;
+	isAuthorized?: boolean;
+	sessionUser?: SessionUser;
 };
 
 // Modals
@@ -418,6 +424,8 @@ export type SearchModalProps = ModalProps & {
 	notificationsBadgeVisible?: boolean;
 	setCardLayout?: (layout: string) => void;
 	onOpen?: () => void;
+	isAuthorized?: boolean;
+	sessionUser?: SessionUser;
 };
 
 export type Headings = {
@@ -500,7 +508,7 @@ export type ManagePostPageProps = {
 	post?: FullPost;
 	id?: string;
 };
-export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean };
+export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean; sessionUser?: SessionUser };
 export type FooterProps = {};
 export type ServerPageProps = {
 	sessionUser?: SessionUser;

@@ -29,12 +29,12 @@ import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
 import { renderers } from "../../app/posts/[postId]/clientPage";
 import { revalidatePost, revalidatePostsOverview, revalidateTags } from "../../data/actions";
+import { deleteImage, getImageDetails, uploadImage } from "../../data/db/images";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../data/db/overview";
 import { addPost, deletePost, updatePost } from "../../data/db/posts";
 import { addTag, getTags } from "../../data/db/tags";
 import { DATA_DEFAULTS } from "../../data/metadata";
 import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../styles/themes/themeMap";
 import { FullPost, ManagePostPageProps } from "../../types";
 import { copyToClipboardV2 } from "../../utils/copyToClipboard";
 import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
@@ -43,7 +43,6 @@ import { BpRadio } from "../DesignLibrary/Buttons/RadioButton";
 import OptionMenu from "../DesignLibrary/Menus/OptionMenu";
 import EditableTypography from "../DesignLibrary/Text/EditableTypography";
 import { StyledTextField } from "../DesignLibrary/Text/TextInput";
-import { deleteImage, getImageDetails, uploadImage } from "../../data/db/images";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
@@ -105,7 +104,10 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	const [automaticallySetUpdatedAt, setAutomaticallySetUpdatedAt] = useState(true);
 
 	useEffect(() => {
-		setTheme(ThemeEnum.Light);
+		if (post) {
+			setData(post);
+			setEditorJSContent(post.data);
+		}
 		getTags()
 			.then((val) => {
 				const array: { value: string; label: string }[] = val.map((item) => ({
@@ -117,14 +119,6 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 			.catch((error) => {
 				console.log(error);
 			});
-	}, []);
-
-	useEffect(() => {
-		if (post) {
-			setData(post);
-			setEditorJSContent(post.data);
-			setIsLoading(false);
-		}
 		setIsLoading(false);
 		return () => {};
 	}, []);
@@ -371,6 +365,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 					sx={{
 						minWidth: "100vw",
 						minHeight: "100vh",
+						height: "100%",
 						backgroundColor: theme.palette.primary.main,
 					}}
 				>

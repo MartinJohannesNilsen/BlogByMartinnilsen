@@ -1,11 +1,14 @@
 "use client";
+import useStickyState from "@/utils/useStickyState";
 import { CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { CustomThemeProviderProps, ThemeContextType } from "../../types";
 import useDidUpdate from "../../utils/useDidUpdate";
-import { defaultAccentColor, defaultFontFamily } from "./themeDefaults";
+import { getFontFamilyFromVariable } from "../fonts";
+import { defaultAccentColor, defaultFontFamily, defaultFontFamilyVariable, defaultFontScale } from "./themeDefaults";
 import { ThemeEnum, themeCreator } from "./themeMap";
+// import * as components from "@/styles/fonts";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting
@@ -24,29 +27,31 @@ export const ThemeContext = createContext<ThemeContextType>({
 	theme: getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light),
 	setTheme: (theme, persist) => {},
 	setDefaultTheme: () => {},
-	accentColor:
-		typeof window !== "undefined" ? localStorage.getItem("accent") || defaultAccentColor.hex : defaultAccentColor.hex,
+	accentColor: (typeof window !== "undefined" && localStorage.getItem("accent")) || defaultAccentColor.hex,
 	setAccentColor: (accent) => {},
-	fontFamily: typeof window !== "undefined" ? localStorage.getItem("font") || defaultFontFamily : defaultFontFamily,
+	fontFamily:
+		typeof window !== "undefined"
+			? getFontFamilyFromVariable(localStorage.getItem("fontFamily") || defaultFontFamilyVariable)
+			: defaultFontFamily,
 	setFontFamily: (fontFamily) => {},
+	fontScale: (typeof window !== "undefined" && localStorage.getItem("fontScale")) || defaultFontScale,
+	setFontScale: (fontScale) => {},
 });
 export const useTheme = () => useContext(ThemeContext);
 
 export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 	const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
-	const [fontFamily, _setFontFamily] = useState(
-		typeof window !== "undefined"
-			? JSON.parse(String(localStorage.getItem("font"))) || defaultFontFamily
-			: defaultFontFamily
-	);
-	const [accentColor, _setAccentColor] = useState(
-		typeof window !== "undefined"
-			? JSON.parse(String(localStorage.getItem("accent"))) || defaultAccentColor.hex
-			: defaultAccentColor.hex
+	const [fontFamily, _setFontFamily] = useStickyState("fontFamily", defaultFontFamilyVariable);
+	const [accentColor, _setAccentColor] = useStickyState(
+		"accent",
+		defaultAccentColor.hex,
+		false,
+		/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/
 	);
 	const [theme, _setTheme] = useState(
 		getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light)
 	);
+	const [fontScale, setFontScale] = useStickyState("fontScale", defaultFontScale);
 
 	useDidUpdate(() => {
 		_setTheme(themeCreator(typeof window !== "undefined" ? localStorage.getItem("theme") || OS_STANDARD : OS_STANDARD));
@@ -64,7 +69,7 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 				},
 				typography: {
 					...underlayingTheme.typography,
-					fontFamily: fontFamily,
+					fontFamily: getFontFamilyFromVariable(fontFamily),
 				},
 			})
 		);
@@ -82,21 +87,29 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 				},
 				typography: {
 					...underlayingTheme.typography,
-					fontFamily: fontFamily,
+					fontFamily: getFontFamilyFromVariable(fontFamily),
 				},
 			})
 		);
 	};
 
 	const setFontFamily = (font: string): void => {
-		localStorage.setItem("font", String(JSON.stringify(font)));
-		_setFontFamily(font);
+		if (font) {
+			console.log(font);
+			localStorage.setItem("font", font);
+			_setFontFamily(getFontFamilyFromVariable(font));
+		}
 	};
 
 	const setAccentColor = (accent: string): void => {
-		localStorage.setItem("accent", String(JSON.stringify(accent)));
+		localStorage.setItem("accent", accent);
 		_setAccentColor(accent);
 	};
+
+	useEffect(() => {
+		document.documentElement.style.setProperty("--font-scale", fontScale);
+		return () => {};
+	}, [, fontScale]);
 
 	useMemo(() => {
 		_setTheme(
@@ -108,7 +121,7 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 				},
 				typography: {
 					...theme.typography,
-					fontFamily: fontFamily,
+					fontFamily: getFontFamilyFromVariable(fontFamily),
 				},
 			})
 		);
@@ -125,6 +138,8 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 				setAccentColor,
 				fontFamily,
 				setFontFamily,
+				fontScale,
+				setFontScale,
 			}}
 		>
 			<AppRouterCacheProvider options={{ key: "mui" }}>

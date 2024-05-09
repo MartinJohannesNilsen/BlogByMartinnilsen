@@ -75,7 +75,7 @@ export const ShareModal = (props: ShareModalProps) => {
 						title={props.data.title}
 						description={props.data.description}
 						ogImage={props.data.ogImage}
-						url={window.location.host}
+						url={typeof window !== "undefined" ? window.location.host : ""}
 						width={props.data.width}
 						height={props.data.height}
 					/>

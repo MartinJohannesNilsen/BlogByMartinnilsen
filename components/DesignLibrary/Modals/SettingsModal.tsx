@@ -1,4 +1,5 @@
 "use client";
+import { getFontFamilyFromVariable } from "@/styles/fonts";
 import { Close, Gradient, Square } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { withStyles } from "@mui/styles";
@@ -10,22 +11,39 @@ import { ThemeEnum } from "../../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../../types";
 import StyledControlledSelect, { SelectOption } from "../Select/StyledControlledSelect";
 import { CustomSwitchNew as Switch } from "../Switch/Switch";
+import CustomSlider from "../Slider/Slider";
+import { NavbarButton } from "../Buttons/NavbarButton";
+import { BiMinus, BiPlus } from "react-icons/bi";
 
 const defaultFonts = [
-	{ title: "Cabinet Grotesk", font: "Cabinet Grotesk" },
-	// { title: "Chillax", font: "Chillax" },
-	{ title: "Consolas", font: "Consolas, monospace" },
-	{ title: "General Sans", font: "General Sans" },
-	{ title: "Gotham Pro", font: "Gotham Pro, montserrat" },
-	{ title: "Luminari", font: "Luminari, sans-serif" },
-	{ title: "Merriweather", font: "Merriweather" },
-	{ title: "Source Sans Pro", font: "Source Sans Pro, calibri" },
-	// { title: "Stardom", font: "Stardom" },
+	{ title: "Bricolage", font: "--font-bricolage-grotesque" },
+	{ title: "Fira Code", font: "--font-fira-code" },
+	{ title: "Open Sans", font: "--font-open-sans" },
+	{ title: "Josefin Sans", font: "--font-josefin-sans" },
+	{ title: "Noto Sans Display", font: "--font-noto-sans-display" },
+	{ title: "Merriweather Sans", font: "--font-merriweather-sans" },
+	{ title: "Noto Serif", font: "--font-noto-serif" },
+	{ title: "Source Sans 3", font: "--font-source-sans-3" },
+	{ title: "Playfair Display", font: "--font-playfair-display" },
+	{ title: "Dancing Script", font: "--font-dancing-script" },
+	{ title: "Rubik", font: "--font-rubik" },
+	{ title: "Montserrat", font: "--font-montserrat" },
+	{ title: "Pixelify Sans", font: "--font-pixelify" },
+	{ title: "Medieval Sharp", font: "--font-medieval-sharp" },
+	{ title: "Cabinet Grotesk", font: "--font-cabinet-grotesk" },
+	{ title: "General Sans", font: "--font-general-sans" },
+	{ title: "Merriweather", font: "--font-merriweather" },
+	{ title: "Zodiak", font: "--font-zodiak" },
 	{
 		title: "System font",
 		font: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
 	},
-	{ title: "Zodiak", font: "Zodiak" },
+	// { title: "General Sans", font: "General Sans" },
+	// { title: "Gotham Pro", font: "Gotham Pro, montserrat" },
+	// { title: "Luminari", font: "Luminari, sans-serif" },
+	// { title: "Merriweather", font: "Merriweather" },
+	// { title: "Source Sans Pro", font: "Source Sans Pro, calibri" },
+	// { title: "Zodiak", font: "Zodiak" },
 ];
 
 const defaultColors = [
@@ -48,7 +66,17 @@ const TransparentTooltip = withStyles({
 })(Tooltip);
 
 export const SettingsModal = (props: SettingsModalProps) => {
-	const { theme, setTheme, setDefaultTheme, accentColor, setAccentColor, fontFamily, setFontFamily } = useTheme();
+	const {
+		theme,
+		setTheme,
+		setDefaultTheme,
+		accentColor,
+		setAccentColor,
+		fontFamily,
+		setFontFamily,
+		fontScale,
+		setFontScale,
+	} = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const [colorPickerOpen, setColorPickerOpen] = useState(false);
 	const [themeUserConfigurationExist, setThemeUserConfigurationExist] = useState<boolean>();
@@ -108,6 +136,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						fontWeight="800"
 						color={theme.palette.text.primary}
 						mb={1}
+						fontSize={"1.5rem"}
 					>
 						Settings
 					</Typography>
@@ -118,6 +147,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							variant="body1"
 							fontWeight="600"
 							color={theme.palette.text.primary}
+							fontSize={"1rem"}
 						>
 							Light Mode:
 						</Typography>
@@ -137,7 +167,100 @@ export const SettingsModal = (props: SettingsModalProps) => {
 								>
 									<Close
 										fontSize="inherit"
-										sx={{ color: themeUserConfigurationExist ? theme.palette.text.primary : undefined }}
+										sx={{
+											color: themeUserConfigurationExist
+												? theme.palette.text.primary
+												: theme.palette.text.primary + "40",
+										}}
+									/>
+								</IconButton>
+							</Tooltip>
+						</Box>
+					</Box>
+					{/* Font Scale */}
+					<Box display="flex" gap="10px" mt={0.4}>
+						<Typography
+							fontFamily={theme.typography.fontFamily}
+							variant="body1"
+							fontWeight="600"
+							color={theme.palette.text.primary}
+							fontSize={"1rem"}
+						>
+							Text size:
+						</Typography>
+						<Box flexGrow="1" />
+						<Box mt={-0.2} mr={-1} gap="10px">
+							{/* <CustomSlider
+								sx={{ width: "100%" }}
+								aria-label="Small steps"
+								defaultValue={1.0}
+								// getAriaValueText={""}
+								step={0.1}
+								marks
+								min={0.8}
+								max={1.5}
+								// valueLabelDisplay="auto"
+								onChange={(_, value) => {
+									setFontScale(`${value}`);
+								}}
+							/>
+							<Box sx={{ display: "flex", justifyContent: "space-between" }}>
+								<Typography variant="body2" onClick={() => setFontScale("0.8")} sx={{ cursor: "pointer" }}>
+									Aa
+								</Typography>
+								<Typography variant="body1" onClick={() => setFontScale("1.5")} sx={{ cursor: "pointer" }}>
+									Aa
+								</Typography>
+							</Box> */}
+							<NavbarButton
+								disabled={fontScale === "0.6"}
+								variant="outline"
+								onClick={() => {
+									setFontScale(`${(Number(fontScale) - 0.1).toFixed(1)}`);
+								}}
+								icon={BiMinus}
+								tooltip="Share"
+								sxButton={{
+									height: "36px",
+									width: "36px",
+									mr: 0.5,
+									// "&:disabled": { opacity: "0.5" },
+								}}
+								styleIcon={{ height: "22px", width: "24px", opacity: fontScale === "0.6" ? "0.5" : "1" }}
+							/>
+							<NavbarButton
+								disabled={fontScale === "1.5"}
+								variant="outline"
+								onClick={() => {
+									setFontScale(`${(Number(fontScale) + 0.1).toFixed(1)}`);
+								}}
+								icon={BiPlus}
+								tooltip="Share"
+								sxButton={{
+									height: "36px",
+									width: "36px",
+									// "&:disabled": { opacity: "0.5" },
+								}}
+								styleIcon={{ height: "22px", width: "24px", opacity: fontScale === "1.5" ? "0.5" : "1" }}
+							/>
+						</Box>
+						<Box mt={-0.2}>
+							<Tooltip enterDelay={2000} title="Use system settings">
+								<IconButton
+									disabled={["1", "1.0"].includes(fontScale)}
+									aria-label="delete"
+									size="small"
+									onClick={() => {
+										setFontScale("1");
+									}}
+								>
+									<Close
+										fontSize="inherit"
+										sx={{
+											color: ["1", "1.0"].includes(fontScale)
+												? theme.palette.text.primary + "40"
+												: theme.palette.text.primary,
+										}}
 									/>
 								</IconButton>
 							</Tooltip>
@@ -151,6 +274,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							variant="body1"
 							fontWeight="600"
 							color={theme.palette.text.primary}
+							fontSize={"1rem"}
 						>
 							Font Family:
 						</Typography>
@@ -158,13 +282,16 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						<StyledControlledSelect
 							value={fontFamily}
 							setValue={(value) => {
+								console.log(value);
 								setFontFamily(value);
 								setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
 							}}
 						>
 							{defaultFonts.map((element) => (
 								<SelectOption value={element.font}>
-									<Typography sx={{ fontFamily: element.font, fontWeight: 400 }}>{element.title}</Typography>
+									<Typography sx={{ fontFamily: getFontFamilyFromVariable(element.font), fontWeight: 400 }}>
+										{element.title}
+									</Typography>
 								</SelectOption>
 							))}
 						</StyledControlledSelect>
@@ -177,6 +304,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							variant="body1"
 							fontWeight="600"
 							color={theme.palette.text.primary}
+							fontSize={"1rem"}
 						>
 							Accent color:
 						</Typography>
@@ -251,6 +379,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							variant="body1"
 							fontWeight="600"
 							color={theme.palette.text.primary}
+							fontSize={"1rem"}
 						>
 							Remove data:
 						</Typography>
@@ -277,6 +406,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 								sx={{ textTransform: "none" }}
 								fontWeight="600"
 								color={theme.palette.text.primary}
+								fontSize={"0.7rem"}
 							>
 								Clear local storage
 							</Typography>

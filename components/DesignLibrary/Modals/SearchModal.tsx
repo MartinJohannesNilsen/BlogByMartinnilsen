@@ -49,7 +49,6 @@ import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../../styles/themes/themeMap";
 import { SearchActionProps, SearchModalProps, StoredPost } from "../../../types";
 import { userSignOut } from "../../../utils/signOut";
-import useAuthorized from "../../Auth/useAuthorized";
 import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 
 export const SearchModal = ({
@@ -63,6 +62,8 @@ export const SearchModal = ({
 	notificationsBadgeVisible,
 	setCardLayout,
 	onOpen,
+	isAuthorized,
+	sessionUser,
 }: SearchModalProps) => {
 	const { theme, setTheme, setDefaultTheme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
@@ -76,13 +77,6 @@ export const SearchModal = ({
 	const [activeItem, setActiveItem] = useState(isMobile ? -1 : 0);
 	const [matchedPosts, setMatchedPosts] = useState<StoredPost[]>([]);
 	const [matchedActions, setMatchedActions] = useState<SearchActionProps[]>([]);
-	const { isAuthorized, status } =
-		process.env.NEXT_PUBLIC_LOCALHOST === "true"
-			? {
-					isAuthorized: true,
-					status: "authenticated",
-			  }
-			: useAuthorized(false);
 	const [isActions, setIsActions] = useState<boolean>(false);
 	let actions: SearchActionProps[] = [
 		{
@@ -115,7 +109,7 @@ export const SearchModal = ({
 			keywords: ["account", "profile", "login", "settings"],
 			iconElement: <Person sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return status === "authenticated" && !window.location.pathname.includes("/account");
+				return sessionUser ? !window.location.pathname.includes("/account") : false;
 			},
 		},
 		{
@@ -154,7 +148,7 @@ export const SearchModal = ({
 			keywords: ["create", "add", "write", "new", "post"],
 			iconElement: <PostAdd sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return isAuthorized && !window.location.pathname.includes("/create");
+				return isAuthorized ? !window.location.pathname.includes("/create") : false;
 			},
 		},
 		{
@@ -163,7 +157,7 @@ export const SearchModal = ({
 			keywords: ["api", "docs", "documentation"],
 			iconElement: <Api sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return isAuthorized;
+				return isAuthorized ? true : false;
 			},
 		},
 		{
@@ -211,7 +205,7 @@ export const SearchModal = ({
 			keywords: ["login", "log", "in"],
 			iconElement: <Login sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return status === "authenticated";
+				return sessionUser ? false : true;
 			},
 		},
 		{
@@ -222,7 +216,7 @@ export const SearchModal = ({
 			keywords: ["logout", "log", "out"],
 			iconElement: <Logout sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return status !== "authenticated";
+				return sessionUser ? true : false;
 			},
 		},
 		{

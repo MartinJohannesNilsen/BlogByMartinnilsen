@@ -57,9 +57,9 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 	const [fetchedNotifications, setFetchedNotifications] = useState<NotificationProps[]>([]);
 	const [notifications, setNotifications] = useState<NotificationProps[]>([]);
 	const [unreadNotificationsIds, setUnreadNotificationsIds] = useState<number[]>([]);
-	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now());
-	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30);
-	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", []);
+	const [lastRead, setLastRead] = useStickyState("lastRead", Date.now(), true);
+	const [notificationsFilterDays, setNotificationsFilterDays] = useStickyState("notificationsFilterDays", 30, true);
+	const [notificationsRead, setNotificationsRead] = useStickyState("notificationsRead", [], true);
 
 	useEffect(() => {
 		getAllNotifications().then((data) => setFetchedNotifications(data));

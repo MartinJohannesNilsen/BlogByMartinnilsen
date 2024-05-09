@@ -11,11 +11,10 @@ import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { NavbarProps } from "../../types";
 import { userSignOut } from "../../utils/signOut";
-import useAuthorized from "../Auth/useAuthorized";
 import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
 import NavbarSearchButton from "../DesignLibrary/Buttons/NavbarSearchButton";
-import { MenuIcon } from "../Icons/MenuIcon";
 import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
+import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
 import SearchModal from "../DesignLibrary/Modals/SearchModal"; // For listening to hotkeys on render, not rerender
 // const SearchModal = dynamic(() => import("../Modals/SearchModal"));
@@ -342,6 +341,8 @@ export const Navbar = ({
 						handleNotificationsModalClose();
 						handleProfileMenuClose();
 					}}
+					isAuthorized={isAuthorized}
+					sessionUser={sessionUser}
 				/>
 				<SettingsModal
 					open={openSettingsModal}
@@ -535,6 +536,8 @@ export const Navbar = ({
 							handleModalOpen: handleSettingsModalOpen,
 							handleModalClose: handleSettingsModalClose,
 						}}
+						isAuthorized={isAuthorized}
+						sessionUser={sessionUser}
 					/>
 				</Box>
 			</Box>
@@ -554,6 +557,8 @@ export const Navbar = ({
 					handleNotificationsModalClose();
 					handleProfileMenuClose();
 				}}
+				isAuthorized={isAuthorized}
+				sessionUser={sessionUser}
 			/>
 			<SettingsModal
 				open={openSettingsModal}

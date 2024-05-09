@@ -116,7 +116,13 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 			justifyContent="center"
 			alignItems="center"
 		>
-			<Navbar posts={postsOverview} setCardLayout={setCardLayout} className="navBar" isAuthorized={isAuthorized} />
+			<Navbar
+				posts={postsOverview}
+				setCardLayout={setCardLayout}
+				className="navBar"
+				isAuthorized={isAuthorized}
+				sessionUser={sessionUser}
+			/>
 			<Box pt={10} pb={6} px={2.5} sx={{ maxWidth: lgUp ? "750px" : xs ? "480px" : "600px" }}>
 				{/* Title */}
 				<Typography variant="h3" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
@@ -184,7 +190,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 						create an account, although one may log in using either Google or Github.
 						This will only personalize a small fraction of the experience, and is used mainly
 						for access control. The fields gathered from the providers are <b><i>email</i></b>,
-						<b><i>name</i></b> and <b><i>icon</i></b>.`,
+						<b><i>name</i></b> and <b><i>image</i></b>.`,
 					}}
 					style={{
 						box: { my: 0 },
@@ -322,7 +328,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					/>
 					<CustomParagraph
 						data={{
-							text: "<a href='https://github.com'>GitHub</a> and <a href='https://www.google.com/'>Google</a> are used for authenticating users. Only the elements <b><i>email</i></b>, <b><i>name</i></b> and <b><i>icon</i></b> will be accessed.",
+							text: "<a href='https://github.com'>GitHub</a> and <a href='https://www.google.com/'>Google</a> are used for authenticating users. Only the elements <b><i>email</i></b>, <b><i>name</i></b> and <b><i>image</i></b> will be accessed.",
 						}}
 						style={{
 							typography: { ...theme.typography.body2, fontWeight: 600 },
@@ -344,7 +350,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					data={{
 						text: `
 						Thank you for even reading this section. 
-						First of all, I appreciate you sharing posts you find helpful, and subscribing to a feed (<code>/feed/[rss.xml/rss.json/atom.xml]</code>) for not missing any new content. 
+						First of all, I appreciate you sharing posts you find helpful, and subscribing to a feed (<a href="/feed/rss.xml">rss.xml</a>/<a href="/feed/rss.json">rss.json</a>/<a href="/feed/atom.xml">atom.xml</a>) for not missing any new content. 
 						Second, I highly appreciate any reactions, comments and/or feedback you may have.
 						Furthermore, you can donate/buy me a hot cocoa using the link in the footer. 
 						I do not use advertisements on this site, and have not been that fixated on earning money on my posts.

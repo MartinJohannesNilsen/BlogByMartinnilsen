@@ -1,5 +1,5 @@
 "use client";
-import { Bookmark, Info, Notifications, Person, RssFeed } from "@mui/icons-material";
+import { Bookmark, Notifications, Person, RssFeed } from "@mui/icons-material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import { Badge, Typography } from "@mui/material";
@@ -14,26 +14,10 @@ import * as React from "react";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { ProfileMenuProps } from "../../../types";
 import { userSignOut } from "../../../utils/signOut";
-import useAuthorized from "../../Auth/useAuthorized";
 import { NavbarButton } from "../Buttons/NavbarButton";
 
 export const AccountMenu = (props: ProfileMenuProps) => {
 	const { theme } = useTheme();
-	const { isAuthorized, session, status } =
-		process.env.NEXT_PUBLIC_LOCALHOST === "true"
-			? {
-					isAuthorized: true,
-					session: {
-						user: {
-							name: "Martin the developer",
-							email: "martinjnilsen@gmail.com",
-							image: null,
-						},
-						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
-					},
-					status: "authenticated",
-			  }
-			: useAuthorized(false);
 
 	return (
 		<React.Fragment>
@@ -96,10 +80,10 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
 			>
 				{/* Account */}
-				{status === "authenticated" ? (
+				{props.sessionUser ? (
 					<MenuItem onClick={() => (window.location.href = "/account")}>
-						<Avatar src={(session!.user && session!.user.image) || undefined} sx={{ width: 10, height: 10 }}>
-							{session?.user?.name ? session.user.name[0] : undefined}
+						<Avatar src={(props.sessionUser && props.sessionUser.image) || undefined} sx={{ width: 10, height: 10 }}>
+							{props.sessionUser.name ? props.sessionUser.name[0] : undefined}
 						</Avatar>
 						<Typography fontFamily={theme.typography.fontFamily}>My account</Typography>
 					</MenuItem>
@@ -188,7 +172,7 @@ export const AccountMenu = (props: ProfileMenuProps) => {
 				</MenuItem>
 
 				{/* Sign out */}
-				{status === "authenticated" && (
+				{props.sessionUser && (
 					<MenuItem
 						onClick={() => {
 							userSignOut("", true);

@@ -107,13 +107,19 @@ const DesignPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProp
 		<Box
 			ref={containerRef}
 			sx={{
-				height: "calc(100% - 185px)",
+				minHeight: "100vh",
 				width: "100vw",
 				backgroundColor: theme.palette.primary.main,
 			}}
 		>
-			<Navbar posts={postsOverview} setCardLayout={setCardLayout} className="navBar" isAuthorized={isAuthorized} />
-			<Box pt={10} pb={6} sx={{ paddingX: lgUp ? "150px" : xs ? "10px" : "80px", height: "100%", width: "100%" }}>
+			<Navbar
+				posts={postsOverview}
+				setCardLayout={setCardLayout}
+				className="navBar"
+				isAuthorized={isAuthorized}
+				sessionUser={sessionUser}
+			/>
+			<Box pt={10} pb={6} sx={{ paddingX: lgUp ? "150px" : xs ? "10px" : "80px" }}>
 				<Typography
 					pb={2}
 					variant="h3"
@@ -121,34 +127,139 @@ const DesignPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProp
 				>
 					Design System
 				</Typography>
-				<Box
-					sx={{
-						height: "100%",
-						width: "100%",
-						display: "flex",
-						flexDirection: "column",
-						alignContent: "center",
-						alignItems: "center",
-						justifyContent: "center",
-						justifyItems: "center",
-						textAlign: "center",
-					}}
-				>
-					<Typography
-						variant="body1"
-						sx={{
-							fontFamily: theme.typography.fontFamily,
-							color: theme.palette.primary.contrastText,
-							border:
-								"1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[500] : theme.palette.grey[300]),
-							borderRadius: 2,
-							backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[100],
-							p: "4px 8px",
-							width: "default",
-						}}
-					>
-						Coming soon
+				{/* Logo */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Logo
 					</Typography>
+					<Box pt={2}>
+						<MenuIcon width={44} height={44} fill={theme.palette.text.primary} style={{ fillRule: "evenodd" }} />
+					</Box>
+				</Box>
+				{/* Typography */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Typography
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						>
+							TODO Describe available fonts and fontsizes. Each font in different weights
+						</Typography>
+					</Box>
+				</Box>
+				{/* Colors */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Colors
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						>
+							TODO Circle with all colors that is available. Primary main, dark, light. Background and foreground.
+							Secondary color options in settings.
+						</Typography>
+					</Box>
+				</Box>
+				{/* Buttons and Links*/}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Buttons and Links
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
+				</Box>
+				{/* Switch */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Switch
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
+				</Box>
+				{/* Select */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Select
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
+				</Box>
+				{/* TextField */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						TextField
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
+				</Box>
+				{/* Pills */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Pills
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
+				</Box>
+				{/* Cards */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Cards
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
+				</Box>
+				{/* Modals */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						Modals
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
+				</Box>
+				{/* EditorJS Components */}
+				<Box py={2}>
+					<Typography variant="h4" sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+						EditorJS Rendered Components
+					</Typography>
+					<Box pt={1}>
+						<Typography
+							variant="body1"
+							sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
+						></Typography>
+					</Box>
 				</Box>
 			</Box>
 			<Footer />

@@ -26,10 +26,7 @@ export const dark = createTheme({
 		// accent color
 		secondary: {
 			main:
-				(typeof window !== "undefined" &&
-					localStorage.getItem("accent") &&
-					JSON.parse(String(localStorage.getItem("accent")))) ||
-				defaultAccentColor.hex,
+				(typeof window !== "undefined" && localStorage.getItem("accent")?.replace('"', "")) || defaultAccentColor.hex,
 		},
 		grey: {
 			600: "#585d63",

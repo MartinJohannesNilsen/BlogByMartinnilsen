@@ -1,5 +1,7 @@
 import { auth } from "@/auth";
+import getMockSession from "@/components/Auth/MockSession";
 import { Metadata } from "next";
+import { Session } from "next-auth";
 import { createdApiDocSpec } from "../../lib/swagger";
 import ApiDoc from "./clientPage";
 
@@ -12,8 +14,8 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page() {
 	// Check authentication
-	const session: any = await auth();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
+	const session: Session | null = process.env.NEXT_PUBLIC_LOCALHOST === "true" ? await getMockSession() : await auth();
+	const isAuthorized = session?.user?.role === "admin";
 
 	// Generate spec
 	const spec: Record<string, any> = createdApiDocSpec;

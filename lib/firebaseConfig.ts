@@ -1,4 +1,3 @@
-import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -14,9 +13,5 @@ const config = {
 };
 const firebaseApp = initializeApp(config);
 const db = getFirestore(firebaseApp);
-let analytics;
-if (firebaseApp.name && typeof window !== "undefined" && process.env.NODE_ENV === "production") {
-	analytics = getAnalytics(firebaseApp);
-}
 const cloudStorage = getStorage();
-export { analytics, cloudStorage, db, firebaseApp };
+export { cloudStorage, db, firebaseApp };

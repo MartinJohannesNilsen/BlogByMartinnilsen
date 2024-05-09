@@ -430,6 +430,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized }: Read
 					shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
 					postsOverview={postsOverview}
 					setCardLayout={setCardLayout}
+					isAuthorized={isAuthorized}
 				/>
 				{/* Content */}
 				<Grid

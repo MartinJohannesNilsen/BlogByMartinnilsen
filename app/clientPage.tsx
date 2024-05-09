@@ -162,7 +162,13 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 				userSelect: "none",
 			}}
 		>
-			<Navbar posts={postsOverview} setCardLayout={setCardLayout} isAuthorized={isAuthorized} centeredPadding />
+			<Navbar
+				posts={postsOverview}
+				setCardLayout={setCardLayout}
+				isAuthorized={isAuthorized}
+				sessionUser={sessionUser}
+				centeredPadding
+			/>
 			<Box
 				display="flex"
 				flexDirection="column"

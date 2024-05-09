@@ -6,19 +6,18 @@ import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import useAuthorized from "../Auth/useAuthorized";
-import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
-import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
-import { extractHeaders } from "../DesignLibrary/Modals/TOCModal";
 import { DATA_DEFAULTS } from "../../data/metadata";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../styles/themes/themeMap";
 import { PostNavbarProps, SearchActionProps } from "../../types";
 import { handleSharing } from "../../utils/handleSharing";
 import useStickyState from "../../utils/useStickyState";
+import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
 import NavbarSearchButton from "../DesignLibrary/Buttons/NavbarSearchButton";
-import { MenuIcon } from "../Icons/MenuIcon";
+import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
 import SearchModal from "../DesignLibrary/Modals/SearchModal";
+import { extractHeaders } from "../DesignLibrary/Modals/TOCModal";
+import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
 const NotificationsModal = dynamic(() => import("../DesignLibrary/Modals/NotificationsModal"));
 const TOCModal = dynamic(() => import("../DesignLibrary/Modals/TOCModal"));
@@ -26,21 +25,6 @@ const ShareModal = dynamic(() => import("../DesignLibrary/Modals/ShareModal"));
 const SettingsModal = dynamic(() => import("../DesignLibrary/Modals/SettingsModal"));
 
 export const PostNavbar = (props: PostNavbarProps) => {
-	const { isAuthorized, session, status } =
-		process.env.NEXT_PUBLIC_LOCALHOST === "true"
-			? {
-					isAuthorized: true,
-					session: {
-						user: {
-							name: "Martin the developer",
-							email: "martinjnilsen@gmail.com",
-							image: null,
-						},
-						expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // A year ahead
-					},
-					status: "authenticated",
-			  }
-			: useAuthorized();
 	const { theme, setTheme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const handleNavigate = (path: string) => {
@@ -78,7 +62,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
 
 	// SavedModal
-	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", []);
+	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", [], true);
 	// const [savedPosts, setSavedPosts] = useState<string[]>([]);
 	const [isSaved, setIsSaved] = useState(false);
 	useEffect(() => {
@@ -139,7 +123,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 							width: "95%",
 						}}
 					>
-						{isAuthorized ? (
+						{props.isAuthorized ? (
 							<NavbarButton
 								variant="outline"
 								href={`/create/${props.post.id}`}
@@ -282,6 +266,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 									handleModalOpen: () => setOpenSettingsModal(true),
 									handleModalClose: () => setOpenSettingsModal(false),
 								}}
+								isAuthorized={props.isAuthorized}
+								sessionUser={props.sessionUser}
 							/>
 						</Box>
 					</Box>
@@ -364,7 +350,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 					{/* Right section */}
 					<Box display="flex">
 						{/* Edit */}
-						{isAuthorized && (
+						{props.isAuthorized && (
 							<NavbarButton
 								variant="outline"
 								href={`/create/${props.post.id}`}
@@ -498,6 +484,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 									handleModalOpen: () => setOpenSettingsModal(true),
 									handleModalClose: () => setOpenSettingsModal(false),
 								}}
+								isAuthorized={props.isAuthorized}
+								sessionUser={props.sessionUser}
 							/>
 						</Box>
 					</Box>
@@ -523,6 +511,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						handleProfileMenuClose();
 					}}
 					extraActions={extraActions}
+					isAuthorized={props.isAuthorized}
+					sessionUser={props.sessionUser}
 				/>
 			)}
 
@@ -568,7 +558,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 									width: 1200,
 									blurhash: "U00l#at7D%M{ofj[WBayD%Rj-;xuRjayt7of",
 							  },
-					url: window.location.href,
+					url: typeof window !== "undefined" ? window.location.href : "",
 					height: xs ? 100 : 130,
 					width: xs ? 400 : 500,
 				}}

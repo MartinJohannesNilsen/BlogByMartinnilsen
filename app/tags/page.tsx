@@ -1,6 +1,8 @@
 "use server";
 import { auth } from "@/auth";
+import getMockSession from "@/components/Auth/MockSession";
 import { Metadata } from "next";
+import { Session } from "next-auth";
 import { WebPageJsonLd } from "next-seo";
 import {
 	getCachedAllDescendingPostsOverview,
@@ -18,12 +20,12 @@ export async function generateMetadata({ params }: { params: { tag: string } }) 
 }
 
 export default async function Page() {
+	// Check authentication
+	const session: Session | null = process.env.NEXT_PUBLIC_LOCALHOST === "true" ? await getMockSession() : await auth();
+	const isAuthorized = session?.user?.role === "admin";
+
 	// Get tags
 	const tags = await getCachedTags();
-
-	// Check authentication
-	const session: any = await auth();
-	const isAuthorized = process.env.NEXT_PUBLIC_LOCALHOST === "true" || session?.user?.role === "admin";
 
 	// Get postsOverview
 	const postsOverview = isAuthorized
@@ -44,7 +46,7 @@ export default async function Page() {
 					name: "Martin Johannes Nilsen",
 				}}
 			/>
-			<TagsPage posts={postsOverview} tags={tags} isAuthorized={isAuthorized} />
+			<TagsPage posts={postsOverview} tags={tags} isAuthorized={isAuthorized} sessionUser={session?.user} />
 		</>
 	);
 }
