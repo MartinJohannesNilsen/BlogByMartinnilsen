@@ -5,8 +5,13 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { CustomThemeProviderProps, ThemeContextType } from "../../types";
 import useDidUpdate from "../../utils/useDidUpdate";
-import { getFontFamilyFromVariable } from "../fonts";
-import { defaultAccentColor, defaultFontFamily, defaultFontFamilyVariable, defaultFontScale } from "./themeDefaults";
+import {
+	defaultAccentColor,
+	defaultFontFamily,
+	defaultFontFamilyVariable,
+	defaultFontScale,
+	getFontFamilyFromVariable,
+} from "./themeDefaults";
 import { ThemeEnum, themeCreator } from "./themeMap";
 // import * as components from "@/styles/fonts";
 
@@ -41,8 +46,8 @@ export const useTheme = () => useContext(ThemeContext);
 
 export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 	const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
-	const [fontFamily, _setFontFamily] = useStickyState("fontFamily", defaultFontFamilyVariable);
-	const [accentColor, _setAccentColor] = useStickyState(
+	const [fontFamily, setFontFamily] = useStickyState("fontFamily", defaultFontFamilyVariable);
+	const [accentColor, setAccentColor] = useStickyState(
 		"accent",
 		defaultAccentColor.hex,
 		false,
@@ -93,18 +98,17 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 		);
 	};
 
-	const setFontFamily = (font: string): void => {
-		if (font) {
-			console.log(font);
-			localStorage.setItem("font", font);
-			_setFontFamily(getFontFamilyFromVariable(font));
-		}
-	};
+	// const setFontFamily = (font: string): void => {
+	// 	if (font) {
+	// 		localStorage.setItem("font", font);
+	// 		_setFontFamily(font);
+	// 	}
+	// };
 
-	const setAccentColor = (accent: string): void => {
-		localStorage.setItem("accent", accent);
-		_setAccentColor(accent);
-	};
+	// const setAccentColor = (accent: string): void => {
+	// 	localStorage.setItem("accent", accent);
+	// 	_setAccentColor(accent);
+	// };
 
 	useEffect(() => {
 		document.documentElement.style.setProperty("--font-scale", fontScale);
@@ -112,19 +116,20 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 	}, [, fontScale]);
 
 	useMemo(() => {
-		_setTheme(
-			createTheme({
-				...theme,
-				palette: {
-					...theme.palette,
-					secondary: { main: accentColor },
-				},
-				typography: {
-					...theme.typography,
-					fontFamily: getFontFamilyFromVariable(fontFamily),
-				},
-			})
-		);
+		setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, false);
+		// _setTheme(
+		// 	createTheme({
+		// 		...theme,
+		// 		palette: {
+		// 			...theme.palette,
+		// 			secondary: { main: accentColor },
+		// 		},
+		// 		typography: {
+		// 			...theme.typography,
+		// 			fontFamily: getFontFamilyFromVariable(fontFamily),
+		// 		},
+		// 	})
+		// );
 		return () => {};
 	}, [accentColor, fontFamily]);
 

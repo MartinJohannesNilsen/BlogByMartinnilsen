@@ -123,13 +123,13 @@ export const Navbar = ({
 							color: theme.palette.text.secondary,
 							"&:focus-visible": {
 								backgroundColor: theme.palette.primary.contrastText,
-								border: "1px solid" + theme.palette.grey[theme.palette.mode === "dark" ? 300 : 200],
-								boxShadow: "0 0 8px 10px" + theme.palette.text.secondary + "20", // Adjust the color and size as needed
+								border: "1px solid" + theme.palette.text.primary + "40",
+								boxShadow: "0 0 4px 5px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 							},
 							"&:hover": {
 								backgroundColor: theme.palette.primary.contrastText,
-								border: "1px solid" + theme.palette.grey[theme.palette.mode === "dark" ? 300 : 200],
-								boxShadow: "0 0 8px 10px" + theme.palette.text.secondary + "20", // Adjust the color and size as needed
+								border: "1px solid" + theme.palette.text.primary + "40",
+								boxShadow: "0 0 4px 5px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 							},
 						}}
 					>
@@ -411,13 +411,13 @@ export const Navbar = ({
 						color: theme.palette.text.primary,
 						"&:focus-visible": {
 							backgroundColor: theme.palette.primary.main,
-							border: "1px solid" + theme.palette.text.primary,
-							boxShadow: "0 0 8px 10px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
+							border: "1px solid" + theme.palette.text.primary + "40",
+							boxShadow: "0 0 4px 5px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 						},
 						"&:hover": {
 							backgroundColor: theme.palette.primary.main,
-							border: "1px solid" + theme.palette.text.primary,
-							boxShadow: "0 0 8px 10px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
+							border: "1px solid" + theme.palette.text.primary + "40",
+							boxShadow: "0 0 4px 5px" + theme.palette.text.primary + "20", // Adjust the color and size as needed
 						},
 					}}
 				>

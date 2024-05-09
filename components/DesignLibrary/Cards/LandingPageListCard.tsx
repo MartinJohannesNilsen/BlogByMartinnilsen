@@ -13,6 +13,7 @@ export const LandingPageListCard = (props: PostCardProps) => {
 		<Card
 			sx={{
 				width: "100%",
+				border: `2px solid ${theme.palette.mode == "dark" ? theme.palette.grey[800] : theme.palette.grey[100]}`,
 				"&:hover": {
 					backgroundColor: theme.palette.primary.light,
 				},

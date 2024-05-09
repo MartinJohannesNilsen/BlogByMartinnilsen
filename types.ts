@@ -4,6 +4,7 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { CSSProperties, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
 import { ThemeEnum } from "./styles/themes/themeMap";
+import { Session } from "inspector";
 
 // Object types
 
@@ -503,6 +504,7 @@ export type ReadPostPageProps = {
 	postId: string;
 	postsOverview?: StoredPost[];
 	isAuthorized: boolean;
+	sessionUser?: SessionUser;
 };
 export type ManagePostPageProps = {
 	post?: FullPost;

@@ -114,7 +114,7 @@ export function processJsonToggleBlocks(inputJson) {
 	return null;
 }
 
-export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized }: ReadPostPageProps) => {
+export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessionUser }: ReadPostPageProps) => {
 	const searchParams = useSearchParams();
 	const { theme, setTheme } = useTheme();
 	const [isExploding, setIsExploding] = useState(false);
@@ -431,6 +431,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized }: Read
 					postsOverview={postsOverview}
 					setCardLayout={setCardLayout}
 					isAuthorized={isAuthorized}
+					sessionUser={sessionUser}
 				/>
 				{/* Content */}
 				<Grid

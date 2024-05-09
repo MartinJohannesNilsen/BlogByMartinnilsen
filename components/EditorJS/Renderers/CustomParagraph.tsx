@@ -4,6 +4,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import colorLuminance from "../../../utils/colorLuminance";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 
 const CustomParagraph = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
@@ -15,6 +16,8 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
         margin: 0 1px;
         padding: 2px 5px;
         border-radius: 4px;
+		font-family: ${getFontFamilyFromVariable("--font-fira-code")};
+		font-size: ${theme.typography.body2.fontSize}
     `;
 	const markStyle = `
         margin: 0 1px;

@@ -2,9 +2,19 @@
 import { createTheme } from "@mui/material";
 import * as fonts from "../fonts";
 
+// Functions
+export function getFontFamilyFromVariable(variable?: string) {
+	return !variable
+		? defaultFontFamily // If not specified, return default
+		: fonts.availableFontFamilies.hasOwnProperty(variable) && fonts.availableFontFamilies[variable]
+		? fonts.availableFontFamilies[variable] // If available, return font
+		: variable; // If not available, return variable string
+}
+
+// Defaults
 export const defaultAccentColor = { hex: "#e9b384", name: "Beige" };
 export const defaultFontFamily = fonts.cabinet_grotesk.style.fontFamily;
-export const defaultFontFamilyVariable = "--font-noto-serif";
+export const defaultFontFamilyVariable = "--font-cabinet-grotesk";
 export const defaultFontScale = "1";
 
 // Create base theme
@@ -12,7 +22,10 @@ const defaultTheme = createTheme();
 // Find default values here: https://mui.com/material-ui/customization/default-theme/
 export const baseTheme = createTheme({
 	typography: {
-		fontFamily: defaultFontFamily,
+		fontFamily:
+			(typeof window !== "undefined" && localStorage.getItem("fontFamily")) || undefined
+				? getFontFamilyFromVariable((typeof window !== "undefined" && localStorage.getItem("fontFamily")) || undefined)
+				: defaultFontFamily,
 		fontSize: 14,
 		// Headings
 		// Usage:

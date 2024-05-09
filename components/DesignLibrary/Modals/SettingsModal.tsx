@@ -1,55 +1,42 @@
 "use client";
-import { getFontFamilyFromVariable } from "@/styles/fonts";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 import { Close, Gradient, Square } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
 import { isMobile } from "react-device-detect";
+import { BiMinus, BiPlus } from "react-icons/bi";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../../styles/themes/themeMap";
 import { SettingsModalProps } from "../../../types";
+import { NavbarButton } from "../Buttons/NavbarButton";
 import StyledControlledSelect, { SelectOption } from "../Select/StyledControlledSelect";
 import { CustomSwitchNew as Switch } from "../Switch/Switch";
-import CustomSlider from "../Slider/Slider";
-import { NavbarButton } from "../Buttons/NavbarButton";
-import { BiMinus, BiPlus } from "react-icons/bi";
 
 const defaultFonts = [
-	{ title: "Bricolage", font: "--font-bricolage-grotesque" },
-	{ title: "Fira Code", font: "--font-fira-code" },
-	{ title: "Open Sans", font: "--font-open-sans" },
-	{ title: "Josefin Sans", font: "--font-josefin-sans" },
-	{ title: "Noto Sans Display", font: "--font-noto-sans-display" },
-	{ title: "Merriweather Sans", font: "--font-merriweather-sans" },
-	{ title: "Noto Serif", font: "--font-noto-serif" },
-	{ title: "Source Sans 3", font: "--font-source-sans-3" },
-	{ title: "Playfair Display", font: "--font-playfair-display" },
-	{ title: "Dancing Script", font: "--font-dancing-script" },
-	{ title: "Rubik", font: "--font-rubik" },
-	{ title: "Montserrat", font: "--font-montserrat" },
-	{ title: "Pixelify Sans", font: "--font-pixelify" },
-	{ title: "Medieval Sharp", font: "--font-medieval-sharp" },
-	{ title: "Cabinet Grotesk", font: "--font-cabinet-grotesk" },
-	{ title: "General Sans", font: "--font-general-sans" },
-	{ title: "Merriweather", font: "--font-merriweather" },
-	{ title: "Zodiak", font: "--font-zodiak" },
 	{
 		title: "System font",
 		font: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
 	},
-	// { title: "General Sans", font: "General Sans" },
-	// { title: "Gotham Pro", font: "Gotham Pro, montserrat" },
-	// { title: "Luminari", font: "Luminari, sans-serif" },
-	// { title: "Merriweather", font: "Merriweather" },
-	// { title: "Source Sans Pro", font: "Source Sans Pro, calibri" },
-	// { title: "Zodiak", font: "Zodiak" },
+	{ title: "Bricolage", font: "--font-bricolage-grotesque" },
+	{ title: "Cabinet Grotesk", font: "--font-cabinet-grotesk" },
+	{ title: "Fira Code", font: "--font-fira-code" },
+	{ title: "Medieval Sharp", font: "--font-medieval-sharp" },
+	{ title: "Merriweather", font: "--font-merriweather" },
+	{ title: "Montserrat", font: "--font-montserrat" },
+	{ title: "Noto Sans Display", font: "--font-noto-sans-display" },
+	{ title: "Noto Serif", font: "--font-noto-serif" },
+	{ title: "Open Sans", font: "--font-open-sans" },
+	{ title: "Playfair Display", font: "--font-playfair-display" },
+	{ title: "Rubik", font: "--font-rubik" },
+	{ title: "Source Sans", font: "--font-source-sans-3" },
+	{ title: "Zodiak", font: "--font-zodiak" },
 ];
 
 const defaultColors = [
 	{ title: "Beige", color: "#e9b384" },
 	{ title: "Crimson", color: "#f47373" },
-	// { title: "Green", color: "#51a83e" },
 	{ title: "Lime", color: "#37d67a" },
 	{ title: "Yellow", color: "#fdd835" },
 	{ title: "Orange", color: "#ff8a65" },
@@ -137,25 +124,27 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						color={theme.palette.text.primary}
 						mb={1}
 						fontSize={"1.5rem"}
+						sx={{ userSelect: "none" }}
 					>
 						Settings
 					</Typography>
 					{/* Dark/light mode */}
-					<Box display="flex" gap="10px">
+					<Box display="flex" gap="10px" alignItems="center" sx={{ height: "32px" }}>
 						<Typography
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
 							fontWeight="600"
 							color={theme.palette.text.primary}
 							fontSize={"1rem"}
+							sx={{ userSelect: "none" }}
 						>
 							Light Mode:
 						</Typography>
 						<Box flexGrow="1" />
-						<Box mt={-0.2} mr={-1}>
+						<Box mr={-1} display="flex" justifyContent="center" alignItems="center">
 							<Switch checked={theme.palette.mode === "light"} onChange={props.handleThemeChange} />
 						</Box>
-						<Box mt={-0.2}>
+						<Box display="flex" alignItems="center">
 							<Tooltip enterDelay={2000} title="Use system settings">
 								<IconButton
 									disabled={!themeUserConfigurationExist}
@@ -166,8 +155,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
 									}}
 								>
 									<Close
-										fontSize="inherit"
 										sx={{
+											fontSize: "1rem",
 											color: themeUserConfigurationExist
 												? theme.palette.text.primary
 												: theme.palette.text.primary + "40",
@@ -178,40 +167,29 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						</Box>
 					</Box>
 					{/* Font Scale */}
-					<Box display="flex" gap="10px" mt={0.4}>
+					<Box display="flex" gap="10px" mt={1} sx={{ height: "28px" }}>
 						<Typography
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
 							fontWeight="600"
 							color={theme.palette.text.primary}
 							fontSize={"1rem"}
+							sx={{ userSelect: "none" }}
 						>
 							Text size:
 						</Typography>
 						<Box flexGrow="1" />
-						<Box mt={-0.2} mr={-1} gap="10px">
-							{/* <CustomSlider
-								sx={{ width: "100%" }}
-								aria-label="Small steps"
-								defaultValue={1.0}
-								// getAriaValueText={""}
-								step={0.1}
-								marks
-								min={0.8}
-								max={1.5}
-								// valueLabelDisplay="auto"
-								onChange={(_, value) => {
-									setFontScale(`${value}`);
-								}}
-							/>
-							<Box sx={{ display: "flex", justifyContent: "space-between" }}>
-								<Typography variant="body2" onClick={() => setFontScale("0.8")} sx={{ cursor: "pointer" }}>
-									Aa
-								</Typography>
-								<Typography variant="body1" onClick={() => setFontScale("1.5")} sx={{ cursor: "pointer" }}>
-									Aa
-								</Typography>
-							</Box> */}
+						<Box mt={-0.2} mr={-1} gap="4px" display="flex" alignItems="center">
+							<Typography
+								variant="body2"
+								fontFamily={theme.typography.fontFamily}
+								fontWeight="400"
+								color={theme.palette.text.primary}
+								fontSize={"0.8rem"}
+								sx={{ mr: 0.5, userSelect: "none" }}
+							>
+								{(Number(fontScale) * 100).toFixed(0)}%
+							</Typography>
 							<NavbarButton
 								disabled={fontScale === "0.6"}
 								variant="outline"
@@ -219,12 +197,11 @@ export const SettingsModal = (props: SettingsModalProps) => {
 									setFontScale(`${(Number(fontScale) - 0.1).toFixed(1)}`);
 								}}
 								icon={BiMinus}
-								tooltip="Share"
+								tooltip="Decrease text size"
 								sxButton={{
-									height: "36px",
-									width: "36px",
-									mr: 0.5,
-									// "&:disabled": { opacity: "0.5" },
+									height: "28px",
+									width: "28px",
+									borderRadius: 2,
 								}}
 								styleIcon={{ height: "22px", width: "24px", opacity: fontScale === "0.6" ? "0.5" : "1" }}
 							/>
@@ -235,16 +212,16 @@ export const SettingsModal = (props: SettingsModalProps) => {
 									setFontScale(`${(Number(fontScale) + 0.1).toFixed(1)}`);
 								}}
 								icon={BiPlus}
-								tooltip="Share"
+								tooltip="Increase text size"
 								sxButton={{
-									height: "36px",
-									width: "36px",
-									// "&:disabled": { opacity: "0.5" },
+									height: "28px",
+									width: "28px",
+									borderRadius: 2,
 								}}
-								styleIcon={{ height: "22px", width: "24px", opacity: fontScale === "1.5" ? "0.5" : "1" }}
+								styleIcon={{ height: "18px", width: "18px", opacity: fontScale === "1.5" ? "0.5" : "1" }}
 							/>
 						</Box>
-						<Box mt={-0.2}>
+						<Box display="flex" alignItems="center">
 							<Tooltip enterDelay={2000} title="Use system settings">
 								<IconButton
 									disabled={["1", "1.0"].includes(fontScale)}
@@ -255,8 +232,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
 									}}
 								>
 									<Close
-										fontSize="inherit"
 										sx={{
+											fontSize: "1rem",
 											color: ["1", "1.0"].includes(fontScale)
 												? theme.palette.text.primary + "40"
 												: theme.palette.text.primary,
@@ -275,6 +252,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							fontWeight="600"
 							color={theme.palette.text.primary}
 							fontSize={"1rem"}
+							sx={{ userSelect: "none" }}
 						>
 							Font Family:
 						</Typography>
@@ -289,7 +267,9 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						>
 							{defaultFonts.map((element) => (
 								<SelectOption value={element.font}>
-									<Typography sx={{ fontFamily: getFontFamilyFromVariable(element.font), fontWeight: 400 }}>
+									<Typography
+										sx={{ fontFamily: getFontFamilyFromVariable(element.font), fontWeight: 400, fontSize: "0.875rem" }}
+									>
 										{element.title}
 									</Typography>
 								</SelectOption>
@@ -305,6 +285,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							fontWeight="600"
 							color={theme.palette.text.primary}
 							fontSize={"1rem"}
+							sx={{ userSelect: "none" }}
 						>
 							Accent color:
 						</Typography>
@@ -380,6 +361,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							fontWeight="600"
 							color={theme.palette.text.primary}
 							fontSize={"1rem"}
+							sx={{ userSelect: "none" }}
 						>
 							Remove data:
 						</Typography>

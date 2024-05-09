@@ -4,6 +4,7 @@ import { ButtonBase, Tooltip, Typography } from "@mui/material";
 import NextLink from "next/link";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { ButtonProps } from "../../../types";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 
 export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
@@ -86,7 +87,12 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 					p: "2px 3px 0px 3px",
 				}}
 			>
-				<Typography fontFamily={"Gotham Pro"} fontSize={10} fontWeight={600} sx={{ color: "#999" }}>
+				<Typography
+					fontFamily={getFontFamilyFromVariable("--font-open-sans")}
+					fontSize={10}
+					fontWeight={600}
+					sx={{ color: "#999" }}
+				>
 					{`${typeof navigator !== "undefined" && navigator.userAgent.indexOf("Mac OS X") != -1 ? "⌘K" : "CTRL+K"}`}
 				</Typography>
 			</ButtonBase>

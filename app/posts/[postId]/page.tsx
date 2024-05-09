@@ -83,7 +83,13 @@ export default async function Page({ params }: { params: { postId: string } }) {
 					url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/yjdttN68e7V3E8SKIupT`,
 				}}
 			/>
-			<ReadArticleView post={post} postId={params.postId} postsOverview={postsOverview} isAuthorized={isAuthorized} />
+			<ReadArticleView
+				post={post}
+				postId={params.postId}
+				postsOverview={postsOverview}
+				isAuthorized={isAuthorized}
+				sessionUser={session?.user}
+			/>
 		</>
 	);
 }

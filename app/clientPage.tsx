@@ -449,6 +449,9 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								<IconButton
 									sx={{
 										color: "text.primary",
+										"&:disabled": {
+											color: theme.palette.text.primary + "30",
+										},
 									}}
 									onClick={(e) => {
 										e.stopPropagation();
@@ -461,6 +464,9 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								<IconButton
 									sx={{
 										color: "text.primary",
+										"&:disabled": {
+											color: theme.palette.text.primary + "30",
+										},
 									}}
 									onClick={(e) => {
 										e.stopPropagation();
@@ -550,7 +556,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								width: "100%",
 								paddingTop: xs ? 1 : 2.5,
 								paddingX: lgUp ? "150px" : xs ? 2 : "80px",
-								paddingBottom: xs ? 5 : 7,
+								paddingBottom: xs ? 5 : 8,
 								margin: 0,
 							}}
 						>

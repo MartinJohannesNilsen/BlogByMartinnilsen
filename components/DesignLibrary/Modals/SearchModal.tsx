@@ -320,18 +320,23 @@ export const SearchModal = ({
 	// Filter/search
 	useEffect(() => {
 		if (isActions) {
-			const bestMatch = matchSorter(
-				actions.filter((action) => action.requirement == null || action.requirement() === true),
-				textFieldValue,
-				{
-					keys: [(item) => item.title, (item) => item.keywords],
-				}
-			);
-			// const min = Math.min(bestMatch.length, actions.length);
-			const min = Math.min(bestMatch.length, Number(process.env.NEXT_PUBLIC_SEARCH_MAX_RESULTS));
-			setMatchedActions(bestMatch.slice(0, min));
-			setMaxNumberOfItems(min);
-			if (!isMobile) setActiveItem(-1);
+			if (textFieldValue === "") {
+				setMatchedActions([]);
+				setMaxNumberOfItems(0);
+			} else {
+				const bestMatch = matchSorter(
+					actions.filter((action) => action.requirement == null || action.requirement() === true),
+					textFieldValue,
+					{
+						keys: [(item) => item.title, (item) => item.keywords],
+					}
+				);
+				// const min = Math.min(bestMatch.length, actions.length);
+				const min = Math.min(bestMatch.length, Number(process.env.NEXT_PUBLIC_SEARCH_MAX_RESULTS));
+				setMatchedActions(bestMatch.slice(0, min));
+				setMaxNumberOfItems(min);
+				if (!isMobile) setActiveItem(-1);
+			}
 		} else {
 			if (textFieldValue === "") {
 				setMatchedPosts([]);

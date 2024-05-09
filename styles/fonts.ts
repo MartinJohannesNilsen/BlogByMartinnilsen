@@ -1,21 +1,20 @@
 import {
 	Bricolage_Grotesque,
-	Fira_Code,
-	Open_Sans,
-	Merriweather_Sans,
-	Noto_Serif,
-	Source_Sans_3,
-	Noto_Sans_Display,
-	Josefin_Sans,
-	Playfair_Display,
 	Dancing_Script,
-	Rubik,
+	Fira_Code,
+	Josefin_Sans,
 	MedievalSharp,
+	Merriweather_Sans,
 	Montserrat,
+	Noto_Sans_Display,
+	Noto_Serif,
+	Open_Sans,
 	Pixelify_Sans,
+	Playfair_Display,
+	Rubik,
+	Source_Sans_3,
 } from "next/font/google";
 import localFont from "next/font/local";
-import { defaultFontFamily } from "./themes/themeDefaults";
 
 // Google fonts
 export const bricolage_grotesque = Bricolage_Grotesque({
@@ -118,33 +117,26 @@ export const zodiak = localFont({
 	// display: 'swap',
 });
 
-// Functions
-const availableFontFamilies = {
+// Export a list of all available font families
+export const availableFontFamilies = {
 	"--font-bricolage-grotesque": bricolage_grotesque.style.fontFamily,
-	"--font-fira-code": fira_code.style.fontFamily,
-	"--font-open-sans": open_sans.style.fontFamily,
-	"--font-josefin-sans": josefin_sans.style.fontFamily,
-	"--font-noto-sans-display": noto_sans_display.style.fontFamily,
-	"--font-merriweather-sans": merriweather_sans.style.fontFamily,
-	"--font-noto-serif": noto_serif.style.fontFamily,
-	"--font-source-sans-3": source_sans_3.style.fontFamily,
-	"--font-playfair-display": playfair_display.style.fontFamily,
-	"--font-dancing-script": dancing_script.style.fontFamily,
-	"--font-rubik": rubik.style.fontFamily,
-	"--font-montserrat": montserrat.style.fontFamily,
-	"--font-pixelify-sans": pixelify_sans.style.fontFamily,
-	"--font-medieval-sharp": medieval_sharp.style.fontFamily,
 	"--font-cabinet-grotesk": cabinet_grotesk.style.fontFamily,
-	"--font-chillax": chillax.style.fontFamily,
-	"--font-general-sans": general_sans.style.fontFamily,
+	// "--font-chillax": chillax.style.fontFamily,
+	// "--font-dancing-script": dancing_script.style.fontFamily,
+	"--font-fira-code": fira_code.style.fontFamily,
+	// "--font-general-sans": general_sans.style.fontFamily,
+	// "--font-josefin-sans": josefin_sans.style.fontFamily,
+	"--font-medieval-sharp": medieval_sharp.style.fontFamily,
 	"--font-merriweather": merriweather.style.fontFamily,
+	// "--font-merriweather-sans": merriweather_sans.style.fontFamily,
+	"--font-montserrat": montserrat.style.fontFamily,
+	"--font-noto-sans-display": noto_sans_display.style.fontFamily,
+	"--font-noto-serif": noto_serif.style.fontFamily,
+	"--font-open-sans": open_sans.style.fontFamily,
+	// "--font-pixelify-sans": pixelify_sans.style.fontFamily,
+	"--font-playfair-display": playfair_display.style.fontFamily,
+	"--font-rubik": rubik.style.fontFamily,
+	"--font-source-sans-3": source_sans_3.style.fontFamily,
 	"--font-zodiak": zodiak.style.fontFamily,
 };
-
-export function getFontFamilyFromVariable(variable?: string) {
-	return !variable
-		? defaultFontFamily // If not specified, return default
-		: availableFontFamilies.hasOwnProperty(variable) && availableFontFamilies[variable]
-		? availableFontFamilies[variable] // If available, return font
-		: variable; // If not available, return variable string
-}
+export default availableFontFamilies;
