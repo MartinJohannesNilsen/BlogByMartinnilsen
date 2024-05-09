@@ -152,8 +152,11 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 						<SelectOption value={7}>Last 7 days</SelectOption>
 						<SelectOption value={14}>Last 14 days</SelectOption>
 						<SelectOption value={30}>Last 30 days</SelectOption>
+						<SelectOption value={60}>Last 60 days</SelectOption>
+						<SelectOption value={90}>Last 90 days</SelectOption>
 						<SelectOption value={180}>Last 180 days</SelectOption>
 						<SelectOption value={365}>Last 365 days</SelectOption>
+						<SelectOption value={10 ** 10}>All notifications</SelectOption>
 					</StyledControlledSelect>
 					{/* Content */}
 					<Box
