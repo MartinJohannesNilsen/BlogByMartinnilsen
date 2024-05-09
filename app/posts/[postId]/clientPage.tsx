@@ -408,7 +408,9 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 		{ dependencies: [isLoading], scope: containerRef }
 	);
 
-	return (
+	return isLoading ? (
+		<></>
+	) : (
 		<Box width="100%" height="100%" position="relative" className="page">
 			<Box
 				height="100%"
