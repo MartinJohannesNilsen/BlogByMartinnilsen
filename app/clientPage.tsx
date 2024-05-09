@@ -629,9 +629,38 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								);
 							})}
 						</Grid>
-					) : null}
+					) : (
+						<Box
+							sx={{
+								height: "calc(100vh - 200px)",
+								width: "100%",
+								display: "flex",
+								flexDirection: "column",
+								alignContent: "center",
+								alignItems: "center",
+								justifyContent: "center",
+								justifyItems: "center",
+								textAlign: "center",
+							}}
+						>
+							<Typography
+								variant="body1"
+								sx={{
+									fontFamily: theme.typography.fontFamily,
+									color: theme.palette.primary.contrastText,
+									border:
+										"1px solid " + (theme.palette.mode === "dark" ? theme.palette.grey[500] : theme.palette.grey[300]),
+									borderRadius: 2,
+									backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[100],
+									p: "4px 8px",
+									width: "default",
+								}}
+							>
+								Something went wrong. Please choose a layout.
+							</Typography>
+						</Box>
+					)}
 				</Box>
-				{/* </Box> */}
 			</Box>
 		</Box>
 	) : (
