@@ -7,11 +7,13 @@ import { defaultMetadata } from "../data/metadata";
 import "../styles/editorJS.scss";
 import "../styles/globals.scss";
 import { CustomThemeProvider } from "../styles/themes/ThemeProvider";
+import { isMobile } from "react-device-detect";
 
 export const viewport: Viewport = {
 	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "#ffffff" },
-		{ media: "(prefers-color-scheme: dark)", color: "#161518" },
+		// primary.dark if mobile, primary.main if not
+		{ media: "(prefers-color-scheme: light)", color: isMobile ? "#fcfcfc" : "#ffffff" },
+		{ media: "(prefers-color-scheme: dark)", color: isMobile ? "#141315" : "#161518" },
 	],
 };
 
