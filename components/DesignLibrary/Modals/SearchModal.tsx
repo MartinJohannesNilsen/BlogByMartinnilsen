@@ -85,7 +85,7 @@ export const SearchModal = ({
 			keywords: ["home", "return", "back", "posts"],
 			iconElement: <Home sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
-				return !window.location.pathname.includes("/");
+				return window.location.pathname !== "/";
 			},
 		},
 		{
