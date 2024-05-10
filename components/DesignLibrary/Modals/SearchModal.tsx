@@ -81,7 +81,7 @@ export const SearchModal = ({
 	let actions: SearchActionProps[] = [
 		{
 			title: "Go to landing page",
-			// href: "/",
+			href: "/",
 			keywords: ["home", "return", "back", "posts"],
 			iconElement: <Home sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
