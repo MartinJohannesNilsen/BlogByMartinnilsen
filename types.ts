@@ -315,6 +315,7 @@ export type PostNavbarProps = {
 	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
 	tocModal: { open: boolean; setOpen: (value: boolean) => void };
 	shareModal: { open: boolean; setOpen: (value: boolean) => void };
+	simpleTextModal: { open: boolean; setOpen: (value: boolean) => void };
 	ref?: MutableRefObject<undefined>;
 	className?: string;
 	isAuthorized?: boolean;

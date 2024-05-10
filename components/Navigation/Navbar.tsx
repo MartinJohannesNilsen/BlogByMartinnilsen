@@ -17,6 +17,7 @@ import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
 import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
 import SearchModal from "../DesignLibrary/Modals/SearchModal"; // For listening to hotkeys on render, not rerender
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 // const SearchModal = dynamic(() => import("../Modals/SearchModal"));
 const NotificationsModal = dynamic(() => import("../DesignLibrary/Modals/NotificationsModal"));
 const SettingsModal = dynamic(() => import("../DesignLibrary/Modals/SettingsModal"));
@@ -494,6 +495,7 @@ export const Navbar = ({
 								height: "24px",
 								width: "24px",
 							}}
+							sxText={{ fontFamily: getFontFamilyFromVariable("--font-noto-sans-display") }}
 						/>
 					)}
 				</Box>

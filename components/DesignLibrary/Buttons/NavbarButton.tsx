@@ -73,7 +73,7 @@ export const NavbarButton = (props: ButtonProps) => {
 					variant="body2"
 					sx={{
 						fontFamily: theme.typography.fontFamily,
-						fontweight: 800,
+						fontWeight: 500,
 						color: theme.palette.text.primary,
 						...props.sxText,
 					}}

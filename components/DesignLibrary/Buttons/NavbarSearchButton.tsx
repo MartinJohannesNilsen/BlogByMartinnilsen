@@ -69,11 +69,12 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 				}}
 			/>
 			<Typography
-				fontFamily={theme.typography.fontFamily}
 				fontSize={12}
 				fontWeight={400}
 				sx={{
+					fontFamily: theme.typography.fontFamily,
 					color: theme.palette.mode === "dark" ? "rgb(220, 220, 220)" : "rgb(100, 100, 100)",
+					...props.sxText,
 				}}
 			>
 				Search...

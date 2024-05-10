@@ -1,5 +1,6 @@
 "use client";
-import { ArrowBack, Bookmark, BookmarkBorder, Edit, IosShareOutlined, Search } from "@mui/icons-material";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { Bookmark, BookmarkBorder, Edit, IosShareOutlined, Search } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
@@ -16,6 +17,7 @@ import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
 import NavbarSearchButton from "../DesignLibrary/Buttons/NavbarSearchButton";
 import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
 import SearchModal from "../DesignLibrary/Modals/SearchModal";
+import SimpleTextModal from "../DesignLibrary/Modals/SimpleTextModal";
 import { extractHeaders } from "../DesignLibrary/Modals/TOCModal";
 import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
@@ -72,6 +74,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 		return () => {};
 	}, [, savedPosts]);
 
+	// Extra actions to search modal
 	const extraActions: SearchActionProps[] = [
 		{
 			title: "Share post",
@@ -123,127 +126,95 @@ export const PostNavbar = (props: PostNavbarProps) => {
 							width: "95%",
 						}}
 					>
-						{props.isAuthorized ? (
-							<NavbarButton
-								variant="outline"
-								href={`/create/${props.post.id}`}
-								// onClick={() =>(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)}
-								icon={Edit}
-								tooltip="Edit post"
-								sxButton={{
-									minWidth: "34px",
-									minHeight: "34px",
-									height: "34px",
-									width: "34px",
-								}}
-								sxIcon={{
-									height: "20px",
-									width: "22px",
-									color: "inherit",
-								}}
-							/>
-						) : (
-							<NavbarButton
-								variant="outline"
-								onClick={() => handleNavigate("/")}
-								icon={ArrowBack}
-								tooltip="Back"
-								sxButton={{
-									minWidth: "34px",
-									minHeight: "34px",
-									height: "34px",
-									width: "34px",
-								}}
-								sxIcon={{
-									height: "24px",
-									width: "24px",
-								}}
-							/>
-						)}
+						{/* <NavbarButton
+							variant="outline"
+							onClick={() => handleNavigate("/")}
+							icon={ArrowBack}
+							tooltip="Back"
+							sxButton={{
+								minWidth: "34px",
+								minHeight: "34px",
+								height: "34px",
+								width: "34px",
+							}}
+							sxIcon={{
+								height: "24px",
+								width: "24px",
+							}}
+						/> */}
+						<NavbarButton
+							variant="outline"
+							onClick={() => props.simpleTextModal.setOpen(true)}
+							text="Aa"
+							tooltip="Customize"
+							sxButton={{
+								minWidth: "34px",
+								minHeight: "34px",
+								height: "34px",
+								width: "34px",
+							}}
+							sxText={{
+								fontSize: "17px",
+								mb: "2px",
+								fontFamily: getFontFamilyFromVariable("--font-noto-sans-display"),
+							}}
+						/>
+						{/* Save */}
 						<Box ml={0.5} mr={0.1}>
 							<NavbarButton
-								icon={Search}
 								variant="outline"
-								onClick={handleSearchModalOpen}
-								tooltip={"Search"}
+								disabled={!props.post.published}
+								onClick={() =>
+									isSaved
+										? setSavedPosts(savedPosts.filter((id) => id !== props.post.id))
+										: setSavedPosts([...savedPosts, props.post.id])
+								}
+								icon={isSaved ? Bookmark : BookmarkBorder}
+								tooltip="Share"
 								sxButton={{
 									height: "34px",
 									width: "34px",
 									backgroundColor: theme.palette.primary.main + "99",
-									color: theme.palette.text.primary,
 								}}
-								sxIcon={{
-									height: "24px",
-									width: "24px",
-								}}
+								sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
 							/>
 						</Box>
 						<Box flexGrow={100} />
 						<Typography
-							fontFamily={theme.typography.fontFamily}
-							variant="body1"
-							fontWeight="800"
+							variant="body2"
+							fontWeight="600"
 							textAlign="center"
 							color={theme.palette.text.primary}
 							marginX={1}
 							sx={{
+								// fontSize: "calc(0.875rem * var(--font-scale))",
+								fontSize: "1rem",
 								whiteSpace: "nowrap",
 								overflow: "hidden",
 								textOverflow: "ellipsis",
+								fontFamily: getFontFamilyFromVariable("--font-open-sans"),
 							}}
 						>
 							{props.post.title}
 						</Typography>
 						<Box flexGrow={100} />
 						<Box display="flex" ml={0.1}>
-							{/* Share */}
-							{/* <Box mr={0.5}>
-								<NavbarButton
-									disabled={!props.post.published}
-									variant="outline"
-									onClick={() => {
-										handleSharing({
-											url: typeof window !== "undefined" ? window.location.href : "",
-											title: props.post.title,
-											text: "",
-											icon: props.post.ogImage || DATA_DEFAULTS.ogImage,
-											fallback: () => props.shareModal.setOpen(true),
-										});
-									}}
-									icon={IosShareOutlined}
-									tooltip="Share"
-									sxButton={{
-										minWidth: "34px",
-										minHeight: "34px",
-										height: "34px",
-										width: "34px",
-										"&:disabled": { opacity: "0.5" },
-									}}
-									sxIcon={{
-										height: "18px",
-										width: "22px",
-									}}
-								/>
-							</Box> */}
-
-							{/* Save */}
 							<Box mr={0.5}>
 								<NavbarButton
+									icon={Search}
 									variant="outline"
-									disabled={!props.post.published}
-									onClick={() =>
-										isSaved
-											? setSavedPosts(savedPosts.filter((id) => id !== props.post.id))
-											: setSavedPosts([...savedPosts, props.post.id])
-									}
-									icon={isSaved ? Bookmark : BookmarkBorder}
-									tooltip="Share"
+									onClick={handleSearchModalOpen}
+									tooltip={"Search"}
 									sxButton={{
 										height: "34px",
 										width: "34px",
 										backgroundColor: theme.palette.primary.main + "99",
+										color: theme.palette.text.primary,
 									}}
-									sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
+									sxIcon={{
+										height: "24px",
+										width: "24px",
+									}}
 								/>
 							</Box>
 							{/* Account */}
@@ -391,7 +362,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						)} */}
 
 						{/* Search */}
-						<Box ml={0.5}>
+						<Box>
 							{xs ? (
 								<NavbarButton
 									icon={Search}
@@ -423,10 +394,25 @@ export const PostNavbar = (props: PostNavbarProps) => {
 										height: "24px",
 										width: "24px",
 									}}
+									sxText={{ fontFamily: getFontFamilyFromVariable("--font-noto-sans-display") }}
 								/>
 							)}
 						</Box>
-
+						{/* SimpleText */}
+						<Box ml={0.5}>
+							<NavbarButton
+								variant="outline"
+								onClick={() => props.simpleTextModal.setOpen(true)}
+								text="Aa"
+								tooltip="Customize"
+								sxButton={{
+									height: "34px",
+									width: "34px",
+									backgroundColor: theme.palette.primary.main + "99",
+								}}
+								sxText={{ fontSize: "17px", fontFamily: getFontFamilyFromVariable("--font-noto-sans-display") }}
+							/>
+						</Box>
 						{/* Saved */}
 						<Box ml={0.5}>
 							<NavbarButton
@@ -529,6 +515,12 @@ export const PostNavbar = (props: PostNavbarProps) => {
 				handleModalOpen={() => setOpenSettingsModal(true)}
 				handleModalClose={() => setOpenSettingsModal(false)}
 				handleThemeChange={handleThemeChange}
+			/>
+			{/* Simple Text */}
+			<SimpleTextModal
+				open={props.simpleTextModal.open}
+				handleModalOpen={() => props.simpleTextModal.setOpen(true)}
+				handleModalClose={() => props.simpleTextModal.setOpen(false)}
 			/>
 			{/* TOC */}
 			{props.toc.content && (

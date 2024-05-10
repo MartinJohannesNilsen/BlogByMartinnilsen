@@ -222,7 +222,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							/>
 						</Box>
 						<Box display="flex" alignItems="center">
-							<Tooltip enterDelay={2000} title="Use system settings">
+							<Tooltip enterDelay={2000} title="Use default settings">
 								<IconButton
 									disabled={["1", "1.0"].includes(fontScale)}
 									aria-label="delete"

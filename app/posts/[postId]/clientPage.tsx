@@ -1,7 +1,16 @@
 "use client";
 import Giscus from "@giscus/react";
 import { useGSAP } from "@gsap/react";
-import { AccessTime, ArrowUpward, CalendarMonth, Comment, Menu, ThumbUpAlt, Visibility } from "@mui/icons-material";
+import {
+	AccessTime,
+	ArrowUpward,
+	CalendarMonth,
+	Comment,
+	Edit,
+	Menu,
+	ThumbUpAlt,
+	Visibility,
+} from "@mui/icons-material";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -233,6 +242,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 	// Modals
 	const [openShareModal, setOpenShareModal] = useState(false);
 	const [openTOCModal, setOpenTOCModal] = useState(false);
+	const [openSimpleTextModal, setOpenSimpleTextModal] = useState(false);
 
 	// Giscus reactions and comments
 	useEffect(() => {
@@ -313,6 +323,15 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 			},
 		},
 	];
+	if (isMobile && isAuthorized) {
+		buttonBarButtons.push({
+			icon: Edit,
+			text: "",
+			onClick: () => {
+				window.location.href = `/create/${postId}`;
+			},
+		});
+	}
 
 	// Animations with GSAP
 	const containerRef = useRef();
@@ -430,6 +449,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 					toc={{ content: OutputString!, currentSection: currentSection }}
 					tocModal={{ open: openTOCModal, setOpen: setOpenTOCModal }}
 					shareModal={{ open: openShareModal, setOpen: setOpenShareModal }}
+					simpleTextModal={{ open: openSimpleTextModal, setOpen: setOpenSimpleTextModal }}
 					postsOverview={postsOverview}
 					setCardLayout={setCardLayout}
 					isAuthorized={isAuthorized}

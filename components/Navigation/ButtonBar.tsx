@@ -3,6 +3,7 @@ import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { isMobile } from "react-device-detect";
 import { useTheme } from "../../styles/themes/ThemeProvider";
 import { ButtonBarProps } from "../../types";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 
 export const ButtonBar = (props: ButtonBarProps) => {
 	const { theme } = useTheme();
@@ -17,6 +18,7 @@ export const ButtonBar = (props: ButtonBarProps) => {
 				backdropFilter: "blur(10px)",
 				WebkitBackdropFilter: "blur(10px)",
 				borderRadius: 5,
+				boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
 				...props.sx,
 			}}
 			aria-label=""
@@ -47,8 +49,9 @@ export const ButtonBar = (props: ButtonBarProps) => {
 						<button.icon
 							sx={{
 								color: theme.palette.text.primary + "bb",
-								fontFamily: theme.typography.fontFamily,
-								fontSize: theme.typography.body1.fontSize,
+								fontFamily: getFontFamilyFromVariable("--font-open-sans"),
+								// fontSize: isMobile ? "1.1rem" : theme.typography.body1.fontSize,
+								fontSize: isMobile ? "1.1rem" : "1rem",
 								my: 0.5,
 							}}
 						/>
@@ -59,10 +62,14 @@ export const ButtonBar = (props: ButtonBarProps) => {
 						button.text && (
 							<Typography
 								textAlign="center"
-								fontFamily={theme.typography.fontFamily}
 								variant="body1"
-								fontWeight="600"
-								sx={{ color: theme.palette.text.primary + "bb" }}
+								sx={{
+									color: theme.palette.text.primary + "bb",
+									fontFamily: getFontFamilyFromVariable("--font-open-sans"),
+									// fontSize: isMobile ? "1.1rem" : theme.typography.body1.fontSize,
+									fontSize: isMobile ? "1.1rem" : "1rem",
+									fontWeight: "500",
+								}}
 							>
 								{button.text}
 							</Typography>

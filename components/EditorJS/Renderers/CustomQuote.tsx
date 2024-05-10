@@ -38,7 +38,7 @@ const CustomQuote = (props: EditorjsRendererProps) => {
 						fontFamily={theme.typography.fontFamily}
 						variant="body1"
 						fontWeight="600"
-						fontSize={17}
+						fontSize={"calc(0.9rem * var(--font-scale))"}
 						color={theme.palette.text.primary}
 						dangerouslySetInnerHTML={{
 							__html: DOMPurify.sanitize(props.data.text!),
