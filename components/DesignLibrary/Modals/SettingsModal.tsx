@@ -35,6 +35,7 @@ const defaultFonts = [
 ];
 
 const defaultColors = [
+	{ title: "Custom", color: undefined },
 	{ title: "Beige", color: "#e9b384" },
 	{ title: "Crimson", color: "#f47373" },
 	{ title: "Lime", color: "#37d67a" },
@@ -43,7 +44,6 @@ const defaultColors = [
 	{ title: "Pink", color: "#df487f" },
 	{ title: "Purple", color: "#ba68c8" },
 	{ title: "Teal", color: "#29939b" },
-	{ title: "Custom", color: undefined },
 ];
 
 const TransparentTooltip = withStyles({
@@ -325,7 +325,6 @@ export const SettingsModal = (props: SettingsModalProps) => {
 										<SelectOption
 											value={element.color}
 											onClick={() => {
-												// element.title === "Custom" ? setColorPickerOpen(true) :  ;
 												setColorPickerOpen(element.title === "Custom");
 											}}
 										>
