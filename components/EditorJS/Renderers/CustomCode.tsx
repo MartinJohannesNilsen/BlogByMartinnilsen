@@ -1,15 +1,14 @@
 "use client";
-import { Box, Button, IconButton, Tooltip, Typography, useRadioGroup } from "@mui/material";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
 import { IoCheckmark, IoCopyOutline } from "react-icons/io5";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import { copyToClipboardV2 } from "../../../utils/copyToClipboard";
-import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
-import { useHotkeys } from "react-hotkeys-hook";
-import { enqueueSnackbar } from "notistack";
 
 // Themes
 import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";

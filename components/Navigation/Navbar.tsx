@@ -16,8 +16,8 @@ import NavbarSearchButton from "../DesignLibrary/Buttons/NavbarSearchButton";
 import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
 import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
-import SearchModal from "../DesignLibrary/Modals/SearchModal"; // For listening to hotkeys on render, not rerender
 import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import SearchModal from "../DesignLibrary/Modals/SearchModal"; // For listening to hotkeys on render, not rerender
 // const SearchModal = dynamic(() => import("../Modals/SearchModal"));
 const NotificationsModal = dynamic(() => import("../DesignLibrary/Modals/NotificationsModal"));
 const SettingsModal = dynamic(() => import("../DesignLibrary/Modals/SettingsModal"));
@@ -148,7 +148,7 @@ export const Navbar = ({
 						</Typography>
 					</ButtonBase>
 					<Box flexGrow={100} />
-					<Box display="flex" flexDirection="row" alignItems="center">
+					<Box display="flex" alignItems="end" height="32px">
 						<Box mr={0.5}>
 							<NavbarButton
 								variant="outline"
@@ -440,7 +440,7 @@ export const Navbar = ({
 					</Typography>
 				</ButtonBase>
 				<Box flexGrow={100} />
-				<Box display="flex" alignItems="center">
+				<Box display="flex" alignItems="end" height="34px">
 					{isAuthorized && (
 						<NavbarButton
 							variant="outline"

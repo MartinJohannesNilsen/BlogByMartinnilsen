@@ -121,84 +121,72 @@ export const PostNavbar = (props: PostNavbarProps) => {
 				>
 					<Box
 						display="flex"
-						alignItems="center"
+						alignItems="end"
 						sx={{
+							height: "34px",
 							width: "95%",
 						}}
 					>
-						{/* <NavbarButton
-							variant="outline"
-							onClick={() => handleNavigate("/")}
-							icon={ArrowBack}
-							tooltip="Back"
-							sxButton={{
-								minWidth: "34px",
-								minHeight: "34px",
-								height: "34px",
-								width: "34px",
-							}}
-							sxIcon={{
-								height: "24px",
-								width: "24px",
-							}}
-						/> */}
-						<NavbarButton
-							variant="outline"
-							onClick={() => props.simpleTextModal.setOpen(true)}
-							text="Aa"
-							tooltip="Customize"
-							sxButton={{
-								minWidth: "34px",
-								minHeight: "34px",
-								height: "34px",
-								width: "34px",
-							}}
-							sxText={{
-								fontSize: "17px",
-								mb: "2px",
-								fontFamily: getFontFamilyFromVariable("--font-noto-sans-display"),
-							}}
-						/>
-						{/* Save */}
-						<Box ml={0.5} mr={0.1}>
+						<Box mr={0.1} display="flex" alignItems="end">
 							<NavbarButton
 								variant="outline"
-								disabled={!props.post.published}
-								onClick={() =>
-									isSaved
-										? setSavedPosts(savedPosts.filter((id) => id !== props.post.id))
-										: setSavedPosts([...savedPosts, props.post.id])
-								}
-								icon={isSaved ? Bookmark : BookmarkBorder}
-								tooltip="Share"
+								onClick={() => props.simpleTextModal.setOpen(true)}
+								text="Aa"
+								tooltip="Customize"
 								sxButton={{
 									height: "34px",
 									width: "34px",
-									backgroundColor: theme.palette.primary.main + "99",
 								}}
-								sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
+								sxText={{
+									fontSize: "17px",
+									mb: "2px",
+									fontFamily: getFontFamilyFromVariable("--font-noto-sans-display"),
+								}}
 							/>
+							{/* Save */}
+							<Box ml={0.5}>
+								<NavbarButton
+									variant="outline"
+									disabled={!props.post.published}
+									onClick={() =>
+										isSaved
+											? setSavedPosts(savedPosts.filter((id) => id !== props.post.id))
+											: setSavedPosts([...savedPosts, props.post.id])
+									}
+									icon={isSaved ? Bookmark : BookmarkBorder}
+									tooltip="Share"
+									sxButton={{
+										height: "34px",
+										width: "34px",
+										backgroundColor: theme.palette.primary.main + "99",
+									}}
+									sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
+								/>
+							</Box>
 						</Box>
 						<Box flexGrow={100} />
-						<Typography
-							variant="body2"
-							fontWeight="600"
-							textAlign="center"
-							color={theme.palette.text.primary}
-							marginX={1}
-							sx={{
-								// fontSize: "calc(0.875rem * var(--font-scale))",
-								fontSize: "1rem",
-								whiteSpace: "nowrap",
-								overflow: "hidden",
-								textOverflow: "ellipsis",
-								fontFamily: getFontFamilyFromVariable("--font-open-sans"),
-							}}
-						>
-							{props.post.title}
-						</Typography>
+						<Box display="flex" alignItems="center" height="34px">
+							<Typography
+								variant="body2"
+								fontWeight="600"
+								textAlign="center"
+								color={theme.palette.text.primary}
+								marginX={1}
+								sx={{
+									// fontSize: "calc(0.875rem * var(--font-scale))",
+									fontSize: "1rem",
+									whiteSpace: "nowrap",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									fontFamily: getFontFamilyFromVariable("--font-open-sans"),
+								}}
+							>
+								{props.post.title}
+							</Typography>
+						</Box>
 						<Box flexGrow={100} />
-						<Box display="flex" ml={0.1}>
+						{/* Right section */}
+						<Box display="flex" ml={0.1} alignItems="end">
 							<Box mr={0.5}>
 								<NavbarButton
 									icon={Search}
@@ -319,7 +307,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 					</ButtonBase>
 					<Box flexGrow={100} />
 					{/* Right section */}
-					<Box display="flex">
+					<Box display="flex" alignItems="end" height="34px">
 						{/* Edit */}
 						{props.isAuthorized && (
 							<NavbarButton
@@ -341,25 +329,6 @@ export const PostNavbar = (props: PostNavbarProps) => {
 								}}
 							/>
 						)}
-
-						{/* TOC */}
-						{/* {props.toc.content && (
-							<NavbarButton
-								variant="outline"
-								onClick={() => props.tocModal.setOpen(true)}
-								icon={MenuBook}
-								tooltip="Open table of contents"
-								sxButton={{
-									height: "34px",
-									width: "34px",
-									backgroundColor: theme.palette.primary.main + "99",
-								}}
-								sxIcon={{
-									height: "20px",
-									width: "24px",
-								}}
-							/>
-						)} */}
 
 						{/* Search */}
 						<Box>
