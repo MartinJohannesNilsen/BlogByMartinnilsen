@@ -470,7 +470,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 						<Stack
 							p={2}
 							sx={{
-								minHeight: isMobile ? "calc(100vh - 81px - 30px)" : "calc(100vh - 67px - 104px)",
+								minHeight: isMobile ? "calc(100vh - 81px - 30px)" : "calc(100vh - 67px - 120px)",
 								minWidth: "380px",
 								width: xs ? "100vw" : sm ? "90vw" : "760px",
 								position: "relative",
