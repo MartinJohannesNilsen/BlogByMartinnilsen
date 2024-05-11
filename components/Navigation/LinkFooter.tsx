@@ -5,37 +5,62 @@ import { FooterProps } from "../../types";
 import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";
 import { MenuIcon } from "../Icons/MenuIcon";
 
-const Footer = ({}: FooterProps) => {
+const Footer = ({ postId }: FooterProps) => {
 	const { theme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const scrollPosition = usePercentageScrollPosition();
-	const router = useRouter();
-	const postId = useSearchParams()?.get("postId");
+	const horizontalDesign = true;
 
 	return (
 		<>
 			{/* Animated scrollbar progress line */}
 			{postId ? (
-				<Box
-					sx={{
-						position: "fixed",
-						left: 0,
-						bottom: 0,
-						width: "100%",
-						height: "5px",
-						background: "transparent",
-						zIndex: 1,
-					}}
-				>
+				horizontalDesign ? (
 					<Box
 						sx={{
-							height: "100%",
-							width: scrollPosition + "0%",
-							background: theme.palette.secondary.main,
-							transition: "background .15s ease",
+							position: "fixed",
+							left: 0,
+							bottom: 0,
+							width: "100%",
+							height: "3px",
+							borderRadius: 2,
+							background: "transparent",
+							zIndex: 1,
 						}}
-					/>
-				</Box>
+					>
+						<Box
+							sx={{
+								height: "100%",
+								width: `calc(${scrollPosition}%)`,
+								background: theme.palette.secondary.main,
+								transition: "background .15s ease",
+							}}
+						/>
+					</Box>
+				) : (
+					<Box
+						sx={{
+							position: "fixed",
+							right: 5,
+							top: "50%",
+							height: "400px",
+							transform: "translate(-50%, -50%)",
+							width: "2px",
+							borderRadius: 2,
+							background: "transparent",
+							zIndex: 1,
+						}}
+					>
+						<Box
+							sx={{
+								width: "100%",
+								height: `calc(${scrollPosition}% - 1px)`,
+								background: theme.palette.secondary.main,
+								transition: "background .15s ease",
+							}}
+						/>
+					</Box>
+				)
 			) : (
 				<></>
 			)}

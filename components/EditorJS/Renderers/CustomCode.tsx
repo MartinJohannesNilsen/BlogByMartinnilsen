@@ -11,6 +11,7 @@ import { EditorjsRendererProps } from "../../../types";
 import { enqueueSnackbar } from "notistack";
 import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import { copyToClipboardV2 } from "../../../utils/copyToClipboard";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 
 export const EDITORTHEME = atomOneDark;
 const CustomCodebox = (props: EditorjsRendererProps) => {
@@ -152,6 +153,12 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 								margin: "0px",
 								padding: "15px",
 								borderRadius: "0 0 10px 10px",
+								fontSize: "calc(0.9rem * var(--font-scale))",
+							}}
+							codeTagProps={{
+								style: {
+									fontFamily: getFontFamilyFromVariable("--font-fira-code"),
+								},
 							}}
 							lineProps={(lineNumber) => ({
 								style:
@@ -180,6 +187,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 								position: "absolute",
 								right: "0",
 								top: "50%",
+								marginRight: "2px",
+								borderRadius: "5px 10px 10px 5px",
 								transform: "translateY(-50%)",
 								backgroundColor: "#25272D",
 								width: "46px",
@@ -189,7 +198,6 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 								<IconButton
 									disabled={true}
 									sx={{
-										pr: 1,
 										borderRadius: 2,
 										"&:disabled": {
 											color: "white",
@@ -204,8 +212,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 								<Tooltip title="Copy code" enterDelay={2000}>
 									<IconButton
 										sx={{
-											pr: 1,
-											borderRadius: 2,
+											borderRadius: "2px 2px 2px 2px",
 											color: "white",
 											backgroundColor: theme.palette.grey[800], // Change the alpha value for opacity
 											"&:hover": {
@@ -230,11 +237,17 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 						language={props.data.language && props.data.language !== "" ? props.data.language : "plaintext"}
 						style={EDITORTHEME}
 						customStyle={{
-							height: "54px",
+							height: "calc(0.9rem * var(--font-scale) + 30px)",
 							overflowY: "hidden",
 							backgroundColor: "rgb(36, 39, 46)",
-							padding: "15px",
+							padding: "10px 15px",
 							borderRadius: "10px 10px",
+							fontSize: "calc(0.9rem * var(--font-scale))",
+						}}
+						codeTagProps={{
+							style: {
+								fontFamily: getFontFamilyFromVariable("--font-fira-code"),
+							},
 						}}
 					>
 						{props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "")}

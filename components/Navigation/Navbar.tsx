@@ -148,14 +148,13 @@ export const Navbar = ({
 						</Typography>
 					</ButtonBase>
 					<Box flexGrow={100} />
-					<Box display="flex" flexDirection="row">
+					<Box display="flex" flexDirection="row" alignItems="center">
 						<Box mr={0.5}>
 							<NavbarButton
 								variant="outline"
 								href="/tags"
 								icon={Tag}
 								tooltip="Go to tags page"
-								sxIcon={{}}
 								sxButton={{
 									color: theme.palette.text.secondary,
 									backgroundColor: "inherit",
@@ -441,8 +440,8 @@ export const Navbar = ({
 					</Typography>
 				</ButtonBase>
 				<Box flexGrow={100} />
-				{isAuthorized && (
-					<Box>
+				<Box display="flex" alignItems="center">
+					{isAuthorized && (
 						<NavbarButton
 							variant="outline"
 							onClick={() => {
@@ -461,15 +460,49 @@ export const Navbar = ({
 								width: "24px",
 							}}
 						/>
+					)}
+					<Box mx={0.5}>
+						{isMobile || xs ? (
+							<NavbarButton
+								icon={Search}
+								variant="outline"
+								onClick={handleSearchModalOpen}
+								tooltip={"Search"}
+								sxButton={{
+									height: "34px",
+									width: "34px",
+									backgroundColor: theme.palette.primary.main + "50",
+									color: theme.palette.text.primary,
+								}}
+								sxIcon={{
+									height: "24px",
+									width: "24px",
+								}}
+							/>
+						) : (
+							<NavbarSearchButton
+								variant="outline"
+								onClick={handleSearchModalOpen}
+								tooltip={"Search"}
+								sxButton={{
+									height: "34px",
+									backgroundColor: theme.palette.primary.main + "50",
+									color: theme.palette.text.primary,
+								}}
+								sxIcon={{
+									height: "24px",
+									width: "24px",
+								}}
+								sxText={{ fontFamily: getFontFamilyFromVariable("--font-noto-sans-display") }}
+							/>
+						)}
 					</Box>
-				)}
-				<Box mx={0.5}>
-					{isMobile || xs ? (
+					<Box mr={0.5}>
 						<NavbarButton
-							icon={Search}
 							variant="outline"
-							onClick={handleSearchModalOpen}
-							tooltip={"Search"}
+							href="/tags"
+							icon={Tag}
+							tooltip="Go to tags page"
 							sxButton={{
 								height: "34px",
 								width: "34px",
@@ -481,66 +514,32 @@ export const Navbar = ({
 								width: "24px",
 							}}
 						/>
-					) : (
-						<NavbarSearchButton
-							variant="outline"
-							onClick={handleSearchModalOpen}
-							tooltip={"Search"}
-							sxButton={{
-								height: "34px",
-								backgroundColor: theme.palette.primary.main + "50",
+					</Box>
+					<Box>
+						<ProfileMenu
+							anchorEl={anchorElProfileMenu}
+							open={openProfileMenu}
+							handleMenuOpen={handleProfileMenuClick}
+							handleMenuClose={handleProfileMenuClose}
+							accountButtonSx={{
 								color: theme.palette.text.primary,
+								backgroundColor: theme.palette.primary.main + "50",
 							}}
-							sxIcon={{
-								height: "24px",
-								width: "24px",
+							showNotificationsBadge={visibleBadgeNotifications}
+							notifications={{
+								open: openNotificationsModal,
+								handleModalOpen: handleNotificationsModalOpen,
+								handleModalClose: handleNotificationsModalClose,
 							}}
-							sxText={{ fontFamily: getFontFamilyFromVariable("--font-noto-sans-display") }}
+							settings={{
+								open: openSettingsModal,
+								handleModalOpen: handleSettingsModalOpen,
+								handleModalClose: handleSettingsModalClose,
+							}}
+							isAuthorized={isAuthorized}
+							sessionUser={sessionUser}
 						/>
-					)}
-				</Box>
-				<Box mr={0.5}>
-					<NavbarButton
-						variant="outline"
-						href="/tags"
-						icon={Tag}
-						tooltip="Go to tags page"
-						sxButton={{
-							height: "34px",
-							width: "34px",
-							backgroundColor: theme.palette.primary.main + "50",
-							color: theme.palette.text.primary,
-						}}
-						sxIcon={{
-							height: "24px",
-							width: "24px",
-						}}
-					/>
-				</Box>
-				<Box>
-					<ProfileMenu
-						anchorEl={anchorElProfileMenu}
-						open={openProfileMenu}
-						handleMenuOpen={handleProfileMenuClick}
-						handleMenuClose={handleProfileMenuClose}
-						accountButtonSx={{
-							color: theme.palette.text.primary,
-							backgroundColor: theme.palette.primary.main + "50",
-						}}
-						showNotificationsBadge={visibleBadgeNotifications}
-						notifications={{
-							open: openNotificationsModal,
-							handleModalOpen: handleNotificationsModalOpen,
-							handleModalClose: handleNotificationsModalClose,
-						}}
-						settings={{
-							open: openSettingsModal,
-							handleModalOpen: handleSettingsModalOpen,
-							handleModalClose: handleSettingsModalClose,
-						}}
-						isAuthorized={isAuthorized}
-						sessionUser={sessionUser}
-					/>
+					</Box>
 				</Box>
 			</Box>
 

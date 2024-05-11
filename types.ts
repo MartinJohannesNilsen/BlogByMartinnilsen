@@ -512,7 +512,7 @@ export type ManagePostPageProps = {
 	id?: string;
 };
 export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean; sessionUser?: SessionUser };
-export type FooterProps = {};
+export type FooterProps = { postId?: string };
 export type ServerPageProps = {
 	sessionUser?: SessionUser;
 	isAuthorized: boolean;

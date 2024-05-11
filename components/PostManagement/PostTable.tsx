@@ -29,6 +29,8 @@ export const PostTable = ({ postsOverview }: { postsOverview: StoredPost[] }) =>
 		return () => {};
 	}, [views]);
 
+	// Defining columns
+	const dateFormatter = new Intl.DateTimeFormat("no-NB");
 	const columns: GridColDef[] = [
 		{ field: "title", headerName: "Title", width: 470, align: "left" },
 		{ field: "views", headerName: "Views", width: 110, align: "center" },
@@ -38,7 +40,7 @@ export const PostTable = ({ postsOverview }: { postsOverview: StoredPost[] }) =>
 			width: 100,
 			align: "center",
 			type: "date",
-			valueGetter: (params: any) => new Date(params.value), // Transforming string to Date object
+			valueFormatter: (value) => dateFormatter.format(value),
 		},
 		{
 			field: "updatedAt",
@@ -46,7 +48,7 @@ export const PostTable = ({ postsOverview }: { postsOverview: StoredPost[] }) =>
 			width: 100,
 			align: "center",
 			type: "date",
-			valueGetter: (params: any) => params.value && new Date(params.value), // Transforming string to Date object
+			valueFormatter: (value) => dateFormatter.format(value),
 		},
 		{
 			field: "readTime",
