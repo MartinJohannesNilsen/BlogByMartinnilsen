@@ -76,13 +76,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 				border: "2px solid transparent",
 			}}
 			my={2}
+			mx="-2px"
 		>
-			{/* <input
-				ref={selectInputRef}
-				style={{ position: "absolute", width: "0", height: "0", opacity: 0, zIndex: -1 }}
-				value={props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "")}
-				readOnly
-			/> */}
 			{props.data.multiline ? (
 				// Multiline codeblock
 				<Box>
@@ -214,7 +209,6 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 						setCopyButtonVisible(false);
 					}}
 					position="relative"
-					sx={{ margin: 0 }}
 				>
 					{isCopyButtonVisible && (
 						<Box
@@ -235,7 +229,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 										borderRadius: "3px 3px 3px 3px",
 										"&:disabled": {
 											color: "white",
-											backgroundColor: "#20222A",
+											backgroundColor: "#22242A",
 										},
 										height: "calc(1.4rem * var(--font-scale))",
 									}}

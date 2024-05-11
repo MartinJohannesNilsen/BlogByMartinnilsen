@@ -541,7 +541,6 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 											tags={data.tags}
 											keywords={data.keywords}
 											published={data.published}
-											// enlargeOnHover={false} // TODO Remove
 										/>
 									</Grid>
 								);
@@ -579,7 +578,6 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												tags={data.tags}
 												keywords={data.keywords}
 												published={data.published}
-												// enlargeOnHover={false} // TODO Remove
 											/>
 										</Grid>
 										<Grid key={index} md={2} lg={3} />
@@ -620,7 +618,6 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												tags={data.tags}
 												keywords={data.keywords}
 												published={data.published}
-												// enlargeOnHover={false} // TODO Remove
 											/>
 										</Grid>
 										{/* <Grid item key={index} md={3} lg={5} /> */}

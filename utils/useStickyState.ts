@@ -24,7 +24,6 @@ export const useStickyState = (
 			if (stringified) {
 				return JSON.parse(item);
 			} else {
-				// if (key === "accent") return !item?.includes('"') ? item : defaultValue; // TODO Fix better way of not breaking if '"#accentcolor"'
 				return item;
 			}
 		}

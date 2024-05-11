@@ -90,6 +90,25 @@ export const PostNavbar = (props: PostNavbarProps) => {
 				});
 			},
 		},
+		{
+			title: "Text Configuration",
+			keywords: ["text", "size", "background"],
+			iconElement: (
+				<Typography
+					variant="body1"
+					sx={{
+						color: theme.palette.text.primary,
+						fontFamily: getFontFamilyFromVariable("--font-noto-sans-display"),
+						fontWeight: 600,
+					}}
+				>
+					Aa
+				</Typography>
+			),
+			onClick: () => {
+				props.simpleTextModal.setOpen(true);
+			},
+		},
 	];
 
 	return (

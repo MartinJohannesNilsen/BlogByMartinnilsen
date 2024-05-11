@@ -18,7 +18,10 @@ export const ButtonBar = (props: ButtonBarProps) => {
 				backdropFilter: "blur(10px)",
 				WebkitBackdropFilter: "blur(10px)",
 				borderRadius: 5,
-				boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+				boxShadow:
+					theme.palette.mode == "dark"
+						? "rgba(50, 50, 50, 0.2) 0px 2px 8px 0px"
+						: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
 				...props.sx,
 			}}
 			aria-label=""
