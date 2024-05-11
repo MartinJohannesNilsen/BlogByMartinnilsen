@@ -1,17 +1,18 @@
 "use client";
-import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Button, IconButton, Tooltip, Typography, useRadioGroup } from "@mui/material";
 import NextLink from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoCheckmark, IoCopyOutline } from "react-icons/io5";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
-
-// Themes
-import { enqueueSnackbar } from "notistack";
-import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import { copyToClipboardV2 } from "../../../utils/copyToClipboard";
 import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { useHotkeys } from "react-hotkeys-hook";
+import { enqueueSnackbar } from "notistack";
+
+// Themes
+import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 export const EDITORTHEME = atomOneDark;
 const CustomCodebox = (props: EditorjsRendererProps) => {
@@ -33,30 +34,56 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 	};
 	const [copyMessageShown, setCopyMessageShown] = useState(false);
 	const [isCopyButtonVisible, setCopyButtonVisible] = useState(false);
+	const [copyEventListenerActive, setCopyEventListenerActive] = useState(false);
 
-	const handleMouseEnter = () => {
-		setCopyButtonVisible(true);
-	};
+	useEffect(() => {
+		const textToBeCopied = props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "");
+		const handleCopy = (event) => {
+			event.preventDefault();
+			handleButtonClick(textToBeCopied);
+		};
+		if (copyEventListenerActive) {
+			document.addEventListener("copy", handleCopy);
+		} else {
+			document.removeEventListener("copy", handleCopy);
+		}
 
-	const handleMouseLeave = () => {
-		setCopyButtonVisible(false);
-	};
+		return () => {
+			document.removeEventListener("copy", handleCopy);
+		};
+	}, [copyEventListenerActive]);
 
 	return (
 		<Box
+			onMouseEnter={() => {
+				setCopyEventListenerActive(true);
+			}}
+			onMouseLeave={() => {
+				setCopyEventListenerActive(false);
+			}}
 			sx={{
 				position: "relative",
 				borderRadius: "10px",
-				// border: "2px solid" + theme.palette.secondary.main,
 				"& .language-plaintext code": {
 					userSelect: "none",
 					margin: "-15px 10px -15px -15px",
 					padding: "15px 0px 15px 15px",
 					backgroundColor: "rgb(30, 30, 30)",
 				},
+				transition: "border .15s ease",
+				"&:hover": {
+					border: "2px solid" + theme.palette.secondary.main,
+				},
+				border: "2px solid transparent",
 			}}
 			my={2}
 		>
+			{/* <input
+				ref={selectInputRef}
+				style={{ position: "absolute", width: "0", height: "0", opacity: 0, zIndex: -1 }}
+				value={props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "")}
+				readOnly
+			/> */}
 			{props.data.multiline ? (
 				// Multiline codeblock
 				<Box>
@@ -66,7 +93,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							userSelect: "none",
 							backgroundColor: "#363642",
 							// backgroundColor: "#282a2e",
-							borderRadius: "10px 10px 0px 0px",
+							borderRadius: "8px 8px 0px 0px",
 							padding: "5px",
 						}}
 						display="flex"
@@ -146,14 +173,14 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							language={props.data.language && props.data.language !== "" ? props.data.language : "plaintext"}
 							style={EDITORTHEME}
 							showLineNumbers={props.data.linenumbers}
-							lineNumberStyle={{ color: "#ffffff20", minWidth: "45px" }}
+							lineNumberStyle={{ color: "#ffffff20" }}
 							wrapLongLines={props.data.textwrap}
 							customStyle={{
 								backgroundColor: "rgb(36, 39, 46)",
 								margin: "0px",
 								padding: "15px",
-								borderRadius: "0 0 10px 10px",
-								fontSize: "calc(0.9rem * var(--font-scale))",
+								borderRadius: "0 0 8px 8px",
+								fontSize: "calc(1rem * var(--font-scale))",
 							}}
 							codeTagProps={{
 								style: {
@@ -180,39 +207,47 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 				</Box>
 			) : (
 				// Singleline codeblock
-				<Box onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} position="relative">
+				<Box
+					onMouseEnter={() => {
+						setCopyButtonVisible(true);
+					}}
+					onMouseLeave={() => {
+						setCopyButtonVisible(false);
+					}}
+					position="relative"
+					sx={{ margin: 0 }}
+				>
 					{isCopyButtonVisible && (
 						<Box
 							sx={{
 								position: "absolute",
 								right: "0",
 								top: "50%",
-								marginRight: "2px",
-								borderRadius: "5px 10px 10px 5px",
 								transform: "translateY(-50%)",
 								backgroundColor: "#25272D",
 								width: "46px",
+								borderRadius: "2px 2px 2px 2px",
 							}}
 						>
 							{copyMessageShown ? (
 								<IconButton
 									disabled={true}
 									sx={{
-										borderRadius: 2,
+										borderRadius: "3px 3px 3px 3px",
 										"&:disabled": {
 											color: "white",
-											// backgroundColor: "black",
 											backgroundColor: "#20222A",
 										},
+										height: "calc(1.4rem * var(--font-scale))",
 									}}
 								>
-									<IoCheckmark />
+									<IoCheckmark style={{ height: "calc(1.4rem * var(--font-scale))" }} />
 								</IconButton>
 							) : (
 								<Tooltip title="Copy code" enterDelay={2000}>
 									<IconButton
 										sx={{
-											borderRadius: "2px 2px 2px 2px",
+											borderRadius: "3px 3px 3px 3px",
 											color: "white",
 											backgroundColor: theme.palette.grey[800], // Change the alpha value for opacity
 											"&:hover": {
@@ -220,6 +255,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 												// backgroundColor: "black",
 												backgroundColor: "#22242A",
 											},
+											height: "calc(1.4rem * var(--font-scale))",
 										}}
 										onClick={() =>
 											handleButtonClick(
@@ -227,7 +263,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 											)
 										}
 									>
-										<IoCopyOutline />
+										<IoCopyOutline style={{ height: "calc(1.4rem * var(--font-scale))" }} />
 									</IconButton>
 								</Tooltip>
 							)}
@@ -237,14 +273,19 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 						language={props.data.language && props.data.language !== "" ? props.data.language : "plaintext"}
 						style={EDITORTHEME}
 						customStyle={{
-							height: "calc(0.9rem * var(--font-scale) + 30px)",
+							margin: 0,
+							display: "flex",
+							alignItems: "center",
+							height: "calc(45px * var(--font-scale))",
 							overflowY: "hidden",
 							backgroundColor: "rgb(36, 39, 46)",
 							padding: "10px 15px",
-							borderRadius: "10px 10px",
-							fontSize: "calc(0.9rem * var(--font-scale))",
+							// borderRadius: "calc(10px * var(--font-scale))",
+							// fontSize: "calc(1rem * var(--font-scale))",
+							borderRadius: "8px",
 						}}
 						codeTagProps={{
+							id: "code-text",
 							style: {
 								fontFamily: getFontFamilyFromVariable("--font-fira-code"),
 							},
