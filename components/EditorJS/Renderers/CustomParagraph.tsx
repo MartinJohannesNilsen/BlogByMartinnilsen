@@ -26,7 +26,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
         padding: 1px 2px;
         border-radius: 1px;
         background-color: ${theme.palette.secondary.main};
-		color: ${getBackgroundColorLightOrDark(theme.palette.secondary.main) ? colors.white : colors.black};
+		color: ${getBackgroundColorLightOrDark(theme.palette.secondary.main) === "dark" ? colors.white : colors.black};
     `;
 	// TODO This will not change on hover unfortunately
 	const linkStyle = `

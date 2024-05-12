@@ -86,7 +86,6 @@ export const SettingsModal = (props: SettingsModalProps) => {
 			setThemeUserConfigurationExist(localStorage.getItem("theme") !== null);
 		}
 		setDefaultColors([
-			{ title: "Custom", color: undefined },
 			{
 				title: "Contrast",
 				color: theme.palette.mode == "dark" ? defaultAccentColorDark.hex : defaultAccentColorLight.hex,

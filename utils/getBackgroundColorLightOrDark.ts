@@ -1,4 +1,4 @@
-export function getBackgroundColorLightOrDark(color: string) {
+export function getBackgroundColorLightOrDark(color: string, threshold?: number) {
 	// Convert hex color to RGB
 	let r, g, b;
 	if (color.startsWith("#")) {
@@ -17,8 +17,11 @@ export function getBackgroundColorLightOrDark(color: string) {
 	}
 
 	// Calculate luminance using the formula for relative luminance
-	const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+	// https://stackoverflow.com/a/596241/13858741
+	const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255; // Digital ITU BT.601 (gives more weight to the R and B components)
+	// const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255; // Photometric/digital ITU BT.709
 
 	// Return "light" or "dark" based on luminance
+	if (threshold) return luminance > threshold ? "light" : "dark";
 	return luminance > 0.5 ? "light" : "dark";
 }
