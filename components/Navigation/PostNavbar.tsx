@@ -146,22 +146,26 @@ export const PostNavbar = (props: PostNavbarProps) => {
 							width: "95%",
 						}}
 					>
-						<Box mr={0.1} display="flex" alignItems="end">
-							<NavbarButton
-								variant="outline"
-								onClick={() => props.simpleTextModal.setOpen(true)}
-								text="Aa"
-								tooltip="Customize"
-								sxButton={{
-									height: "34px",
-									width: "34px",
-								}}
-								sxText={{
-									fontSize: "17px",
-									mb: "2px",
-									fontFamily: getFontFamilyFromVariable("--font-noto-sans-display"),
-								}}
-							/>
+						{/* Left section */}
+						<Box display="flex" alignItems="end" mr={0.1}>
+							{/* Text customization */}
+							<Box>
+								<NavbarButton
+									variant="outline"
+									onClick={() => props.simpleTextModal.setOpen(true)}
+									text="Aa"
+									tooltip="Customize"
+									sxButton={{
+										height: "34px",
+										width: "34px",
+									}}
+									sxText={{
+										fontSize: "17px",
+										mb: "2px",
+										fontFamily: getFontFamilyFromVariable("--font-noto-sans-display"),
+									}}
+								/>
+							</Box>
 							{/* Save */}
 							<Box ml={0.5}>
 								<NavbarButton
@@ -184,7 +188,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 							</Box>
 						</Box>
 						<Box flexGrow={100} />
-						<Box display="flex" alignItems="center" height="34px">
+						{/* Centered title */}
+						<Box display="flex" alignItems="center" height="34px" sx={{ overflow: "hidden" }}>
 							<Typography
 								variant="body2"
 								fontWeight="600"
@@ -205,7 +210,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						</Box>
 						<Box flexGrow={100} />
 						{/* Right section */}
-						<Box display="flex" ml={0.1} alignItems="end">
+						<Box display="flex" alignItems="end" ml={0.1}>
+							{/* Search */}
 							<Box mr={0.5}>
 								<NavbarButton
 									icon={Search}
@@ -225,28 +231,30 @@ export const PostNavbar = (props: PostNavbarProps) => {
 								/>
 							</Box>
 							{/* Account */}
-							<ProfileMenu
-								anchorEl={anchorElProfileMenu}
-								open={openProfileMenu}
-								handleMenuOpen={handleProfileMenuClick}
-								handleMenuClose={handleProfileMenuClose}
-								accountButtonSx={{
-									backgroundColor: theme.palette.primary.main + "99",
-								}}
-								showNotificationsBadge={visibleBadgeNotifications}
-								notifications={{
-									open: openNotificationsModal,
-									handleModalOpen: () => setOpenNotificationsModal(true),
-									handleModalClose: () => setOpenNotificationsModal(false),
-								}}
-								settings={{
-									open: openSettingsModal,
-									handleModalOpen: () => setOpenSettingsModal(true),
-									handleModalClose: () => setOpenSettingsModal(false),
-								}}
-								isAuthorized={props.isAuthorized}
-								sessionUser={props.sessionUser}
-							/>
+							<Box>
+								<ProfileMenu
+									anchorEl={anchorElProfileMenu}
+									open={openProfileMenu}
+									handleMenuOpen={handleProfileMenuClick}
+									handleMenuClose={handleProfileMenuClose}
+									accountButtonSx={{
+										backgroundColor: theme.palette.primary.main + "99",
+									}}
+									showNotificationsBadge={visibleBadgeNotifications}
+									notifications={{
+										open: openNotificationsModal,
+										handleModalOpen: () => setOpenNotificationsModal(true),
+										handleModalClose: () => setOpenNotificationsModal(false),
+									}}
+									settings={{
+										open: openSettingsModal,
+										handleModalOpen: () => setOpenSettingsModal(true),
+										handleModalClose: () => setOpenSettingsModal(false),
+									}}
+									isAuthorized={props.isAuthorized}
+									sessionUser={props.sessionUser}
+								/>
+							</Box>
 						</Box>
 					</Box>
 				</Box>
