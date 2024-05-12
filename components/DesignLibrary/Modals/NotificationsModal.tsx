@@ -170,7 +170,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 					>
 						{notifications.length > 0 ? (
 							notifications.map((notification, index) => (
-								<>
+								<Box key={index}>
 									<Box
 										my={1}
 										sx={
@@ -211,7 +211,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 										/>
 									</Box>
 									{index !== notifications.length - 1 && <Divider sx={{ mt: 2, mb: 1.5 }} />}
-								</>
+								</Box>
 							))
 						) : (
 							<Typography

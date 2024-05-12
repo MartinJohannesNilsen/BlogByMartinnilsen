@@ -1,4 +1,3 @@
-"use client";
 import { Option as BaseOption, optionClasses } from "@mui/base/Option";
 import { Select as BaseSelect, selectClasses, SelectProps, SelectRootSlotProps } from "@mui/base/Select";
 import { UnfoldMoreRounded } from "@mui/icons-material";
@@ -6,15 +5,15 @@ import { styled } from "@mui/system";
 import * as React from "react";
 import { SelectContentProps } from "../../../types";
 
-export default function StyledControlledSelect(props: SelectContentProps) {
+export default function StyledControlledSelect(props: SelectContentProps & { width?: string }) {
 	return (
-		<Select defaultValue={props.value} onChange={(_, newValue) => props.setValue(newValue)}>
+		<Select value={props.value} onChange={(_, newValue) => props.setValue(newValue)} width={props.width}>
 			{props.children}
 		</Select>
 	);
 }
 
-function Select(props: SelectProps<number, false>) {
+function Select(props: SelectProps<number, false> & { width?: string }) {
 	const slots: SelectProps<number, false>["slots"] = {
 		root: StyledButton,
 		listbox: Listbox,
@@ -26,10 +25,10 @@ function Select(props: SelectProps<number, false>) {
 }
 
 const CustomButton = React.forwardRef(function CustomButton(
-	props: SelectRootSlotProps<number, false>,
+	props: SelectRootSlotProps<number, false> & { width?: string },
 	ref: React.ForwardedRef<HTMLButtonElement>
 ) {
-	const { ownerState, ...other } = props;
+	const { ownerState, width, ...other } = props;
 	return (
 		<button
 			type="button"
@@ -39,7 +38,7 @@ const CustomButton = React.forwardRef(function CustomButton(
 				display: "flex",
 				justifyContent: "space-between",
 				alignItems: "center",
-				minWidth: "160px",
+				minWidth: width || "160px", // Use the specified width or default to 160px
 			}}
 		>
 			<span>{other.children}</span>
@@ -53,7 +52,6 @@ const StyledButton = styled(CustomButton, { shouldForwardProp: () => true })(
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 0.875rem;
     box-sizing: border-box;
-    // min-width: 336px;
     padding: 8px 12px;
     border-radius: 8px;
     text-align: left;
@@ -71,14 +69,20 @@ const StyledButton = styled(CustomButton, { shouldForwardProp: () => true })(
     &:hover {
       background: ${theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50]};
       border-color: ${theme.palette.mode === "dark" ? theme.palette.grey[600] : theme.palette.grey[300]};
-      cursor: 'pointer';
+      cursor: pointer;
+    }
+    
+    &.${selectClasses.focusVisible} {
+      background: ${theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50]};
+      border-color: ${theme.palette.mode === "dark" ? theme.palette.grey[600] : theme.palette.grey[300]};
+      outline: 0;
     }
   
-    &.${selectClasses.focusVisible} {
-      outline: 0;
-      border-color: ${theme.palette.grey[400]};
-      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[200]};
-    }
+    // &.${selectClasses.focusVisible} {
+    //   outline: 0;
+    //   border-color: ${theme.palette.grey[400]};
+    //   box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[200]};
+    // }
   
     & > svg {
       font-size: 1rem;
@@ -91,15 +95,14 @@ const StyledButton = styled(CustomButton, { shouldForwardProp: () => true })(
 );
 
 const Listbox = styled("ul")(
-	({ theme }) => `
+	({ theme, width }: any) => `
   height: 200px;
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 0.875rem;
   box-sizing: border-box;
   padding: 6px;
   margin: 12px 0;
-  // min-width: 336px;
-  min-width: 160px;
+  min-width: ${width || "160px"}; // Use the specified width or default to 160px
   border-radius: 12px;
   overflow: auto;
   outline: 0px;
@@ -154,12 +157,3 @@ export const SelectOption = styled(BaseOption)(
 const Popup = styled("div")`
 	z-index: 1400;
 `;
-
-// const Paragraph = styled("p")(
-// 	({ theme }) => `
-//   font-family: 'IBM Plex Sans', sans-serif;
-//   font-size: 0.875rem;
-//   margin: 10px 0;
-//   color: ${theme.palette.mode === "dark" ? grey[400] : grey[700]};
-//   `
-// );

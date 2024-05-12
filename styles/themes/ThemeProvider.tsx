@@ -6,7 +6,8 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { CustomThemeProviderProps, ThemeContextType } from "../../types";
 import useDidUpdate from "../../utils/useDidUpdate";
 import {
-	defaultAccentColor,
+	defaultAccentColorDark,
+	defaultAccentColorLight,
 	defaultFontFamily,
 	defaultFontFamilyVariable,
 	defaultFontScale,
@@ -32,7 +33,10 @@ export const ThemeContext = createContext<ThemeContextType>({
 	theme: getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light),
 	setTheme: (theme, persist) => {},
 	setDefaultTheme: () => {},
-	accentColor: (typeof window !== "undefined" && localStorage.getItem("accent")) || defaultAccentColor.hex,
+	accentColor:
+		(typeof window !== "undefined" && localStorage.getItem("accent")) || getSelectedTheme() === "dark"
+			? defaultAccentColorDark.hex
+			: defaultAccentColorLight.hex,
 	setAccentColor: (accent) => {},
 	fontFamily:
 		typeof window !== "undefined"
@@ -47,14 +51,14 @@ export const useTheme = () => useContext(ThemeContext);
 export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 	const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
 	const [fontFamily, setFontFamily] = useStickyState("fontFamily", defaultFontFamilyVariable);
-	const [accentColor, setAccentColor] = useStickyState(
-		"accent",
-		defaultAccentColor.hex,
-		false,
-		/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/
-	);
 	const [theme, _setTheme] = useState(
 		getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light)
+	);
+	const [accentColor, setAccentColor] = useStickyState(
+		"accent",
+		theme.palette.mode == "dark" ? defaultAccentColorDark.hex : defaultAccentColorLight.hex,
+		false,
+		/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/
 	);
 	const [fontScale, setFontScale] = useStickyState("fontScale", defaultFontScale);
 
@@ -98,17 +102,14 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 		);
 	};
 
-	// const setFontFamily = (font: string): void => {
-	// 	if (font) {
-	// 		localStorage.setItem("font", font);
-	// 		_setFontFamily(font);
-	// 	}
-	// };
-
-	// const setAccentColor = (accent: string): void => {
-	// 	localStorage.setItem("accent", accent);
-	// 	_setAccentColor(accent);
-	// };
+	useEffect(() => {
+		if (getSelectedTheme() === "dark" && accentColor == defaultAccentColorLight.hex) {
+			setAccentColor(defaultAccentColorDark.hex);
+		} else if (getSelectedTheme() == "light" && accentColor == defaultAccentColorDark.hex) {
+			setAccentColor(defaultAccentColorLight.hex);
+		}
+		return () => {};
+	}, [theme]);
 
 	useEffect(() => {
 		document.documentElement.style.setProperty("--font-scale", fontScale);
@@ -117,19 +118,6 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 
 	useMemo(() => {
 		setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, false);
-		// _setTheme(
-		// 	createTheme({
-		// 		...theme,
-		// 		palette: {
-		// 			...theme.palette,
-		// 			secondary: { main: accentColor },
-		// 		},
-		// 		typography: {
-		// 			...theme.typography,
-		// 			fontFamily: getFontFamilyFromVariable(fontFamily),
-		// 		},
-		// 	})
-		// );
 		return () => {};
 	}, [accentColor, fontFamily]);
 

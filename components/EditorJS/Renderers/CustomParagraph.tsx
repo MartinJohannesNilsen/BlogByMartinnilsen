@@ -5,6 +5,8 @@ import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "../../../types";
 import colorLuminance from "../../../utils/colorLuminance";
 import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
+import colors from "@/styles/colors";
 
 const CustomParagraph = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
@@ -24,6 +26,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
         padding: 1px 2px;
         border-radius: 1px;
         background-color: ${theme.palette.secondary.main};
+		color: ${getBackgroundColorLightOrDark(theme.palette.secondary.main) ? colors.white : colors.black};
     `;
 	// TODO This will not change on hover unfortunately
 	const linkStyle = `

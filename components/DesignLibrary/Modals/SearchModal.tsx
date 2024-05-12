@@ -165,7 +165,22 @@ export const SearchModal = ({
 			onClick: () => {
 				handleSettingsModalOpen && handleSettingsModalOpen();
 			},
-			keywords: ["settings", "configure", "tune", "accent", "color", "mode", "light", "dark", "font"],
+			keywords: [
+				"settings",
+				"configure",
+				"tune",
+				"accent",
+				"color",
+				"mode",
+				"light",
+				"dark",
+				"font",
+				"size",
+				"scale",
+				"local",
+				"storage",
+				"cookies",
+			],
 			iconElement: <Settings sx={{ color: theme.palette.text.primary }} />,
 			requirement: () => {
 				return handleSettingsModalOpen != null;

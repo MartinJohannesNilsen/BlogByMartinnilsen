@@ -1,11 +1,15 @@
 "use client";
-import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import {
+	defaultAccentColorDark,
+	defaultAccentColorLight,
+	defaultFontFamilyVariable,
+	getFontFamilyFromVariable,
+} from "@/styles/themes/themeDefaults";
 import { Close, Gradient, Square } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
-import { isMobile } from "react-device-detect";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import { useTheme } from "../../../styles/themes/ThemeProvider";
 import { ThemeEnum } from "../../../styles/themes/themeMap";
@@ -34,18 +38,6 @@ const defaultFonts = [
 	{ title: "Zodiak", font: "--font-zodiak" },
 ];
 
-const defaultColors = [
-	{ title: "Custom", color: undefined },
-	{ title: "Beige", color: "#e9b384" },
-	{ title: "Crimson", color: "#f47373" },
-	{ title: "Lime", color: "#37d67a" },
-	{ title: "Yellow", color: "#fdd835" },
-	{ title: "Orange", color: "#ff8a65" },
-	{ title: "Pink", color: "#df487f" },
-	{ title: "Purple", color: "#ba68c8" },
-	{ title: "Teal", color: "#29939b" },
-];
-
 const TransparentTooltip = withStyles({
 	tooltip: {
 		backgroundColor: "transparent",
@@ -66,8 +58,10 @@ export const SettingsModal = (props: SettingsModalProps) => {
 	} = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const [colorPickerOpen, setColorPickerOpen] = useState(false);
+	const [defaultColors, setDefaultColors] = useState<{ title: string; color?: string }[]>([]);
 	const [themeUserConfigurationExist, setThemeUserConfigurationExist] = useState<boolean>();
 
+	// Modal style
 	const style = {
 		position: "absolute" as "absolute",
 		top: "50%",
@@ -83,14 +77,30 @@ export const SettingsModal = (props: SettingsModalProps) => {
 		rowGap: "10px",
 		justifyContent: "flex-start",
 		boxShadow: 24,
-		p: xs ? 2.5 : 4,
+		p: xs ? "20px 10px 20px 20px" : "20px 10px 20px 20px",
 	};
 
 	useEffect(() => {
+		console.log(accentColor);
 		// Check if localStorage is defined (only in the browser environment)
 		if (typeof window !== "undefined" && window.localStorage) {
 			setThemeUserConfigurationExist(localStorage.getItem("theme") !== null);
 		}
+		setDefaultColors([
+			{ title: "Custom", color: undefined },
+			{
+				title: "Contrast",
+				color: theme.palette.mode == "dark" ? defaultAccentColorDark.hex : defaultAccentColorLight.hex,
+			},
+			{ title: "Beige", color: "#e9b384" },
+			{ title: "Crimson", color: "#f47373" },
+			{ title: "Lime", color: "#37d67a" },
+			{ title: "Yellow", color: "#fdd835" },
+			{ title: "Orange", color: "#ff8a65" },
+			{ title: "Pink", color: "#df487f" },
+			{ title: "Purple", color: "#ba68c8" },
+			{ title: "Teal", color: "#29939b" },
+		]);
 	}, [, theme]);
 
 	return (
@@ -108,6 +118,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 				aria-describedby="modal-modal-description"
 			>
 				<Box sx={style}>
+					{/* Close button */}
 					<IconButton
 						style={{ position: "absolute", top: "5px", right: "5px" }}
 						onClick={() => {
@@ -117,6 +128,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 					>
 						<Close sx={{ color: theme.palette.text.primary }} />
 					</IconButton>
+					{/* Title */}
 					<Typography
 						fontFamily={theme.typography.fontFamily}
 						variant="h5"
@@ -244,9 +256,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						</Box>
 					</Box>
 					{/* Font family */}
-					<Box display="flex" mt={0.4} alignItems="baseline">
+					<Box display="flex" mt={0.4} alignItems="center">
 						<Typography
-							mt={0.8}
 							fontFamily={theme.typography.fontFamily}
 							variant="body1"
 							fontWeight="600"
@@ -260,13 +271,12 @@ export const SettingsModal = (props: SettingsModalProps) => {
 						<StyledControlledSelect
 							value={fontFamily}
 							setValue={(value) => {
-								console.log(value);
 								setFontFamily(value);
 								setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
 							}}
 						>
-							{defaultFonts.map((element) => (
-								<SelectOption value={element.font}>
+							{defaultFonts.map((element, index) => (
+								<SelectOption value={element.font} key={index}>
 									<Typography
 										sx={{ fontFamily: getFontFamilyFromVariable(element.font), fontWeight: 400, fontSize: "0.875rem" }}
 									>
@@ -275,6 +285,28 @@ export const SettingsModal = (props: SettingsModalProps) => {
 								</SelectOption>
 							))}
 						</StyledControlledSelect>
+						<Box display="flex" alignItems="center" ml={"2px"}>
+							<Tooltip enterDelay={2000} title="Use default settings">
+								<IconButton
+									disabled={fontFamily === defaultFontFamilyVariable}
+									aria-label="delete"
+									size="small"
+									onClick={() => {
+										setFontFamily(defaultFontFamilyVariable);
+									}}
+								>
+									<Close
+										sx={{
+											fontSize: "1rem",
+											color:
+												fontFamily === defaultFontFamilyVariable
+													? theme.palette.text.primary + "40"
+													: theme.palette.text.primary,
+										}}
+									/>
+								</IconButton>
+							</Tooltip>
+						</Box>
 					</Box>
 					{/* Accent color */}
 					<Box display="flex" mt={0.2}>
@@ -290,6 +322,11 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							Accent color:
 						</Typography>
 						<Box flexGrow="1" />
+						{/* <ClickAwayListener
+							onClickAway={() => {
+								setColorPickerOpen(false);
+							}}
+						> */}
 						<TransparentTooltip
 							PopperProps={{
 								disablePortal: true,
@@ -298,61 +335,118 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							disableFocusListener
 							disableHoverListener
 							disableTouchListener
-							placement={isMobile ? "top" : "bottom"}
+							// placement={isMobile ? "top" : "bottom"}
 							title={
 								<BlockPicker
-									triangle={isMobile ? "hide" : "top"}
+									// triangle={isMobile ? "hide" : "top"}
+									triangle={"hide"}
 									colors={null}
 									color={accentColor}
 									onChange={(color, event) => {
-										setAccentColor(color.hex);
-										setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, true);
+										if (color.hex) {
+											setAccentColor(color.hex);
+											setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, true);
+										}
 									}}
 								/>
 							}
 						>
-							<Box>
-								<StyledControlledSelect
-									value={accentColor}
-									setValue={(value) => {
-										if (value === undefined || value) {
-											setAccentColor(value);
-											setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
-										}
+							<Box display="flex" alignItems="center">
+								<Box onClick={() => setColorPickerOpen(false)}>
+									<StyledControlledSelect
+										width="117px"
+										value={accentColor}
+										setValue={(value) => {
+											if (value) {
+												setAccentColor(value);
+												setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light);
+											}
+										}}
+									>
+										{defaultColors.map((element: { title: string; color?: string }, index: number) => (
+											<SelectOption value={element.color} key={index}>
+												<Box display="flex" alignItems="center" gap={0.25}>
+													<Square sx={{ color: element.color }} />
+													<Typography sx={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "0.875rem" }}>
+														{element.title}
+													</Typography>
+												</Box>
+											</SelectOption>
+										))}
+									</StyledControlledSelect>
+								</Box>
+
+								<NavbarButton
+									variant="outline"
+									onClick={() => setColorPickerOpen(!colorPickerOpen)}
+									icon={Gradient}
+									tooltip="Set custom color"
+									sxButton={{
+										height: "39px",
+										width: "39px",
+										ml: "3px",
+										background: theme.palette.mode === "dark" ? theme.palette.grey[900] : "#fff",
+										border: `1px solid ${
+											theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[200]
+										}`,
+										color: theme.palette.mode === "dark" ? theme.palette.grey[300] : theme.palette.grey[900],
+										boxShadow: `0px 2px 4px ${
+											theme.palette.mode === "dark" ? "rgba(0,0,0, 0.5)" : "rgba(0,0,0, 0.05)"
+										}`,
+										"&:hover": {
+											background: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+											borderColor: theme.palette.mode === "dark" ? theme.palette.grey[600] : theme.palette.grey[300],
+										},
+										"&:focus": {
+											background: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[50],
+											borderColor: theme.palette.mode === "dark" ? theme.palette.grey[600] : theme.palette.grey[300],
+										},
 									}}
-								>
-									{defaultColors.map((element: { title: string; color?: string }, index: number) => (
-										<SelectOption
-											value={element.color}
+									sxIcon={{
+										height: "24px",
+										width: "24px",
+										color: accentColor,
+									}}
+								/>
+								<Box display="flex" alignItems="center" ml={"2px"}>
+									<Tooltip enterDelay={2000} title="Use default settings">
+										<IconButton
+											disabled={
+												(theme.palette.mode === "dark" && accentColor === defaultAccentColorDark.hex) ||
+												(theme.palette.mode === "light" && accentColor === defaultAccentColorLight.hex)
+											}
+											aria-label="delete"
+											size="small"
 											onClick={() => {
-												setColorPickerOpen(element.title === "Custom");
+												if (theme.palette.mode === "dark") {
+													setAccentColor(defaultAccentColorDark.hex);
+													setTheme(ThemeEnum.Dark);
+												} else {
+													setAccentColor(defaultAccentColorLight.hex);
+													setTheme(ThemeEnum.Light);
+												}
+												setColorPickerOpen(false);
 											}}
 										>
-											<Box display="flex" alignItems="center" gap={0.25}>
-												{element.color ? (
-													<Square sx={{ color: element.color }} />
-												) : (
-													<Gradient
-														sx={{
-															color: !defaultColors.some((obj) => obj.color === accentColor)
-																? accentColor
-																: theme.palette.text.primary,
-														}}
-													/>
-												)}
-
-												<Typography sx={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "0.875rem" }}>
-													{element.title}
-												</Typography>
-											</Box>
-										</SelectOption>
-									))}
-								</StyledControlledSelect>
+											<Close
+												sx={{
+													fontSize: "1rem",
+													color:
+														(theme.palette.mode === "dark" && accentColor === defaultAccentColorDark.hex) ||
+														(theme.palette.mode === "light" && accentColor === defaultAccentColorLight.hex)
+															? theme.palette.text.primary + "40"
+															: theme.palette.text.primary,
+												}}
+											/>
+										</IconButton>
+									</Tooltip>
+								</Box>
 							</Box>
 						</TransparentTooltip>
+						{/* </ClickAwayListener> */}
 					</Box>
 					{/* Clear localstorage */}
-					<Box display="flex" mt={0.2}>
+					<Box display="flex" mt={0.2} mr={"28px"}>
 						<Typography
 							mt={0.8}
 							fontFamily={theme.typography.fontFamily}

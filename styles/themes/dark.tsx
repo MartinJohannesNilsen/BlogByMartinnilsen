@@ -1,6 +1,6 @@
 "use client";
 import { createTheme } from "@mui/material";
-import { baseTheme, defaultAccentColor } from "./themeDefaults";
+import { baseTheme, defaultAccentColorDark } from "./themeDefaults";
 
 export const dark = createTheme({
 	palette: {
@@ -26,7 +26,8 @@ export const dark = createTheme({
 		// accent color
 		secondary: {
 			main:
-				(typeof window !== "undefined" && localStorage.getItem("accent")?.replace('"', "")) || defaultAccentColor.hex,
+				(typeof window !== "undefined" && localStorage.getItem("accent")?.replace('"', "")) ||
+				defaultAccentColorDark.hex,
 		},
 		grey: {
 			600: "#585d63",

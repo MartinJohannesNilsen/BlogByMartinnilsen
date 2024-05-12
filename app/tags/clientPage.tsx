@@ -13,6 +13,8 @@ import { StoredPost, TagsPageProps } from "../../types";
 import colorLumincance from "../../utils/colorLuminance";
 import useStickyState from "../../utils/useStickyState";
 import { getAllViewCounts } from "../../data/middleware/views/actions";
+import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
+import colors from "@/styles/colors";
 
 export const _caseInsensitiveIncludes = (list: string[], word: string, removeSpace?: boolean) => {
 	const lowerCaseList = list.map((e) => e.toLowerCase());
@@ -188,7 +190,12 @@ const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => 
 							>
 								<Typography
 									fontFamily={theme.typography.fontFamily}
-									color={theme.palette.text.primary}
+									color={
+										getBackgroundColorLightOrDark(!tag ? theme.palette.secondary.main : theme.palette.primary.main) ===
+										"dark"
+											? colors.white
+											: colors.black
+									}
 									variant="body2"
 									fontSize={xs ? "11px" : "13px"}
 									textTransform="none"
@@ -243,7 +250,15 @@ const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => 
 									>
 										<Typography
 											fontFamily={theme.typography.fontFamily}
-											color={theme.palette.text.primary}
+											color={
+												getBackgroundColorLightOrDark(
+													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+														? theme.palette.secondary.main
+														: theme.palette.primary.main
+												) === "dark"
+													? colors.white
+													: colors.black
+											}
 											variant="body2"
 											fontSize={xs ? "11px" : "13px"}
 											textTransform="none"

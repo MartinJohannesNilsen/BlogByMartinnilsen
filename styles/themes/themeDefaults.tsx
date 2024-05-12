@@ -12,7 +12,10 @@ export function getFontFamilyFromVariable(variable?: string) {
 }
 
 // Defaults
-export const defaultAccentColor = { hex: "#e9b384", name: "Beige" };
+// export const defaultAccentColor = { hex: "#e9b384", name: "Beige" };
+export const defaultAccentColorLight = { hex: "#333333", name: "Contrast" };
+// export const defaultAccentColorDark = { hex: "#eaeaea", name: "Contrast" };
+export const defaultAccentColorDark = { hex: "#dddddd", name: "Contrast" };
 export const defaultFontFamily = fonts.cabinet_grotesk.style.fontFamily;
 export const defaultFontFamilyVariable = "--font-cabinet-grotesk";
 export const defaultFontScale = "1";
