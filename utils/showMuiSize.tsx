@@ -1,6 +1,6 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
 import { Box, Breakpoint, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "../styles/themes/ThemeProvider";
 
 /**
  * taken from https://material-ui.com/components/use-media-query/#migrating-from-withwidth

@@ -1,4 +1,8 @@
 "use client";
+import LandingPageSwipeCard from "@/components/DesignLibrary/Cards/LandingPageSwipeCard";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { directionType, StoredPost, TinderSwipeType } from "@/types";
+import { copyToClipboardV2 } from "@/utils/copyToClipboard";
 import ClearIcon from "@mui/icons-material/Clear";
 import LaunchIcon from "@mui/icons-material/Launch";
 import ReplayIcon from "@mui/icons-material/Replay";
@@ -8,10 +12,6 @@ import React, { useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { BiCopy } from "react-icons/bi";
 import TinderCard from "react-tinder-card";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { directionType, StoredPost, TinderSwipeType } from "../../types";
-import { copyToClipboardV2 } from "../../utils/copyToClipboard";
-import LandingPageSwipeCard from "../DesignLibrary/Cards/LandingPageSwipeCard";
 
 const TinderSwipe = (props: TinderSwipeType) => {
 	const { theme } = useTheme();

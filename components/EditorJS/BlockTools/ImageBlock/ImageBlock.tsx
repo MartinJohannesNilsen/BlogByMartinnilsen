@@ -1,13 +1,13 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
+import { deleteImage, getImageDetails, uploadImage } from "@/data/db/images";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { BlockToolImageProps } from "@/types";
 import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
-import { deleteImage, getImageDetails, uploadImage } from "../../../../data/db/images";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import { BlockToolImageProps } from "../../../../types";
-import { NavbarButton } from "../../../DesignLibrary/Buttons/NavbarButton";
-import { StyledTextField } from "../../../DesignLibrary/Text/TextInput";
 
 // Component
 export const ImageBlock = (props: BlockToolImageProps) => {

@@ -1,13 +1,13 @@
 "use client";
+import StyledControlledSelect, { SelectOption } from "@/components/DesignLibrary/Select/StyledControlledSelect";
+import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
+import { getAllNotifications } from "@/data/middleware/notifications/actions";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { NotificationProps, NotificationsModalProps, UnreadFunctionProps } from "@/types";
+import useStickyState from "@/utils/useStickyState";
 import { Close } from "@mui/icons-material";
 import { Box, Divider, IconButton, Modal, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllNotifications } from "../../../data/middleware/notifications/actions";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { NotificationProps, NotificationsModalProps, UnreadFunctionProps } from "../../../types";
-import useStickyState from "../../../utils/useStickyState";
-import CustomParagraph from "../../EditorJS/Renderers/CustomParagraph";
-import StyledControlledSelect, { SelectOption } from "../Select/StyledControlledSelect";
 
 export const checkForUnreadRecentNotifications = (
 	data: NotificationProps[],

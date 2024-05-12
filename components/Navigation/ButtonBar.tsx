@@ -1,9 +1,9 @@
 "use client";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ButtonBarProps } from "@/types";
 import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ButtonBarProps } from "../../types";
-import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 
 export const ButtonBar = (props: ButtonBarProps) => {
 	const { theme } = useTheme();

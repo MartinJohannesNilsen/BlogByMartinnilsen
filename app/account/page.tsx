@@ -1,11 +1,11 @@
 "use server";
+import Account from "@/app/account/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
+import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "@/data/cache";
 import { Metadata } from "next";
 import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
-import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
-import Account from "./clientPage";
 
 export async function generateMetadata({ params, searchParams }) {
 	const metadata: Metadata = {

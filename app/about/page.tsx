@@ -1,10 +1,10 @@
 "use server";
+import AboutPage from "@/app/about/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
+import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "@/data/cache";
 import { Metadata } from "next";
 import { Session } from "next-auth";
-import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../../data/cache";
-import AboutPage from "./clientPage";
 
 export async function generateMetadata({ params, searchParams }) {
 	const metadata: Metadata = {

@@ -1,9 +1,9 @@
 "use server";
+import LandingPage from "@/app/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
+import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "@/data/cache";
 import { Session } from "next-auth";
-import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "../data/cache";
-import LandingPage from "./clientPage";
 
 export default async function Page() {
 	// Check authentication

@@ -1,7 +1,7 @@
 "use client";
+import { dark } from "@/styles/themes/dark";
+import { light } from "@/styles/themes/light";
 import { Theme } from "@mui/material";
-import { dark } from "./dark";
-import { light } from "./light";
 
 export enum ThemeEnum {
 	Dark = "dark",

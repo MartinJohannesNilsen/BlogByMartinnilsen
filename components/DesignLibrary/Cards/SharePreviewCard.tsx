@@ -1,8 +1,8 @@
 "use client";
+import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { SharePreviewCardProps } from "@/types";
 import { Box, Card, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { SharePreviewCardProps } from "../../../types";
-import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 
 export const SharePreviewCard = (props: SharePreviewCardProps) => {
 	const { theme } = useTheme();

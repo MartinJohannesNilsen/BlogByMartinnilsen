@@ -1,4 +1,16 @@
 "use client";
+import LandingPageCarouselCard from "@/components/DesignLibrary/Cards/LandingPageCarouselCard";
+import LandingPageGridCard from "@/components/DesignLibrary/Cards/LandingPageGridCard";
+import LandingPageListCard from "@/components/DesignLibrary/Cards/LandingPageListCard";
+import LandingPagePlainCard from "@/components/DesignLibrary/Cards/LandingPagePlainCard";
+import Navbar from "@/components/Navigation/Navbar";
+import TinderSwipe from "@/components/TinderSwipe/TinderSwipe";
+import { _filterListOfStoredPostsOnPublished } from "@/data/db/overview";
+import { getAllViewCounts } from "@/data/middleware/views/actions";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ServerPageProps, StoredPost } from "@/types";
+import { splitChunks } from "@/utils/postChunking";
+import useStickyState from "@/utils/useStickyState";
 import {
 	ArrowBackIosNewSharp,
 	ArrowBackIosSharp,
@@ -25,19 +37,6 @@ import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
-import LandingPageCarouselCard from "../components/DesignLibrary/Cards/LandingPageCarouselCard";
-import LandingPageGridCard from "../components/DesignLibrary/Cards/LandingPageGridCard";
-import LandingPageListCard from "../components/DesignLibrary/Cards/LandingPageListCard";
-import LandingPagePlainCard from "../components/DesignLibrary/Cards/LandingPagePlainCard";
-import Navbar from "../components/Navigation/Navbar";
-import TinderSwipe from "../components/TinderSwipe/TinderSwipe";
-import { getCachedPublishedDescendingPostsOverview } from "../data/cache";
-import { _filterListOfStoredPostsOnPublished } from "../data/db/overview";
-import { useTheme } from "../styles/themes/ThemeProvider";
-import { ServerPageProps, StoredPost } from "../types";
-import { splitChunks } from "../utils/postChunking";
-import useStickyState from "../utils/useStickyState";
-import { getAllViewCounts } from "../data/middleware/views/actions";
 
 const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPageProps) => {
 	const { theme } = useTheme();

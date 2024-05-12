@@ -1,8 +1,8 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ButtonProps } from "@/types";
 import { ButtonBase, Tooltip, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ButtonProps } from "../../../types";
 
 export const NavbarButton = (props: ButtonProps) => {
 	const { theme } = useTheme();

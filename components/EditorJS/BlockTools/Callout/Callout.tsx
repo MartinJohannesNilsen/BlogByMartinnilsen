@@ -1,9 +1,9 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { BlockToolCalloutProps } from "@/types";
 import { Box, Card, IconButton, InputBase, MenuItem, Modal, Select, Typography, useMediaQuery } from "@mui/material";
 import EmojiPicker, { EmojiClickData, SkinTonePickerLocation } from "emoji-picker-react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import { BlockToolCalloutProps } from "../../../../types";
 
 // Component
 export const Callout = (props: BlockToolCalloutProps) => {

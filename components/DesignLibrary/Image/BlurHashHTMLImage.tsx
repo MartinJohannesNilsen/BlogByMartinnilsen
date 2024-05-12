@@ -1,8 +1,8 @@
 "use client";
+import { BlurHashImageProps } from "@/types";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Blurhash } from "react-blurhash";
-import { BlurHashImageProps } from "../../../types";
 
 export const BlurHashImage = (props: BlurHashImageProps) => {
 	const [loaded, setLoaded] = useState(false);

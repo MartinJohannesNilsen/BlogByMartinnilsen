@@ -1,4 +1,6 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { TOCModalProps } from "@/types";
 import { Close } from "@mui/icons-material";
 import { ButtonBase, IconButton, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -8,8 +10,6 @@ import DOMPurify from "dompurify";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { TOCModalProps } from "../../../types";
 
 export function extractHeaders(html: string) {
 	const regex = /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;

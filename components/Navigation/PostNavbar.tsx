@@ -1,5 +1,18 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import NavbarSearchButton from "@/components/DesignLibrary/Buttons/NavbarSearchButton";
+import ProfileMenu from "@/components/DesignLibrary/Menus/ProfileMenu";
+import SearchModal from "@/components/DesignLibrary/Modals/SearchModal";
+import SimpleTextModal from "@/components/DesignLibrary/Modals/SimpleTextModal";
+import { extractHeaders } from "@/components/DesignLibrary/Modals/TOCModal";
+import { MenuIcon } from "@/components/Icons/MenuIcon";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { useTheme } from "@/styles/themes/ThemeProvider";
 import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { ThemeEnum } from "@/styles/themes/themeMap";
+import { PostNavbarProps, SearchActionProps } from "@/types";
+import { handleSharing } from "@/utils/handleSharing";
+import useStickyState from "@/utils/useStickyState";
 import { Bookmark, BookmarkBorder, Edit, IosShareOutlined, Search } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
@@ -7,24 +20,11 @@ import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import { DATA_DEFAULTS } from "../../data/metadata";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../styles/themes/themeMap";
-import { PostNavbarProps, SearchActionProps } from "../../types";
-import { handleSharing } from "../../utils/handleSharing";
-import useStickyState from "../../utils/useStickyState";
-import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
-import NavbarSearchButton from "../DesignLibrary/Buttons/NavbarSearchButton";
-import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
-import SearchModal from "../DesignLibrary/Modals/SearchModal";
-import SimpleTextModal from "../DesignLibrary/Modals/SimpleTextModal";
-import { extractHeaders } from "../DesignLibrary/Modals/TOCModal";
-import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
-const NotificationsModal = dynamic(() => import("../DesignLibrary/Modals/NotificationsModal"));
-const TOCModal = dynamic(() => import("../DesignLibrary/Modals/TOCModal"));
-const ShareModal = dynamic(() => import("../DesignLibrary/Modals/ShareModal"));
-const SettingsModal = dynamic(() => import("../DesignLibrary/Modals/SettingsModal"));
+const NotificationsModal = dynamic(() => import("@/components/DesignLibrary/Modals/NotificationsModal"));
+const TOCModal = dynamic(() => import("@/components/DesignLibrary/Modals/TOCModal"));
+const ShareModal = dynamic(() => import("@/components/DesignLibrary/Modals/ShareModal"));
+const SettingsModal = dynamic(() => import("@/components/DesignLibrary/Modals/SettingsModal"));
 
 export const PostNavbar = (props: PostNavbarProps) => {
 	const { theme, setTheme } = useTheme();

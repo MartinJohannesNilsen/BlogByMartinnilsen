@@ -1,4 +1,4 @@
-import { StoredPost } from "../types";
+import { StoredPost } from "@/types";
 
 export function splitChunks(arr: StoredPost[], chunkSize: number) {
 	if (chunkSize <= 0) throw "chunkSize must be greater than 0";

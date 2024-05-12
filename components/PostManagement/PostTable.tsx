@@ -1,10 +1,10 @@
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { getAllViewCounts } from "@/data/middleware/views/actions";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { StoredPost, TablePost } from "@/types";
 import { Check, Close, Edit, OpenInNewRounded } from "@mui/icons-material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { getAllViewCounts } from "../../data/middleware/views/actions";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { StoredPost, TablePost } from "../../types";
-import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
 
 export const PostTable = ({ postsOverview }: { postsOverview: StoredPost[] }) => {
 	const { theme } = useTheme();

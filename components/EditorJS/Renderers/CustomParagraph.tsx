@@ -1,12 +1,12 @@
 "use client";
+import colors from "@/styles/colors";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
+import colorLuminance from "@/utils/colorLuminance";
+import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
 import { Box, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
-import colorLuminance from "../../../utils/colorLuminance";
-import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
-import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
-import colors from "@/styles/colors";
 
 const CustomParagraph = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();

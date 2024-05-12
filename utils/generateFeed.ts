@@ -1,6 +1,6 @@
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { StoredPost } from "@/types";
 import { Feed } from "feed";
-import { DATA_DEFAULTS } from "../data/metadata";
-import { StoredPost } from "../types";
 
 export function generateFeed(posts: StoredPost[]) {
 	// Create feed

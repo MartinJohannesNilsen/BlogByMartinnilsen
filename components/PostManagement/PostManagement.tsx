@@ -1,3 +1,19 @@
+import { renderers } from "@/app/posts/[postId]/clientPage";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { BpRadio } from "@/components/DesignLibrary/Buttons/RadioButton";
+import OptionMenu from "@/components/DesignLibrary/Menus/OptionMenu";
+import EditableTypography from "@/components/DesignLibrary/Text/EditableTypography";
+import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
+import { revalidatePost, revalidatePostsOverview, revalidateTags } from "@/data/actions";
+import { deleteImage, getImageDetails, uploadImage } from "@/data/db/images";
+import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "@/data/db/overview";
+import { addPost, deletePost, updatePost } from "@/data/db/posts";
+import { addTag, getTags } from "@/data/db/tags";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { FullPost, ManagePostPageProps } from "@/types";
+import { copyToClipboardV2 } from "@/utils/copyToClipboard";
+import { getTimeZoneUTCFormatString } from "@/utils/timeZoneUTCFormatString";
 import { OutputData } from "@editorjs/editorjs";
 import { Clear, Close, Delete, Home, Launch, MoreVert, Save, Update } from "@mui/icons-material";
 import {
@@ -27,25 +43,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
-import { renderers } from "../../app/posts/[postId]/clientPage";
-import { revalidatePost, revalidatePostsOverview, revalidateTags } from "../../data/actions";
-import { deleteImage, getImageDetails, uploadImage } from "../../data/db/images";
-import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../data/db/overview";
-import { addPost, deletePost, updatePost } from "../../data/db/posts";
-import { addTag, getTags } from "../../data/db/tags";
-import { DATA_DEFAULTS } from "../../data/metadata";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { FullPost, ManagePostPageProps } from "../../types";
-import { copyToClipboardV2 } from "../../utils/copyToClipboard";
-import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
-import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
-import { BpRadio } from "../DesignLibrary/Buttons/RadioButton";
-import OptionMenu from "../DesignLibrary/Menus/OptionMenu";
-import EditableTypography from "../DesignLibrary/Text/EditableTypography";
-import { StyledTextField } from "../DesignLibrary/Text/TextInput";
 let EditorBlock;
 if (typeof window !== "undefined") {
-	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
+	EditorBlock = dynamic(() => import("@/components/EditorJS/EditorJS"));
 }
 
 const OGDEFAULTS = {

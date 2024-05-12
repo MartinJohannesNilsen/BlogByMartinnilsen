@@ -1,20 +1,20 @@
 "use client";
+import TagsPageCard from "@/components/DesignLibrary/Cards/TagsPageCard";
+import Navbar from "@/components/Navigation/Navbar";
+import { _filterListOfStoredPostsOnPublished } from "@/data/db/overview";
+import { getAllViewCounts } from "@/data/middleware/views/actions";
+import colors from "@/styles/colors";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { StoredPost, TagsPageProps } from "@/types";
+import colorLumincance from "@/utils/colorLuminance";
+import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
+import useStickyState from "@/utils/useStickyState";
 import { Box, Button, Grid, Typography, useMediaQuery } from "@mui/material";
 import ErrorPage from "next/error";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import TagsPageCard from "../../components/DesignLibrary/Cards/TagsPageCard";
-import Navbar from "../../components/Navigation/Navbar";
-import { _filterListOfStoredPostsOnPublished } from "../../data/db/overview";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { StoredPost, TagsPageProps } from "../../types";
-import colorLumincance from "../../utils/colorLuminance";
-import useStickyState from "../../utils/useStickyState";
-import { getAllViewCounts } from "../../data/middleware/views/actions";
-import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
-import colors from "@/styles/colors";
 
 export const _caseInsensitiveIncludes = (list: string[], word: string, removeSpace?: boolean) => {
 	const lowerCaseList = list.map((e) => e.toLowerCase());

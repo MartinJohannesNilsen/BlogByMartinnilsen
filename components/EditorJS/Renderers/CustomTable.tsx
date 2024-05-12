@@ -1,4 +1,6 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 import { Box } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -9,8 +11,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import DOMPurify from "isomorphic-dompurify";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {

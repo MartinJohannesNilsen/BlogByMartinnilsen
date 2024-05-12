@@ -1,12 +1,12 @@
 "use client";
+import { processJsonToggleBlocks, renderers } from "@/app/posts/[postId]/clientPage";
+import Toggle from "@/components/DesignLibrary/Toggles/Toggle";
+import { style } from "@/components/EditorJS/style";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 import { Box } from "@mui/material";
 import Output from "editorjs-react-renderer";
 import { useMemo, useState } from "react";
-import { processJsonToggleBlocks, renderers } from "../../../app/posts/[postId]/clientPage";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
-import Toggle from "../../DesignLibrary/Toggles/Toggle";
-import { style } from "../style";
 
 const CustomToggle = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();

@@ -1,7 +1,7 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 import { Box, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
 
 const CustomLinkTool = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();

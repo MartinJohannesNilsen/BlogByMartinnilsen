@@ -1,6 +1,6 @@
-import { NextRequest } from "next/server";
+import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { validateAuthAPIToken } from "../../../lib/tokenValidationAPI";
+import { NextRequest } from "next/server";
 
 /**
  * @swagger

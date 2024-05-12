@@ -1,6 +1,6 @@
+import { SupabaseAdmin } from "@/lib/supabaseAdmin";
+import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
 import { NextApiRequest, NextApiResponse } from "next";
-import { SupabaseAdmin } from "../../../lib/supabaseAdmin";
-import { validateAuthAPIToken } from "../tags";
 
 /**
  * @swagger

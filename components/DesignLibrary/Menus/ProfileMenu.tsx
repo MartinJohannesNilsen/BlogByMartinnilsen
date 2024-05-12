@@ -1,4 +1,8 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ProfileMenuProps } from "@/types";
+import { userSignOut } from "@/utils/signOut";
 import { Bookmark, Notifications, Person, RssFeed } from "@mui/icons-material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
@@ -11,10 +15,6 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { signIn } from "next-auth/react";
 import * as React from "react";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ProfileMenuProps } from "../../../types";
-import { userSignOut } from "../../../utils/signOut";
-import { NavbarButton } from "../Buttons/NavbarButton";
 
 export const AccountMenu = (props: ProfileMenuProps) => {
 	const { theme } = useTheme();

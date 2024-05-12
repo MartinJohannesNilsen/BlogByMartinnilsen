@@ -1,3 +1,5 @@
+import { db } from "@/lib/firebaseConfig";
+import { FirestoreFullPost, FullPost } from "@/types";
 import {
 	DocumentData,
 	QueryDocumentSnapshot,
@@ -19,8 +21,6 @@ import {
 	updateDoc,
 	where,
 } from "firebase/firestore";
-import { db } from "../../lib/firebaseConfig";
-import { FirestoreFullPost, FullPost } from "../../types";
 
 const postConverterWithoutStringify = {
 	toFirestore: (post: FullPost): FullPost => {

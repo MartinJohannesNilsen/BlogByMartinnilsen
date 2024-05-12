@@ -1,22 +1,22 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import StyledControlledSelect, { SelectOption } from "@/components/DesignLibrary/Select/StyledControlledSelect";
+import { CustomSwitchNew as Switch } from "@/components/DesignLibrary/Switch/Switch";
+import { useTheme } from "@/styles/themes/ThemeProvider";
 import {
 	defaultAccentColorDark,
 	defaultAccentColorLight,
 	defaultFontFamilyVariable,
 	getFontFamilyFromVariable,
 } from "@/styles/themes/themeDefaults";
+import { ThemeEnum } from "@/styles/themes/themeMap";
+import { SettingsModalProps } from "@/types";
 import { Close, Gradient, Square } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
 import { BiMinus, BiPlus } from "react-icons/bi";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../../styles/themes/themeMap";
-import { SettingsModalProps } from "../../../types";
-import { NavbarButton } from "../Buttons/NavbarButton";
-import StyledControlledSelect, { SelectOption } from "../Select/StyledControlledSelect";
-import { CustomSwitchNew as Switch } from "../Switch/Switch";
 
 const defaultFonts = [
 	{
@@ -81,7 +81,6 @@ export const SettingsModal = (props: SettingsModalProps) => {
 	};
 
 	useEffect(() => {
-		console.log(accentColor);
 		// Check if localStorage is defined (only in the browser environment)
 		if (typeof window !== "undefined" && window.localStorage) {
 			setThemeUserConfigurationExist(localStorage.getItem("theme") !== null);
@@ -322,11 +321,6 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							Accent color:
 						</Typography>
 						<Box flexGrow="1" />
-						{/* <ClickAwayListener
-							onClickAway={() => {
-								setColorPickerOpen(false);
-							}}
-						> */}
 						<TransparentTooltip
 							PopperProps={{
 								disablePortal: true,
@@ -443,7 +437,6 @@ export const SettingsModal = (props: SettingsModalProps) => {
 								</Box>
 							</Box>
 						</TransparentTooltip>
-						{/* </ClickAwayListener> */}
 					</Box>
 					{/* Clear localstorage */}
 					<Box display="flex" mt={0.2} mr={"28px"}>

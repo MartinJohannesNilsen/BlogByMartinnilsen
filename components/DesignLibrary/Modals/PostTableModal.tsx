@@ -1,8 +1,8 @@
 "use client";
+import PostTable from "@/components/PostManagement/PostTable";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { PostTableProps } from "@/types";
 import { Box, Modal, useMediaQuery } from "@mui/material";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { PostTableProps } from "../../../types";
-import PostTable from "../../PostManagement/PostTable";
 
 export const PostTableModal = ({ open, handleModalOpen, handleModalClose, postsOverview }: PostTableProps) => {
 	const { theme } = useTheme();

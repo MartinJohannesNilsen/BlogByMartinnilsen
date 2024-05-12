@@ -1,17 +1,16 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { useTheme } from "@/styles/themes/ThemeProvider";
 import dark from "@/styles/themes/dark";
 import light from "@/styles/themes/light";
-import { Box, Button, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
-import { BiMinus, BiPlus } from "react-icons/bi";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../../styles/themes/themeMap";
-import { ModalProps } from "../../../types";
-import { NavbarButton } from "../Buttons/NavbarButton";
 import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { ThemeEnum } from "@/styles/themes/themeMap";
+import { ModalProps } from "@/types";
+import { Box, Button, Modal, Tooltip, Typography } from "@mui/material";
+import { BiMinus, BiPlus } from "react-icons/bi";
 
 export const SimpleTextModal = ({ open, handleModalOpen, handleModalClose }: ModalProps) => {
 	const { theme, setTheme, fontScale, setFontScale } = useTheme();
-	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 
 	const style = {
 		position: "absolute" as "absolute",
@@ -38,8 +37,8 @@ export const SimpleTextModal = ({ open, handleModalOpen, handleModalClose }: Mod
 				}}
 				// hideBackdrop
 				slotProps={{ backdrop: { style: { background: "rgba(0,0,0,0.2)", userSelect: "none" } } }}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
+				aria-labelledby="simple text configuration modal"
+				aria-describedby="a modal for changing background color and font scale"
 			>
 				<Box sx={style} display="flex">
 					{/* Theme */}

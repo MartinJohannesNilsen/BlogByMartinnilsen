@@ -1,9 +1,9 @@
+import { SelectContentProps } from "@/types";
 import { Option as BaseOption, optionClasses } from "@mui/base/Option";
 import { Select as BaseSelect, selectClasses, SelectProps, SelectRootSlotProps } from "@mui/base/Select";
 import { UnfoldMoreRounded } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import * as React from "react";
-import { SelectContentProps } from "../../../types";
 
 export default function StyledControlledSelect(props: SelectContentProps & { width?: string }) {
 	return (

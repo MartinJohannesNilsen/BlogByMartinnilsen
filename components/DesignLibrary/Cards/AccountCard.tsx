@@ -1,9 +1,8 @@
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { AccountCardProps } from "@/types";
+import { GitHub, Google } from "@mui/icons-material";
 import { Avatar, Box, Card, CardContent, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import colors from "../../../styles/colors";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { AccountCardProps } from "../../../types";
-import { GitHub, Google } from "@mui/icons-material";
 
 export const AccountCard = ({ sessionUser, isAuthorized }: AccountCardProps) => {
 	const { theme } = useTheme();

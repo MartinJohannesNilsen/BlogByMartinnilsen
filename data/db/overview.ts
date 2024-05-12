@@ -1,6 +1,6 @@
+import { db } from "@/lib/firebaseConfig";
+import { StoredPost } from "@/types";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../lib/firebaseConfig";
-import { StoredPost } from "../../types";
 const db_document = "overview";
 
 const _sortListOfStoredPostsOnTimestamp = (data: StoredPost[], asc?: boolean) => {

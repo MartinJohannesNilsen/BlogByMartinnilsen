@@ -1,8 +1,7 @@
 "use server";
+import { getPostsOverview } from "@/data/db/overview";
+import { getTags } from "@/data/db/tags";
 import { unstable_cache } from "next/cache";
-import { getPostsOverview } from "./db/overview";
-import { getPost } from "./db/posts";
-import { getTags } from "./db/tags";
 
 // Cache overview of posts with only published posts
 export const getCachedPublishedDescendingPostsOverview = unstable_cache(

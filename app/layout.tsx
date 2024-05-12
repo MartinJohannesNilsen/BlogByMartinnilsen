@@ -1,12 +1,12 @@
 import { auth } from "@/auth";
+import SessionProvider from "@/components/Auth/SessionProvider";
+import CustomSnackbarProvider from "@/components/SnackbarProvider/CustomSnackbarProvider";
+import { defaultMetadata } from "@/data/metadata";
+import "@/styles/editorJS.scss";
+import "@/styles/globals.scss";
+import { CustomThemeProvider } from "@/styles/themes/ThemeProvider";
 import { Metadata, Viewport } from "next";
 import Script from "next/script";
-import SessionProvider from "../components/Auth/SessionProvider";
-import CustomSnackbarProvider from "../components/SnackbarProvider/CustomSnackbarProvider";
-import { defaultMetadata } from "../data/metadata";
-import "../styles/editorJS.scss";
-import "../styles/globals.scss";
-import { CustomThemeProvider } from "../styles/themes/ThemeProvider";
 import { isMobile } from "react-device-detect";
 
 export const viewport: Viewport = {

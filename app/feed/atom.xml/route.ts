@@ -1,5 +1,5 @@
-import { getCachedPublishedDescendingPostsOverview } from "../../../data/cache";
-import { generateFeed } from "../../../utils/generateFeed";
+import { getCachedPublishedDescendingPostsOverview } from "@/data/cache";
+import { generateFeed } from "@/utils/generateFeed";
 
 export async function GET() {
 	const posts = await getCachedPublishedDescendingPostsOverview();

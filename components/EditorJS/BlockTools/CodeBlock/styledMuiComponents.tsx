@@ -1,6 +1,6 @@
 "use client";
-import { styled } from "@mui/material";
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
+import { styled } from "@mui/material";
 
 export const TextareaAutosizeElement = styled(BaseTextareaAutosize)(
 	({ theme }) => `

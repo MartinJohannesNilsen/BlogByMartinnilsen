@@ -1,13 +1,13 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
+import { handleSharing } from "@/utils/handleSharing";
 import { IosShare } from "@mui/icons-material";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { useState } from "react";
 import { BiSolidQuoteRight } from "react-icons/bi";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
-import { NavbarButton } from "../../DesignLibrary/Buttons/NavbarButton";
-import { handleSharing } from "../../../utils/handleSharing";
 const { convert } = require("html-to-text");
 
 const CustomQuote = (props: EditorjsRendererProps) => {

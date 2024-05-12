@@ -1,12 +1,12 @@
 "use client";
+import { allowedLanguages } from "@/components/EditorJS/BlockTools/CodeBlock/allowedLanguages";
+import { InputElement, TextareaAutosizeElement } from "@/components/EditorJS/BlockTools/CodeBlock/styledMuiComponents";
+import { EDITORTHEME } from "@/components/EditorJS/Renderers/CustomCode";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { BlockToolCodeBlockProps } from "@/types";
 import { Autocomplete, Box, Checkbox, Input, TextField, Typography, useMediaQuery } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import { BlockToolCodeBlockProps } from "../../../../types";
-import { EDITORTHEME } from "../../Renderers/CustomCode";
-import { allowedLanguages } from "./allowedLanguages";
-import { InputElement, TextareaAutosizeElement } from "./styledMuiComponents";
 
 // Functions
 const allowedLanguagesOptions = allowedLanguages.map((option) => {

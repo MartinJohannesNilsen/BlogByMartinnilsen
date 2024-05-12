@@ -1,10 +1,10 @@
 "use client";
+import PostViews from "@/components/PostViews/PostViews";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { PostCardProps } from "@/types";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { PostCardProps } from "../../../types";
-import PostViews from "../../PostViews/PostViews";
 
 export const LandingPageListCard = (props: PostCardProps) => {
 	const { theme } = useTheme();

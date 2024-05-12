@@ -1,12 +1,12 @@
 "use server";
+import ManageArticlePage from "@/app/create/[[...postId]]/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
+import { getPost } from "@/data/db/posts";
+import { DATA_DEFAULTS, defaultMetadata } from "@/data/metadata";
 import { Metadata } from "next";
 import { Session } from "next-auth";
 import { unstable_cache } from "next/cache";
-import { getPost } from "../../../data/db/posts";
-import { DATA_DEFAULTS, defaultMetadata } from "../../../data/metadata";
-import ManageArticlePage from "./clientPage";
 
 export async function generateMetadata({ params }: { params: { postId?: string } }) {
 	// Get postId

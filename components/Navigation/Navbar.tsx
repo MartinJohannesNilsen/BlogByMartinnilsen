@@ -1,4 +1,14 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import NavbarSearchButton from "@/components/DesignLibrary/Buttons/NavbarSearchButton";
+import ProfileMenu from "@/components/DesignLibrary/Menus/ProfileMenu";
+import SearchModal from "@/components/DesignLibrary/Modals/SearchModal"; // For listening to hotkeys on render, not rerender
+import { MenuIcon } from "@/components/Icons/MenuIcon";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { ThemeEnum } from "@/styles/themes/themeMap";
+import { NavbarProps } from "@/types";
+import { userSignOut } from "@/utils/signOut";
 import { Info, LogoutRounded, PostAdd, RssFeed, Search, SettingsRounded, Tag } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
@@ -7,20 +17,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../styles/themes/themeMap";
-import { NavbarProps } from "../../types";
-import { userSignOut } from "../../utils/signOut";
-import { NavbarButton } from "../DesignLibrary/Buttons/NavbarButton";
-import NavbarSearchButton from "../DesignLibrary/Buttons/NavbarSearchButton";
-import ProfileMenu from "../DesignLibrary/Menus/ProfileMenu";
-import { MenuIcon } from "../Icons/MenuIcon";
 // Modals can be dynamically imported
-import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
-import SearchModal from "../DesignLibrary/Modals/SearchModal"; // For listening to hotkeys on render, not rerender
-// const SearchModal = dynamic(() => import("../Modals/SearchModal"));
-const NotificationsModal = dynamic(() => import("../DesignLibrary/Modals/NotificationsModal"));
-const SettingsModal = dynamic(() => import("../DesignLibrary/Modals/SettingsModal"));
+// const SearchModal = dynamic(() => import("@/components/Modals/SearchModal"));
+const NotificationsModal = dynamic(() => import("@/components/DesignLibrary/Modals/NotificationsModal"));
+const SettingsModal = dynamic(() => import("@/components/DesignLibrary/Modals/SettingsModal"));
 
 export const Navbar = ({
 	posts,

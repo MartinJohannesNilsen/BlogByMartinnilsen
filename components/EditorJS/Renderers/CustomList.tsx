@@ -1,7 +1,7 @@
 "use client";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
-import CustomParagraph from "./CustomParagraph";
+import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 
 const CustomList = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();

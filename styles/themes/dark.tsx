@@ -1,6 +1,6 @@
 "use client";
+import { baseTheme, defaultAccentColorDark } from "@/styles/themes/themeDefaults";
 import { createTheme } from "@mui/material";
-import { baseTheme, defaultAccentColorDark } from "./themeDefaults";
 
 export const dark = createTheme({
 	palette: {

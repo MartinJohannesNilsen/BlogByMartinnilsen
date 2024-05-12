@@ -1,10 +1,4 @@
 "use client";
-import useStickyState from "@/utils/useStickyState";
-import { CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { CustomThemeProviderProps, ThemeContextType } from "../../types";
-import useDidUpdate from "../../utils/useDidUpdate";
 import {
 	defaultAccentColorDark,
 	defaultAccentColorLight,
@@ -12,8 +6,14 @@ import {
 	defaultFontFamilyVariable,
 	defaultFontScale,
 	getFontFamilyFromVariable,
-} from "./themeDefaults";
-import { ThemeEnum, themeCreator } from "./themeMap";
+} from "@/styles/themes/themeDefaults";
+import { ThemeEnum, themeCreator } from "@/styles/themes/themeMap";
+import { CustomThemeProviderProps, ThemeContextType } from "@/types";
+import useDidUpdate from "@/utils/useDidUpdate";
+import useStickyState from "@/utils/useStickyState";
+import { CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 // import * as components from "@/styles/fonts";
 
 // Find the correct scheme based on user preferences.
@@ -103,9 +103,9 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 	};
 
 	useEffect(() => {
-		if (getSelectedTheme() === "dark" && accentColor == defaultAccentColorLight.hex) {
+		if (theme.palette.mode === "dark" && accentColor == defaultAccentColorLight.hex) {
 			setAccentColor(defaultAccentColorDark.hex);
-		} else if (getSelectedTheme() == "light" && accentColor == defaultAccentColorDark.hex) {
+		} else if (theme.palette.mode == "light" && accentColor == defaultAccentColorDark.hex) {
 			setAccentColor(defaultAccentColorLight.hex);
 		}
 		return () => {};

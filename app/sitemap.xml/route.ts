@@ -1,5 +1,5 @@
-import { getCachedPublishedDescendingPostsOverview } from "../../data/cache";
-import { StoredPost } from "../../types";
+import { getCachedPublishedDescendingPostsOverview } from "@/data/cache";
+import { StoredPost } from "@/types";
 
 function _getFormatedLastmodDate(date: Date) {
 	const year = date.getFullYear();
@@ -80,7 +80,7 @@ export const revalidate = 1;
 // Revalidation problems, as mentioned in https://github.com/vercel/next.js/discussions/50419
 
 // import { MetadataRoute } from "next";
-// import { getCachedPublishedDescendingPostsOverview } from "../data/cache";
+// import { getCachedPublishedDescendingPostsOverview } from "@/data/cache";
 
 // function _getFormatedLastmodDate(date: Date) {
 // 	const year = date.getFullYear();

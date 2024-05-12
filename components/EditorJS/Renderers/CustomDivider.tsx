@@ -1,6 +1,6 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
 import { Box } from "@mui/material";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
 
 const CustomDivider = () => {
 	const { theme } = useTheme();

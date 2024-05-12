@@ -1,4 +1,8 @@
 "use client";
+import Toggle from "@/components/DesignLibrary/Toggles/Toggle";
+import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ModalProps } from "@/types";
 import { Close } from "@mui/icons-material";
 import { Button, IconButton, Tooltip, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -6,10 +10,6 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import NextLink from "next/link";
 import { useState } from "react";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ModalProps } from "../../../types";
-import CustomParagraph from "../../EditorJS/Renderers/CustomParagraph";
-import Toggle from "../Toggles/Toggle";
 
 export const AboutModal = (props: ModalProps) => {
 	const { theme } = useTheme();

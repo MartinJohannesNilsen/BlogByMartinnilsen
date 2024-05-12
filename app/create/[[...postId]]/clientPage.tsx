@@ -1,10 +1,10 @@
 "use client";
+import CreatePost from "@/components/PostManagement/PostManagement";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ThemeEnum } from "@/styles/themes/themeMap";
+import { FullPost } from "@/types";
 import ErrorPage from "next/error";
 import { useEffect, useState } from "react";
-import CreatePost from "../../../components/PostManagement/PostManagement";
-import { FullPost } from "../../../types";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../../styles/themes/themeMap";
 
 const ManageArticlePage = ({
 	post,

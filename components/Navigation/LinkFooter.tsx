@@ -1,9 +1,8 @@
+import { MenuIcon } from "@/components/Icons/MenuIcon";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { FooterProps } from "@/types";
+import usePercentageScrollPosition from "@/utils/usePercentageScrollPosition";
 import { Box, Grid, Link, Typography, useMediaQuery } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { FooterProps } from "../../types";
-import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";
-import { MenuIcon } from "../Icons/MenuIcon";
 
 const Footer = ({ postId }: FooterProps) => {
 	const { theme } = useTheme();

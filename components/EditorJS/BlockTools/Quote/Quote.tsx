@@ -1,9 +1,9 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { BlockToolQuoteProps } from "@/types";
 import { Box, InputBase, useMediaQuery } from "@mui/material";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { BiSolidQuoteRight } from "react-icons/bi";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import { BlockToolQuoteProps } from "../../../../types";
 
 // Component
 export const Quote = (props: BlockToolQuoteProps) => {

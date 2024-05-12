@@ -1,11 +1,11 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { FooterProps } from "@/types";
+import colorLuminance from "@/utils/colorLuminance";
+import usePercentageScrollPosition from "@/utils/usePercentageScrollPosition";
 import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { FooterProps } from "../../types";
-import colorLuminance from "../../utils/colorLuminance";
-import usePercentageScrollPosition from "../../utils/usePercentageScrollPosition";
 
 const Footer = ({}: FooterProps) => {
 	const { theme } = useTheme();

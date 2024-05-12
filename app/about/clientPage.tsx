@@ -1,17 +1,17 @@
 "use client";
+import CustomHeader from "@/components/EditorJS/Renderers/CustomHeader";
+import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
+import Footer from "@/components/Navigation/LinkFooter";
+import Navbar from "@/components/Navigation/Navbar";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ServerPageProps } from "@/types";
+import useStickyState from "@/utils/useStickyState";
 import { useGSAP } from "@gsap/react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import gsap from "gsap";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
-import CustomHeader from "../../components/EditorJS/Renderers/CustomHeader";
-import CustomParagraph from "../../components/EditorJS/Renderers/CustomParagraph";
-import Footer from "../../components/Navigation/LinkFooter";
-import Navbar from "../../components/Navigation/Navbar";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ServerPageProps } from "../../types";
-import useStickyState from "../../utils/useStickyState";
 
 const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps) => {
 	const { theme } = useTheme();

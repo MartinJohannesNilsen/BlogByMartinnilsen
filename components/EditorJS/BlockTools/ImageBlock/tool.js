@@ -1,7 +1,7 @@
+import ImageBlock from "@/components/EditorJS/BlockTools/ImageBlock/ImageBlock";
+import { ImageIcon } from "@/components/EditorJS/Icons";
 import React from "react";
 import ReactDOM from 'react-dom';
-import { ImageIcon } from "../../Icons";
-import ImageBlock from "./ImageBlock";
 
 const dataDefaults = {
   type: "upload", // url, upload, unsplash, paste?

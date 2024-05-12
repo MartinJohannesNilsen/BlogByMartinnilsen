@@ -1,9 +1,9 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 import { Box, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import ReactPlayer from "react-player/lazy";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
 
 const CustomVideo = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();

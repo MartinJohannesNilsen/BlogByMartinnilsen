@@ -1,15 +1,15 @@
 "use server";
+import TagsPage from "@/app/tags/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
-import { Metadata } from "next";
-import { Session } from "next-auth";
-import { WebPageJsonLd } from "next-seo";
 import {
 	getCachedAllDescendingPostsOverview,
 	getCachedPublishedDescendingPostsOverview,
 	getCachedTags,
-} from "../../data/cache";
-import TagsPage from "./clientPage";
+} from "@/data/cache";
+import { Metadata } from "next";
+import { Session } from "next-auth";
+import { WebPageJsonLd } from "next-seo";
 
 export async function generateMetadata({ params }: { params: { tag: string } }) {
 	const metadata: Metadata = {

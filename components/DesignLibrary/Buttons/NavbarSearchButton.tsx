@@ -1,10 +1,10 @@
 "use client";
+import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ButtonProps } from "@/types";
 import { Search } from "@mui/icons-material";
 import { ButtonBase, Tooltip, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ButtonProps } from "../../../types";
-import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 
 export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();

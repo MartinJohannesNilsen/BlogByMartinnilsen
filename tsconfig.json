@@ -25,12 +25,11 @@
 		"strictNullChecks": true
 	},
 	"include": [
+		".next/types/**/*.ts",
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		"lib/*",
-		"lib/supabaseAdmin",
-		".next/types/**/*.ts"
+		"lib/*"
 	],
 	"exclude": ["node_modules"]
 }

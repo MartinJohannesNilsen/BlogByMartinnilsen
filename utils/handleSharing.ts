@@ -1,4 +1,4 @@
-import { NavigatorShareProps } from "../types";
+import { NavigatorShareProps } from "@/types";
 
 export const handleSharing = async (shareDetails: NavigatorShareProps) => {
 	if (navigator.share) {

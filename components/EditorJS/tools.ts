@@ -1,19 +1,16 @@
 // General
 // import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-// import { cloudStorage } from "../../lib/firebaseConfig";
+// import { cloudStorage } from "@/lib/firebaseConfig";
 import {
 	CalloutIcon,
 	ChecklistIcon,
 	CodeIcon,
 	DividerIcon,
-	ImageUploadIcon,
-	ImageUrlIcon,
 	MathIcon,
-	QuoteIcon,
 	TableIcon,
 	ToggleIcon,
 	VideoIcon,
-} from "./Icons";
+} from "@/components/EditorJS/Icons";
 
 // Tools
 import CheckList from "@editorjs/checklist";
@@ -25,25 +22,25 @@ import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
 import Paragraph from "@editorjs/paragraph";
 // import Quote from "@editorjs/quote";
+import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import Underline from "@editorjs/underline";
 import ToggleBlock from "editorjs-toggle-block";
-import ChangeCase from "./BlockTools/ChangeCase/change-case";
 // @ts-ignore
 import Table from "@martinjohannesnilsen/editorjs-table";
 const EJLaTeX = require("editorjs-latex"); // Math
 const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
 
 // Custom tools
-import InlineVideo from "./BlockTools/InlineVideo/tool";
-import Divider from "./BlockTools/Divider/tool";
-import CodeBlock from "./BlockTools/CodeBlock/tool";
-import Callout from "./BlockTools/Callout/tool";
-import Quote from "./BlockTools/Quote/tool";
+import Callout from "@/components/EditorJS/BlockTools/Callout/tool";
+import CodeBlock from "@/components/EditorJS/BlockTools/CodeBlock/tool";
+import Divider from "@/components/EditorJS/BlockTools/Divider/tool";
+import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
+import Quote from "@/components/EditorJS/BlockTools/Quote/tool";
 
 // Development
 // Images
-// import ImageOnPaste from "./BlockTools/ImageOnPaste/tool"; // TODO Trial at implementing SimpleImage, but focus on ImageBlock first
-import Image from "./BlockTools/ImageBlock/tool";
+// import ImageOnPaste from "@/components/EditorJS/BlockTools/ImageOnPaste/tool"; // TODO Trial at implementing SimpleImage, but focus on ImageBlock first
+import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
 
 export const EDITOR_JS_TOOLS: any = {
 	underline: { class: Underline, shortcut: "CMD+U" },

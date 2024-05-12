@@ -1,6 +1,6 @@
 "use client";
+import { PostViewsProps } from "@/types";
 import { Skeleton } from "@mui/material";
-import { PostViewsProps } from "../../types";
 
 const PostViews = ({ viewCount, sx }: PostViewsProps) => {
 	return viewCount ? (

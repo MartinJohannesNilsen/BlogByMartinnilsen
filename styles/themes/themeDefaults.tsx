@@ -1,6 +1,6 @@
 "use client";
+import * as fonts from "@/styles/fonts";
 import { createTheme } from "@mui/material";
-import * as fonts from "../fonts";
 
 // Functions
 export function getFontFamilyFromVariable(variable?: string) {

@@ -1,4 +1,4 @@
-import { IconProps } from "../../types";
+import { IconProps } from "@/types";
 
 export const MenuIcon = ({ fill, height, width, style, alt }: IconProps) => (
 	<svg fill={fill} height={height} width={width} id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">

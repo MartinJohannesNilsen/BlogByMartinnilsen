@@ -1,7 +1,6 @@
+import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/utils/validateAuthTokenPagesRouter";
 import { blurhashFromURL } from "blurhash-from-url";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { validateAuthAPIToken } from "../tags";
-import { validateImagestoreAPIToken } from "./imagestore";
 
 async function getBlurhash(url: string) {
 	// Default 32x32 size

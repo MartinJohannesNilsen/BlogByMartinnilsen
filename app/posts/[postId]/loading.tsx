@@ -1,6 +1,6 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
 import { Box } from "@mui/material";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
 
 export default function Loading() {
 	const { theme } = useTheme();

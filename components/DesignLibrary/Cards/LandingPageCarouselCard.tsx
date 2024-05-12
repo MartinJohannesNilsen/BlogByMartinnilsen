@@ -1,13 +1,13 @@
 "use client";
+import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
+import PostViews from "@/components/PostViews/PostViews";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { PostCardProps } from "@/types";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardMedia, Typography, useMediaQuery } from "@mui/material";
 import NextLink from "next/link";
 import { isMobile } from "react-device-detect";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { PostCardProps } from "../../../types";
-import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
-import PostViews from "../../PostViews/PostViews";
-import { DATA_DEFAULTS } from "../../../data/metadata";
 
 export const LandingPageCarouselCard = (props: PostCardProps) => {
 	const { theme } = useTheme();

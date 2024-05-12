@@ -1,10 +1,10 @@
 "use client";
+import { EDITOR_JS_TOOLS } from "@/components/EditorJS/tools";
+import { EditorBlockProps } from "@/types";
 import EditorJS from "@editorjs/editorjs";
 import DragDrop from "editorjs-drag-drop";
 import Undo from "editorjs-undo";
 import { memo, useEffect, useRef } from "react";
-import { EditorBlockProps } from "../../types";
-import { EDITOR_JS_TOOLS } from "./tools";
 
 const EditorBlock = ({ data, onChange, holder }: EditorBlockProps) => {
 	//add a reference to editor

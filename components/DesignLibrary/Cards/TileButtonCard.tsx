@@ -1,4 +1,7 @@
 "use client";
+import colors from "@/styles/colors";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { TileButtonCardProps } from "@/types";
 import {
 	Badge,
 	Box,
@@ -11,9 +14,6 @@ import {
 	useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
-import colors from "../../../styles/colors";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { TileButtonCardProps } from "../../../types";
 
 export const TileButtonCard = (props: TileButtonCardProps) => {
 	const { theme } = useTheme();

@@ -1,5 +1,4 @@
 "use server";
-
 import { Session } from "next-auth";
 
 export default async function getMockSession() {

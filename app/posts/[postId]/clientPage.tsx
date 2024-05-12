@@ -1,4 +1,14 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import Toggle from "@/components/DesignLibrary/Toggles/Toggle";
+import { style } from "@/components/EditorJS/style";
+import ButtonBar from "@/components/Navigation/ButtonBar";
+import Footer from "@/components/Navigation/LinkFooter";
+import PostNavbar from "@/components/Navigation/PostNavbar";
+import PostViews from "@/components/PostViews/PostViews";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ButtonBarButtonProps, ReadPostPageProps } from "@/types";
+import { IDiscussionData, IMetadataMessage } from "@/utils/giscus";
 import Giscus from "@giscus/react";
 import { useGSAP } from "@gsap/react";
 import {
@@ -24,16 +34,6 @@ import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { useEventListener } from "usehooks-ts";
-import { NavbarButton } from "../../../components/DesignLibrary/Buttons/NavbarButton";
-import Toggle from "../../../components/DesignLibrary/Toggles/Toggle";
-import { style } from "../../../components/EditorJS/style";
-import ButtonBar from "../../../components/Navigation/ButtonBar";
-import Footer from "../../../components/Navigation/LinkFooter";
-import PostNavbar from "../../../components/Navigation/PostNavbar";
-import PostViews from "../../../components/PostViews/PostViews";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ButtonBarButtonProps, ReadPostPageProps } from "../../../types";
-import { IDiscussionData, IMetadataMessage } from "../../../utils/giscus";
 // gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Editorjs render
@@ -44,25 +44,25 @@ import Output from "editorjs-react-renderer";
 // const Output = dynamic(async () => (await import("editorjs-react-renderer")).default, { ssr: false });
 
 // EditorJS renderers
-import CustomCallout from "../../../components/EditorJS/Renderers/CustomCallout";
-import CustomChecklist from "../../../components/EditorJS/Renderers/CustomChecklist";
-import CustomCode from "../../../components/EditorJS/Renderers/CustomCode";
-import CustomDivider from "../../../components/EditorJS/Renderers/CustomDivider";
-import CustomHeader from "../../../components/EditorJS/Renderers/CustomHeader";
-import CustomIframe from "../../../components/EditorJS/Renderers/CustomIframe";
-import CustomImage from "../../../components/EditorJS/Renderers/CustomImage";
-import CustomLinkTool from "../../../components/EditorJS/Renderers/CustomLinkTool";
-import CustomList from "../../../components/EditorJS/Renderers/CustomList";
-import CustomMath from "../../../components/EditorJS/Renderers/CustomMath";
-import CustomParagraph from "../../../components/EditorJS/Renderers/CustomParagraph";
-import CustomQuote from "../../../components/EditorJS/Renderers/CustomQuote";
-import CustomTable from "../../../components/EditorJS/Renderers/CustomTable";
-import CustomToggle from "../../../components/EditorJS/Renderers/CustomToggle";
-import CustomVideo from "../../../components/EditorJS/Renderers/CustomVideo";
-import { DATA_DEFAULTS } from "../../../data/metadata";
-import { getViewCountsByPostId, incrementPostViews } from "../../../data/middleware/views/actions";
-import { handleSharing } from "../../../utils/handleSharing";
-import useStickyState from "../../../utils/useStickyState";
+import CustomCallout from "@/components/EditorJS/Renderers/CustomCallout";
+import CustomChecklist from "@/components/EditorJS/Renderers/CustomChecklist";
+import CustomCode from "@/components/EditorJS/Renderers/CustomCode";
+import CustomDivider from "@/components/EditorJS/Renderers/CustomDivider";
+import CustomHeader from "@/components/EditorJS/Renderers/CustomHeader";
+import CustomIframe from "@/components/EditorJS/Renderers/CustomIframe";
+import CustomImage from "@/components/EditorJS/Renderers/CustomImage";
+import CustomLinkTool from "@/components/EditorJS/Renderers/CustomLinkTool";
+import CustomList from "@/components/EditorJS/Renderers/CustomList";
+import CustomMath from "@/components/EditorJS/Renderers/CustomMath";
+import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
+import CustomQuote from "@/components/EditorJS/Renderers/CustomQuote";
+import CustomTable from "@/components/EditorJS/Renderers/CustomTable";
+import CustomToggle from "@/components/EditorJS/Renderers/CustomToggle";
+import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { getViewCountsByPostId, incrementPostViews } from "@/data/middleware/views/actions";
+import { handleSharing } from "@/utils/handleSharing";
+import useStickyState from "@/utils/useStickyState";
 
 // Pass your custom renderers to Output
 export const renderers = {
@@ -355,28 +355,6 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 				reversed: true, // Start in reverse
 			});
 
-			// Scrolltrigger approach
-			// ScrollTrigger.create({
-			// 	start: "bottom bottom",
-			// 	// As both "max" or a dynamic value in document.body.scrollheight (as state) did not work as expected, setting an arbitrary high number
-			// 	end: `123456789px`,
-			// 	scrub: true, // Number for smoother connection between scrollbar and animation
-			// 	onUpdate: (self) => {
-			// 		self.direction === -1 ? navBarAnimation.reverse() : navBarAnimation.play();
-			// 	},
-			// });
-			// ScrollTrigger.create({
-			// 	start: "top top",
-			// 	end: `123456789px`,
-			// 	scrub: true, // Number for smoother connection between scrollbar and animation
-			// 	onUpdate: (self) => {
-			// 		self.direction === -1 ? buttonBarAnimation.play() : buttonBarAnimation.reverse();
-			// 	},
-			// });
-			// return () => {
-			// 	buttonBarAnimation.reverse();
-			// };
-
 			// Await scroll in same direction for some time to trigger
 			let lastScrollTop = 0;
 			let scrollDistance = 0;
@@ -600,6 +578,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									</Box>
 								</Box>
 							</Box>
+
 							{/* EditorJS rendering */}
 							<Box
 								id="output"

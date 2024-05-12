@@ -1,4 +1,9 @@
 "use client";
+import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { ThemeEnum } from "@/styles/themes/themeMap";
+import { SearchActionProps, SearchModalProps, StoredPost } from "@/types";
+import { userSignOut } from "@/utils/signOut";
 import {
 	Api,
 	Bookmark,
@@ -45,11 +50,6 @@ import NextLink from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../../styles/themes/themeMap";
-import { SearchActionProps, SearchModalProps, StoredPost } from "../../../types";
-import { userSignOut } from "../../../utils/signOut";
-import BlurHashHTMLImage from "../Image/BlurHashHTMLImage";
 
 export const SearchModal = ({
 	open,

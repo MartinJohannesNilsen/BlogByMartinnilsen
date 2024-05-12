@@ -1,9 +1,9 @@
 "use client";
+import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 import { Box, Card, IconButton, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
-import CustomParagraph from "./CustomParagraph";
 
 const CustomCallout = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();

@@ -1,4 +1,6 @@
 "use client";
+import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
+import colors from "@/styles/colors";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { Box } from "@mui/material";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
@@ -6,8 +8,6 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { SxProps, styled } from "@mui/material/styles";
 import { MutableRefObject } from "react";
-import CustomParagraph from "../../EditorJS/Renderers/CustomParagraph";
-import colors from "../../../styles/colors";
 
 // Accordion styled
 export const Accordion = styled((props: AccordionProps) => (

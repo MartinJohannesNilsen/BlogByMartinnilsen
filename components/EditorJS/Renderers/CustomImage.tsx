@@ -1,13 +1,12 @@
 "use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
+import colorLuminance from "@/utils/colorLuminance";
 import { Box, styled, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { isMobile } from "react-device-detect";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
-import colorLuminance from "../../../utils/colorLuminance";
-import { BlurhashCanvas } from "react-blurhash";
 import { useEffect, useState } from "react";
-import BlurHashHTMLImage from "../../DesignLibrary/Image/BlurHashHTMLImage";
+import { BlurhashCanvas } from "react-blurhash";
+import { isMobile } from "react-device-detect";
 
 const maxWidth = 760;
 

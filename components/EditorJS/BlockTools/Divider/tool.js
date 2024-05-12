@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import CustomDivider from "@/components/EditorJS/Renderers/CustomDivider";
+import React from "react";
 import ReactDOM from 'react-dom';
-import CustomDivider from "../../Renderers/CustomDivider";
 
 export default class Tool extends React.Component{
   constructor({ data, config, api, readOnly }) {
