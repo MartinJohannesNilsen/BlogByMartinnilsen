@@ -12,7 +12,6 @@ import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 import { ThemeEnum } from "@/styles/themes/themeMap";
 import { PostNavbarProps, SearchActionProps } from "@/types";
 import { handleSharing } from "@/utils/handleSharing";
-import useStickyState from "@/utils/useStickyState";
 import { Bookmark, BookmarkBorder, Edit, IosShareOutlined, Search } from "@mui/icons-material";
 import { Box, ButtonBase, Typography, useMediaQuery } from "@mui/material";
 import dynamic from "next/dynamic";
@@ -26,7 +25,21 @@ const TOCModal = dynamic(() => import("@/components/DesignLibrary/Modals/TOCModa
 const ShareModal = dynamic(() => import("@/components/DesignLibrary/Modals/ShareModal"));
 const SettingsModal = dynamic(() => import("@/components/DesignLibrary/Modals/SettingsModal"));
 
-export const PostNavbar = (props: PostNavbarProps) => {
+export const PostNavbar = ({
+	post,
+	postsOverview,
+	toc,
+	setCardLayout,
+	tocModal,
+	shareModal,
+	simpleTextModal,
+	ref,
+	className,
+	isAuthorized,
+	sessionUser,
+	savedPosts,
+	setSavedPosts,
+}: PostNavbarProps) => {
 	const { theme, setTheme } = useTheme();
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const handleNavigate = (path: string) => {
@@ -64,12 +77,10 @@ export const PostNavbar = (props: PostNavbarProps) => {
 	const [visibleBadgeNotifications, setVisibleBadgeNotifications] = useState(false);
 
 	// SavedModal
-	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", [], true);
-	// const [savedPosts, setSavedPosts] = useState<string[]>([]);
 	const [isSaved, setIsSaved] = useState(false);
 	useEffect(() => {
 		if (savedPosts && savedPosts) {
-			setIsSaved(savedPosts.includes(props.post.id));
+			setIsSaved(savedPosts.includes(post.id));
 		}
 		return () => {};
 	}, [, savedPosts]);
@@ -83,10 +94,10 @@ export const PostNavbar = (props: PostNavbarProps) => {
 			onClick: () => {
 				handleSharing({
 					url: typeof window !== "undefined" ? window.location.href : "",
-					title: props.post.title,
+					title: post.title,
 					text: "",
-					icon: props.post.ogImage.src || DATA_DEFAULTS.images.openGraph,
-					fallback: () => props.shareModal.setOpen(true),
+					icon: post.ogImage.src || DATA_DEFAULTS.images.openGraph,
+					fallback: () => shareModal.setOpen(true),
 				});
 			},
 		},
@@ -106,7 +117,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 				</Typography>
 			),
 			onClick: () => {
-				props.simpleTextModal.setOpen(true);
+				simpleTextModal.setOpen(true);
 			},
 		},
 	];
@@ -117,8 +128,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 			{isMobile ? (
 				// Mobile
 				<Box
-					className={props.className}
-					ref={props.ref}
+					className={className}
+					ref={ref}
 					width={"100%"}
 					pt={4.75}
 					pb={0.75}
@@ -152,7 +163,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 							<Box>
 								<NavbarButton
 									variant="outline"
-									onClick={() => props.simpleTextModal.setOpen(true)}
+									onClick={() => simpleTextModal.setOpen(true)}
 									text="Aa"
 									tooltip="Customize"
 									sxButton={{
@@ -170,11 +181,11 @@ export const PostNavbar = (props: PostNavbarProps) => {
 							<Box ml={0.5}>
 								<NavbarButton
 									variant="outline"
-									disabled={!props.post.published}
+									disabled={!post.published}
 									onClick={() =>
 										isSaved
-											? setSavedPosts(savedPosts.filter((id) => id !== props.post.id))
-											: setSavedPosts([...savedPosts, props.post.id])
+											? setSavedPosts(savedPosts.filter((id) => id !== post.id))
+											: setSavedPosts([...savedPosts, post.id])
 									}
 									icon={isSaved ? Bookmark : BookmarkBorder}
 									tooltip="Share"
@@ -183,7 +194,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 										width: "34px",
 										backgroundColor: theme.palette.primary.main + "99",
 									}}
-									sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
+									sxIcon={{ height: "20px", width: "22px", opacity: !post.published ? "0.5" : "1" }}
 								/>
 							</Box>
 						</Box>
@@ -205,7 +216,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 									fontFamily: getFontFamilyFromVariable("--font-open-sans"),
 								}}
 							>
-								{props.post.title}
+								{post.title}
 							</Typography>
 						</Box>
 						<Box flexGrow={100} />
@@ -251,8 +262,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 										handleModalOpen: () => setOpenSettingsModal(true),
 										handleModalClose: () => setOpenSettingsModal(false),
 									}}
-									isAuthorized={props.isAuthorized}
-									sessionUser={props.sessionUser}
+									isAuthorized={isAuthorized}
+									sessionUser={sessionUser}
 								/>
 							</Box>
 						</Box>
@@ -261,8 +272,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 			) : (
 				// Not mobile
 				<Box
-					className={props.className}
-					ref={props.ref}
+					className={className}
+					ref={ref}
 					id="computer-navbar"
 					display="flex"
 					alignItems="center"
@@ -336,11 +347,11 @@ export const PostNavbar = (props: PostNavbarProps) => {
 					{/* Right section */}
 					<Box display="flex" alignItems="end" height="34px">
 						{/* Edit */}
-						{props.isAuthorized && (
+						{isAuthorized && (
 							<NavbarButton
 								variant="outline"
-								href={`/create/${props.post.id}`}
-								// onClick={() =>(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${props.post.id}`)}
+								href={`/create/${post.id}`}
+								// onClick={() =>(window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${post.id}`)}
 								icon={Edit}
 								tooltip="Edit post"
 								sxButton={{
@@ -398,7 +409,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						<Box ml={0.5}>
 							<NavbarButton
 								variant="outline"
-								onClick={() => props.simpleTextModal.setOpen(true)}
+								onClick={() => simpleTextModal.setOpen(true)}
 								text="Aa"
 								tooltip="Customize"
 								sxButton={{
@@ -413,11 +424,11 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						<Box ml={0.5}>
 							<NavbarButton
 								variant="outline"
-								disabled={!props.post.published}
+								disabled={!post.published}
 								onClick={() =>
 									isSaved
-										? setSavedPosts(savedPosts.filter((id) => id !== props.post.id))
-										: setSavedPosts([...savedPosts, props.post.id])
+										? setSavedPosts(savedPosts.filter((id) => id !== post.id))
+										: setSavedPosts([...savedPosts, post.id])
 								}
 								icon={isSaved ? Bookmark : BookmarkBorder}
 								tooltip="Save"
@@ -426,15 +437,15 @@ export const PostNavbar = (props: PostNavbarProps) => {
 									width: "34px",
 									backgroundColor: theme.palette.primary.main + "99",
 								}}
-								sxIcon={{ height: "20px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
+								sxIcon={{ height: "20px", width: "22px", opacity: !post.published ? "0.5" : "1" }}
 							/>
 						</Box>
 						{/* ShareModal */}
 						<Box ml={0.5}>
 							<NavbarButton
-								disabled={!props.post.published}
+								disabled={!post.published}
 								variant="outline"
-								onClick={() => props.shareModal.setOpen(true)}
+								onClick={() => shareModal.setOpen(true)}
 								icon={IosShareOutlined}
 								tooltip="Share"
 								sxButton={{
@@ -442,7 +453,7 @@ export const PostNavbar = (props: PostNavbarProps) => {
 									width: "34px",
 									backgroundColor: theme.palette.primary.main + "99",
 								}}
-								sxIcon={{ height: "18px", width: "22px", opacity: !props.post.published ? "0.5" : "1" }}
+								sxIcon={{ height: "18px", width: "22px", opacity: !post.published ? "0.5" : "1" }}
 							/>
 						</Box>
 						{/* Profile Menu */}
@@ -466,8 +477,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 									handleModalOpen: () => setOpenSettingsModal(true),
 									handleModalClose: () => setOpenSettingsModal(false),
 								}}
-								isAuthorized={props.isAuthorized}
-								sessionUser={props.sessionUser}
+								isAuthorized={isAuthorized}
+								sessionUser={sessionUser}
 							/>
 						</Box>
 					</Box>
@@ -476,16 +487,16 @@ export const PostNavbar = (props: PostNavbarProps) => {
 
 			{/* Modals */}
 			{/* Search */}
-			{props.postsOverview && (
+			{postsOverview && (
 				<SearchModal
 					open={openSearchModal}
 					handleModalOpen={handleSearchModalOpen}
 					handleModalClose={handleSearchModalClose}
-					postsOverview={props.postsOverview}
+					postsOverview={postsOverview}
 					handleSettingsModalOpen={() => setOpenSettingsModal(true)}
 					handleNotificationsModalOpen={handleNotificationsModalOpen}
 					notificationsBadgeVisible={visibleBadgeNotifications}
-					setCardLayout={props.setCardLayout}
+					setCardLayout={setCardLayout}
 					onOpen={() => {
 						setOpenSettingsModal(false);
 						setOpenNotificationsModal(false);
@@ -493,8 +504,8 @@ export const PostNavbar = (props: PostNavbarProps) => {
 						handleProfileMenuClose();
 					}}
 					extraActions={extraActions}
-					isAuthorized={props.isAuthorized}
-					sessionUser={props.sessionUser}
+					isAuthorized={isAuthorized}
+					sessionUser={sessionUser}
 				/>
 			)}
 
@@ -514,32 +525,32 @@ export const PostNavbar = (props: PostNavbarProps) => {
 			/>
 			{/* Simple Text */}
 			<SimpleTextModal
-				open={props.simpleTextModal.open}
-				handleModalOpen={() => props.simpleTextModal.setOpen(true)}
-				handleModalClose={() => props.simpleTextModal.setOpen(false)}
+				open={simpleTextModal.open}
+				handleModalOpen={() => simpleTextModal.setOpen(true)}
+				handleModalClose={() => simpleTextModal.setOpen(false)}
 			/>
 			{/* TOC */}
-			{props.toc.content && (
+			{toc.content && (
 				<TOCModal
-					open={props.tocModal.open}
-					handleModalOpen={() => props.tocModal.setOpen(true)}
-					handleModalClose={() => props.tocModal.setOpen(false)}
-					headings={extractHeaders(props.toc.content)}
-					currentSection={props.toc.currentSection}
-					postTitle={props.post.title}
+					open={tocModal.open}
+					handleModalOpen={() => tocModal.setOpen(true)}
+					handleModalClose={() => tocModal.setOpen(false)}
+					headings={extractHeaders(toc.content)}
+					currentSection={toc.currentSection}
+					postTitle={post.title}
 				/>
 			)}
 			{/* Share */}
 			<ShareModal
-				open={props.shareModal.open}
-				handleModalOpen={() => props.shareModal.setOpen(true)}
-				handleModalClose={() => props.shareModal.setOpen(false)}
+				open={shareModal.open}
+				handleModalOpen={() => shareModal.setOpen(true)}
+				handleModalClose={() => shareModal.setOpen(false)}
 				data={{
-					title: props.post.title,
-					description: props.post.description,
+					title: post.title,
+					description: post.description,
 					ogImage:
-						props.post.ogImage && props.post.ogImage.src && props.post.ogImage.src.trim() !== ""
-							? props.post.ogImage
+						post.ogImage && post.ogImage.src && post.ogImage.src.trim() !== ""
+							? post.ogImage
 							: {
 									src: DATA_DEFAULTS.images.openGraph,
 									height: 630,

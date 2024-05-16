@@ -249,6 +249,12 @@ export type PostCardProps = PostProps & {
 	views: any;
 };
 
+export type PostRecommendationCardProps = PostProps & {
+	id: string;
+	isSaved: boolean;
+	toggleIsSaved: () => void;
+};
+
 export type ImageProps = {
 	src: string;
 	blurhash?: string;
@@ -319,6 +325,8 @@ export type PostNavbarProps = {
 	className?: string;
 	isAuthorized?: boolean;
 	sessionUser?: SessionUser;
+	savedPosts: string[];
+	setSavedPosts: (ids: string[]) => void;
 };
 
 // Component types

@@ -7,7 +7,7 @@ import Footer from "@/components/Navigation/LinkFooter";
 import PostNavbar from "@/components/Navigation/PostNavbar";
 import PostViews from "@/components/PostViews/PostViews";
 import { useTheme } from "@/styles/themes/ThemeProvider";
-import { ButtonBarButtonProps, ReadPostPageProps } from "@/types";
+import { ButtonBarButtonProps, FullPost, ReadPostPageProps, StoredPost } from "@/types";
 import { IDiscussionData, IMetadataMessage } from "@/utils/giscus";
 import Giscus from "@giscus/react";
 import { useGSAP } from "@gsap/react";
@@ -44,6 +44,7 @@ import Output from "editorjs-react-renderer";
 // const Output = dynamic(async () => (await import("editorjs-react-renderer")).default, { ssr: false });
 
 // EditorJS renderers
+import PostRecommendationCard from "@/components/DesignLibrary/Cards/PostRecommendationCard";
 import CustomCallout from "@/components/EditorJS/Renderers/CustomCallout";
 import CustomChecklist from "@/components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "@/components/EditorJS/Renderers/CustomCode";
@@ -123,6 +124,40 @@ export function processJsonToggleBlocks(inputJson) {
 	return null;
 }
 
+export function getNextRelevantPosts(
+	currentPostId: string,
+	currentPost: FullPost,
+	allPosts: StoredPost[],
+	nPosts: number
+) {
+	// Filter out the current post and unpublished posts
+	const filteredPosts = allPosts.filter((post) => post.id !== currentPostId && post.published);
+
+	// Function to calculate the score of a post based on shared tags and type
+	function calculateScore(post) {
+		let score = 0;
+		if (post.type === currentPost.type) {
+			score += 1;
+		}
+		const sharedTags = post.tags.filter((tag) => currentPost.tags.includes(tag)).length;
+		score += sharedTags;
+		return score;
+	}
+
+	// Score each post and sort by score in descending order
+	const scoredPosts = filteredPosts.map((post) => ({
+		post,
+		score: calculateScore(post),
+	}));
+	scoredPosts.sort((a, b) => b.score - a.score);
+
+	// Extract the sorted posts
+	const rankedPosts = scoredPosts.map((scoredPost) => scoredPost.post);
+
+	// Ensure the number of posts is exactly nPosts
+	return rankedPosts.slice(0, nPosts);
+}
+
 export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessionUser }: ReadPostPageProps) => {
 	const searchParams = useSearchParams();
 	const { theme, setTheme } = useTheme();
@@ -158,6 +193,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 	const toggleRef = useRef<null | HTMLDivElement>(null);
 	const [toggleRCOpen, setToggleRCOpen] = useState<boolean>(false);
 	const [views, setViews] = useState<number>();
+	const [savedPosts, setSavedPosts] = useStickyState("savedPosts", [], true);
+	const [nextRelevantPosts, setNextRelevantPosts] = useState<StoredPost[]>();
 
 	const OutputElement = useMemo(() => {
 		if (post && post.data && post.data.blocks && Array.isArray(post.data.blocks)) {
@@ -180,6 +217,9 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 		getViewCountsByPostId(postId).then((data) => {
 			setViews(data.viewCount);
 		});
+
+		// Get next recommendation posts
+		if (postsOverview) setNextRelevantPosts(getNextRelevantPosts(postId, post, postsOverview, 2));
 
 		// When session is updated, not loading anymore
 		setIsLoading(false);
@@ -211,13 +251,6 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 				duration: 0.4,
 			});
 			navBarAnimation.play();
-			// Hide button bar as well?
-			// const buttonBarAnimation = gsap.to(".buttonBar", {
-			// 	y: "60px",
-			// 	paused: true,
-			// 	duration: 0.4,
-			// });
-			// buttonBarAnimation.reverse();
 		}
 	}, []);
 
@@ -272,14 +305,15 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 		{
 			icon: ThumbUpAlt,
 			fetched: discussionData.reactionCount !== null ? true : false,
-			text: isMobile
-				? discussionData.reactionCount
-					? discussionData.reactionCount.toString()
-					: "0"
-				: discussionData.reactionCount
-				? `${discussionData.reactionCount.toString()}
+			text:
+				isMobile || xs
+					? discussionData.reactionCount
+						? discussionData.reactionCount.toString()
+						: "0"
+					: discussionData.reactionCount
+					? `${discussionData.reactionCount.toString()}
 				reaction${discussionData.reactionCount !== 1 ? "s" : ""}`
-				: `0 reactions`,
+					: `0 reactions`,
 			onClick: () => {
 				setToggleRCOpen(true);
 				setTimeout(() => {
@@ -290,14 +324,15 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 		{
 			icon: Comment,
 			fetched: discussionData.totalCommentCount !== null ? true : false,
-			text: isMobile
-				? discussionData.totalCommentCount
-					? discussionData.totalCommentCount.toString()
-					: "0"
-				: discussionData.totalCommentCount
-				? `${discussionData.totalCommentCount.toString()}
+			text:
+				isMobile || xs
+					? discussionData.totalCommentCount
+						? discussionData.totalCommentCount.toString()
+						: "0"
+					: discussionData.totalCommentCount
+					? `${discussionData.totalCommentCount.toString()}
 				comment${discussionData.totalCommentCount !== 1 ? "s" : ""}`
-				: `0 comments`,
+					: `0 comments`,
 			onClick: () => {
 				setToggleRCOpen(true);
 				setTimeout(() => {
@@ -307,14 +342,14 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 		},
 		{
 			icon: Menu,
-			text: isMobile ? "" : "Table of contents",
+			text: isMobile || xs ? "" : mdDown ? "Contents" : "Table of contents",
 			onClick: () => {
 				setOpenTOCModal(true);
 			},
 		},
 		{
 			icon: ArrowUpward,
-			text: isMobile ? "" : "Back to top",
+			text: isMobile || xs ? "" : mdDown ? "Top" : "Back to top",
 			onClick: () => {
 				window.scrollTo({
 					top: 0,
@@ -432,6 +467,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 					setCardLayout={setCardLayout}
 					isAuthorized={isAuthorized}
 					sessionUser={sessionUser}
+					savedPosts={savedPosts}
+					setSavedPosts={setSavedPosts}
 				/>
 				{/* Content */}
 				<Grid
@@ -701,6 +738,43 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 										</Typography>
 									)}
 							</Box>
+							{/* Recommendation */}
+							{postsOverview && nextRelevantPosts && nextRelevantPosts.length > 0 ? (
+								<Box>
+									<Typography
+										variant="h6"
+										sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary, opacity: 0.8 }}
+										mb={1}
+									>
+										You might also like
+									</Typography>
+									<Box display="flex" flexDirection="row" gap="10px" mb={1}>
+										{nextRelevantPosts.slice(0, xs ? 1 : 2).map((recommendedPost) => (
+											<PostRecommendationCard
+												author={recommendedPost.author}
+												createdAt={recommendedPost.createdAt}
+												description={recommendedPost.description}
+												ogImage={recommendedPost.ogImage}
+												published={recommendedPost.published}
+												readTime={recommendedPost.readTime}
+												tags={recommendedPost.tags}
+												keywords={recommendedPost.keywords}
+												title={recommendedPost.title}
+												type={recommendedPost.type}
+												id={recommendedPost.id}
+												isSaved={savedPosts.includes(recommendedPost.id)}
+												toggleIsSaved={() =>
+													savedPosts.includes(recommendedPost.id)
+														? setSavedPosts(savedPosts.filter((id) => id !== recommendedPost.id))
+														: setSavedPosts([...savedPosts, recommendedPost.id])
+												}
+											/>
+										))}
+									</Box>
+								</Box>
+							) : (
+								<></>
+							)}
 							{/* Comment section */}
 							<Box mb={3} ref={toggleRef}>
 								<Toggle
