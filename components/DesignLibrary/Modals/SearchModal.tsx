@@ -442,13 +442,7 @@ export const SearchModal = ({
 
 	return (
 		<Box>
-			<Modal
-				open={open}
-				onClose={handleModalClose}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
-				disableAutoFocus
-			>
+			<Modal open={open} onClose={handleModalClose} disableAutoFocus>
 				<Box
 					sx={{
 						position: "fixed",

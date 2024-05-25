@@ -178,7 +178,6 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 					// overflowY: "scroll",
 				}}
 			>
-				{/* <Box height="100%"> */}
 				{/* Toggle line */}
 				<Box display="flex" flexDirection="row" px={lgUp ? "150px" : xs ? "10px" : "80px"}>
 					<Box flexGrow={1} />
@@ -600,7 +599,6 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 							{posts.map((data, index) => {
 								return (
 									<>
-										{/* <Grid item key={index} md={1} lg={1} /> */}
 										<Grid key={index} md={1} lg={2} />
 										<Grid key={index} xs={12} sm={12} md={8} lg={6}>
 											<LandingPagePlainCard
@@ -619,7 +617,6 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												published={data.published}
 											/>
 										</Grid>
-										{/* <Grid item key={index} md={3} lg={5} /> */}
 										<Grid key={index} md={3} lg={4} />
 									</>
 								);

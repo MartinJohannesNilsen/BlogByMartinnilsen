@@ -47,12 +47,7 @@ export const AboutModal = (props: ModalProps) => {
 
 	return (
 		<Box>
-			<Modal
-				open={props.open}
-				onClose={props.handleModalClose}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
-			>
+			<Modal open={props.open} onClose={props.handleModalClose}>
 				<Box sx={style}>
 					<IconButton
 						style={{ position: "absolute", top: "5px", right: "5px" }}

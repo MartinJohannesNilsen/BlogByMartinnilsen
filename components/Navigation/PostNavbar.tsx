@@ -137,7 +137,8 @@ export const PostNavbar = ({
 					display="flex"
 					justifyContent={"center"}
 					sx={{
-						backgroundColor: theme.palette.primary.dark,
+						// backgroundColor: theme.palette.primary.dark,
+						backgroundColor: theme.palette.primary.main,
 						borderBottom:
 							"1px solid" + (theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[200]),
 						top: 0,
@@ -284,7 +285,7 @@ export const PostNavbar = ({
 					position={"fixed"}
 					sx={{
 						top: 0,
-						backgroundColor: isMobile ? theme.palette.primary.main : theme.palette.primary.main + "CC",
+						backgroundColor: theme.palette.primary.main + "EE",
 						borderBottom:
 							"1px solid" + (theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[200]),
 						whiteSpace: "nowrap",

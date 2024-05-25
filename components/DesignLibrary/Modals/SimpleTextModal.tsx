@@ -7,6 +7,7 @@ import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 import { ThemeEnum } from "@/styles/themes/themeMap";
 import { ModalProps } from "@/types";
 import { Box, Button, Modal, Tooltip, Typography } from "@mui/material";
+import { isMobile } from "react-device-detect";
 import { BiMinus, BiPlus } from "react-icons/bi";
 
 export const SimpleTextModal = ({ open, handleModalOpen, handleModalClose }: ModalProps) => {
@@ -25,7 +26,7 @@ export const SimpleTextModal = ({ open, handleModalOpen, handleModalClose }: Mod
 		rowGap: "10px",
 		justifyContent: "flex-start",
 		// boxShadow: 24,
-		p: "12px 18px",
+		p: isMobile ? "12px 18px 30px 18px" : "12px 18px",
 	};
 
 	return (
@@ -66,7 +67,7 @@ export const SimpleTextModal = ({ open, handleModalOpen, handleModalClose }: Mod
 								<Button
 									disableRipple
 									onClick={() => {
-										setTheme(ThemeEnum.Light);
+										setTheme(ThemeEnum.Light, true);
 									}}
 									sx={{
 										backgroundColor: light.palette.primary.main,
@@ -84,7 +85,7 @@ export const SimpleTextModal = ({ open, handleModalOpen, handleModalClose }: Mod
 								<Button
 									disableRipple
 									onClick={() => {
-										setTheme(ThemeEnum.Dark);
+										setTheme(ThemeEnum.Dark, true);
 									}}
 									sx={{
 										backgroundColor: dark.palette.primary.main,

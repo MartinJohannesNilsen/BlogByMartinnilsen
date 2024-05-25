@@ -21,8 +21,6 @@ import LinkTool from "@editorjs/link";
 import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
 import Paragraph from "@editorjs/paragraph";
-// import Quote from "@editorjs/quote";
-import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import Underline from "@editorjs/underline";
 import ToggleBlock from "editorjs-toggle-block";
 // @ts-ignore
@@ -31,15 +29,12 @@ const EJLaTeX = require("editorjs-latex"); // Math
 const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
 
 // Custom tools
+import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import Callout from "@/components/EditorJS/BlockTools/Callout/tool";
 import CodeBlock from "@/components/EditorJS/BlockTools/CodeBlock/tool";
 import Divider from "@/components/EditorJS/BlockTools/Divider/tool";
 import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
 import Quote from "@/components/EditorJS/BlockTools/Quote/tool";
-
-// Development
-// Images
-// import ImageOnPaste from "@/components/EditorJS/BlockTools/ImageOnPaste/tool"; // TODO Trial at implementing SimpleImage, but focus on ImageBlock first
 import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
 
 export const EDITOR_JS_TOOLS: any = {

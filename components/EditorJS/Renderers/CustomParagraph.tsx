@@ -28,7 +28,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
         background-color: ${theme.palette.secondary.main};
 		color: ${getBackgroundColorLightOrDark(theme.palette.secondary.main) === "dark" ? colors.white : colors.black};
     `;
-	// TODO This will not change on hover unfortunately
+	// TODO Rethink and implement solution for hover effects. Might need to include a css class here?
 	const linkStyle = `
         color: ${theme.palette.text.primary};
         text-decoration: none;

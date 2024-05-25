@@ -24,7 +24,6 @@ export const ButtonBar = (props: ButtonBarProps) => {
 						: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
 				...props.sx,
 			}}
-			aria-label=""
 		>
 			{props.buttons.map((button) => (
 				// @ts-ignore

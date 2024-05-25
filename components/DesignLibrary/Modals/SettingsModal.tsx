@@ -112,8 +112,6 @@ export const SettingsModal = (props: SettingsModalProps) => {
 				onKeyDown={(e) => {
 					e.key === "Enter" && colorPickerOpen && setColorPickerOpen(false);
 				}}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
 			>
 				<Box sx={style}>
 					{/* Close button */}
@@ -158,7 +156,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							<Tooltip enterDelay={2000} title="Use system settings">
 								<IconButton
 									disabled={!themeUserConfigurationExist}
-									aria-label="delete"
+									aria-label="default settings"
 									size="small"
 									onClick={() => {
 										setDefaultTheme();
@@ -235,7 +233,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							<Tooltip enterDelay={2000} title="Use default settings">
 								<IconButton
 									disabled={["1", "1.0"].includes(fontScale)}
-									aria-label="delete"
+									aria-label="default settings"
 									size="small"
 									onClick={() => {
 										setFontScale("1");
@@ -287,7 +285,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							<Tooltip enterDelay={2000} title="Use default settings">
 								<IconButton
 									disabled={fontFamily === defaultFontFamilyVariable}
-									aria-label="delete"
+									aria-label="default settings"
 									size="small"
 									onClick={() => {
 										setFontFamily(defaultFontFamilyVariable);
@@ -408,7 +406,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 												(theme.palette.mode === "dark" && accentColor === defaultAccentColorDark.hex) ||
 												(theme.palette.mode === "light" && accentColor === defaultAccentColorLight.hex)
 											}
-											aria-label="delete"
+											aria-label="default settings"
 											size="small"
 											onClick={() => {
 												if (theme.palette.mode === "dark") {

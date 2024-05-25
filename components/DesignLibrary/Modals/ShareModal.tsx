@@ -47,8 +47,6 @@ export const ShareModal = (props: ShareModalProps) => {
 				onClose={() => {
 					props.handleModalClose();
 				}}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
 			>
 				<Box sx={style} display="flex" flexDirection="column">
 					{/* Close icon */}

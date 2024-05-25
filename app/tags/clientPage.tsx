@@ -138,17 +138,7 @@ const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => 
 								? tag.charAt(0).toUpperCase() + tag.slice(1) + " posts"
 								: "#" + _getCaseInsensitiveElement(tags, tag)!.replace(" ", "")
 							: "All posts"}
-						{/* {" (" + posts.length + ")"} */}
 					</Typography>
-					{/* <Typography
-								ml={1}
-								variant={xs ? "h6" : "h5"}
-								fontFamily={theme.typography.fontFamily}
-								color={theme.palette.text.primary}
-								fontWeight={600}
-							>
-								{"⋅ " + posts.length}
-							</Typography> */}
 				</Box>
 				{/* Grid of tags and posts */}
 				<Grid container pt={xs ? 2 : lgUp ? 4 : 2} pb={8} rowSpacing={xs ? 2 : 4}>

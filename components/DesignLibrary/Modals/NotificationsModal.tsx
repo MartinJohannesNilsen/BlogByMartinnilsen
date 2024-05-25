@@ -123,12 +123,7 @@ export const NotificationsModal = (props: NotificationsModalProps) => {
 
 	return (
 		<Box>
-			<Modal
-				open={props.open}
-				onClose={props.handleModalClose}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
-			>
+			<Modal open={props.open} onClose={props.handleModalClose}>
 				<Box sx={style}>
 					{/* Close button */}
 					<IconButton

@@ -151,7 +151,7 @@ const DesignPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProp
 							width: "default",
 						}}
 					>
-						Coming soon
+						Coming later this year
 					</Typography>
 				</Box>
 			</Box>

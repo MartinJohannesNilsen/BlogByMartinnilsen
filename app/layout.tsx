@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import SessionProvider from "@/components/Auth/SessionProvider";
 import CustomSnackbarProvider from "@/components/SnackbarProvider/CustomSnackbarProvider";
+import ViewportMeta from "@/components/ViewportMeta/ViewportMeta";
 import { defaultMetadata } from "@/data/metadata";
 import "@/styles/editorJS.scss";
 import "@/styles/globals.scss";
@@ -9,13 +10,13 @@ import { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { isMobile } from "react-device-detect";
 
-export const viewport: Viewport = {
-	themeColor: [
-		// primary.dark if mobile, primary.main if not
-		{ media: "(prefers-color-scheme: light)", color: isMobile ? "#fcfcfc" : "#ffffff" },
-		{ media: "(prefers-color-scheme: dark)", color: isMobile ? "#141315" : "#161518" },
-	],
-};
+// export const viewport: Viewport = {
+// 	themeColor: [
+// 		// primary.dark if mobile, primary.main if not
+// 		{ media: "(prefers-color-scheme: light)", color: isMobile ? "#fcfcfc" : "#ffffff" },
+// 		{ media: "(prefers-color-scheme: dark)", color: isMobile ? "#141315" : "#161518" },
+// 	],
+// };
 
 export const metadata: Metadata = {
 	...defaultMetadata,
@@ -37,6 +38,7 @@ export default async function RootLayout({
 				<SessionProvider session={session}>
 					<CustomThemeProvider>
 						<CustomSnackbarProvider>
+							<ViewportMeta />
 							{(!process.env.NEXT_PUBLIC_LOCALHOST || process.env.NEXT_PUBLIC_LOCALHOST === "false") &&
 								(!session?.user?.role || session.user.role !== "admin") && (
 									<Script

@@ -31,6 +31,7 @@ export function formatDate(date: Date) {
 
 export const defaultMetadata: Metadata = {
 	// Icons
+	// https://nextjs.org/docs/app/api-reference/functions/generate-metadata#icons
 	icons: {
 		icon: DATA_DEFAULTS.images.favicon,
 		apple: DATA_DEFAULTS.images.appleTouchIcon,
@@ -93,33 +94,12 @@ export const defaultMetadata: Metadata = {
 		// creatorId: '1467726470533754880',
 		images: [DATA_DEFAULTS.images.openGraph], // Must be an absolute URL
 	},
-	// viewport: { width: "device-width", initialScale: 1 },
 };
 
 export const defaultViewport: Viewport = {
+	// TODO color based on theme
 	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, // TODO color
-		{ media: "(prefers-color-scheme: dark)", color: "#161518" }, // TODO color
+		{ media: "(prefers-color-scheme: light)", color: "#ffffff" },
+		{ media: "(prefers-color-scheme: dark)", color: "#161518" },
 	],
 };
-
-// TODO Icons improved maybe
-// https://nextjs.org/docs/app/api-reference/functions/generate-metadata#icons
-/* icons: {
-    icon: [
-      { url: '/icon.png' },
-      new URL('/icon.png', 'https://example.com'),
-      { url: '/icon-dark.png', media: '(prefers-color-scheme: dark)' },
-    ],
-    shortcut: ['/shortcut-icon.png'],
-    apple: [
-      { url: '/apple-icon.png' },
-      { url: '/apple-icon-x3.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-      {
-        rel: 'apple-touch-icon-precomposed',
-        url: '/apple-touch-icon-precomposed.png',
-      },
-    ],
-  }, */

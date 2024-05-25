@@ -157,7 +157,6 @@ export const CodeBlock = (props: BlockToolCodeBlockProps) => {
 										e.stopPropagation();
 									}
 								}}
-								// TODO Might want to further investigate this yielding a warning
 								isOptionEqualToValue={(option: { language: string; firstLetter: string }, value) =>
 									option.language === value.language
 								}
