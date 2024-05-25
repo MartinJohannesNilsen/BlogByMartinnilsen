@@ -28,12 +28,6 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
         background-color: ${theme.palette.secondary.main};
 		color: ${getBackgroundColorLightOrDark(theme.palette.secondary.main) === "dark" ? colors.white : colors.black};
     `;
-	// TODO Rethink and implement solution for hover effects. Might need to include a css class here?
-	const linkStyle = `
-        color: ${theme.palette.text.primary};
-        text-decoration: none;
-        border-bottom: 2px solid ${colorLuminance(theme.palette.secondary.main, 0.15)};
-    `;
 	const underlineStyle = `
         color: ${theme.palette.text.primary};
         text-decoration: none;
@@ -41,11 +35,22 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
     `;
 	const code = `<code style="${codeStyle}">`;
 	const mark = `<mark style="${markStyle}">`;
-	const link = `<a style="${linkStyle}" href=`;
 	const underline = `<u style="${underlineStyle}">`;
 
+	// User interactable styled components
+	const link = `<a class="link" href=`;
+
 	return (
-		<Box sx={{ userSelect: "text", my: 1, ...props.style?.box }}>
+		<Box
+			sx={{
+				userSelect: "text",
+				my: 1,
+				"--link-color": theme.palette.text.primary,
+				"--link-border-color": theme.palette.secondary.main,
+				"--link-border-hover-color": colorLuminance(theme.palette.secondary.main, 0.15),
+				...props.style?.box,
+			}}
+		>
 			{props.data.text === "" ? (
 				<br />
 			) : (
