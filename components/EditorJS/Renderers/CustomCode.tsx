@@ -209,6 +209,23 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 						setCopyButtonVisible(false);
 					}}
 					position="relative"
+					sx={{
+						"& pre": {
+							"&::-webkit-scrollbar": {
+								height: "0px",
+							},
+							"&::-webkit-scrollbar-thumb": {
+								backgroundColor: "#888",
+								borderRadius: "6px",
+							},
+							"&::-webkit-scrollbar-thumb:hover": {
+								backgroundColor: "#555",
+							},
+							"&::-webkit-scrollbar-track": {
+								marginY: "10px",
+							},
+						},
+					}}
 				>
 					{isCopyButtonVisible && (
 						<Box
@@ -269,7 +286,6 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							margin: 0,
 							display: "flex",
 							alignItems: "center",
-							height: "calc(45px * var(--font-scale))",
 							overflowY: "hidden",
 							backgroundColor: "rgb(36, 39, 46)",
 							padding: "10px 15px",

@@ -1,4 +1,5 @@
 "use client";
+import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "@/types";
 import { Box, Card, CardActionArea, Typography, useMediaQuery } from "@mui/material";
@@ -45,6 +46,7 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 								fontFamily={theme.typography.fontFamily}
 								sx={{
 									...theme.typography.subtitle1,
+									fontSize: defaultTheme.typography.subtitle1.fontSize,
 									fontWeight: 800,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
@@ -62,6 +64,7 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 								fontFamily={theme.typography.fontFamily}
 								sx={{
 									...theme.typography.subtitle2,
+									fontSize: defaultTheme.typography.subtitle2.fontSize,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									display: "webkit-flex",
@@ -79,6 +82,7 @@ const CustomLinkTool = (props: EditorjsRendererProps) => {
 									fontWeight={600}
 									fontFamily={theme.typography.fontFamily}
 									sx={{
+										fontSize: defaultTheme.typography.subtitle2.fontSize,
 										overflow: "hidden",
 										textOverflow: "ellipsis",
 										display: "webkit-flex",

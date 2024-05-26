@@ -21,7 +21,7 @@ export const defaultFontFamilyVariable = "--font-cabinet-grotesk";
 export const defaultFontScale = "1";
 
 // Create base theme
-const defaultTheme = createTheme();
+export const defaultTheme = createTheme();
 // Find default values here: https://mui.com/material-ui/customization/default-theme/
 export const baseTheme = createTheme({
 	typography: {

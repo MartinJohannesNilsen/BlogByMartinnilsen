@@ -2,6 +2,7 @@
 import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
 import PostViews from "@/components/PostViews/PostViews";
 import { DATA_DEFAULTS } from "@/data/metadata";
+import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { PostCardProps } from "@/types";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
@@ -61,10 +62,10 @@ export const LandingPageGridCard = (props: PostCardProps) => {
 								sx={{ marginRight: 1, backgroundColor: "white" }}
 							>
 								<Typography
-									variant="body2"
 									fontWeight={600}
 									color="white"
 									fontFamily={theme.typography.fontFamily}
+									fontSize={defaultTheme.typography.body2.fontSize}
 									sx={{
 										overflow: "hidden",
 										textOverflow: "ellipsis",

@@ -14,7 +14,7 @@ export const PostRecommendationCard = (props: PostRecommendationCardProps) => {
 			sx={{
 				width: "100%",
 				boxShadow: "none",
-				border: `2px solid ${theme.palette.mode == "dark" ? theme.palette.grey[800] : theme.palette.grey[200]}`,
+				border: `1px solid ${theme.palette.mode == "dark" ? theme.palette.grey[800] : theme.palette.grey[200]}`,
 				"&:hover": {
 					backgroundColor: theme.palette.primary.light,
 				},

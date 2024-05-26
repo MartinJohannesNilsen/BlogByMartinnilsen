@@ -219,7 +219,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 		});
 
 		// Get next recommendation posts
-		if (postsOverview) setNextRelevantPosts(getNextRelevantPosts(postId, post, postsOverview, 2));
+		if (postsOverview) setNextRelevantPosts(getNextRelevantPosts(postId, post, postsOverview, 3));
 
 		// When session is updated, not loading anymore
 		setIsLoading(false);
@@ -533,8 +533,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												color: theme.palette.text.primary,
 												opacity: 0.6,
 												marginRight: "6px",
-												// fontSize: xs ? "12px" : "default",
-												fontSize: "default",
+												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												// fontSize: "default",
 											}}
 										/>
 										<Typography
@@ -544,8 +544,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											sx={{
 												color: theme.palette.text.primary,
 												opacity: 0.6,
-												// fontSize: xs ? "12px" : "default",
-												fontSize: "default",
+												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												// fontSize: "default",
 											}}
 										>
 											{new Date(post.createdAt).toLocaleDateString("en-GB", {
@@ -562,8 +562,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												opacity: 0.6,
 												marginLeft: "16px",
 												marginRight: "6px",
-												// fontSize: xs ? "12px" : "default",
-												fontSize: "default",
+												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												// fontSize: "default",
 											}}
 										/>
 										<Typography
@@ -573,8 +573,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											sx={{
 												color: theme.palette.text.primary,
 												opacity: 0.6,
-												// fontSize: xs ? "12px" : "default",
-												fontSize: "default",
+												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												// fontSize: "default",
 											}}
 										>
 											{post.readTime ? post.readTime : "⎯"}
@@ -585,7 +585,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												opacity: 0.6,
 												marginLeft: "16px",
 												marginRight: "6px",
-												fontSize: "default",
+												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												// fontSize: "default",
 												color: theme.palette.text.primary,
 											}}
 										/>
@@ -595,7 +596,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											fontWeight="600"
 											sx={{
 												opacity: 0.6,
-												fontSize: "default",
+												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												// fontSize: "default",
 												color: theme.palette.text.primary,
 											}}
 										>
@@ -603,7 +605,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												<PostViews
 													viewCount={views}
 													sx={{
-														fontSize: theme.typography.fontSize,
+														fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+														// fontSize: "default",
 														color: theme.palette.text.primary,
 														fontFamily: theme.typography.fontFamily,
 													}}
@@ -691,9 +694,9 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 										<Box mr={3}>
 											<NavbarButton
 												variant="outline"
-												href="https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ"
+												href="https://buymeacoffee.com/mjntech"
 												icon={BiCoffeeTogo}
-												tooltip="Donate cacao"
+												tooltip="Buy me a cocoa"
 												sxButton={{
 													height: "36px",
 													width: "36px",
@@ -738,45 +741,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 										</Typography>
 									)}
 							</Box>
-							{/* Recommendation */}
-							{postsOverview && nextRelevantPosts && nextRelevantPosts.length > 0 ? (
-								<Box>
-									<Typography
-										variant="h6"
-										sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary, opacity: 0.8 }}
-										mb={1}
-									>
-										You might also like
-									</Typography>
-									<Box display="flex" flexDirection="row" gap="10px" mb={1}>
-										{nextRelevantPosts.slice(0, xs ? 1 : 2).map((recommendedPost) => (
-											<PostRecommendationCard
-												author={recommendedPost.author}
-												createdAt={recommendedPost.createdAt}
-												description={recommendedPost.description}
-												ogImage={recommendedPost.ogImage}
-												published={recommendedPost.published}
-												readTime={recommendedPost.readTime}
-												tags={recommendedPost.tags}
-												keywords={recommendedPost.keywords}
-												title={recommendedPost.title}
-												type={recommendedPost.type}
-												id={recommendedPost.id}
-												isSaved={savedPosts.includes(recommendedPost.id)}
-												toggleIsSaved={() =>
-													savedPosts.includes(recommendedPost.id)
-														? setSavedPosts(savedPosts.filter((id) => id !== recommendedPost.id))
-														: setSavedPosts([...savedPosts, recommendedPost.id])
-												}
-											/>
-										))}
-									</Box>
-								</Box>
-							) : (
-								<></>
-							)}
 							{/* Comment section */}
-							<Box mb={3} ref={toggleRef}>
+							<Box ref={toggleRef}>
 								<Toggle
 									open={toggleRCOpen}
 									handleClick={() => {
@@ -831,6 +797,51 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									</Box>
 								</Toggle>
 							</Box>
+							<Box
+								my={3}
+								sx={{
+									width: "100%",
+									borderBottom: "2px solid rgba(100,100,100,0.2)",
+								}}
+							/>
+							{/* Recommendation */}
+							{postsOverview && nextRelevantPosts && nextRelevantPosts.length > 0 ? (
+								<Box mb={3}>
+									<Typography
+										variant="h6"
+										sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary, opacity: 0.8 }}
+										mb={1.5}
+									>
+										You might also like
+									</Typography>
+
+									<Box display="flex" flexDirection="column" gap="10px" mb={1}>
+										{nextRelevantPosts.slice(0, 3).map((recommendedPost) => (
+											<PostRecommendationCard
+												author={recommendedPost.author}
+												createdAt={recommendedPost.createdAt}
+												description={recommendedPost.description}
+												ogImage={recommendedPost.ogImage}
+												published={recommendedPost.published}
+												readTime={recommendedPost.readTime}
+												tags={recommendedPost.tags}
+												keywords={recommendedPost.keywords}
+												title={recommendedPost.title}
+												type={recommendedPost.type}
+												id={recommendedPost.id}
+												isSaved={savedPosts.includes(recommendedPost.id)}
+												toggleIsSaved={() =>
+													savedPosts.includes(recommendedPost.id)
+														? setSavedPosts(savedPosts.filter((id) => id !== recommendedPost.id))
+														: setSavedPosts([...savedPosts, recommendedPost.id])
+												}
+											/>
+										))}
+									</Box>
+								</Box>
+							) : (
+								<></>
+							)}
 						</Stack>
 					</Grid>
 					<Footer postId={postId} />

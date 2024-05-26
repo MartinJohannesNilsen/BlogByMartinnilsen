@@ -269,7 +269,7 @@ type PostProps = {
 	createdAt: number;
 	description: string;
 	ogImage: ImageProps;
-	updatedAt?: number;
+	updatedAt?: number | null;
 	published: boolean;
 	readTime: string;
 	tags: string[];

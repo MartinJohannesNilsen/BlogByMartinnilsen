@@ -2,6 +2,7 @@
 import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
 import PostViews from "@/components/PostViews/PostViews";
 import { DATA_DEFAULTS } from "@/data/metadata";
+import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { PostCardProps } from "@/types";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
@@ -63,10 +64,10 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 					{/* Title and description */}
 					<Box display="flex" flexDirection="column" pt={0} sx={{ maxWidth: "650px" }}>
 						<Typography
-							variant="h6"
 							fontWeight={700}
 							color="textPrimary"
 							fontFamily={theme.typography.fontFamily}
+							fontSize={defaultTheme.typography.body1.fontSize}
 							sx={{
 								lineHeight: "26px",
 								overflow: "hidden",
@@ -81,10 +82,10 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 						</Typography>
 						<Typography
 							mt={1}
-							variant="body1"
 							fontWeight={500}
 							color="textPrimary"
 							fontFamily={theme.typography.fontFamily}
+							fontSize={defaultTheme.typography.body1.fontSize}
 							sx={{
 								lineHeight: "26px",
 								overflow: "hidden",
@@ -107,10 +108,10 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 							{props.tags.map((tag, index) => (
 								<Button LinkComponent={NextLink} key={index} disabled variant="contained" sx={{ marginRight: 1 }}>
 									<Typography
-										variant="body2"
 										fontWeight={600}
 										color="textPrimary"
 										fontFamily={theme.typography.fontFamily}
+										fontSize={defaultTheme.typography.body2.fontSize}
 										sx={{
 											overflow: "hidden",
 											textOverflow: "ellipsis",

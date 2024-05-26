@@ -1,6 +1,7 @@
 "use client";
 import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
 import { useTheme } from "@/styles/themes/ThemeProvider";
+import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { ThemeEnum } from "@/styles/themes/themeMap";
 import { SearchActionProps, SearchModalProps, StoredPost } from "@/types";
 import { userSignOut } from "@/utils/signOut";
@@ -519,10 +520,9 @@ export const SearchModal = ({
 													}}
 												>
 													<Typography
-														variant="body1"
 														sx={{
 															fontWeight: 600,
-															fontSize: xs ? 12 : theme.typography.body1,
+															fontSize: xs ? 12 : defaultTheme.typography.body1,
 															fontFamily: theme.typography.fontFamily,
 														}}
 													>
@@ -773,6 +773,7 @@ export const SearchModal = ({
 															color: theme.palette.text.primary,
 															fontFamily: theme.typography.fontFamily,
 															fontWeight: "600",
+															fontSize: defaultTheme.typography.body1.fontSize,
 															whiteSpace: "nowrap",
 															textOverflow: "ellipsis",
 															overflow: "hidden",
@@ -781,6 +782,7 @@ export const SearchModal = ({
 														secondaryTypographyProps={{
 															color: theme.palette.text.primary,
 															fontFamily: theme.typography.fontFamily,
+															fontSize: defaultTheme.typography.body2.fontSize,
 															whiteSpace: "nowrap",
 															textOverflow: "ellipsis",
 															overflow: "hidden",

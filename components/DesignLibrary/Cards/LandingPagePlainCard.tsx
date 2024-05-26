@@ -1,5 +1,6 @@
 "use client";
 import PostViews from "@/components/PostViews/PostViews";
+import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { PostCardProps } from "@/types";
 import { AccessTime, CalendarMonth, Visibility } from "@mui/icons-material";
@@ -26,10 +27,10 @@ export const LandingPageListCard = (props: PostCardProps) => {
 				{/* Title and description */}
 				<Box display="flex" flexDirection="column" pt={0} sx={{ maxWidth: "650px", color: "inherit" }}>
 					<Typography
-						variant="body1"
 						fontWeight={700}
 						color="inherit"
 						fontFamily={theme.typography.fontFamily}
+						fontSize={defaultTheme.typography.body1.fontSize}
 						sx={{
 							mt: 1,
 							lineHeight: "26px",

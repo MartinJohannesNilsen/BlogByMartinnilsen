@@ -15,7 +15,7 @@ import { FullPost, ManagePostPageProps } from "@/types";
 import { copyToClipboardV2 } from "@/utils/copyToClipboard";
 import { getTimeZoneUTCFormatString } from "@/utils/timeZoneUTCFormatString";
 import { OutputData } from "@editorjs/editorjs";
-import { Clear, Close, Delete, Home, Launch, MoreVert, Save, Update } from "@mui/icons-material";
+import { Clear, Close, Delete, Home, Launch, MoreVert, Save, Update, UploadFile } from "@mui/icons-material";
 import {
 	Autocomplete,
 	Box,
@@ -546,28 +546,31 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 											{/* Created At */}
 											<Box display="flex" gap={0.5} alignItems="center">
 												{/* {xs && <Box flexGrow={1} />} */}
-												<input
-													style={{
-														border:
-															"1px solid " +
-															(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-														borderRadius: 5,
-														padding: 5,
-														fontFamily: theme.typography.fontFamily,
-														fontWeight: 600,
-														fontSize: isMobile ? 18 : 15,
-													}}
-													disabled={!createdAtEditable}
-													type="datetime-local"
-													name="createdAt"
-													// onKeyDown={(e) => {
-													// 	if (e.key === "Delete") e.preventDefault();
-													// }}
-													value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
-													onChange={(e) => {
-														setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
-													}}
-												/>
+												<Box sx={{ width: "180px" }}>
+													<input
+														style={{
+															border:
+																"1px solid " +
+																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+															borderRadius: 5,
+															padding: 5,
+															fontFamily: theme.typography.fontFamily,
+															fontWeight: 600,
+															fontSize: isMobile ? 18 : 15,
+															width: "100%",
+														}}
+														disabled={!createdAtEditable}
+														type="datetime-local"
+														name="createdAt"
+														// onKeyDown={(e) => {
+														// 	if (e.key === "Delete") e.preventDefault();
+														// }}
+														value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
+														onChange={(e) => {
+															setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
+														}}
+													/>
+												</Box>
 												<OptionMenu
 													icon={MoreVert}
 													menuItems={[
@@ -578,7 +581,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															},
 														},
 														{
-															text: "Revert",
+															text: "Set to initial",
 															disabled: !post,
 															onClick: () => {
 																setData({ ...data, createdAt: post!.createdAt });
@@ -602,68 +605,70 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 											{/* Updated At */}
 											<Box display="flex" gap={0.5} alignItems="center" justifyContent="flex-start">
 												{/* {xs && <Box flexGrow={1} />} */}
-												{automaticallySetUpdatedAt ? (
-													<input
-														style={{
-															border:
-																"1px solid " +
-																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-															borderRadius: 5,
-															padding: "7px 7px",
-															marginRight: -1,
-															fontFamily: theme.typography.fontFamily,
-															fontWeight: 600,
-															fontSize: isMobile ? 18 : 15,
-															color: theme.palette.grey[400],
-															width: 155.5,
-														}}
-														disabled
-														name="updatedAt"
-														value="Automatic on save"
-														onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
-													/>
-												) : data.updatedAt ? (
-													<input
-														style={{
-															border:
-																"1px solid " +
-																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-															borderRadius: 5,
-															padding: "5px 5px",
-															fontFamily: theme.typography.fontFamily,
-															fontWeight: 600,
-															fontSize: isMobile ? 18 : 15,
-														}}
-														disabled={!updatedAtEditable}
-														type="datetime-local"
-														name="updatedAt"
-														value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
-														onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
-													/>
-												) : (
-													<input
-														style={{
-															border:
-																"1px solid " +
-																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-															borderRadius: 5,
-															padding: "7px 7px",
-															fontFamily: theme.typography.fontFamily,
-															fontWeight: 600,
-															fontSize: isMobile ? 18 : 15,
-															color: theme.palette.grey[400],
-															width: 155.5,
-															marginRight: -1,
-														}}
-														disabled
-														name="updatedAt"
-														value={post.updatedAt ? "Will be removed" : "Not yet updated"}
-														onChange={(e) => {
-															setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
-														}}
-													/>
-												)}
-
+												<Box sx={{ width: "180px" }}>
+													{automaticallySetUpdatedAt ? (
+														<input
+															style={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: 5,
+																padding: "7px 7px",
+																marginRight: -1,
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																color: theme.palette.grey[400],
+																width: "100%",
+															}}
+															disabled
+															name="updatedAt"
+															value="Automatic on save"
+															onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+														/>
+													) : data.updatedAt ? (
+														<input
+															style={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: 5,
+																padding: "5px 5px",
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																width: "100%",
+															}}
+															disabled={!updatedAtEditable}
+															type="datetime-local"
+															name="updatedAt"
+															value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
+															onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+														/>
+													) : (
+														<input
+															style={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: 5,
+																padding: "7px 7px",
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																color: theme.palette.grey[400],
+																width: "100%",
+																marginRight: -1,
+															}}
+															disabled
+															name="updatedAt"
+															value={post.updatedAt ? "Will be removed" : "Not yet updated"}
+															onChange={(e) => {
+																setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
+															}}
+														/>
+													)}
+												</Box>
 												<OptionMenu
 													icon={MoreVert}
 													menuItems={[
@@ -677,7 +682,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															},
 														},
 														{
-															text: "Revert",
+															text: "Set to initial",
 															disabled: !post,
 															onClick: () => {
 																setData({ ...data, updatedAt: post!.updatedAt });
@@ -696,7 +701,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															text: "Remove",
 															disabled: !post?.updatedAt,
 															onClick: () => {
-																setData({ ...data, updatedAt: undefined });
+																setData({ ...data, updatedAt: null });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(false);
 															},
@@ -877,40 +882,99 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 													/>
 												</Box>
 											) : (
-												<input
-													type="file"
-													id="fileInput"
-													// accept="image/*,video/*"
-													accept="image/*"
-													onChange={async (e) => {
-														const file = e.target.files && e.target.files[0];
-														const uploadResponse = await uploadImage(file, postId, "ogImage");
-														if (uploadResponse.hasOwnProperty("data")) {
-															const details = await getImageDetails(uploadResponse.data.url);
-															setData({
-																...data,
-																ogImage: {
-																	...data.ogImage,
-																	src: uploadResponse.data.url,
-																	height: details.height,
-																	width: details.width,
-																	blurhash: details.encoded,
-																	fileRef: uploadResponse.data.fileRef,
-																	fileSize: file!.size,
-																},
-															});
-															enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
-																variant: "success",
-																preventDuplicate: true,
-															});
-														} else {
-															enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
-																variant: "error",
-																preventDuplicate: true,
-															});
-														}
-													}}
-												/>
+												// Old version
+												<>
+													<input
+														type="file"
+														id="fileInput"
+														accept="image/*"
+														onChange={async (e) => {
+															const file = e.target.files && e.target.files[0];
+															const uploadResponse = await uploadImage(file, postId, "ogImage");
+															if (uploadResponse.hasOwnProperty("data")) {
+																const details = await getImageDetails(uploadResponse.data.url);
+																setData({
+																	...data,
+																	ogImage: {
+																		...data.ogImage,
+																		src: uploadResponse.data.url,
+																		height: details.height,
+																		width: details.width,
+																		blurhash: details.encoded,
+																		fileRef: uploadResponse.data.fileRef,
+																		fileSize: file!.size,
+																	},
+																});
+																enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
+																	variant: "success",
+																	preventDuplicate: true,
+																});
+															} else {
+																enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+																	variant: "error",
+																	preventDuplicate: true,
+																});
+															}
+														}}
+														style={{ display: "none" }}
+													/>
+													<label htmlFor="fileInput">
+														<Button
+															component="span"
+															sx={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: "5px",
+																padding: "5px 5px",
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																color: theme.palette.grey[400],
+																width: "180px",
+																textTransform: "none",
+															}}
+														>
+															<UploadFile sx={{ mr: "2px", fontSize: isMobile ? 18 : 15 }} />
+															Select File
+														</Button>
+													</label>
+												</>
+
+												// New version
+												// <FileInputSelector
+												// 	type="file"
+												// 	id="fileInput"
+												// 	accept="image/*"
+												// 	onChange={async (e) => {
+												// 		const file = e.target.files && e.target.files[0];
+												// 		const uploadResponse = await uploadImage(file, postId, "ogImage");
+												// 		if (uploadResponse.hasOwnProperty("data")) {
+												// 			const details = await getImageDetails(uploadResponse.data.url);
+												// 			setData({
+												// 				...data,
+												// 				ogImage: {
+												// 					...data.ogImage,
+												// 					src: uploadResponse.data.url,
+												// 					height: details.height,
+												// 					width: details.width,
+												// 					blurhash: details.encoded,
+												// 					fileRef: uploadResponse.data.fileRef,
+												// 					fileSize: file!.size,
+												// 				},
+												// 			});
+												// 			enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
+												// 				variant: "success",
+												// 				preventDuplicate: true,
+												// 			});
+												// 		} else {
+												// 			enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+												// 				variant: "error",
+												// 				preventDuplicate: true,
+												// 			});
+												// 		}
+												// 	}}
+												// />
 											)}
 										</Grid>
 									</>

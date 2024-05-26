@@ -178,7 +178,7 @@ const Footer = ({ postId }: FooterProps) => {
 									SoMe
 								</Typography>
 							</Link>
-							<Link underline="none" href="https://www.paypal.com/donate/?hosted_button_id=MJFHZZ2RAN7HQ">
+							<Link underline="none" href="https://buymeacoffee.com/mjntech">
 								<Typography
 									sx={{
 										fontFamily: theme.typography.fontFamily,
