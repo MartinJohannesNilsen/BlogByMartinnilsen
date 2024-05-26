@@ -84,14 +84,14 @@ export const PostRecommendationCard = (props: PostRecommendationCardProps) => {
 									sx={{
 										opacity: 0.6,
 										marginRight: "6px",
-										fontSize: "13px",
+										fontSize: `calc(13px * var(--font-scale))`,
 									}}
 								/>
 								<Typography
 									fontFamily={theme.typography.fontFamily}
 									variant="body2"
 									fontWeight="600"
-									sx={{ opacity: 0.6, fontSize: "13px" }}
+									sx={{ opacity: 0.6, fontSize: `calc(13px * var(--font-scale))` }}
 								>
 									{new Date(props.createdAt).toLocaleDateString("en-GB", {
 										day: "2-digit",
@@ -106,14 +106,14 @@ export const PostRecommendationCard = (props: PostRecommendationCardProps) => {
 										opacity: 0.6,
 										marginLeft: "12px",
 										marginRight: "6px",
-										fontSize: "13px",
+										fontSize: `calc(13px * var(--font-scale))`,
 									}}
 								/>
 								<Typography
 									fontFamily={theme.typography.fontFamily}
 									variant="body2"
 									fontWeight="600"
-									sx={{ opacity: 0.6, fontSize: "13px" }}
+									sx={{ opacity: 0.6, fontSize: `calc(13px * var(--font-scale))` }}
 								>
 									{props.readTime ? props.readTime : "⎯"}
 								</Typography>
