@@ -21,7 +21,7 @@ import {
 	ThumbUpAlt,
 	Visibility,
 } from "@mui/icons-material";
-import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Box, Grid, Link, Stack, Typography, useMediaQuery } from "@mui/material";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import DOMPurify from "isomorphic-dompurify";
@@ -64,6 +64,10 @@ import { DATA_DEFAULTS } from "@/data/metadata";
 import { getViewCountsByPostId, incrementPostViews } from "@/data/middleware/views/actions";
 import { handleSharing } from "@/utils/handleSharing";
 import useStickyState from "@/utils/useStickyState";
+import colors from "@/styles/colors";
+import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
+import colorLumincance from "@/utils/colorLuminance";
+import { baseTheme } from "@/styles/themes/themeDefaults";
 
 // Pass your custom renderers to Output
 export const renderers = {
@@ -497,29 +501,51 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 								id={post.title}
 								className={"anchorHeading"}
 								display="flex"
-								alignItems="center"
+								alignItems="left"
 								mt={isMobile ? 6 : 9}
-								mb={1}
+								mb={0}
 								pb={2}
 								sx={{ userSelect: "text" }}
 							>
-								<Box display="flex" width="100%" flexDirection="column" justifyContent="center" alignItems="center">
+								<Box display="flex" width="100%" flexDirection="column" justifyContent="left" alignItems="left">
+									{/* Top row */}
+									<Box>
+										{/* Type */}
+										{post.type ? (
+											<Typography
+												my={0}
+												// textAlign="center"
+												fontFamily={theme.typography.fontFamily}
+												variant="body2"
+												fontWeight="600"
+												color={
+													getBackgroundColorLightOrDark(theme.palette.secondary.main) === "dark"
+														? colors.white
+														: colors.black
+												}
+												sx={{
+													backgroundColor: theme.palette.secondary.main,
+													borderRadius: 1,
+													// border: `2px solid ${colorLumincance(
+													// 	theme.palette.secondary.main,
+													// 	getBackgroundColorLightOrDark(theme.palette.secondary.main) === "dark" ? 0.05 : -0.05
+													// )}`,
+													width: "fit-content",
+													padding: "2px 8px",
+												}}
+												dangerouslySetInnerHTML={{
+													__html: DOMPurify.sanitize(post.type),
+												}}
+											/>
+										) : (
+											<></>
+										)}
+									</Box>
+
+									{/* Title */}
 									<Typography
 										my={1}
-										textAlign="center"
-										fontFamily={theme.typography.fontFamily}
-										variant="h5"
-										fontWeight="800"
-										sx={{ color: theme.palette.secondary.main }}
-										dangerouslySetInnerHTML={{
-											__html: DOMPurify.sanitize(
-												post.type ? "//&nbsp;&nbsp;&nbsp;&nbsp;" + post.type + "&nbsp;&nbsp;&nbsp;&nbsp;//" : ""
-											),
-										}}
-									/>
-									<Typography
-										my={xs ? 0 : 1}
-										textAlign="center"
+										// textAlign="left"
 										sx={{ color: theme.palette.text.primary }}
 										fontFamily={theme.typography.fontFamily}
 										variant={"h3"}
@@ -527,14 +553,22 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									>
 										{post.title}
 									</Typography>
-									<Box display="flex" mt={mdDown ? 1 : 2} mb={xs ? 0 : 1} justifyContent="center" alignItems="center">
+
+									{/* Information */}
+									<Box
+										display="flex"
+										// mt={mdDown ? 1 : 2}
+										mb={xs ? 0 : 1}
+										justifyContent="left"
+										alignItems="center"
+									>
 										<CalendarMonth
 											sx={{
 												color: theme.palette.text.primary,
 												opacity: 0.6,
 												marginRight: "6px",
-												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
-												// fontSize: "default",
+												// fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												fontSize: "13px",
 											}}
 										/>
 										<Typography
@@ -544,8 +578,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											sx={{
 												color: theme.palette.text.primary,
 												opacity: 0.6,
-												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
-												// fontSize: "default",
+												// fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												fontSize: "13px",
 											}}
 										>
 											{new Date(post.createdAt).toLocaleDateString("en-GB", {
@@ -562,8 +596,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												opacity: 0.6,
 												marginLeft: "16px",
 												marginRight: "6px",
-												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
-												// fontSize: "default",
+												// fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												fontSize: "13px",
 											}}
 										/>
 										<Typography
@@ -573,8 +607,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											sx={{
 												color: theme.palette.text.primary,
 												opacity: 0.6,
-												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
-												// fontSize: "default",
+												// fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												fontSize: "13px",
 											}}
 										>
 											{post.readTime ? post.readTime : "⎯"}
@@ -585,9 +619,9 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												opacity: 0.6,
 												marginLeft: "16px",
 												marginRight: "6px",
-												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
-												// fontSize: "default",
 												color: theme.palette.text.primary,
+												// fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												fontSize: "13px",
 											}}
 										/>
 										<Typography
@@ -596,9 +630,9 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											fontWeight="600"
 											sx={{
 												opacity: 0.6,
-												fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
-												// fontSize: "default",
 												color: theme.palette.text.primary,
+												// fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+												fontSize: "13px",
 											}}
 										>
 											{post.published ? (
@@ -630,10 +664,11 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 							>
 								{OutputElement}
 							</Box>
+
 							<Box flexGrow={100} />
-							{/* Share and applause section */}
+
+							{/* Top divider with 3 action buttons */}
 							<Box mt={6} sx={{ userSelect: "none" }}>
-								{/* Horizontal lines */}
 								<Box display="flex" justifyContent="center" alignItems="center">
 									<Box
 										style={{
@@ -690,7 +725,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											/>
 										</Box>
 
-										{/* Paypal */}
+										{/* Buy me a coffee */}
 										<Box mr={3}>
 											<NavbarButton
 												variant="outline"
@@ -713,6 +748,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									/>
 								</Box>
 							</Box>
+							{/* Additional information */}
 							<Box mt={3} mb={3} display="flex" flexDirection="column">
 								<Typography
 									variant="body1"
@@ -741,6 +777,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 										</Typography>
 									)}
 							</Box>
+
 							{/* Comment section */}
 							<Box ref={toggleRef}>
 								<Toggle
@@ -797,6 +834,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									</Box>
 								</Toggle>
 							</Box>
+
+							{/* Bottom divider */}
 							<Box
 								my={3}
 								sx={{
@@ -804,6 +843,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									borderBottom: "2px solid rgba(100,100,100,0.2)",
 								}}
 							/>
+
 							{/* Recommendation */}
 							{postsOverview && nextRelevantPosts && nextRelevantPosts.length > 0 ? (
 								<Box mb={3}>

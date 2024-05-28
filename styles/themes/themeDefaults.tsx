@@ -32,12 +32,12 @@ export const baseTheme = createTheme({
 		fontSize: 14,
 		// Headings
 		// Usage:
-		h1: { fontSize: "calc(6rem * var(--font-scale))" },
+		h1: { fontSize: "calc(4rem * var(--font-scale))" },
 		// Usage:
-		h2: { fontSize: "calc(3.75 * var(--font-scale))" },
+		h2: { fontSize: "calc(3.5rem * var(--font-scale))" },
 		// Usage:
 		h3: {
-			fontSize: "calc(3rem * var(--font-scale))",
+			fontSize: "calc(2rem * var(--font-scale))",
 			fontWeight: 800,
 			[defaultTheme.breakpoints.only("sm")]: {
 				fontSize: "calc(32px * var(--font-scale))",
@@ -49,7 +49,7 @@ export const baseTheme = createTheme({
 		// Usage:
 		h4: {
 			fontWeight: 800,
-			fontSize: "calc(2.125rem * var(--font-scale))",
+			fontSize: "calc(1.6rem * var(--font-scale))",
 			[defaultTheme.breakpoints.only("sm")]: {
 				fontSize: "calc(24px * var(--font-scale))",
 			},
@@ -60,7 +60,7 @@ export const baseTheme = createTheme({
 		// Usage:
 		h5: {
 			fontWeight: 800,
-			fontSize: "calc(1.5rem * var(--font-scale))",
+			fontSize: "calc(1.3rem * var(--font-scale))",
 			[defaultTheme.breakpoints.only("sm")]: {
 				fontSize: "calc(22px * var(--font-scale))",
 			},
@@ -71,7 +71,7 @@ export const baseTheme = createTheme({
 		// Usage:
 		h6: {
 			fontWeight: 800,
-			fontSize: "calc(1.25rem * var(--font-scale))",
+			fontSize: "calc(1.15rem * var(--font-scale))",
 			[defaultTheme.breakpoints.only("sm")]: {
 				fontSize: "calc(20px * var(--font-scale))",
 			},
