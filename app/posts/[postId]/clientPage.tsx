@@ -639,8 +639,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												<PostViews
 													viewCount={views}
 													sx={{
-														fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
-														// fontSize: "default",
+														// fontSize: `calc(${theme.typography.body2.fontSize} * var(--font-scale))`,
+														fontSize: "13px",
 														color: theme.palette.text.primary,
 														fontFamily: theme.typography.fontFamily,
 													}}
