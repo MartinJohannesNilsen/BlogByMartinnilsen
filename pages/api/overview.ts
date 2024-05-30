@@ -1,3 +1,4 @@
+import { getPostsOverview } from "@/data/middleware/overview/overview";
 import { db } from "@/lib/firebaseConfig";
 import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
 import { doc, getDoc } from "firebase/firestore";
@@ -106,8 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	if (req.method === "GET") {
 		try {
-			const data = await getDoc(doc(db, "administrative", "overview")).then((data) => data.data()!.values);
-			if (!data) return res.status(404).send("Overview not found!");
+			const data = await getPostsOverview();
 			return res.status(200).send(data);
 		} catch (error) {
 			return res.status(500).json({ error: error });

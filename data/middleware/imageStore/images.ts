@@ -1,6 +1,4 @@
-"use server";
-
-// Upload an image to firebase storage
+// ImageStoring
 export async function uploadImage(file, postId, name) {
 	// Prepare FormData
 	const formData = new FormData();
@@ -36,8 +34,6 @@ export async function uploadImage(file, postId, name) {
 		return { error: error };
 	}
 }
-
-// Delete an image from firebase storage
 export async function deleteImage(fileRef) {
 	// Add apikey header
 	const headers = new Headers();
@@ -68,8 +64,6 @@ export async function deleteImage(fileRef) {
 		return { error: error };
 	}
 }
-
-// Get image details such as height, width and encoded blurhash
 export async function getImageDetails(imageUrl) {
 	// Add apikey header
 	const headers = new Headers();
@@ -85,3 +79,5 @@ export async function getImageDetails(imageUrl) {
 	);
 	return await res.json();
 }
+
+// TODO Make server variant with apikey instead of image store api key

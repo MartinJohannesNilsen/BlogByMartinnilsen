@@ -1,5 +1,5 @@
-import { deletePostsOverview, updatePostsOverview } from "@/data/db/overview";
-import { deletePost, getPost, updatePost } from "@/data/db/posts";
+import { deletePostsOverview, updatePostsOverview } from "@/data/middleware/overview/overview";
+import { deletePost, getPost, updatePost } from "@/data/middleware/posts/posts";
 import { db } from "@/lib/firebaseConfig";
 import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
 import { doc, getDoc } from "firebase/firestore";
@@ -283,14 +283,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	if (req.method === "GET") {
 		// Get post by id
 		try {
-			const post = await getDoc(doc(db, "posts", String(postId))).then((data) => data.data());
+			const post = await getPost(String(postId));
 			if (!post) {
 				return res.status(404).json({ code: 404, reason: "Post not found" });
 			}
 			if (parseData && typeof parseData === "string" && parseData.toLowerCase() === "true") {
-				return res.status(200).send({ ...post, data: JSON.parse(post.data) });
+				return res.status(200).send(post);
 			}
-			return res.status(200).send(post);
+			return res.status(200).send({ ...post, data: JSON.stringify(post.data) });
 		} catch (error) {
 			return res.status(500).json({ error: error });
 		}

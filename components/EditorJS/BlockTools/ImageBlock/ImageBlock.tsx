@@ -1,7 +1,7 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
-import { deleteImage, getImageDetails, uploadImage } from "@/data/db/images";
+import { deleteImage, getImageDetails, uploadImage } from "@/data/middleware/imageStore/images";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { BlockToolImageProps } from "@/types";
 import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-material";

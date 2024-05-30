@@ -95,11 +95,3 @@ export const defaultMetadata: Metadata = {
 		images: [DATA_DEFAULTS.images.openGraph], // Must be an absolute URL
 	},
 };
-
-export const defaultViewport: Viewport = {
-	// TODO color based on theme
-	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "#ffffff" },
-		{ media: "(prefers-color-scheme: dark)", color: "#161518" },
-	],
-};

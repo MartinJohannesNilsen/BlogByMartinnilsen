@@ -1,7 +1,7 @@
 "use client";
 import TagsPageCard from "@/components/DesignLibrary/Cards/TagsPageCard";
 import Navbar from "@/components/Navigation/Navbar";
-import { _filterListOfStoredPostsOnPublished } from "@/data/db/overview";
+import { _filterListOfStoredPostsOnPublished } from "@/data/middleware/overview/overview";
 import { getAllViewCounts } from "@/data/middleware/views/actions";
 import colors from "@/styles/colors";
 import { useTheme } from "@/styles/themes/ThemeProvider";

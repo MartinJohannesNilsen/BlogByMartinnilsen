@@ -2,7 +2,7 @@
 import ManageArticlePage from "@/app/create/[[...postId]]/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
-import { getPost } from "@/data/db/posts";
+import { getPost } from "@/data/middleware/posts/posts";
 import { DATA_DEFAULTS, defaultMetadata } from "@/data/metadata";
 import { Metadata } from "next";
 import { Session } from "next-auth";

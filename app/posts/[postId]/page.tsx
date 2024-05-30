@@ -3,7 +3,7 @@ import ReadArticleView from "@/app/posts/[postId]/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
 import { getCachedAllDescendingPostsOverview, getCachedPublishedDescendingPostsOverview } from "@/data/cache";
-import { getPost } from "@/data/db/posts";
+import { getPost } from "@/data/middleware/posts/posts";
 import { DATA_DEFAULTS, defaultMetadata, formatDate } from "@/data/metadata";
 import { Metadata } from "next";
 import { Session } from "next-auth";
