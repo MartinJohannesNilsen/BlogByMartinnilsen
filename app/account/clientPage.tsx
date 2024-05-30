@@ -72,9 +72,9 @@ const Account = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps) 
 					<>
 						<Grid item xs={5.7} mb={2}>
 							<TileButtonCard
-								href={"/create"}
-								icon={<Create sx={{ color: theme.palette.text.primary }} />}
-								text="Create"
+								icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
+								text="Post Table"
+								onClick={handlePostTableModalOpen}
 							/>
 						</Grid>
 						<Grid item xs={5.7} mb={2}>
@@ -87,20 +87,11 @@ const Account = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps) 
 					</>
 				)}
 				<Grid item xs={5.7}>
-					{isAuthorized ? (
-						<TileButtonCard
-							icon={<Newspaper sx={{ color: theme.palette.text.primary }} />}
-							text="Post Table"
-							onClick={handlePostTableModalOpen}
-						/>
-					) : (
-						// <TileButtonCard icon={<Newspaper sx={{ color: theme.palette.text.primary }} />} text="Posts" href="/" />
-						<TileButtonCard
-							icon={<Bookmark sx={{ color: theme.palette.text.primary }} />}
-							text="Saved Posts"
-							href="/tags?name=Saved"
-						/>
-					)}
+					<TileButtonCard
+						icon={<Bookmark sx={{ color: theme.palette.text.primary }} />}
+						text="Saved Posts"
+						href="/tags?name=Saved"
+					/>
 				</Grid>
 				<Grid item xs={5.7}>
 					<TileButtonCard
