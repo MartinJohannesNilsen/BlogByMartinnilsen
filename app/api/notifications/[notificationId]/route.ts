@@ -1,6 +1,6 @@
-import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { deleteNotification, getNotificationById, updateNotification } from "@/data/middleware/notifications/actions";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
-import { SupabaseAdmin } from "@/lib/supabaseAdmin";
 
 export const dynamic = "force-dynamic";
 
@@ -26,8 +26,8 @@ export const dynamic = "force-dynamic";
  *           application/json:
  *             example:
  *              {
- *                "id": 1,
- *                "created_at": "2023-12-26T17:56:37.351648+00:00",
+ *                "id": "1",
+ *                "createdAt": "2023-12-26T17:56:37.351Z",
  *                "title": "Test",
  *                "content": "This is a test",
  *                "action": {
@@ -61,16 +61,15 @@ export async function GET(request: NextRequest, { params }: { params: { notifica
 		return Response.json({ code: 400, reason: "Missing notificationId" }, { status: 400 });
 	}
 
-	// Query the pages table in the database where slug equals the request params slug.
-	const { data, error } = await SupabaseAdmin.from("notifications")
-		.select("id, createdAt, title, content, action, important")
-		.filter("id", "eq", notificationId)
-		.single();
-	// Return
-	if (data) {
-		return Response.json(data, { status: 200 });
-	} else {
-		return Response.json({ code: 404, reason: "Notification not found" }, { status: 400 });
+	try {
+		const notification = await getNotificationById(notificationId);
+		if (notification) {
+			return Response.json(notification, { status: 200 });
+		} else {
+			return Response.json({ code: 404, reason: "Notification not found" }, { status: 404 });
+		}
+	} catch (error) {
+		return Response.json({ code: 500, reason: "Internal server error" }, { status: 500 });
 	}
 }
 
@@ -100,16 +99,16 @@ export async function GET(request: NextRequest, { params }: { params: { notifica
  *                format: date-time
  *                nullable: true
  *               title:
- *                type string
+ *                type: string
  *               content:
- *                type string
+ *                type: string
  *               action:
  *                  href:
  *                    type: string
  *                  caption:
  *                    type: string
  *               important:
- *                type boolean
+ *                type: boolean
  *             example:
  *               title: "Test"
  *               content: "Hello world"
@@ -124,7 +123,7 @@ export async function GET(request: NextRequest, { params }: { params: { notifica
  *           application/json:
  *             example:
  *               id: "0"
- *               createdAt: "2023-12-26T17:56:37.351648+00:00"
+ *               createdAt: "2023-12-26T17:56:37.351Z"
  *               title: "Test"
  *               content: "Hello world"
  *               action:
@@ -156,23 +155,25 @@ export async function PUT(request: NextRequest, { params }: { params: { notifica
 		return Response.json({ code: 400, reason: "Missing notificationId" }, { status: 400 });
 	}
 
-	// Update using requestBody
-	const requestBody = await request.json();
-	if (requestBody.id)
-		return Response.json(
-			{
-				code: 400,
-				reason: "Update not followed through. Id should not be updated!",
-			},
-			{ status: 400 }
-		);
-	const { data, error } = await SupabaseAdmin.from("notifications")
-		.update(requestBody)
-		.eq("id", notificationId)
-		.select();
-	return data && data.length === 1
-		? Response.json({ code: 200, reason: "Notification successfully updated" }, { status: 200 })
-		: Response.json({ code: 400, reason: "No changes made" }, { status: 400 });
+	try {
+		const requestBody = await request.json();
+		if (requestBody.id) {
+			return Response.json(
+				{
+					code: 400,
+					reason: "Updating the 'id' field is not allowed. Please omit this field from your update request.",
+				},
+				{ status: 400 }
+			);
+		}
+
+		const success = await updateNotification(notificationId, requestBody);
+		return success
+			? Response.json({ code: 200, reason: "Notification successfully updated" }, { status: 200 })
+			: Response.json({ code: 400, reason: "No changes made" }, { status: 400 });
+	} catch (error) {
+		return Response.json({ code: 500, reason: "Internal server error" }, { status: 500 });
+	}
 }
 
 /**
@@ -216,21 +217,15 @@ export async function DELETE(request: NextRequest, { params }: { params: { notif
 		return Response.json({ code: 400, reason: "Missing notificationId" }, { status: 400 });
 	}
 
-	// Delete row where postId equal query parameter postId
-	const { error } = await SupabaseAdmin.from("notifications").delete().eq("id", notificationId).single();
-	return error
-		? Response.json(
-				{
-					code: 400,
-					reason: `Could not delete notification with id '${notificationId}'`,
-				},
-				{ status: 400 }
-		  )
-		: Response.json(
-				{
-					code: 200,
-					reason: `Deleted notification with id '${notificationId}'`,
-				},
-				{ status: 200 }
-		  );
+	try {
+		const success = await deleteNotification(notificationId);
+		return success
+			? Response.json({ code: 200, reason: `Deleted notification with id '${notificationId}'` }, { status: 200 })
+			: Response.json(
+					{ code: 400, reason: `Could not delete notification with id '${notificationId}'` },
+					{ status: 400 }
+			  );
+	} catch (error) {
+		return Response.json({ code: 500, reason: "Internal server error" }, { status: 500 });
+	}
 }

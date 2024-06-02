@@ -1,9 +1,28 @@
 "use server";
 import { StoredPost } from "@/types";
-import { MongoClient, Db } from "mongodb";
+import { Collection, Db, MongoClient } from "mongodb";
 
+// Properties
 const uri = `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_PASSWORD}@localhost:27017/`;
-const client = new MongoClient(uri);
+let cachedDb: Db;
+let client: MongoClient;
+const collection = "administrative";
+
+// Utility function to get the collection
+export async function _getCollection(): Promise<Collection> {
+	if (cachedDb) {
+		return cachedDb.collection(collection);
+	}
+	try {
+		client = await MongoClient.connect(uri);
+		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
+		cachedDb = db;
+		return db.collection(collection);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
 
 const _sortListOfStoredPostsOnTimestamp = (data: StoredPost[], asc?: boolean) => {
 	if (!data) return [];
@@ -30,9 +49,8 @@ export const _filterListOfStoredPostsOnPublished = (
 
 const getAllPostIds = async (filterOnVisibility: boolean): Promise<string[]> => {
 	try {
-		await client.connect();
-		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
-		const collection = db.collection("administrative");
+		// Get collection
+		const collection = await _getCollection();
 
 		// @ts-ignore
 		const postsOverviewDoc = await collection.findOne({ _id: "overview" });
@@ -48,16 +66,13 @@ const getAllPostIds = async (filterOnVisibility: boolean): Promise<string[]> => 
 	} catch (error) {
 		console.error("Error fetching post ids:", error);
 		return [];
-	} finally {
-		await client.close();
 	}
 };
 
 const getPostsOverview = async (sorted?: "asc" | "desc", filterOnPublished?: boolean): Promise<StoredPost[]> => {
 	try {
-		await client.connect();
-		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
-		const collection = db.collection("administrative");
+		// Get collection
+		const collection = await _getCollection();
 
 		// @ts-ignore
 		const postsOverviewDoc = await collection.findOne({ _id: "overview" });
@@ -80,16 +95,13 @@ const getPostsOverview = async (sorted?: "asc" | "desc", filterOnPublished?: boo
 	} catch (error) {
 		console.error("Error fetching posts overview:", error);
 		return [];
-	} finally {
-		await client.close();
 	}
 };
 
 const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
 	try {
-		await client.connect();
-		const db: Db = client.db("data-staging");
-		const collection = db.collection("administrative");
+		// Get collection
+		const collection = await _getCollection();
 
 		//@ts-ignore
 		const postsOverviewDoc = await collection.findOne({ _id: "overview" });
@@ -116,16 +128,13 @@ const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
 	} catch (error) {
 		console.error("Error adding post to overview:", error);
 		return false;
-	} finally {
-		await client.close();
 	}
 };
 
 const updatePostsOverview = async (updatedPost: StoredPost): Promise<boolean> => {
 	try {
-		await client.connect();
-		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
-		const collection = db.collection("administrative");
+		// Get collection
+		const collection = await _getCollection();
 
 		//@ts-ignore
 		const postsOverviewDoc = await collection.findOne({ _id: "overview" });
@@ -156,16 +165,14 @@ const updatePostsOverview = async (updatedPost: StoredPost): Promise<boolean> =>
 	} catch (error) {
 		console.error("Error updating posts overview:", error);
 		return false;
-	} finally {
-		await client.close();
 	}
 };
 
 const deletePostsOverview = async (id: string): Promise<boolean> => {
 	try {
-		await client.connect();
-		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
-		const collection = db.collection("administrative");
+		// Get collection
+		const collection = await _getCollection();
+
 		//@ts-ignore
 		const postsOverviewDoc = await collection.findOne({ _id: "overview" });
 
@@ -193,8 +200,6 @@ const deletePostsOverview = async (id: string): Promise<boolean> => {
 	} catch (error) {
 		console.error("Error deleting post from overview:", error);
 		return false;
-	} finally {
-		await client.close();
 	}
 };
 

@@ -1,6 +1,6 @@
 "use server";
-import { getPostsOverview } from "@/data/middleware/overview/overview";
-import { getTags } from "@/data/middleware/tags/tags";
+import { getPostsOverview } from "@/data/middleware/overview/actions";
+import { getTags } from "@/data/middleware/tags/actions";
 import { unstable_cache } from "next/cache";
 
 // Cache overview of posts with only published posts

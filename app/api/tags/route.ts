@@ -1,5 +1,5 @@
-import { getTags } from "@/data/middleware/tags/tags";
-import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { getTags } from "@/data/middleware/tags/actions";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";

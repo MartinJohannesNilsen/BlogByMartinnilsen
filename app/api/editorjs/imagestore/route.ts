@@ -1,5 +1,5 @@
 import { cloudStorage } from "@/lib/firebaseConfig";
-import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/lib/tokenValidationAPI";
+import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { NextRequest } from "next/server";
 

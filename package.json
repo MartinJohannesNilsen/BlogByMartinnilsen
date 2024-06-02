@@ -37,7 +37,6 @@
 		"@mui/styles": "^5.15.15",
 		"@mui/x-data-grid": "^7.3.1",
 		"@react-spring/web": "^9.7.3",
-		"@supabase/supabase-js": "^2.42.7",
 		"@types/dompurify": "^3.0.5",
 		"@types/gsap": "^3.0.0",
 		"@types/jquery": "^3.5.29",

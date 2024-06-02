@@ -1,7 +1,7 @@
 "use client";
 import TagsPageCard from "@/components/DesignLibrary/Cards/TagsPageCard";
 import Navbar from "@/components/Navigation/Navbar";
-import { _filterListOfStoredPostsOnPublished } from "@/data/middleware/overview/overview";
+import { _filterListOfStoredPostsOnPublished } from "@/data/middleware/overview/actions";
 import { getAllViewCounts } from "@/data/middleware/views/actions";
 import colors from "@/styles/colors";
 import { useTheme } from "@/styles/themes/ThemeProvider";
@@ -45,11 +45,13 @@ const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => 
 	const [_, setCardLayout] = useStickyState("cardLayout", "plain");
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
-	const [views, setViews] = useState();
+	const [views, setViews] = useState<{}>();
 
 	useEffect(() => {
 		// Get views
-		getAllViewCounts().then((data) => setViews(data));
+		getAllViewCounts().then((data) => {
+			if (data) setViews(data);
+		});
 	}, []);
 
 	const updateData = () => {

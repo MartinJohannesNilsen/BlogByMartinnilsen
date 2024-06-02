@@ -1,5 +1,5 @@
-import { getPostsOverview } from "@/data/middleware/overview/overview";
-import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { getPostsOverview } from "@/data/middleware/overview/actions";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";

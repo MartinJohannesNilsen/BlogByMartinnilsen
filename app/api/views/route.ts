@@ -1,5 +1,5 @@
-import { SupabaseAdmin } from "@/lib/supabaseAdmin";
-import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { getAllViewCounts } from "@/data/middleware/views/actions";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -28,17 +28,15 @@ export async function GET(request: NextRequest) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
-		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
+		return new Response(JSON.stringify({ code: authValidation.code, reason: authValidation.reason }), {
+			status: authValidation.code,
+		});
 	}
 
-	// Query the pages table in the database where slug equals the request params slug.
-	const { data, error } = await SupabaseAdmin.from("views").select("postId, viewCount");
-
-	if (data) {
-		let viewCounts = {};
-		data.map((row) => (viewCounts[row.postId] = row.viewCount));
-		return Response.json(viewCounts || null, { status: 200 });
-	} else if (error) {
-		return Response.json({ code: 500, reason: error }, { status: 500 });
+	try {
+		const viewCounts = await getAllViewCounts();
+		return new Response(JSON.stringify(viewCounts || null), { status: 200 });
+	} catch (error) {
+		return new Response(JSON.stringify({ code: 500, reason: error.message }), { status: 500 });
 	}
 }

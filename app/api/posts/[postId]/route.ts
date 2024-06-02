@@ -1,7 +1,7 @@
 import { revalidatePost, revalidatePostsOverview, revalidateTags } from "@/data/actions";
-import { deletePostsOverview, updatePostsOverview } from "@/data/middleware/overview/overview";
-import { deletePost, getPost, updatePost } from "@/data/middleware/posts/posts";
-import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { deletePostsOverview, updatePostsOverview } from "@/data/middleware/overview/actions";
+import { deletePost, getPost, updatePost } from "@/data/middleware/posts/actions";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { FullPost } from "@/types";
 import { NextRequest } from "next/server";
 

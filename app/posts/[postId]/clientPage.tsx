@@ -21,7 +21,7 @@ import {
 	ThumbUpAlt,
 	Visibility,
 } from "@mui/icons-material";
-import { Box, Grid, Link, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import DOMPurify from "isomorphic-dompurify";
@@ -61,13 +61,11 @@ import CustomTable from "@/components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "@/components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
 import { DATA_DEFAULTS } from "@/data/metadata";
-import { getViewCountsByPostId, incrementPostViews } from "@/data/middleware/views/actions";
-import { handleSharing } from "@/utils/handleSharing";
-import useStickyState from "@/utils/useStickyState";
+import { getViewCount, incrementViewCount } from "@/data/middleware/views/actions";
 import colors from "@/styles/colors";
 import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
-import colorLumincance from "@/utils/colorLuminance";
-import { baseTheme } from "@/styles/themes/themeDefaults";
+import { handleSharing } from "@/utils/handleSharing";
+import useStickyState from "@/utils/useStickyState";
 
 // Pass your custom renderers to Output
 export const renderers = {
@@ -215,11 +213,11 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 			post.published &&
 			!isAuthorized &&
 			// All criterias are met, run POST request to increment counter
-			incrementPostViews(postId);
+			incrementViewCount(postId);
 
 		// Get views
-		getViewCountsByPostId(postId).then((data) => {
-			setViews(data.viewCount);
+		getViewCount(postId).then((viewCount) => {
+			setViews(viewCount);
 		});
 
 		// Get next recommendation posts

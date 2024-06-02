@@ -3,8 +3,27 @@ import { FirestoreFullPost, FullPost } from "@/types";
 import { firestoreAutoId } from "@/utils/firestoreAutoId";
 import { Collection, Db, Document, MongoClient, WithId } from "mongodb";
 
+// Properties
 const uri = `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_PASSWORD}@localhost:27017/`;
-const client = new MongoClient(uri);
+let cachedDb: Db;
+let client: MongoClient;
+const collection = "posts";
+
+// Utility function to get the collection
+export async function _getCollection(): Promise<Collection> {
+	if (cachedDb) {
+		return cachedDb.collection(collection);
+	}
+	try {
+		client = await MongoClient.connect(uri);
+		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
+		cachedDb = db;
+		return db.collection(collection);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
 
 // Helper functions for conversion
 const postConverter = {
@@ -20,13 +39,6 @@ const postConverter = {
 			data: JSON.parse(doc.data),
 		};
 	},
-};
-
-// Utility function to get the collection
-const _getCollection = async (): Promise<Collection> => {
-	await client.connect();
-	const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
-	return db.collection("posts");
 };
 
 const getPost = async (id: string): Promise<FullPost | null> => {
@@ -48,8 +60,6 @@ const addPost = async (newDocument: FullPost): Promise<string> => {
 	} catch (error) {
 		console.error("Error adding post:", error);
 		throw error;
-	} finally {
-		await client.close();
 	}
 };
 

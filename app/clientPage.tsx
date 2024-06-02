@@ -5,7 +5,7 @@ import LandingPageListCard from "@/components/DesignLibrary/Cards/LandingPageLis
 import LandingPagePlainCard from "@/components/DesignLibrary/Cards/LandingPagePlainCard";
 import Navbar from "@/components/Navigation/Navbar";
 import TinderSwipe from "@/components/TinderSwipe/TinderSwipe";
-import { _filterListOfStoredPostsOnPublished } from "@/data/middleware/overview/overview";
+import { _filterListOfStoredPostsOnPublished } from "@/data/middleware/overview/actions";
 import { getAllViewCounts } from "@/data/middleware/views/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { ServerPageProps, StoredPost } from "@/types";

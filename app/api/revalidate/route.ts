@@ -1,4 +1,4 @@
-import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
 

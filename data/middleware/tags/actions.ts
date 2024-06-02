@@ -1,18 +1,31 @@
 "use server";
-import { MongoClient, Db, Collection } from "mongodb";
+import { Collection, Db, MongoClient } from "mongodb";
 
+// Properties
 const uri = `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_PASSWORD}@localhost:27017/`;
-const client = new MongoClient(uri);
+let cachedDb: Db;
+let client: MongoClient;
+const collection = "administrative";
 
-const getCollection = async (collectionName: string): Promise<Collection> => {
-	await client.connect();
-	const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
-	return db.collection(collectionName);
-};
+// Utility function to get the collection
+export async function _getCollection(): Promise<Collection> {
+	if (cachedDb) {
+		return cachedDb.collection(collection);
+	}
+	try {
+		client = await MongoClient.connect(uri);
+		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
+		cachedDb = db;
+		return db.collection(collection);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
 
 const getTags = async (): Promise<string[]> => {
 	try {
-		const collection = await getCollection("administrative");
+		const collection = await _getCollection();
 		// @ts-ignore
 		const tagsDoc = await collection.findOne({ _id: "tags" });
 		if (tagsDoc) {
@@ -23,14 +36,12 @@ const getTags = async (): Promise<string[]> => {
 	} catch (error) {
 		console.error("Error fetching tags:", error);
 		return [];
-	} finally {
-		await client.close();
 	}
 };
 
 const addTag = async (tag: string): Promise<boolean> => {
 	try {
-		const collection = await getCollection("administrative");
+		const collection = await _getCollection();
 		// @ts-ignore
 		const tagsDoc = await collection.findOne({ _id: "tags" });
 
@@ -48,8 +59,6 @@ const addTag = async (tag: string): Promise<boolean> => {
 	} catch (error) {
 		console.error("Error adding tag:", error);
 		return false;
-	} finally {
-		await client.close();
 	}
 };
 

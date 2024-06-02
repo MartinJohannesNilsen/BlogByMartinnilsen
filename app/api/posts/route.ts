@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection } from "mongodb";
-import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -105,7 +105,5 @@ export async function GET(request: NextRequest) {
 		return Response.json(response, { status: 200 });
 	} catch (error) {
 		return Response.json({ code: 500, error: error }, { status: 500 });
-	} finally {
-		await client.close();
 	}
 }

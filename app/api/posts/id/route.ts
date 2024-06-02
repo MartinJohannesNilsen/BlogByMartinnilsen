@@ -1,4 +1,4 @@
-import { getPostsOverview } from "@/data/middleware/overview/overview";
+import { getPostsOverview } from "@/data/middleware/overview/actions";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
