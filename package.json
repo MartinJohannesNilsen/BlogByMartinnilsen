@@ -59,7 +59,6 @@
 		"emoji-picker-react": "^4.9.2",
 		"feed": "^4.2.2",
 		"firebase": "^10.11.1",
-		"formidable-serverless": "^1.1.1",
 		"gsap": "^3.12.5",
 		"html-react-parser": "^5.1.10",
 		"html-to-text": "^9.0.5",

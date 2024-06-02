@@ -1,6 +1,8 @@
 import { SupabaseAdmin } from "@/lib/supabaseAdmin";
-import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
-import { NextApiRequest, NextApiResponse } from "next";
+import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 /**
  * @swagger
@@ -34,6 +36,26 @@ import { NextApiRequest, NextApiResponse } from "next";
  *         description: Internal Server Error.
  *       '501':
  *         description: Method not supported.
+ */
+export async function GET(request: NextRequest) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = await validateAuthAPIToken(request);
+	if (!authValidation.isValid) {
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
+	}
+
+	// Query the notifications table
+	const { data } = await SupabaseAdmin.from("notifications").select("id, createdAt, title, content, action, important");
+	if (data) {
+		return Response.json(data, { status: 200 });
+	} else {
+		return Response.json({ code: 500, reason: "Internal server error" }, { status: 500 });
+	}
+}
+
+/**
+ * @swagger
+ * /api/notifications:
  *   post:
  *     summary: Create notification
  *     description: Create notification. Key 'CreatedAt' defaults to now(), but could be set as time-date format string.
@@ -88,39 +110,27 @@ import { NextApiRequest, NextApiResponse } from "next";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(request: NextRequest) {
 	// Validate authorized access based on header field 'apikey'
-	const authValidation = validateAuthAPIToken(req);
+	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
-		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
-	if (req.method === "GET") {
-		// Query the pages table in the database where slug equals the request params slug.
-		const { data } = await SupabaseAdmin.from("notifications").select(
-			"id, createdAt, title, content, action, important"
-		);
-
-		if (data) {
-			// let notifications = {};
-			// data.map((row) => (viewCounts[row.postId] = row.viewCount));
-			return res.status(200).json(data);
-		} else {
-			return res.status(500).json({ code: 500, reason: "Internal server error" });
-		}
-	} else if (req.method === "POST") {
-		if (req.body.id)
-			return res.status(400).json({
+	// Post using requestBody
+	const requestBody = await request.json();
+	if (requestBody.id)
+		return Response.json(
+			{
 				code: 400,
 				reason: "Post not followed through. Id is set automatically!",
-			});
+			},
+			{ status: 400 }
+		);
 
-		// Insert data in database
-		const { data, error } = await SupabaseAdmin.from("notifications").insert(req.body).select().single();
-		return error || !data
-			? res.status(500).json({ code: 500, reason: "Could not insert to database" })
-			: res.status(200).json(data);
-	} else {
-		return res.status(501).json({ code: 501, reason: "Method not supported" });
-	}
+	// Insert data in database
+	const { data, error } = await SupabaseAdmin.from("notifications").insert(requestBody).select().single();
+	return error || !data
+		? Response.json({ code: 500, reason: "Could not insert to database" }, { status: 500 })
+		: Response.json(data, { status: 200 });
 }

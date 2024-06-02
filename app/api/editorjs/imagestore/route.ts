@@ -1,12 +1,22 @@
 import { cloudStorage } from "@/lib/firebaseConfig";
-import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/utils/validateAuthTokenPagesRouter";
+import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/lib/tokenValidationAPI";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import formidable from "formidable-serverless";
-import * as fs from "fs";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
 
-const srcToFile = async (src: string) => await fs.readFileSync(src);
+export const dynamic = "force-dynamic";
 
+// Helper functions and list of supported types
+const srcToBuffer = async (file: File) => Buffer.from(await file.arrayBuffer());
+const generateName = (extension: string) => {
+	const date = new Date();
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	const hour = String(date.getHours()).padStart(2, "0");
+	const minute = String(date.getMinutes()).padStart(2, "0");
+	const second = String(date.getSeconds()).padStart(2, "0");
+	return `${year}-${month}-${day}.${hour}${minute}${second}.${extension}`;
+};
 const supportedMimeTypes = {
 	jpg: "image/jpeg",
 	jpeg: "image/jpeg",
@@ -24,23 +34,6 @@ const supportedMimeTypes = {
 	wmv: "video/x-ms-wmv",
 	flv: "video/x-flv",
 	mkv: "video/x-matroska",
-};
-
-const generateName = (extension: string) => {
-	const date = new Date();
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-	const hour = String(date.getHours()).padStart(2, "0");
-	const minute = String(date.getMinutes()).padStart(2, "0");
-	const second = String(date.getSeconds()).padStart(2, "0");
-	return `${year}-${month}-${day}.${hour}${minute}${second}.${extension}`;
-};
-
-export const config = {
-	api: {
-		bodyParser: false,
-	},
 };
 
 /**
@@ -128,6 +121,72 @@ export const config = {
  *         description: Internal server error.
  *       501:
  *         description: Method not supported.
+ */
+export async function POST(request: NextRequest) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = await validateAuthAPIToken(request);
+	const imagestoreValidation = await validateImagestoreAPIToken(request);
+	if (!authValidation.isValid && !imagestoreValidation.isValid) {
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
+	}
+
+	// Get query parameters
+	const name = request.nextUrl.searchParams.get("name");
+	const directory = request.nextUrl.searchParams.get("directory");
+
+	// Check if directory is missing
+	if (!directory) {
+		return Response.json({ code: 400, reason: "Missing directory, root should not be used!" }, { status: 400 });
+	}
+
+	try {
+		const formData = await request.formData();
+		const file = formData.get("file") as File;
+
+		if (!file) {
+			return Response.json({ code: 400, reason: "File is missing!" }, { status: 400 });
+		}
+
+		// Get extension from file name
+		const extensionMatch = file.name.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
+		const extension = extensionMatch && extensionMatch[1].toLowerCase();
+		if (!extension) return Response.json({ code: 400, reason: "File missing extension!" }, { status: 400 });
+
+		// Check for file support
+		const mimeType = supportedMimeTypes[extension];
+		if (!mimeType) {
+			return Response.json(
+				{ code: 400, reason: `File with extension '.${extension}' not supported!` },
+				{ status: 400 }
+			);
+		}
+
+		// Rename file, timestamp as default if not given new name
+		const fileRef =
+			`images/${directory}${directory && "/"}` + (name ? `${name}.${extension}` : generateName(extension));
+
+		// Upload to Firestore
+		const cloudStorageFileRef = ref(cloudStorage, fileRef);
+		const metadata = {
+			contentType: file.type,
+		};
+		const fileBuffer = await srcToBuffer(file);
+		const uploadTask = await uploadBytes(cloudStorageFileRef, fileBuffer, metadata);
+		const downloadURL = await getDownloadURL(uploadTask.ref);
+
+		return Response.json(
+			{ data: { url: downloadURL, fileRef: fileRef }, file: { size: file.size, name: file.name, type: file.type } },
+			{ status: 200 }
+		);
+	} catch (err) {
+		console.log(err);
+		return Response.json({ code: 500, reason: err }, { status: 500 });
+	}
+}
+
+/**
+ * @swagger
+ * /api/editorjs/imagestore:
  *   delete:
  *     summary: Delete image
  *     description: Delete image from storage solution.
@@ -163,81 +222,26 @@ export const config = {
  *       501:
  *         description: Method not supported.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function DELETE(request: NextRequest) {
 	// Validate authorized access based on header field 'apikey'
-	const authValidation = validateAuthAPIToken(req);
-	const imagestoreValidation = validateImagestoreAPIToken(req);
+	const authValidation = await validateAuthAPIToken(request);
+	const imagestoreValidation = await validateImagestoreAPIToken(request);
 	if (!authValidation.isValid && !imagestoreValidation.isValid) {
-		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
-	if (req.method === "POST") {
-		if (!req.query.directory) {
-			return res.status(400).json({ code: 400, reason: "Missing directory, root should not be used!" });
-		}
-
-		try {
-			const form = new formidable.IncomingForm();
-			form.multiples = false;
-			form.keepExtensions = true;
-
-			form.parse(req, async (err, fields, files) => {
-				if (err) {
-					res.status(500).json({ success: false, error: err });
-				} else {
-					const file = files.file;
-
-					// Get extension from file name
-					const extensionMatch = file.name.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
-					const extension = extensionMatch && extensionMatch[1].toLowerCase();
-					if (!extension) return res.status(400).json({ code: 400, reason: "File missing extension!" });
-
-					// Check for file support
-					const mimeType = supportedMimeTypes[extension];
-					if (!mimeType)
-						// Not in supported hashmap
-						res.status(400).json({ code: 400, reason: `File with extension '.${extension}' not supported!` });
-					// if (mimeType !== file.type)
-					// 	// Check for content type and extension match
-					// 	res.status(400).json({
-					// 		code: 400,
-					// 		reason: `File extension '.${extension}' and content type '${file.type}' does not match!`,
-					// 	});
-
-					// Rename file, timestamp as default if not given new name
-					const fileRef =
-						`images/${req.query.directory}${req.query.directory && "/"}` +
-						(req.query.name ? `${req.query.name}.${extension}` : generateName(extension));
-
-					// Upload to Firestore
-					let cloudStorageFileRef = ref(cloudStorage, fileRef);
-					let metadata = {
-						contentType: file.type,
-					};
-					let fileBytes = await srcToFile(file.path);
-					let uploadTask = await uploadBytes(cloudStorageFileRef, fileBytes, metadata);
-					const downloadURL = await getDownloadURL(uploadTask.ref);
-
-					res.status(200).json({ data: { url: downloadURL, fileRef: fileRef }, file: file });
-				}
-			});
-		} catch (err) {
-			return res.status(500).json({ code: 500, reason: err });
-		}
-	} else if (req.method === "DELETE") {
-		if (!req.query.fileRef) {
-			return res.status(400).json({ code: 400, reason: "Missing fileRef to Firebase Storage!" });
-		}
-
-		const fileRef = ref(cloudStorage, req.query.fileRef as string);
-		await deleteObject(fileRef)
-			.then(() => {
-				return res.status(200).json({ code: 200, response: "File successfully deleted!" });
-			})
-			.catch((error) => {
-				return res.status(500).json({ code: 500, reason: error });
-			});
-	} else {
-		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	// Get query parameters
+	const fileRef = request.nextUrl.searchParams.get("fileRef");
+	if (!fileRef) {
+		return Response.json({ code: 400, reason: "Missing fileRef to Firebase Storage!" }, { status: 400 });
 	}
+
+	const db_fileRef = ref(cloudStorage, fileRef as string);
+	await deleteObject(db_fileRef)
+		.then(() => {
+			return Response.json({ code: 200, response: "File successfully deleted!" }, { status: 200 });
+		})
+		.catch((error) => {
+			return Response.json({ code: 500, reason: error }, { status: 500 });
+		});
 }

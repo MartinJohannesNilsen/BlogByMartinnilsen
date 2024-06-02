@@ -1,7 +1,10 @@
-import { db } from "@/lib/firebaseConfig";
-import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { MongoClient, Db, Collection } from "mongodb";
+import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
+const uri = `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_PASSWORD}@localhost:27017/`;
+const client = new MongoClient(uri);
 
 /**
  * @swagger
@@ -67,45 +70,42 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(request: NextRequest) {
 	// Validate authorized access based on header field 'apikey'
-	const authValidation = validateAuthAPIToken(req);
+	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
-		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
 	// Get query parameter if present
-	const parseData = req.query.parseData;
+	const parseData = request.nextUrl.searchParams.get("parseData");
 
-	if (req.method === "GET") {
-		// Get all posts
-		try {
-			const response: { posts: any[]; overview: any[] } = {
-				posts: [],
-				overview: [],
-			};
-			const querySnapshot = await getDocs(collection(db, "posts"));
-			querySnapshot.forEach((doc) => {
-				// Get doc data object
-				const docData = doc.data();
-				// Get datafield, parse if parseData is present
-				const dataField =
-					parseData && typeof parseData === "string" && parseData.toLowerCase() === "true"
-						? JSON.parse(docData.data)
-						: docData.data;
-				// Push response
-				response.posts.push({
-					id: doc.id,
-					data: { ...docData, data: dataField },
-				});
+	// Get all posts
+	try {
+		const response: any[] = [];
+		await client.connect();
+		const db: Db = client.db(process.env.NEXT_PUBLIC_DB);
+		const postsCollection = db.collection("posts");
+		const postsCursor = postsCollection.find({});
+		const posts = await postsCursor.toArray();
+		posts.forEach((doc) => {
+			// Get doc data object
+			const docData = doc;
+			const dataField =
+				parseData && typeof parseData === "string" && parseData.toLowerCase() === "true"
+					? JSON.parse(doc.data)
+					: doc.data;
+			// Push response
+			response.push({
+				id: doc._id,
+				data: { ...docData, data: dataField },
 			});
-			const postsOverviewSnapshot = await getDoc(doc(db, "administrative", "overview"));
-			response.overview = postsOverviewSnapshot.data()!.values;
-			return res.status(200).json(response);
-		} catch (error) {
-			return res.status(500).json({ code: 500, reason: error });
-		}
-	} else {
-		return res.status(501).json({ code: 501, reason: "Method not supported" });
+		});
+
+		return Response.json(response, { status: 200 });
+	} catch (error) {
+		return Response.json({ code: 500, error: error }, { status: 500 });
+	} finally {
+		await client.close();
 	}
 }

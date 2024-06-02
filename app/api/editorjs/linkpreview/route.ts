@@ -1,4 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 /**
  * @swagger
@@ -51,34 +53,34 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(request: NextRequest) {
 	// Removed due to editorjs component not supporting additional parameters
 	// Check for secret to confirm this is a valid request
-	// if (!req.query.secret) {
-	//   return res.status(400).json({ code: 400, reason: "Missing token" });
-	// } else if (req.query.secret !== process.env.NEXT_PUBLIC_LINKPREVIEW_API_KEY) {
-	//   return res.status(400).json({ code: 400, reason: "Invalid token" });
+	// const secret = request.nextUrl.searchParams.get("secret");
+	// if (!secret) {
+	// 	return Response.json({ code: 400, reason: "Missing token" }, { status: 400 });
+	// } else if (secret !== process.env.LINKPREVIEW_API_KEY) {
+	// 	return Response.json({ code: 400, reason: "Invalid token" }, { status: 400 });
 	// }
 
+	// Get query param
+	const url = request.nextUrl.searchParams.get("url");
+
 	// Check if url is set
-	if (!req.query.url) {
-		return res.status(400).json({ code: 400, reason: "Missing url" });
+	if (!url) {
+		return Response.json({ code: 400, reason: "Missing url" }, { status: 400 });
 	}
 
-	if (req.method === "GET") {
-		try {
-			const api = await fetch(
-				"http://api.linkpreview.net/?key=" + process.env.LINKPREVIEW_API_KEY + "&q=" + req.query.url
-			).then((data) => data.json());
-			if (api.error === undefined) {
-				return res.json({ success: 1, meta: api });
-			} else {
-				return res.status(400).json({ code: 400, reason: "Invalid url" });
-			}
-		} catch (err) {
-			return res.status(500).json({ code: 401, reason: err });
+	try {
+		const api = await fetch(`http://api.linkpreview.net/?key=${process.env.LINKPREVIEW_API_KEY}&q=${url}`).then(
+			(data) => data.json()
+		);
+		if (api.error === undefined) {
+			return Response.json({ success: 1, meta: api }, { status: 200 });
+		} else {
+			return Response.json({ code: 400, reason: "Invalid url" }, { status: 400 });
 		}
-	} else {
-		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	} catch (err) {
+		return Response.json({ code: 401, reason: err }, { status: 401 });
 	}
 }

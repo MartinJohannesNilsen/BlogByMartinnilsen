@@ -1,6 +1,8 @@
+import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { NextRequest } from "next/server";
 import { SupabaseAdmin } from "@/lib/supabaseAdmin";
-import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
-import { NextApiRequest, NextApiResponse } from "next";
+
+export const dynamic = "force-dynamic";
 
 /**
  * @swagger
@@ -40,6 +42,41 @@ import { NextApiRequest, NextApiResponse } from "next";
  *         description: Internal Server Error.
  *       '501':
  *         description: Method not supported.
+ */
+export async function GET(request: NextRequest, { params }: { params: { notificationId: string } }) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = await validateAuthAPIToken(request);
+	if (!authValidation.isValid) {
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
+	}
+
+	// Check if id is provided
+	const notificationId = params.notificationId;
+	if (
+		!notificationId ||
+		notificationId == "{notificationId}" ||
+		notificationId === "" ||
+		typeof notificationId !== "string"
+	) {
+		return Response.json({ code: 400, reason: "Missing notificationId" }, { status: 400 });
+	}
+
+	// Query the pages table in the database where slug equals the request params slug.
+	const { data, error } = await SupabaseAdmin.from("notifications")
+		.select("id, createdAt, title, content, action, important")
+		.filter("id", "eq", notificationId)
+		.single();
+	// Return
+	if (data) {
+		return Response.json(data, { status: 200 });
+	} else {
+		return Response.json({ code: 404, reason: "Notification not found" }, { status: 400 });
+	}
+}
+
+/**
+ * @swagger
+ * /api/notifications/{notificationId}:
  *   put:
  *     summary: Update notification with notificationId
  *     description: Update notification with id equal to provided postId.
@@ -100,6 +137,47 @@ import { NextApiRequest, NextApiResponse } from "next";
  *         description: Internal Server Error.
  *       '501':
  *         description: Method not supported.
+ */
+export async function PUT(request: NextRequest, { params }: { params: { notificationId: string } }) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = await validateAuthAPIToken(request);
+	if (!authValidation.isValid) {
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
+	}
+
+	// Check if id is provided
+	const notificationId = params.notificationId;
+	if (
+		!notificationId ||
+		notificationId == "{notificationId}" ||
+		notificationId === "" ||
+		typeof notificationId !== "string"
+	) {
+		return Response.json({ code: 400, reason: "Missing notificationId" }, { status: 400 });
+	}
+
+	// Update using requestBody
+	const requestBody = await request.json();
+	if (requestBody.id)
+		return Response.json(
+			{
+				code: 400,
+				reason: "Update not followed through. Id should not be updated!",
+			},
+			{ status: 400 }
+		);
+	const { data, error } = await SupabaseAdmin.from("notifications")
+		.update(requestBody)
+		.eq("id", notificationId)
+		.select();
+	return data && data.length === 1
+		? Response.json({ code: 200, reason: "Notification successfully updated" }, { status: 200 })
+		: Response.json({ code: 400, reason: "No changes made" }, { status: 400 });
+}
+
+/**
+ * @swagger
+ * /api/notifications/{notificationId}:
  *   delete:
  *     summary: Delete notification
  *     description: Delete notification with id equal to parameter 'notificationId'.
@@ -120,62 +198,39 @@ import { NextApiRequest, NextApiResponse } from "next";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function DELETE(request: NextRequest, { params }: { params: { notificationId: string } }) {
 	// Validate authorized access based on header field 'apikey'
-	const authValidation = validateAuthAPIToken(req);
+	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
-		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
 	// Check if id is provided
-	const { notificationId } = req.query;
+	const notificationId = params.notificationId;
 	if (
 		!notificationId ||
 		notificationId == "{notificationId}" ||
 		notificationId === "" ||
 		typeof notificationId !== "string"
 	) {
-		return res.status(400).json({ code: 400, reason: "Missing notificationId" });
+		return Response.json({ code: 400, reason: "Missing notificationId" }, { status: 400 });
 	}
 
-	if (req.method === "GET") {
-		// Query the pages table in the database where slug equals the request params slug.
-		const { data, error } = await SupabaseAdmin.from("notifications")
-			.select("id, createdAt, title, content, action, important")
-			.filter("id", "eq", notificationId)
-			.single();
-		// Return
-		if (data) {
-			return res.status(200).json(data);
-		} else {
-			return res.status(404).json({ code: 404, reason: "Notification not found" });
-		}
-	} else if (req.method === "PUT") {
-		if (req.body.id)
-			return res.status(400).json({
-				code: 400,
-				reason: "Update not followed through. Id should not be updated!",
-			});
-		const { data, error } = await SupabaseAdmin.from("notifications")
-			.update(req.body)
-			.eq("id", notificationId)
-			.select();
-		return data && data.length === 1
-			? res.status(200).json({ code: 200, reason: "Notification successfully updated" })
-			: res.status(400).json({ code: 400, reason: "No changes made" });
-	} else if (req.method === "DELETE") {
-		// Delete row where postId equal query parameter postId
-		const { error } = await SupabaseAdmin.from("notifications").delete().eq("id", notificationId).single();
-		return error
-			? res.status(400).json({
+	// Delete row where postId equal query parameter postId
+	const { error } = await SupabaseAdmin.from("notifications").delete().eq("id", notificationId).single();
+	return error
+		? Response.json(
+				{
 					code: 400,
-					reason: `Could not delete view count of notification '${notificationId}'`,
-			  })
-			: res.status(200).json({
+					reason: `Could not delete notification with id '${notificationId}'`,
+				},
+				{ status: 400 }
+		  )
+		: Response.json(
+				{
 					code: 200,
-					reason: `Deleted view count of post '${notificationId}'`,
-			  });
-	} else {
-		return res.status(501).json({ code: 501, reason: "Method not supported" });
-	}
+					reason: `Deleted notification with id '${notificationId}'`,
+				},
+				{ status: 200 }
+		  );
 }

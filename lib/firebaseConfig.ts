@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const config = {
@@ -12,6 +11,5 @@ const config = {
 	measurementId: process.env.NEXT_PUBLIC_FIREBASE_measurementId,
 };
 const firebaseApp = initializeApp(config);
-const db = getFirestore(firebaseApp);
 const cloudStorage = getStorage();
-export { cloudStorage, db, firebaseApp };
+export { cloudStorage, firebaseApp };

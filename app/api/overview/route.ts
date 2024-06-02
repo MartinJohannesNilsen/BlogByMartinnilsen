@@ -1,8 +1,8 @@
 import { getPostsOverview } from "@/data/middleware/overview/overview";
-import { db } from "@/lib/firebaseConfig";
-import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
-import { doc, getDoc } from "firebase/firestore";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 /**
  * @swagger
@@ -92,27 +92,23 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *                         example: "U45=LxTM8^wIt:X9rps=00nL.8TLivivR%XT"
  *
  *       '404':
- *         description: Database entry 'tags' not found.
+ *         description: Overview not found.
  *       '500':
  *         description: Internal Server Error.
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(request: NextRequest) {
 	// Validate authorized access based on header field 'apikey'
-	const authValidation = validateAuthAPIToken(req);
+	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
-		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
-
-	if (req.method === "GET") {
-		try {
-			const data = await getPostsOverview();
-			return res.status(200).send(data);
-		} catch (error) {
-			return res.status(500).json({ error: error });
-		}
-	} else {
-		return res.status(501).json({ code: 501, reason: "Method not supported" });
+	try {
+		const data = await getPostsOverview();
+		if (!data) return new Response("Overview not found!", { status: 404 });
+		return Response.json(data, { status: 200 });
+	} catch (error) {
+		return Response.json({ error: error }, { status: 500 });
 	}
 }

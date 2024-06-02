@@ -1,4 +1,4 @@
-Hello 👋🏼
+# Hello 👋🏼
 
 Who? Well, my name is Martin Johannes Nilsen. I am a Norwegian Software Engineer. And if you want to read more about me, you might as well head over to [the very first blog post on the site](https://blog.mjntech.dev/posts/yjdttN68e7V3E8SKIupT).
 

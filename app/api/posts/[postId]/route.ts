@@ -1,9 +1,11 @@
+import { revalidatePost, revalidatePostsOverview, revalidateTags } from "@/data/actions";
 import { deletePostsOverview, updatePostsOverview } from "@/data/middleware/overview/overview";
 import { deletePost, getPost, updatePost } from "@/data/middleware/posts/posts";
-import { db } from "@/lib/firebaseConfig";
-import { validateAuthAPIToken } from "@/utils/validateAuthTokenPagesRouter";
-import { doc, getDoc } from "firebase/firestore";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { validateAuthAPIToken } from "@/lib/tokenValidationAPI";
+import { FullPost } from "@/types";
+import { NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 /**
  * @swagger
@@ -92,6 +94,41 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *         description: Internal Server Error.
  *       '501':
  *         description: Method not supported.
+ */
+export async function GET(request: NextRequest, { params }: { params: { postId: string } }) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = await validateAuthAPIToken(request);
+	if (!authValidation.isValid) {
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
+	}
+
+	// Check if route parameter postId is provided
+	const postId = params.postId;
+	if (!postId || postId == "{postId}" || postId === "" || typeof postId !== "string") {
+		return Response.json({ code: 400, reason: "Missing postId" }, { status: 400 });
+	}
+
+	// Get query parameters if present
+	const parseData = request.nextUrl.searchParams.get("parseData");
+
+	// Get post by id
+	try {
+		const post = await getPost(String(postId));
+		if (!post) {
+			return Response.json({ code: 404, reason: "Post not found" }, { status: 404 });
+		}
+		if (parseData && typeof parseData === "string" && parseData.toLowerCase() === "true") {
+			return Response.json({ ...post, data: post.data }, { status: 200 });
+		}
+		return Response.json({ ...post, data: JSON.stringify(post.data) }, { status: 200 });
+	} catch (error) {
+		return Response.json({ error: error }, { status: 500 });
+	}
+}
+
+/**
+ * @swagger
+ * /api/posts/{postId}:
  *   put:
  *     summary: Update post with postId
  *     description: Update document of post with id equal to provided postId.
@@ -228,6 +265,88 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *         description: Internal Server Error.
  *       '501':
  *         description: Method not supported.
+ */
+export async function PUT(request: NextRequest, { params }: { params: { postId: string } }) {
+	// Validate authorized access based on header field 'apikey'
+	const authValidation = await validateAuthAPIToken(request);
+	if (!authValidation.isValid) {
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
+	}
+
+	// Check if route parameter postId is provided
+	const postId = params.postId;
+	if (!postId || postId == "{postId}" || postId === "" || typeof postId !== "string") {
+		return Response.json({ code: 400, reason: "Missing postId" }, { status: 400 });
+	}
+
+	// Decide which fields to change
+	const { data, ...fields } = await request.json();
+	if (!data && Object.keys(fields).length === 0) {
+		return Response.json({ code: 400, reason: "Missing fields to update" }, { status: 200 });
+	}
+
+	// Fetch post
+	const post = await getPost(String(postId));
+	if (!post) {
+		return Response.json({ code: 404, reason: "Post not found" }, { status: 404 });
+	}
+
+	// Check if 'data' is set to be updated and not already a string, then stringify it
+	if (data !== undefined && typeof data !== "string") {
+		fields.data = JSON.stringify(data);
+	} else {
+		fields.data = data;
+	}
+
+	// Alter post
+	const updatedPost = { ...post };
+	// const { image, ...updatedPost } = post;
+	Object.keys(fields).map((key) => {
+		if (post.hasOwnProperty(key)) {
+			updatedPost[key] = fields[key];
+		} else {
+			return Response.json(
+				{
+					code: 400,
+					reason: `Field '${key}' does not exist in stored post`,
+				},
+				{ status: 400 }
+			);
+		}
+		updatedPost[key] = fields[key];
+	});
+
+	// Update post
+	const postWasUpdated = await updatePost(postId, updatedPost, false);
+	if (postWasUpdated) {
+		// Create post without data
+		const { data, ...postsOverviewPost } = updatedPost;
+		// Update postsOverview
+		const overviewWasUpdated = await updatePostsOverview({
+			...postsOverviewPost,
+			id: postId,
+		});
+		// Return the updated post
+		if (overviewWasUpdated) {
+			const updatedPost = await getPost(String(postId))
+				.then((data) => {
+					return { ...data, data: JSON.stringify(data?.data) };
+				})
+				.catch(() => {
+					return Response.json({ code: 500, reason: "Retrieval of updated post failed" }, { status: 500 });
+				});
+			return Response.json(updatedPost, { status: 200 });
+		} else {
+			return Response.json({ code: 500, reason: "Update of overview failed" }, { status: 500 });
+		}
+	} else {
+		return Response.json({ code: 500, reason: "Update of post failed" }, { status: 500 });
+	}
+}
+
+/**
+ * @swagger
+ * /api/posts/{postId}:
  *   delete:
  *     summary: Delete post with postId
  *     description: Delete specific post with id equal to provided postId.
@@ -241,12 +360,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *           type: string
  *         description: The ID of the post.
  *       - in: query
- *         name: revalidatePages
+ *         name: revalidateCache
  *         required: false
  *         schema:
  *           type: boolean
  *           default: true
- *         description: Whether to revalidate pages upon deletion.
+ *         description: Whether to revalidate cache upon deletion.
  *     responses:
  *       '200':
  *         description: Successful response.
@@ -261,155 +380,78 @@ import type { NextApiRequest, NextApiResponse } from "next";
  *       '501':
  *         description: Method not supported.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function DELETE(request: NextRequest, { params }: { params: { postId: string } }) {
 	// Validate authorized access based on header field 'apikey'
-	const authValidation = validateAuthAPIToken(req);
+	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
-		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
+		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
-	// Check if id is provided
-	const { postId } = req.query;
+	// Check if route parameter postId is provided
+	const postId = params.postId;
 	if (!postId || postId == "{postId}" || postId === "" || typeof postId !== "string") {
-		return res.status(400).json({ code: 400, reason: "Missing postId" });
+		return Response.json({ code: 400, reason: "Missing postId" }, { status: 400 });
 	}
 
-	// Get query parameter if present
-	const parseData = req.query.parseData;
+	// Get query parameters if present
+	const revalidateCacheAfterDeleting = request.nextUrl.searchParams.get("revalidateCache");
 
-	// Get query parameter if present
-	const revalidatePagesAfterDeleting = req.query.revalidatePages;
+	// Fetch post
+	const post = await getPost(String(postId));
+	if (!post) {
+		return Response.json({ code: 404, reason: "Post not found" }, { status: 404 });
+	}
 
-	if (req.method === "GET") {
-		// Get post by id
-		try {
-			const post = await getPost(String(postId));
-			if (!post) {
-				return res.status(404).json({ code: 404, reason: "Post not found" });
+	// Delete post
+	const postWasDeleted = await deletePost(postId);
+	if (postWasDeleted) {
+		const overviewWasUpdated = await deletePostsOverview(postId);
+		if (overviewWasUpdated) {
+			if (
+				revalidateCacheAfterDeleting &&
+				typeof revalidateCacheAfterDeleting === "string" &&
+				revalidateCacheAfterDeleting.toLowerCase() === "true"
+			) {
+				try {
+					await revalidatePost(postId);
+					await revalidatePostsOverview();
+					await revalidateTags();
+					return Response.json(
+						{
+							code: 200,
+							reason: "Successfully deleted post '" + postId + "' and revalidated the cache",
+						},
+						{ status: 200 }
+					);
+				} catch (err) {
+					// If there was an error, Next.js will continue to show the last successfully generated page
+					return Response.json({ code: 500, reason: "Error during revalidation" }, { status: 500 });
+				}
+			} else {
+				return Response.json(
+					{
+						code: 200,
+						reason: "Successfully deleted post '" + postId + "' without cache revalidation",
+					},
+					{ status: 200 }
+				);
 			}
-			if (parseData && typeof parseData === "string" && parseData.toLowerCase() === "true") {
-				return res.status(200).send(post);
-			}
-			return res.status(200).send({ ...post, data: JSON.stringify(post.data) });
-		} catch (error) {
-			return res.status(500).json({ error: error });
-		}
-	} else if (req.method === "PUT") {
-		// Decide which fields to change
-		const { data, ...fields } = req.body;
-		if (!data && Object.keys(fields).length === 0) {
-			return res.status(400).json({ code: 400, reason: "Missing fields to update" });
-		}
-
-		// Fetch post
-		// const post = await getDoc(doc(db, "posts", String(postId))).then((data) => data.data());
-		const post = await getPost(String(postId));
-		if (!post) {
-			return res.status(404).json({ code: 404, reason: "Post not found" });
-		}
-
-		// Check if 'data' is set to be updated and not already a string, then stringify it
-		if (data !== undefined && typeof data !== "string") {
-			fields.data = JSON.stringify(data);
 		} else {
-			fields.data = data;
-		}
-
-		// Alter post
-		const updatedPost = { ...post };
-		// const { image, ...updatedPost } = post;
-		Object.keys(fields).map((key) => {
-			if (post.hasOwnProperty(key)) {
-				updatedPost[key] = fields[key];
-			} else {
-				return res.status(400).json({
-					code: 400,
-					reason: `Field '${key}' does not exist in stored post`,
-				});
-			}
-			updatedPost[key] = fields[key];
-		});
-
-		// Update post
-		updatePost(postId, updatedPost, false).then((postWasUpdated) => {
-			if (postWasUpdated) {
-				// Create post without data
-				const { data, ...postsOverviewPost } = updatedPost;
-				// Update postsOverview
-				updatePostsOverview({
-					...postsOverviewPost,
-					id: postId,
-				}).then(async (overviewWasUpdated) => {
-					// Return the updated post
-					if (overviewWasUpdated) {
-						const updatedPost = await getDoc(doc(db, "posts", String(postId)))
-							.then((data) => data.data())
-							.catch(() => {
-								return res.status(500).json({ code: 500, reason: "Retrieval of updated post failed" });
-							});
-						return res.status(200).json(updatedPost);
-					} else {
-						return res.status(500).json({ code: 500, reason: "Update of overview failed" });
-					}
-				});
-			} else {
-				return res.status(500).json({ code: 500, reason: "Update of post failed" });
-			}
-		});
-	} else if (req.method === "DELETE") {
-		// Fetch post
-		const post = await getDoc(doc(db, "posts", String(postId))).then((data) => data.data());
-		if (!post) {
-			return res.status(404).json({ code: 404, reason: "Post not found" });
-		}
-
-		deletePost(postId).then((postWasDeleted) => {
-			if (postWasDeleted) {
-				deletePostsOverview(postId).then(async (overviewWasUpdated) => {
-					if (overviewWasUpdated) {
-						if (
-							revalidatePagesAfterDeleting &&
-							typeof revalidatePagesAfterDeleting === "string" &&
-							revalidatePagesAfterDeleting.toLowerCase() === "true"
-						) {
-							try {
-								await res.revalidate("/");
-								await res.revalidate("/tags");
-								await res.revalidate("/posts/" + postId);
-								return res.status(200).json({
-									code: 200,
-									reason:
-										"Successfully deleted post '" +
-										postId +
-										"' and revalidated pages '/', '/tags', and '/posts/" +
-										postId +
-										"'",
-								});
-							} catch (err) {
-								// If there was an error, Next.js will continue to show the last successfully generated page
-								return res.status(500).json({ code: 500, reason: "Error during revalidation" });
-							}
-						} else {
-							return res.status(200).json({
-								code: 200,
-								reason: "Successfully deleted post '" + postId + "' without page revalidation",
-							});
-						}
-					} else {
-						return res.status(500).json({
-							code: 500,
-							reason: "Did not manage to delete from overview",
-						});
-					}
-				});
-			} else {
-				return res.status(500).json({
+			return Response.json(
+				{
 					code: 500,
-					reason: "Did not manage to delete from posts",
-				});
-			}
-		});
+					reason: "Did not manage to delete from overview",
+				},
+				{ status: 500 }
+			);
+		}
 	} else {
-		return res.status(501).json({ code: 501, reason: "Method not supported" });
+		return Response.json(
+			{
+				code: 500,
+				reason: "Did not manage to delete from posts",
+			},
+			{ status: 500 }
+		);
 	}
 }
