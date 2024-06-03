@@ -25,9 +25,10 @@ export async function _getCollection(): Promise<Collection> {
 
 // Convert MongoDB document to plain JavaScript object
 function convertToPlainObject(doc: any) {
+	const { _id, ...keyValuePairsToKeep } = doc;
 	return {
-		...doc,
-		_id: doc._id.toString(),
+		...keyValuePairsToKeep,
+		id: _id.toString(),
 	};
 }
 
