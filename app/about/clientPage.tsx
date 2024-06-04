@@ -136,7 +136,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}
 				>
 					Hi. My name is Martin, and I am the creator of this Tech Blog. In this section, I would like to cover aspects
-					such as terms of usage, data privacy, external services and how you can best support me. Let's have a look,
+					such as terms of usage, data privacy, external services, and how you can best support me. Let's have a look,
 					shall we?
 				</Typography>
 
@@ -168,7 +168,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					data={{
 						text: `The site implicitly does not collect any identifiable data. 
 							   All user-specific data is either 
-							   (1) fetched from a service provider such as Google or Github, if specifically authorized, or 
+							   (1) fetched from a service provider such as Google or Github if specifically authorized, or 
 							   (2) stored in your browser's local storage.`,
 					}}
 					style={{
@@ -188,9 +188,9 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					data={{
 						text: `The current scope of the site does not allow users to 
 						create an account, although one may log in using either Google or Github.
-						This will only personalize a small fraction of the experience, and is used mainly
+						This will only personalize a small fraction of the experience and is used mainly
 						for access control. The fields gathered from the providers are <b><i>email</i></b>,
-						<b><i>name</i></b> and <b><i>image</i></b>.`,
+						<b><i>name</i></b>, and <b><i>image</i></b>.`,
 					}}
 					style={{
 						box: { my: 0 },
@@ -209,7 +209,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					data={{
 						text: `Some data is stored locally to enhance the user experience
 						       coming back to the page. That is, decisions that are made,
-							   such as the user's preferred layout and theme, is stored in
+							   such as the user's preferred layout and theme, are stored in
 							   your browser.
 							   The stored fields are:`,
 					}}
@@ -231,7 +231,8 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 						text: `<ul>
 						<li><code>theme</code>: Dark/light mode. Defaults to system default</li>
 						<li><code>accent</code>: Accent color</li>
-						<li><code>font</code>: Font family</li>
+						<li><code>fontFamily</code>: Font family variable</li>
+						<li><code>fontScale</code>: Scale multiplier ranging from 0.6x to 1.5x</li>
 						<li><code>cardLayout</code>: Card layout on landing page</li>
 						<li><code>lastRead</code>: Date as number for notifications</li>
 						<li><code>notificationsRead</code>: List of read notification ids</li>
@@ -270,7 +271,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					data={{
 						text: `Regarding general data, a few notes can be made. 
 						First, a numeric counter for the total amount of visitors per
-						post is stored in a <a href="https://supabase.com">Supabase</a> database.
+						post is stored in a self-hosted <a href="https://www.mongodb.com">MongoDB</a> database.
 						Additionally, I self-host an <a href="https://umami.is">Umami</a> server for analyzing web traffic - promising 
 						data privacy, no cookie usage, and GDPR & CCPA compliance. I want to emphasize the fact
 						that none of these data points can be used to identify any of the 
@@ -294,7 +295,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 				<CustomHeader data={{ level: 2, text: "Services" }} />
 				<CustomParagraph
 					data={{
-						text: `This page utilize external services for certain aspects, all of which are:`,
+						text: `This web application depends on a small selection of external services, which are:`,
 					}}
 					style={{
 						box: { my: 0 },
@@ -312,14 +313,6 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 				<>
 					<CustomParagraph
 						data={{
-							text: "<a href='https://firebase.google.com'>Firebase</a>, a Google product, specifically their document database for blog post storage. Except for new version builds, the documents are fetched only when creating or updating posts, using Next.js caching and tag-based revalidation.",
-						}}
-						style={{
-							typography: { ...theme.typography.body2, fontWeight: 600 },
-						}}
-					/>
-					<CustomParagraph
-						data={{
 							text: "<a href='https://giscus.app'>Giscus</a> is used for post reactions and comments. Each comment section serves as a wrapper for a GitHub discussion per post.",
 						}}
 						style={{
@@ -328,22 +321,13 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 					/>
 					<CustomParagraph
 						data={{
-							text: "<a href='https://github.com'>GitHub</a> and <a href='https://www.google.com/'>Google</a> are used for authenticating users. Only the elements <b><i>email</i></b>, <b><i>name</i></b> and <b><i>image</i></b> will be accessed.",
-						}}
-						style={{
-							typography: { ...theme.typography.body2, fontWeight: 600 },
-						}}
-					/>
-					<CustomParagraph
-						data={{
-							text: "<a href='https://supabase.com'>Supabase</a> is used for managing notifications, in addition to storing numeric view counts per post.",
+							text: "<a href='https://github.com'>GitHub</a> and <a href='https://www.google.com/'>Google</a> are used for authenticating users. Only <b><i>email</i></b>, <b><i>name</i></b>, and <b><i>image</i></b> will be accessed.",
 						}}
 						style={{
 							typography: { ...theme.typography.body2, fontWeight: 600 },
 						}}
 					/>
 				</>
-
 				{/* Section 4: Support */}
 				<CustomHeader data={{ level: 2, text: "Support" }} />
 				<CustomParagraph
@@ -351,12 +335,12 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 						text: `
 						Thank you for even reading this section. 
 						First of all, I appreciate you sharing posts you find helpful, and subscribing to a feed (<a href="/feed/rss.xml">rss.xml</a>/<a href="/feed/rss.json">rss.json</a>/<a href="/feed/atom.xml">atom.xml</a>) for not missing any new content. 
-						Second, I highly appreciate any reactions, comments and/or feedback you may have.
+						Second, I highly appreciate any reactions, comments, and/or feedback you may have.
 						Furthermore, you can donate/buy me a hot cocoa using the link in the footer. 
-						I do not use advertisements on this site, and have not been that fixated on earning money on my posts.
+						I do not use advertisements on this site and have not been that fixated on earning money on my posts.
 						It has mostly been a platform for me to write about the cool stuff I learn on my SE journey, retaining knowledge
-						and challenging myself into explaining concepts for a better understanding.
-						Finally, if you are a company or an individual that is looking to cooperate/sponsor me in any way, you can reach
+						and challenging myself to explain concepts for a better understanding.
+						Finally, if you are a company or an individual who is looking to cooperate/sponsor me in any way, you can reach
 						out to me using any of the social media links or contact information found in my portfolio, all available in the footer below.`,
 					}}
 					style={{
