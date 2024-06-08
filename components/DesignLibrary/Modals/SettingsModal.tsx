@@ -26,6 +26,7 @@ const defaultFonts = [
 	{ title: "Bricolage", font: "--font-bricolage-grotesque" },
 	{ title: "Cabinet Grotesk", font: "--font-cabinet-grotesk" },
 	{ title: "Fira Code", font: "--font-fira-code" },
+	{ title: "Inter", font: "--font-inter" },
 	{ title: "Medieval Sharp", font: "--font-medieval-sharp" },
 	{ title: "Merriweather", font: "--font-merriweather" },
 	{ title: "Montserrat", font: "--font-montserrat" },
@@ -35,6 +36,8 @@ const defaultFonts = [
 	{ title: "Playfair Display", font: "--font-playfair-display" },
 	{ title: "Rubik", font: "--font-rubik" },
 	{ title: "Source Sans", font: "--font-source-sans-3" },
+	{ title: "Space Grotesk", font: "--font-space-grotesk" },
+	{ title: "Syne", font: "--font-syne" },
 	{ title: "Zodiak", font: "--font-zodiak" },
 ];
 

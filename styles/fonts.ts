@@ -1,3 +1,4 @@
+import { nextImageLoaderRegex } from "next/dist/build/webpack-config";
 import {
 	Bricolage_Grotesque,
 	Fira_Code,
@@ -9,6 +10,10 @@ import {
 	Playfair_Display,
 	Rubik,
 	Source_Sans_3,
+	Inter,
+	Space_Grotesk,
+	Syne,
+	Krona_One,
 } from "next/font/google";
 import localFont from "next/font/local";
 
@@ -28,21 +33,11 @@ export const open_sans = Open_Sans({
 	variable: "--font-open-sans",
 	// display: 'swap',
 });
-// export const josefin_sans = Josefin_Sans({
-// 	subsets: ["latin"],
-// 	variable: "--font-josefin-sans",
-// 	// display: 'swap',
-// });
 export const noto_sans_display = Noto_Sans_Display({
 	subsets: ["latin"],
 	variable: "--font-noto-sans-display",
 	// display: 'swap',
 });
-// export const merriweather_sans = Merriweather_Sans({
-// 	subsets: ["latin"],
-// 	variable: "--font-merriweather-sans",
-// 	// display: 'swap',
-// });
 export const noto_serif = Noto_Serif({
 	subsets: ["latin"],
 	variable: "--font-noto-serif",
@@ -58,11 +53,6 @@ export const playfair_display = Playfair_Display({
 	variable: "--font-playfair-display",
 	// display: 'swap',
 });
-// export const dancing_script = Dancing_Script({
-// 	subsets: ["latin"],
-// 	variable: "--font-dancing-script",
-// 	// display: 'swap',
-// });
 export const rubik = Rubik({
 	subsets: ["latin"],
 	variable: "--font-rubik",
@@ -73,12 +63,29 @@ export const montserrat = Montserrat({
 	variable: "--font-monteserrat",
 	// display: 'swap',
 });
-// export const pixelify_sans = Pixelify_Sans({
-// 	subsets: ["latin"],
-// 	variable: "--font-pixelify-sans",
-// 	// display: 'swap',
-// });
+export const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	// display: 'swap',
+});
+export const space_grotesk = Space_Grotesk({
+	subsets: ["latin"],
+	variable: "--font-space-grotesk",
+	// display: 'swap',
+});
+export const syne = Syne({
+	subsets: ["latin"],
+	variable: "--font-syne",
+	// display: 'swap',
+});
+
 // Not variable
+export const krona_one = Krona_One({
+	subsets: ["latin"],
+	variable: "--font-syne",
+	weight: "400",
+	// display: 'swap',
+});
 export const medieval_sharp = MedievalSharp({
 	subsets: ["latin"],
 	weight: "400",
@@ -117,22 +124,19 @@ export const zodiak = localFont({
 export const availableFontFamilies = {
 	"--font-bricolage-grotesque": bricolage_grotesque.style.fontFamily,
 	"--font-cabinet-grotesk": cabinet_grotesk.style.fontFamily,
-	// "--font-chillax": chillax.style.fontFamily,
-	// "--font-dancing-script": dancing_script.style.fontFamily,
 	"--font-fira-code": fira_code.style.fontFamily,
-	// "--font-general-sans": general_sans.style.fontFamily,
-	// "--font-josefin-sans": josefin_sans.style.fontFamily,
 	"--font-medieval-sharp": medieval_sharp.style.fontFamily,
 	"--font-merriweather": merriweather.style.fontFamily,
-	// "--font-merriweather-sans": merriweather_sans.style.fontFamily,
 	"--font-montserrat": montserrat.style.fontFamily,
 	"--font-noto-sans-display": noto_sans_display.style.fontFamily,
 	"--font-noto-serif": noto_serif.style.fontFamily,
 	"--font-open-sans": open_sans.style.fontFamily,
-	// "--font-pixelify-sans": pixelify_sans.style.fontFamily,
 	"--font-playfair-display": playfair_display.style.fontFamily,
 	"--font-rubik": rubik.style.fontFamily,
 	"--font-source-sans-3": source_sans_3.style.fontFamily,
 	"--font-zodiak": zodiak.style.fontFamily,
+	"--font-inter": inter.style.fontFamily,
+	"--font-space-grotesk": space_grotesk.style.fontFamily,
+	"--font-syne": syne.style.fontFamily,
 };
 export default availableFontFamilies;
