@@ -1,5 +1,5 @@
 "use server";
-import { FirestoreFullPost, FullPost } from "@/types";
+import { DbFullPost, FullPost } from "@/types";
 import { firestoreAutoId } from "@/utils/firestoreAutoId";
 import { Collection, Db, Document, MongoClient, WithId } from "mongodb";
 
@@ -27,15 +27,16 @@ export async function _getCollection(): Promise<Collection> {
 
 // Helper functions for conversion
 const postConverter = {
-	toMongoDB: (post: FullPost): FirestoreFullPost => {
+	toMongoDB: (post: FullPost): DbFullPost => {
 		return {
 			...post,
 			data: JSON.stringify(post.data),
 		};
 	},
 	fromMongoDB: (doc: any): FullPost => {
+		const { _id, ...post } = doc; // Omit the _id field
 		return {
-			...doc,
+			...post,
 			data: JSON.parse(doc.data),
 		};
 	},

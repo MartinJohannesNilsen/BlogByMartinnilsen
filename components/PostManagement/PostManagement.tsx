@@ -223,8 +223,11 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 								variant: "default",
 								preventDuplicate: true,
 							});
+							// Remove data before pushing to posts overview
+							const { data, ...newPost } = newObject;
+							// Push to posts overview
 							addPostsOverview({
-								...newObject,
+								...newPost,
 								id: postId,
 							}).then((overviewWasAdded) => {
 								if (overviewWasAdded) {

@@ -282,7 +282,7 @@ export type FullPost = PostProps & {
 	data: OutputData;
 };
 
-export type FirestoreFullPost = PostProps & {
+export type DbFullPost = PostProps & {
 	data: any;
 };
 

@@ -62,4 +62,50 @@ const addTag = async (tag: string): Promise<boolean> => {
 	}
 };
 
-export { addTag, getTags };
+const renameTag = async (oldTag: string, newTag: string): Promise<boolean> => {
+	try {
+		const collection = await _getCollection();
+		// @ts-ignore
+		const tagsDoc = await collection.findOne({ _id: "tags" });
+
+		if (tagsDoc) {
+			let values: string[] = tagsDoc.values;
+			if (!values.includes(oldTag) || values.includes(newTag)) {
+				return false;
+			}
+			values = values.map((tag) => (tag === oldTag ? newTag : tag));
+			// @ts-ignore
+			await collection.updateOne({ _id: "tags" }, { $set: { values: values } });
+			return true;
+		}
+		return false;
+	} catch (error) {
+		console.error("Error renaming tag:", error);
+		return false;
+	}
+};
+
+const deleteTag = async (tag: string): Promise<boolean> => {
+	try {
+		const collection = await _getCollection();
+		// @ts-ignore
+		const tagsDoc = await collection.findOne({ _id: "tags" });
+
+		if (tagsDoc) {
+			let values: string[] = tagsDoc.values;
+			if (!values.includes(tag)) {
+				return false;
+			}
+			values = values.filter((t) => t !== tag);
+			// @ts-ignore
+			await collection.updateOne({ _id: "tags" }, { $set: { values: values } });
+			return true;
+		}
+		return false;
+	} catch (error) {
+		console.error("Error deleting tag:", error);
+		return false;
+	}
+};
+
+export { addTag, deleteTag, getTags, renameTag };

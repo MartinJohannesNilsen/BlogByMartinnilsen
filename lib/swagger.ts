@@ -1,7 +1,6 @@
 import { createSwaggerSpec } from "next-swagger-doc";
 
 export const createdApiDocSpec = createSwaggerSpec({
-	// apiFolder: "pages/api",
 	apiFolder: "app/api",
 	definition: {
 		openapi: "3.0.0",
@@ -48,6 +47,10 @@ export const createdApiDocSpec = createSwaggerSpec({
 			{
 				name: "Posts",
 				description: "Endpoints related to post management",
+			},
+			{
+				name: "Tags",
+				description: "Endpoints related to available tags",
 			},
 			{
 				name: "Views",
