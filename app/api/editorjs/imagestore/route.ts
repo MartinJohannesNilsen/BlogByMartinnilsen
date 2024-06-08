@@ -1,40 +1,9 @@
-import { cloudStorage } from "@/lib/firebaseConfig";
-import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/data/middleware/tokenValidationAPI";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+// "@/app/api/editorjs/imagestore/route.ts"
 import { NextRequest } from "next/server";
+import { uploadImage, deleteImage } from "@/data/middleware/imageStore/actions";
+import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/data/middleware/tokenValidationAPI";
 
 export const dynamic = "force-dynamic";
-
-// Helper functions and list of supported types
-const srcToBuffer = async (file: File) => Buffer.from(await file.arrayBuffer());
-const generateName = (extension: string) => {
-	const date = new Date();
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-	const hour = String(date.getHours()).padStart(2, "0");
-	const minute = String(date.getMinutes()).padStart(2, "0");
-	const second = String(date.getSeconds()).padStart(2, "0");
-	return `${year}-${month}-${day}.${hour}${minute}${second}.${extension}`;
-};
-const supportedMimeTypes = {
-	jpg: "image/jpeg",
-	jpeg: "image/jpeg",
-	png: "image/png",
-	gif: "image/gif",
-	bmp: "image/bmp",
-	webp: "image/webp",
-	tiff: "image/tiff",
-	svg: "image/svg+xml",
-	mp4: "video/mp4",
-	webm: "video/webm",
-	mpeg: "video/mpeg",
-	avi: "video/avi",
-	mov: "video/quicktime",
-	wmv: "video/x-ms-wmv",
-	flv: "video/x-flv",
-	mkv: "video/x-matroska",
-};
 
 /**
  * @swagger
@@ -123,18 +92,15 @@ const supportedMimeTypes = {
  *         description: Method not supported.
  */
 export async function POST(request: NextRequest) {
-	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	const imagestoreValidation = await validateImagestoreAPIToken(request);
 	if (!authValidation.isValid && !imagestoreValidation.isValid) {
 		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
-	// Get query parameters
 	const name = request.nextUrl.searchParams.get("name");
 	const directory = request.nextUrl.searchParams.get("directory");
 
-	// Check if directory is missing
 	if (!directory) {
 		return Response.json({ code: 400, reason: "Missing directory, root should not be used!" }, { status: 400 });
 	}
@@ -146,41 +112,11 @@ export async function POST(request: NextRequest) {
 		if (!file) {
 			return Response.json({ code: 400, reason: "File is missing!" }, { status: 400 });
 		}
-
-		// Get extension from file name
-		const extensionMatch = file.name.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
-		const extension = extensionMatch && extensionMatch[1].toLowerCase();
-		if (!extension) return Response.json({ code: 400, reason: "File missing extension!" }, { status: 400 });
-
-		// Check for file support
-		const mimeType = supportedMimeTypes[extension];
-		if (!mimeType) {
-			return Response.json(
-				{ code: 400, reason: `File with extension '.${extension}' not supported!` },
-				{ status: 400 }
-			);
-		}
-
-		// Rename file, timestamp as default if not given new name
-		const fileRef =
-			`images/${directory}${directory && "/"}` + (name ? `${name}.${extension}` : generateName(extension));
-
-		// Upload to Firestore
-		const cloudStorageFileRef = ref(cloudStorage, fileRef);
-		const metadata = {
-			contentType: file.type,
-		};
-		const fileBuffer = await srcToBuffer(file);
-		const uploadTask = await uploadBytes(cloudStorageFileRef, fileBuffer, metadata);
-		const downloadURL = await getDownloadURL(uploadTask.ref);
-
-		return Response.json(
-			{ data: { url: downloadURL, fileRef: fileRef }, file: { size: file.size, name: file.name, type: file.type } },
-			{ status: 200 }
-		);
+		const result = await uploadImage(file, directory, name);
+		return Response.json(result, { status: result.code });
 	} catch (err) {
 		console.log(err);
-		return Response.json({ code: 500, reason: err }, { status: 500 });
+		return Response.json({ code: 500, reason: err.message }, { status: 500 });
 	}
 }
 
@@ -223,25 +159,21 @@ export async function POST(request: NextRequest) {
  *         description: Method not supported.
  */
 export async function DELETE(request: NextRequest) {
-	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	const imagestoreValidation = await validateImagestoreAPIToken(request);
 	if (!authValidation.isValid && !imagestoreValidation.isValid) {
 		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
-	// Get query parameters
 	const fileRef = request.nextUrl.searchParams.get("fileRef");
 	if (!fileRef) {
 		return Response.json({ code: 400, reason: "Missing fileRef to Firebase Storage!" }, { status: 400 });
 	}
 
-	const db_fileRef = ref(cloudStorage, fileRef as string);
-	await deleteObject(db_fileRef)
-		.then(() => {
-			return Response.json({ code: 200, response: "File successfully deleted!" }, { status: 200 });
-		})
-		.catch((error) => {
-			return Response.json({ code: 500, reason: error }, { status: 500 });
-		});
+	try {
+		const result = await deleteImage(fileRef);
+		return Response.json(result, { status: result.code });
+	} catch (err) {
+		return Response.json({ code: 500, reason: err.message }, { status: 500 });
+	}
 }

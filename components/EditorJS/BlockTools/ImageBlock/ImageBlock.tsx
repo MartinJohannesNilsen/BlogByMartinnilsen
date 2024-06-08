@@ -27,7 +27,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 	);
 	const [postId, setPostId] = useState<string>();
 	const [urlfieldInputValue, setUrlfieldInputValue] = useState("");
-	const [uploadfieldInputValue, setUploadfieldInputValue] = useState<{ type: string; size: number }>();
+	const [uploadfieldInputValue, setUploadfieldInputValue] = useState<any>();
 	const [deleteButtonVisible, setDeleteButtonVisible] = useState(false);
 
 	useEffect(() => {
@@ -80,6 +80,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 								<NavbarButton
 									variant="outline"
 									onClick={async () => {
+										if (!stateData.fileRef) return;
 										const response = await deleteImage(stateData.fileRef);
 										if (response.code === 200) {
 											setStateData({
@@ -242,7 +243,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 									uploadImage(uploadfieldInputValue, postId, null)
 										.then((uploadResponse) => {
 											// Check if response was ok and we got data, else error snackbar
-											if (uploadResponse.hasOwnProperty("data")) {
+											if (uploadResponse.data) {
 												// Check if image, then fetch details and blurhash
 												if (uploadfieldInputValue!.type.startsWith("image/")) {
 													getImageDetails(uploadResponse.data.url)
