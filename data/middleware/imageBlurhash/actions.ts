@@ -1,4 +1,3 @@
-"use server";
 import { blurhashFromURL } from "blurhash-from-url";
 
 /**

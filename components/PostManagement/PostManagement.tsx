@@ -5,11 +5,12 @@ import OptionMenu from "@/components/DesignLibrary/Menus/OptionMenu";
 import EditableTypography from "@/components/DesignLibrary/Text/EditableTypography";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
 import { revalidatePost, revalidatePostsOverview, revalidateTags } from "@/data/actions";
-import { deleteImage, getImageDetails, uploadImage } from "@/data/middleware/imageStore/actions";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
+import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "@/data/middleware/overview/actions";
 import { addPost, deletePost, updatePost } from "@/data/middleware/posts/actions";
 import { addTag, getTags } from "@/data/middleware/tags/actions";
-import { DATA_DEFAULTS } from "@/data/metadata";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { FullPost, ManagePostPageProps } from "@/types";
 import { copyToClipboardV2 } from "@/utils/copyToClipboard";
@@ -169,16 +170,16 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 				if (!data.ogImage.blurhash) {
 					// Get image details
 					const details = await getImageDetails(data.ogImage.src);
-					if (details.hasOwnProperty("code") && details.code !== 200) {
-						enqueueSnackbar(`Open Graph Image: ${details.reason}`, {
-							variant: "error",
-							preventDuplicate: true,
-						});
-					} else {
+					if (details) {
 						newObject = {
 							...newObject,
 							ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
 						};
+					} else {
+						enqueueSnackbar(`Open Graph Image: Could not fetch image details`, {
+							variant: "error",
+							preventDuplicate: true,
+						});
 					}
 				}
 
@@ -858,6 +859,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															{
 																text: "Delete",
 																onClick: async () => {
+																	if (!data.ogImage.fileRef) return;
 																	const response = await deleteImage(data.ogImage.fileRef);
 																	if (response.code === 200) {
 																		setData({
@@ -893,8 +895,9 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 														accept="image/*"
 														onChange={async (e) => {
 															const file = e.target.files && e.target.files[0];
+															if (!file) return;
 															const uploadResponse = await uploadImage(file, postId, "ogImage");
-															if (uploadResponse.hasOwnProperty("data")) {
+															if (uploadResponse.data) {
 																const details = await getImageDetails(uploadResponse.data.url);
 																setData({
 																	...data,

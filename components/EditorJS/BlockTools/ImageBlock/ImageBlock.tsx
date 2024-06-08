@@ -1,7 +1,8 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
-import { deleteImage, getImageDetails, uploadImage } from "@/data/middleware/imageStore/actions";
+import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
+import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { BlockToolImageProps } from "@/types";
 import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-material";
@@ -248,12 +249,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 												if (uploadfieldInputValue!.type.startsWith("image/")) {
 													getImageDetails(uploadResponse.data.url)
 														.then((details) => {
-															if (details.hasOwnProperty("code") && details.code !== 200) {
-																enqueueSnackbar(details.reason, {
-																	variant: "error",
-																	preventDuplicate: true,
-																});
-															} else {
+															if (details) {
 																setStateData({
 																	...stateData,
 																	type: "upload",
@@ -263,6 +259,11 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 																	blurhash: details.encoded,
 																	height: details.height,
 																	width: details.width,
+																});
+															} else {
+																enqueueSnackbar("Could not fetch image details", {
+																	variant: "error",
+																	preventDuplicate: true,
 																});
 															}
 														})
@@ -293,12 +294,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 									// Fetch image details
 									getImageDetails(urlfieldInputValue)
 										.then((details) => {
-											if (details.hasOwnProperty("code") && details.code !== 200) {
-												enqueueSnackbar(details.reason, {
-													variant: "error",
-													preventDuplicate: true,
-												});
-											} else {
+											if (details) {
 												setStateData({
 													...stateData,
 													type: "url",
@@ -306,6 +302,11 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 													blurhash: details.encoded,
 													height: details.height,
 													width: details.width,
+												});
+											} else {
+												enqueueSnackbar("Could not fetch image details", {
+													variant: "error",
+													preventDuplicate: true,
 												});
 											}
 										})
