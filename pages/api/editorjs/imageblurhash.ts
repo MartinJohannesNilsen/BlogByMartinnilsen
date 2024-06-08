@@ -1,5 +1,5 @@
 import { getImageBlurhash } from "@/data/middleware/imageBlurhash/actions";
-import { validateAuthAPIToken, validateImagestoreAPIToken } from "@/utils/validateAuthTokenPagesRouter";
+import { validateAuthAPIToken, validateImagedetailsAPIToken } from "@/utils/validateAuthTokenPagesRouter";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 function isImgUrl(url) {
@@ -51,7 +51,7 @@ function isImgUrl(url) {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = validateAuthAPIToken(req);
-	const imagestoreValidation = validateImagestoreAPIToken(req);
+	const imagestoreValidation = validateImagedetailsAPIToken(req);
 	if (!authValidation.isValid && !imagestoreValidation.isValid) {
 		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
 	}

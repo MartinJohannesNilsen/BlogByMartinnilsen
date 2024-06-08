@@ -1,7 +1,7 @@
 export async function getImageDetails(imageUrl) {
 	// Add apikey header
 	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_IMAGESTORE_TOKEN!);
+	headers.append("apikey", process.env.NEXT_PUBLIC_API_IMAGEDETAILS_TOKEN!);
 
 	// Fetch and return
 	const res: Response = await fetch(

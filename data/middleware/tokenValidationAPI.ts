@@ -26,7 +26,7 @@ export async function validateAuthAPIToken(request: NextRequest) {
 	}
 }
 
-export async function validateImagestoreAPIToken(request: NextRequest) {
+export async function validateImagedetailsAPIToken(request: NextRequest) {
 	// Extract the Authorization header
 	const authorizationHeader = request.headers.get("apikey");
 	// Check
@@ -36,7 +36,7 @@ export async function validateImagestoreAPIToken(request: NextRequest) {
 			code: 401,
 			reason: "Unauthorized - Authorization token 'apikey' missing in header",
 		};
-	} else if (authorizationHeader !== process.env.NEXT_PUBLIC_API_IMAGESTORE_TOKEN) {
+	} else if (authorizationHeader !== process.env.NEXT_PUBLIC_API_IMAGEDETAILS_TOKEN) {
 		return {
 			isValid: false,
 			code: 401,
