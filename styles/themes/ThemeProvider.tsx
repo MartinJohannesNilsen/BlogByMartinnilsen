@@ -1,8 +1,20 @@
-import { Theme, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
-import React, { createContext, useContext, useMemo, useState } from "react";
-import useDidUpdate from "../../utils/useDidUpdate";
-import { defaultAccentColor, defaultFontFamily } from "./themeDefaults";
-import { ThemeEnum, themeCreator } from "./themeMap";
+"use client";
+import {
+	defaultAccentColorDark,
+	defaultAccentColorLight,
+	defaultFontFamily,
+	defaultFontFamilyVariable,
+	defaultFontScale,
+	getFontFamilyFromVariable,
+} from "@/styles/themes/themeDefaults";
+import { ThemeEnum, themeCreator } from "@/styles/themes/themeMap";
+import { CustomThemeProviderProps, ThemeContextType } from "@/types";
+import useDidUpdate from "@/utils/useDidUpdate";
+import useStickyState from "@/utils/useStickyState";
+import { CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+// import * as components from "@/styles/fonts";
 
 // Find the correct scheme based on user preferences.
 // If changed on site before, persist based on localStorage, else default OS setting
@@ -17,47 +29,38 @@ export function getSelectedTheme() {
 	}
 }
 
-export type ThemeContextType = {
-	theme: Theme;
-	setTheme: (Theme: ThemeEnum, persist?: boolean) => void;
-	setDefaultTheme: () => void;
-	accentColor: string;
-	setAccentColor: (accent: string) => void;
-	fontFamily: string;
-	setFontFamily: (font: string) => void;
-};
-
 export const ThemeContext = createContext<ThemeContextType>({
 	theme: getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light),
 	setTheme: (theme, persist) => {},
 	setDefaultTheme: () => {},
 	accentColor:
-		typeof window !== "undefined" ? localStorage.getItem("accent") || defaultAccentColor.hex : defaultAccentColor.hex,
+		(typeof window !== "undefined" && localStorage.getItem("accent")) || getSelectedTheme() === "dark"
+			? defaultAccentColorDark.hex
+			: defaultAccentColorLight.hex,
 	setAccentColor: (accent) => {},
-	fontFamily: typeof window !== "undefined" ? localStorage.getItem("font") || defaultFontFamily : defaultFontFamily,
+	fontFamily:
+		typeof window !== "undefined"
+			? getFontFamilyFromVariable(localStorage.getItem("fontFamily") || defaultFontFamilyVariable)
+			: defaultFontFamily,
 	setFontFamily: (fontFamily) => {},
+	fontScale: (typeof window !== "undefined" && localStorage.getItem("fontScale")) || defaultFontScale,
+	setFontScale: (fontScale) => {},
 });
 export const useTheme = () => useContext(ThemeContext);
 
-type CustomThemeProviderProps = {
-	children: React.ReactNode;
-};
-
-const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
+export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 	const OS_STANDARD = useMediaQuery(COLOR_SCHEME_QUERY) ? "dark" : "light";
-	const [fontFamily, _setFontFamily] = useState(
-		typeof window !== "undefined"
-			? JSON.parse(String(localStorage.getItem("font"))) || defaultFontFamily
-			: defaultFontFamily
-	);
-	const [accentColor, _setAccentColor] = useState(
-		typeof window !== "undefined"
-			? JSON.parse(String(localStorage.getItem("accent"))) || defaultAccentColor.hex
-			: defaultAccentColor.hex
-	);
+	const [fontFamily, setFontFamily] = useStickyState("fontFamily", defaultFontFamilyVariable);
 	const [theme, _setTheme] = useState(
 		getSelectedTheme() === "dark" ? themeCreator(ThemeEnum.Dark) : themeCreator(ThemeEnum.Light)
 	);
+	const [accentColor, setAccentColor] = useStickyState(
+		"accent",
+		theme.palette.mode == "dark" ? defaultAccentColorDark.hex : defaultAccentColorLight.hex,
+		false,
+		/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/
+	);
+	const [fontScale, setFontScale] = useStickyState("fontScale", defaultFontScale);
 
 	useDidUpdate(() => {
 		_setTheme(themeCreator(typeof window !== "undefined" ? localStorage.getItem("theme") || OS_STANDARD : OS_STANDARD));
@@ -75,7 +78,7 @@ const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
 				},
 				typography: {
 					...underlayingTheme.typography,
-					fontFamily: fontFamily,
+					fontFamily: getFontFamilyFromVariable(fontFamily),
 				},
 			})
 		);
@@ -93,36 +96,28 @@ const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
 				},
 				typography: {
 					...underlayingTheme.typography,
-					fontFamily: fontFamily,
+					fontFamily: getFontFamilyFromVariable(fontFamily),
 				},
 			})
 		);
 	};
 
-	const setFontFamily = (font: string): void => {
-		localStorage.setItem("font", String(JSON.stringify(font)));
-		_setFontFamily(font);
-	};
+	useEffect(() => {
+		if (theme.palette.mode === "dark" && accentColor == defaultAccentColorLight.hex) {
+			setAccentColor(defaultAccentColorDark.hex);
+		} else if (theme.palette.mode == "light" && accentColor == defaultAccentColorDark.hex) {
+			setAccentColor(defaultAccentColorLight.hex);
+		}
+		return () => {};
+	}, [theme]);
 
-	const setAccentColor = (accent: string): void => {
-		localStorage.setItem("accent", String(JSON.stringify(accent)));
-		_setAccentColor(accent);
-	};
+	useEffect(() => {
+		document.documentElement.style.setProperty("--font-scale", fontScale);
+		return () => {};
+	}, [, fontScale]);
 
 	useMemo(() => {
-		_setTheme(
-			createTheme({
-				...theme,
-				palette: {
-					...theme.palette,
-					secondary: { main: accentColor },
-				},
-				typography: {
-					...theme.typography,
-					fontFamily: fontFamily,
-				},
-			})
-		);
+		setTheme(theme.palette.mode === "dark" ? ThemeEnum.Dark : ThemeEnum.Light, false);
 		return () => {};
 	}, [accentColor, fontFamily]);
 
@@ -136,9 +131,16 @@ const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
 				setAccentColor,
 				fontFamily,
 				setFontFamily,
+				fontScale,
+				setFontScale,
 			}}
 		>
-			<ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+			<AppRouterCacheProvider options={{ key: "mui" }}>
+				<ThemeProvider theme={theme}>
+					<CssBaseline /> {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+					{children}
+				</ThemeProvider>
+			</AppRouterCacheProvider>
 		</ThemeContext.Provider>
 	);
 };

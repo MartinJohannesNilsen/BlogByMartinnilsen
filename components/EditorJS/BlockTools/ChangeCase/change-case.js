@@ -2,7 +2,7 @@
 * @file Change Case Tool for the Editor.js - Allows to change selected text case in the block.
 * @author Bakhtiar Amaludin <github.com/maziyank>
 */
-import { upperCase, lowerCase, titleCase, sentenceCase, toggleCase } from "./change-case-util";
+import { lowerCase, sentenceCase, titleCase, toggleCase, upperCase } from "@/components/EditorJS/BlockTools/ChangeCase/change-case-util";
 
 export default class ChangeCase {
 

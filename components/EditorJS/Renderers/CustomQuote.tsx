@@ -1,12 +1,13 @@
+"use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
+import { handleSharing } from "@/utils/handleSharing";
 import { IosShare } from "@mui/icons-material";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
 import { useState } from "react";
 import { BiSolidQuoteRight } from "react-icons/bi";
-import { handleSharing } from "../../../pages/posts/[postId]";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
-import { NavbarButton } from "../../Buttons/NavbarButton";
 const { convert } = require("html-to-text");
 
 const CustomQuote = (props: EditorjsRendererProps) => {
@@ -37,7 +38,7 @@ const CustomQuote = (props: EditorjsRendererProps) => {
 						fontFamily={theme.typography.fontFamily}
 						variant="body1"
 						fontWeight="600"
-						fontSize={17}
+						fontSize={"calc(0.9rem * var(--font-scale))"}
 						color={theme.palette.text.primary}
 						dangerouslySetInnerHTML={{
 							__html: DOMPurify.sanitize(props.data.text!),

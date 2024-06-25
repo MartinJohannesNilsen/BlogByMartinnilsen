@@ -1,11 +1,11 @@
-@import './fontfaces/gothampro.css';
-@import './fontfaces/sourcesanspro.css';
-@import './fontfaces/consolas.css';
-@import './fontfaces/luminari.css';
-@import './fontfaces/generalsans.css';
-@import './fontfaces/cabinetgrotesk.css';
-@import './fontfaces/merriweather.css';
-@import './fontfaces/zodiak.css';
+// @import './fontfaces/gothampro.css';
+// @import './fontfaces/sourcesanspro.css';
+// @import './fontfaces/consolas.css';
+// @import './fontfaces/luminari.css';
+// @import './fontfaces/generalsans.css';
+// @import './fontfaces/cabinetgrotesk.css';
+// @import './fontfaces/merriweather.css';
+// @import './fontfaces/zodiak.css';
 // @import './fontfaces/stardom.css';
 // @import './fontfaces/chillax.css';
 
@@ -18,6 +18,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
   user-select: text;
+}
+
+:root {
+  --font-scale: 1; /* Default font scale */
 }
 
 /* define height for wrapper's parent div */

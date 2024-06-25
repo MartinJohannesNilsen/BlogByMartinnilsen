@@ -1,6 +1,6 @@
+import CodeBlock from '@/components/EditorJS/BlockTools/CodeBlock/CodeBlock';
 import React from "react";
 import ReactDOM from 'react-dom';
-import CodeBlock from './CodeBlock';
 // import { createRoot } from "react-dom/client";
 
 const dataDefaults = {

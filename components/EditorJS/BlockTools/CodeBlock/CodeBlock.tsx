@@ -1,10 +1,12 @@
+"use client";
+import { allowedLanguages } from "@/components/EditorJS/BlockTools/CodeBlock/allowedLanguages";
+import { InputElement, TextareaAutosizeElement } from "@/components/EditorJS/BlockTools/CodeBlock/styledMuiComponents";
+import { EDITORTHEME } from "@/components/EditorJS/Renderers/CustomCode";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { BlockToolCodeBlockProps } from "@/types";
 import { Autocomplete, Box, Checkbox, Input, TextField, Typography, useMediaQuery } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import { EDITORTHEME } from "../../Renderers/CustomCode";
-import { allowedLanguages } from "./allowedLanguages";
-import { InputElement, TextareaAutosizeElement } from "./styledMuiComponents";
 
 // Functions
 const allowedLanguagesOptions = allowedLanguages.map((option) => {
@@ -15,26 +17,8 @@ const allowedLanguagesOptions = allowedLanguages.map((option) => {
 	};
 });
 
-// Types
-type CodeBlockDataProps = {
-	code: string;
-	language: string;
-	multiline: boolean;
-	linenumbers: boolean;
-	textwrap: boolean;
-	filename: string;
-	caption: string;
-	render: boolean;
-	highlightLines: number[];
-};
-type CodeBlockProps = {
-	data: CodeBlockDataProps;
-	onDataChange: (arg0: any) => void;
-	readOnly: boolean;
-};
-
 // Component
-export const CodeBlock = (props: CodeBlockProps) => {
+export const CodeBlock = (props: BlockToolCodeBlockProps) => {
 	const { theme } = useTheme();
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
@@ -173,8 +157,9 @@ export const CodeBlock = (props: CodeBlockProps) => {
 										e.stopPropagation();
 									}
 								}}
-								// TODO Might want to further investigate this yielding a warning
-								isOptionEqualToValue={(option, value) => option.language === value.language}
+								isOptionEqualToValue={(option: { language: string; firstLetter: string }, value) =>
+									option.language === value.language
+								}
 								options={allowedLanguagesOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
 								groupBy={(option) => option.firstLetter}
 								getOptionLabel={(option) => option.language}
@@ -209,7 +194,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
 								}}
 								size="small"
 								renderInput={(params) => (
-									<TextField {...params} label="Language" InputLabelProps={null} variant="outlined" />
+									<TextField {...params} label="Language" InputLabelProps={undefined} variant="outlined" />
 								)}
 								value={{
 									language: stateData.language,
@@ -275,7 +260,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
 								style={EDITORTHEME}
 								wrapLongLines={stateData.textwrap}
 								customStyle={{
-									height: !stateData.multiline && "54px",
+									height: !stateData.multiline ? "54px" : "default",
 									overflowY: "hidden",
 									backgroundColor: "rgb(36, 39, 46)",
 									margin: "0px",

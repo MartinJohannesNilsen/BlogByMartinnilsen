@@ -1,5 +1,6 @@
+import { ThemeEnum } from "@/styles/themes/themeMap";
 import { OutputData } from "@editorjs/editorjs";
-import { SvgIconTypeMap, SxProps } from "@mui/material";
+import { SvgIconTypeMap, SxProps, Theme } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { CSSProperties, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
@@ -84,7 +85,7 @@ export type EditorjsRendererProps = {
 		fileref?: string;
 		fileSize?: number;
 	};
-	style: {
+	style?: {
 		typography?: SxProps;
 		box?: SxProps;
 		h1?: CSSProperties;
@@ -94,7 +95,7 @@ export type EditorjsRendererProps = {
 		h5?: CSSProperties;
 		h6?: CSSProperties;
 	};
-	classNames: {
+	classNames?: {
 		h1?: string;
 		h2?: string;
 		h3?: string;
@@ -102,7 +103,127 @@ export type EditorjsRendererProps = {
 		h5?: string;
 		h6?: string;
 	};
-	config: { disableDefaultStyle?: any };
+	config?: { disableDefaultStyle?: any };
+};
+
+export type BlurHashImageProps = {
+	blurhash: { encoded: string; height?: number; width?: number; punch?: number };
+	src: string;
+	alt: string;
+	style: CSSProperties;
+};
+
+export type IconProps = {
+	fill?: string;
+	height?: string | number;
+	width?: string | number;
+	style?: CSSProperties;
+	alt?: string;
+};
+
+export type SearchActionProps = {
+	title: string;
+	iconElement: JSX.Element;
+	keywords: string[];
+	onClick?: () => void;
+	href?: string;
+	requirement?: () => boolean;
+	id?: string;
+};
+
+export type EditorBlockProps = {
+	data?: OutputData;
+	onChange(val: OutputData): void;
+	holder: string;
+};
+
+export type ButtonBarProps = {
+	buttons: ButtonBarButtonProps[];
+	sx?: SxProps & {};
+	ref?: MutableRefObject<any>;
+	className?: string;
+};
+
+export type ButtonBarButtonProps = {
+	fetched?: boolean;
+	icon?:
+		| (OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+				muiName: string;
+		  })
+		| IconType;
+	text?: string;
+	onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
+	href?: string;
+	disabled?: boolean;
+};
+
+export type BlockToolQuoteDataProps = {
+	text: string;
+	caption: string;
+};
+export type BlockToolQuoteProps = {
+	data: BlockToolQuoteDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type BlockToolImageDataProps = {
+	type: string; // url, upload, unsplash, paste?
+	url: string;
+	caption: string;
+	blurhash: string;
+	height: number;
+	width: number;
+	fileRef?: string;
+	fileSize?: number;
+	// unsplash?: { author: string; profileLink: string };
+};
+export type BlockToolImageProps = {
+	data: BlockToolImageDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type BlockToolCodeBlockDataProps = {
+	code: string;
+	language: string;
+	multiline: boolean;
+	linenumbers: boolean;
+	textwrap: boolean;
+	filename: string;
+	caption: string;
+	render: boolean;
+	highlightLines: number[];
+};
+export type BlockToolCodeBlockProps = {
+	data: BlockToolCodeBlockDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type BlockToolCalloutDataProps = {
+	type: string;
+	message: string;
+	title?: string;
+	icon?: string;
+};
+export type BlockToolCalloutProps = {
+	data: BlockToolCalloutDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
+export type SessionUser = {
+	name?: string | null | undefined;
+	email?: string | null | undefined;
+	image?: string | null | undefined;
+	role?: string | null | undefined;
+	provider?: string | null | undefined;
+};
+
+export type AccountCardProps = {
+	sessionUser?: SessionUser;
+	isAuthorized: boolean;
 };
 
 export type SharePreviewCardProps = {
@@ -114,8 +235,24 @@ export type SharePreviewCardProps = {
 	height: number;
 };
 
+export type TileButtonCardProps = {
+	icon: any;
+	text: string;
+	href?: string;
+	onClick?: () => void;
+	disabled?: boolean;
+	showBadge?: boolean;
+};
+
 export type PostCardProps = PostProps & {
 	id: string;
+	views: any;
+};
+
+export type PostRecommendationCardProps = PostProps & {
+	id: string;
+	isSaved: boolean;
+	toggleIsSaved: () => void;
 };
 
 export type ImageProps = {
@@ -132,7 +269,7 @@ type PostProps = {
 	createdAt: number;
 	description: string;
 	ogImage: ImageProps;
-	updatedAt: number;
+	updatedAt?: number | null;
 	published: boolean;
 	readTime: string;
 	tags: string[];
@@ -145,8 +282,7 @@ export type FullPost = PostProps & {
 	data: OutputData;
 };
 
-export type FirestoreFullPost = PostProps & {
-	// data: string;
+export type DbFullPost = PostProps & {
 	data: any;
 };
 
@@ -158,19 +294,39 @@ export type TablePost = StoredPost & {
 	views: number | string;
 };
 
+export type PostTableProps = ModalProps & {
+	postsOverview: StoredPost[];
+};
+
+export type PostViewsProps = {
+	viewCount?: number;
+	sx?: {};
+};
+
 export type NavbarProps = {
 	posts?: StoredPost[];
 	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
 	ref?: MutableRefObject<undefined>;
 	className?: string;
+	isAuthorized: boolean;
+	sessionUser?: SessionUser;
+	centeredPadding?: boolean;
 };
 
 export type PostNavbarProps = {
 	post: FullPost & { id: string };
+	postsOverview?: StoredPost[];
 	toc: { content: string; currentSection: string };
+	setCardLayout?: (layout: "carousel" | "swipe" | "grid" | "list") => void;
+	tocModal: { open: boolean; setOpen: (value: boolean) => void };
 	shareModal: { open: boolean; setOpen: (value: boolean) => void };
+	simpleTextModal: { open: boolean; setOpen: (value: boolean) => void };
 	ref?: MutableRefObject<undefined>;
 	className?: string;
+	isAuthorized?: boolean;
+	sessionUser?: SessionUser;
+	savedPosts: string[];
+	setSavedPosts: (ids: string[]) => void;
 };
 
 // Component types
@@ -188,7 +344,52 @@ export type RevealProps = {
 	delay?: number;
 };
 
+export type ThemeContextType = {
+	theme: Theme;
+	setTheme: (Theme: ThemeEnum, persist?: boolean) => void;
+	setDefaultTheme: () => void;
+	accentColor: string;
+	setAccentColor: (accent: string) => void;
+	fontFamily: string;
+	setFontFamily: (font: string) => void;
+	fontScale: string;
+	setFontScale: (scale: string) => void;
+};
+
+export type directionType = "left" | "right" | "up" | "down";
+export type TinderSwipeType = {
+	posts: StoredPost[];
+	views: any;
+};
+
+export type SelectContentProps = {
+	value: any;
+	setValue: (value: any) => void;
+	children?: JSX.Element[];
+};
+
+export type UnreadFunctionProps = {
+	allNotificationsFilteredOnDate: NotificationProps[];
+	allNotificationsFilteredOnDateIds: number[];
+	unreadNotifications: NotificationProps[];
+	unreadNotificationsIds: number[];
+	hasUnreadNotifications: boolean;
+};
+
 // Menus
+
+export type OptionMenuProps = {
+	icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+		muiName: string;
+	};
+	text?: string;
+	menuItems: OptionMenuItem[];
+};
+export type OptionMenuItem = {
+	text: string;
+	onClick: () => void;
+	disabled?: boolean;
+};
 
 export type MenuProps = {
 	open: boolean;
@@ -203,6 +404,9 @@ export type ProfileMenuProps = MenuProps & {
 	showNotificationsBadge?: boolean;
 	notifications?: ModalProps;
 	settings?: ModalProps;
+	about?: ModalProps;
+	isAuthorized?: boolean;
+	sessionUser?: SessionUser;
 };
 
 // Modals
@@ -222,12 +426,15 @@ export type ShareModalProps = ModalProps & {
 };
 
 export type SearchModalProps = ModalProps & {
+	extraActions?: SearchActionProps[];
 	postsOverview?: StoredPost[];
 	handleSettingsModalOpen?: () => void;
 	handleNotificationsModalOpen?: () => void;
 	notificationsBadgeVisible?: boolean;
 	setCardLayout?: (layout: string) => void;
 	onOpen?: () => void;
+	isAuthorized?: boolean;
+	sessionUser?: SessionUser;
 };
 
 export type Headings = {
@@ -269,7 +476,7 @@ export type ButtonProps = {
 		| IconType;
 	text?: string;
 	onClick?: (() => void) | ((event: React.MouseEvent<HTMLElement>) => void);
-	href?: string;
+	href?: string | undefined;
 	disabled?: boolean;
 	sxButton?: SxProps & {};
 	sxIcon?: SxProps & {};
@@ -284,14 +491,37 @@ export type ButtonProps = {
 	replace?: any;
 };
 
+export type NavigatorShareProps = {
+	url?: string; // The URL of the webpage you want to share
+	title?: string; // The title of the shared content, although may be ignored by the target
+	text: string; // The description or text to accompany the shared content
+	icon?: string; // URL of the image for the preview
+	fallback?: () => void; // Fallback method
+};
+
 // export type SearchButtonProps = ButtonProps;
 
-// View props types
-export type ManageArticleViewProps = {
-	post?: FullPost;
+export type CustomThemeProviderProps = {
+	children: React.ReactNode;
 };
-export type ReadArticleViewProps = { post: FullPost; postId: string };
-export type LandingPageProps = { posts: StoredPost[] };
-export type TagsPageProps = { posts: StoredPost[]; tags: string[] };
-export type ListViewProps = {};
-export type FooterProps = {};
+
+// Page types
+export type LandingPageProps = {};
+export type ReadPostPageProps = {
+	post: FullPost;
+	postId: string;
+	postsOverview?: StoredPost[];
+	isAuthorized: boolean;
+	sessionUser?: SessionUser;
+};
+export type ManagePostPageProps = {
+	post?: FullPost;
+	id?: string;
+};
+export type TagsPageProps = { posts: StoredPost[]; tags: string[]; isAuthorized: boolean; sessionUser?: SessionUser };
+export type FooterProps = { postId?: string };
+export type ServerPageProps = {
+	sessionUser?: SessionUser;
+	isAuthorized: boolean;
+	postsOverview?: StoredPost[];
+};

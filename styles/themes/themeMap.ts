@@ -1,17 +1,18 @@
+"use client";
+import { dark } from "@/styles/themes/dark";
+import { light } from "@/styles/themes/light";
 import { Theme } from "@mui/material";
-import { dark } from "./dark";
-import { light } from "./light";
 
 export enum ThemeEnum {
-  Dark = "dark",
-  Light = "light",
+	Dark = "dark",
+	Light = "light",
 }
 
 export function themeCreator(theme: string): Theme {
-  return themeMap[theme];
+	return themeMap[theme];
 }
 
 const themeMap: { [key: string]: Theme } = {
-  dark,
-  light,
+	dark,
+	light,
 };

@@ -1,45 +1,17 @@
+"use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
+import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
+import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { BlockToolImageProps } from "@/types";
 import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import { NavbarButton } from "../../../Buttons/NavbarButton";
-import { deleteImage, uploadImage } from "../../../PostManagement/PostManagement";
-import { StyledTextField } from "../../../StyledMUI/TextInput";
-
-export const imageDetailsApiFetcher = async (url: RequestInfo) => {
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
-
-	// Fetch and return
-	const res: Response = await fetch(url, {
-		method: "GET", // or 'POST', 'PUT', etc.
-		headers: headers,
-	});
-	return await res.json();
-};
-
-// Types
-type ImageDataProps = {
-	type: string; // url, upload, unsplash, paste?
-	url: string;
-	caption: string;
-	blurhash: string;
-	height: number;
-	width: number;
-	fileRef?: string;
-	fileSize?: number;
-	// unsplash?: { author: string; profileLink: string };
-};
-type ImageProps = {
-	data: ImageDataProps;
-	onDataChange: (arg0: any) => void;
-	readOnly: boolean;
-};
 
 // Component
-export const ImageBlock = (props: ImageProps) => {
+export const ImageBlock = (props: BlockToolImageProps) => {
 	const { theme } = useTheme();
 	const [stateData, setStateData] = useState(
 		props.data || {
@@ -54,9 +26,9 @@ export const ImageBlock = (props: ImageProps) => {
 			// unsplash: null,
 		}
 	);
-	const [postId, setPostId] = useState(null);
+	const [postId, setPostId] = useState<string>();
 	const [urlfieldInputValue, setUrlfieldInputValue] = useState("");
-	const [uploadfieldInputValue, setUploadfieldInputValue] = useState(null);
+	const [uploadfieldInputValue, setUploadfieldInputValue] = useState<any>();
 	const [deleteButtonVisible, setDeleteButtonVisible] = useState(false);
 
 	useEffect(() => {
@@ -64,7 +36,7 @@ export const ImageBlock = (props: ImageProps) => {
 		const lastSegment = pathSegments.pop(); // Gets the last segment
 
 		// Check if the last segment is not "create"
-		if (lastSegment.toLowerCase() !== "create") {
+		if (lastSegment!.toLowerCase() !== "create") {
 			setPostId(lastSegment); // Store the last segment in postId
 		} else {
 			setStateData({ ...stateData, type: "url" }); // Cannot upload to path with postId if postId not present
@@ -104,18 +76,19 @@ export const ImageBlock = (props: ImageProps) => {
 										padding: "3px 6px",
 									}}
 								>
-									{`${(stateData.fileSize / 1024).toFixed(2)}kb`}
+									{`${(stateData.fileSize! / 1024).toFixed(2)}kb`}
 								</Typography>
 								<NavbarButton
 									variant="outline"
 									onClick={async () => {
+										if (!stateData.fileRef) return;
 										const response = await deleteImage(stateData.fileRef);
 										if (response.code === 200) {
 											setStateData({
 												...stateData,
 												url: "",
-												fileRef: null,
-												fileSize: null,
+												fileRef: undefined,
+												fileSize: undefined,
 											});
 										} else {
 											enqueueSnackbar(`(${response.code}) ${response.reason}`, {
@@ -169,7 +142,7 @@ export const ImageBlock = (props: ImageProps) => {
 							size="small"
 							onKeyPress={(e) => {
 								if (e.key === "Enter") {
-									event.preventDefault();
+									e.preventDefault();
 								}
 							}}
 							inputProps={{
@@ -197,7 +170,7 @@ export const ImageBlock = (props: ImageProps) => {
 									setUrlfieldInputValue("");
 								} else {
 									setStateData({ ...stateData, type: "upload" });
-									setUrlfieldInputValue(null);
+									setUrlfieldInputValue("");
 								}
 							}}
 							disabled={!postId} // Can only have url if no postId present
@@ -233,7 +206,7 @@ export const ImageBlock = (props: ImageProps) => {
 									// accept="image/*"
 									style={{ marginLeft: 10 }}
 									onChange={(e) => {
-										setUploadfieldInputValue(e.target.files[0]);
+										setUploadfieldInputValue(e.target.files![0]);
 									}}
 								/>
 								<Box flexGrow={1} />
@@ -248,7 +221,7 @@ export const ImageBlock = (props: ImageProps) => {
 								size="small"
 								onKeyPress={(e) => {
 									if (e.key === "Enter") {
-										event.preventDefault();
+										e.preventDefault();
 									}
 								}}
 								inputProps={{
@@ -265,75 +238,81 @@ export const ImageBlock = (props: ImageProps) => {
 						{/* Store image if upload and fetch image details */}
 						<NavbarButton
 							variant="outline"
-							onClick={async () => {
+							onClick={() => {
 								if (stateData.type === "upload") {
 									// Upload image or video
-									const uploadResponse = await uploadImage(uploadfieldInputValue, postId, null);
-
-									// Check if response was ok and we got data, else error snackbar
-									if (uploadResponse.hasOwnProperty("data")) {
-										// Check if image, then fetch details and blurhash
-										if (uploadfieldInputValue.type.startsWith("image/")) {
-											const details = await imageDetailsApiFetcher(
-												process.env.NEXT_PUBLIC_SERVER_URL +
-													"/editorjs/imageblurhash?url=" +
-													encodeURIComponent(uploadResponse.data.url)
-											);
-											if (details.hasOwnProperty("code") && details.code !== 200) {
-												enqueueSnackbar(details.reason, {
+									uploadImage(uploadfieldInputValue, postId, null)
+										.then((uploadResponse) => {
+											// Check if response was ok and we got data, else error snackbar
+											if (uploadResponse.data) {
+												// Check if image, then fetch details and blurhash
+												if (uploadfieldInputValue!.type.startsWith("image/")) {
+													getImageDetails(uploadResponse.data.url)
+														.then((details) => {
+															if (details) {
+																setStateData({
+																	...stateData,
+																	type: "upload",
+																	url: uploadResponse.data.url,
+																	fileRef: uploadResponse.data.fileRef,
+																	fileSize: uploadfieldInputValue!.size,
+																	blurhash: details.encoded,
+																	height: details.height,
+																	width: details.width,
+																});
+															} else {
+																enqueueSnackbar("Could not fetch image details", {
+																	variant: "error",
+																	preventDuplicate: true,
+																});
+															}
+														})
+														.catch((error) => {
+															console.error("Error fetching image details:", error);
+														});
+												} else if (uploadfieldInputValue!.type.startsWith("video/")) {
+													setStateData({
+														...stateData,
+														type: "upload",
+														url: uploadResponse.data.url,
+														fileRef: uploadResponse.data.fileRef,
+														fileSize: uploadfieldInputValue!.size,
+													});
+												}
+											} else {
+												enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
 													variant: "error",
 													preventDuplicate: true,
 												});
-											} else {
-												await setStateData({
+											}
+										})
+										.catch((error) => {
+											// Handle error from uploadImage
+											console.error("Error uploading image:", error);
+										});
+								} else {
+									// Fetch image details
+									getImageDetails(urlfieldInputValue)
+										.then((details) => {
+											if (details) {
+												setStateData({
 													...stateData,
-													type: "upload",
-													url: uploadResponse.data.url,
-													fileRef: uploadResponse.data.fileRef,
-													fileSize: uploadfieldInputValue.size,
+													type: "url",
+													url: urlfieldInputValue,
 													blurhash: details.encoded,
 													height: details.height,
 													width: details.width,
 												});
+											} else {
+												enqueueSnackbar("Could not fetch image details", {
+													variant: "error",
+													preventDuplicate: true,
+												});
 											}
-										} else if (uploadfieldInputValue.type.startsWith("video/")) {
-											await setStateData({
-												...stateData,
-												type: "upload",
-												url: uploadResponse.data.url,
-												fileRef: uploadResponse.data.fileRef,
-												fileSize: uploadfieldInputValue.size,
-											});
-										}
-									} else {
-										enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
-											variant: "error",
-											preventDuplicate: true,
+										})
+										.catch((error) => {
+											console.error("Error fetching image details:", error);
 										});
-									}
-								} else {
-									// Fetch image details
-									const details = await imageDetailsApiFetcher(
-										process.env.NEXT_PUBLIC_SERVER_URL +
-											"/editorjs/imageblurhash?url=" +
-											encodeURIComponent(urlfieldInputValue)
-									);
-									if (details.hasOwnProperty("code") && details.code !== 200) {
-										enqueueSnackbar(details.reason, {
-											// variant: "default",
-											variant: "error",
-											preventDuplicate: true,
-										});
-									} else {
-										setStateData({
-											...stateData,
-											type: "url",
-											url: urlfieldInputValue,
-											blurhash: details.encoded,
-											height: details.height,
-											width: details.width,
-										});
-									}
 								}
 							}}
 							icon={Add}

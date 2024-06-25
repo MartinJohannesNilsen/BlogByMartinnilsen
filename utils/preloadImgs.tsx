@@ -1,3 +1,4 @@
+"use client";
 const preloadImgs = (imgPaths: string[]) => {
 	let links: JSX.Element[] = [];
 	imgPaths.map((path) => {

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import Quote from "@/components/EditorJS/BlockTools/Quote/Quote";
+import { QuoteIcon } from "@/components/EditorJS/Icons";
+import React from "react";
 import ReactDOM from 'react-dom';
-import Quote from "./Quote";
-import { QuoteIcon } from "../../Icons";
 
 const dataDefaults = {
   text: "",
