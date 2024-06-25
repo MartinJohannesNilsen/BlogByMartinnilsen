@@ -41,9 +41,7 @@ export const checkForUnreadRecentNotifications = (
 					!notificationsRead.includes(notification.id) &&
 					(Date.parse(notification.createdAt) > Date.now() - notificationDaysInMilliseconds || notification.important) // Also count important in unread notifications as these are visible as well
 			); //Need to include the filtering if notificationsFilterDate is larger (thus not visible)
-	// TODO HERE?? fixed now??
 	const unreadNotificationsIds = unreadNotifications.map((notification) => notification.id);
-	console.log(unreadNotificationsIds);
 	return {
 		allNotificationsFilteredOnDate: allFilteredOnDateOrImportant,
 		allNotificationsFilteredOnDateIds: allFilteredOnDateIds,

@@ -41,8 +41,10 @@ export const _filterListOfStoredPostsOnPublished = (
 	} else if (filter === "unpublished") {
 		return data.filter((post) => !post.published);
 	} else if (filter === "saved") {
-		const saved = JSON.parse(localStorage.getItem("savedPosts")!);
-		return data.filter((post) => saved && saved.includes(post.id) && post.published);
+		if (typeof window !== "undefined" && window.localStorage) {
+			const saved = JSON.parse(localStorage.getItem("savedPosts")!);
+			return data.filter((post) => saved && saved.includes(post.id) && post.published);
+		}
 	}
 	return data;
 };

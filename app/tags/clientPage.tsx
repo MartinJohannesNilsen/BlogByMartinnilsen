@@ -1,7 +1,6 @@
 "use client";
 import TagsPageCard from "@/components/DesignLibrary/Cards/TagsPageCard";
 import Navbar from "@/components/Navigation/Navbar";
-import { _filterListOfStoredPostsOnPublished } from "@/data/middleware/overview/actions";
 import { getAllViewCounts } from "@/data/middleware/views/actions";
 import colors from "@/styles/colors";
 import { useTheme } from "@/styles/themes/ThemeProvider";
@@ -34,12 +33,28 @@ export const _filterListOfStoredPostsOnTag = (data: StoredPost[], tag: string) =
 	return data.filter((post) => post.tags.includes(tag));
 };
 
+export const _filterListOfStoredPostsOnPublished = (
+	data: StoredPost[],
+	filter: "published" | "unpublished" | "all" | "saved"
+) => {
+	if (filter === "published") {
+		return data.filter((post) => post.published);
+	} else if (filter === "unpublished") {
+		return data.filter((post) => !post.published);
+	} else if (filter === "saved") {
+		if (typeof window !== "undefined" && window.localStorage) {
+			const saved = JSON.parse(localStorage.getItem("savedPosts")!);
+			return data.filter((post) => saved && saved.includes(post.id) && post.published);
+		}
+	}
+	return data;
+};
+
 const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => {
 	const { theme } = useTheme();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const router = useRouter();
 	const [tag, setTag] = useState<string | null>("loading");
-	// const { query, isReady } = useRouter();
 	const searchParams = useSearchParams();
 	const [statePosts, setStatePosts] = useState<StoredPost[]>(posts);
 	const [_, setCardLayout] = useStickyState("cardLayout", "plain");
@@ -54,7 +69,13 @@ const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => 
 		});
 	}, []);
 
-	const updateData = () => {
+	useEffect(() => {
+		if (searchParams) {
+			setTag(searchParams.get("name"));
+		}
+	}, [searchParams]);
+
+	useEffect(() => {
 		if (!tag) {
 			setStatePosts(posts);
 		} else if (tag.toLowerCase() === "published") {
@@ -66,18 +87,6 @@ const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => 
 		} else {
 			setStatePosts(_filterListOfStoredPostsOnTag(posts, _getCaseInsensitiveElement(tags, tag)!));
 		}
-	};
-
-	useEffect(() => {
-		if (searchParams) {
-			setTag(searchParams.get("name"));
-		}
-	}, [searchParams]);
-
-	useEffect(() => {
-		// if (searchParams) {
-		updateData();
-		// }
 	}, [tag]);
 
 	useEffect(() => {
