@@ -74,7 +74,7 @@ export const NavbarButton = (props: ButtonProps) => {
 					sx={{
 						fontFamily: theme.typography.fontFamily,
 						fontWeight: 500,
-						color: theme.palette.text.primary,
+						color: "inherit",
 						...props.sxText,
 					}}
 				>
