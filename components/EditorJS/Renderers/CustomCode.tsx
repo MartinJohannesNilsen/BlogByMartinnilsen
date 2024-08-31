@@ -39,8 +39,30 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 		const textToBeCopied = props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "");
 		const handleCopy = (event) => {
 			event.preventDefault();
-			handleButtonClick(textToBeCopied);
+			const selection = window.getSelection();
+			const selectedText = selection ? selection.toString() : "";
+
+			if (selectedText) {
+				// Copy the selected text
+				copyToClipboardV2(selectedText)
+					.then(() => {
+						setCopyMessageShown(true);
+						setTimeout(() => {
+							setCopyMessageShown(false);
+						}, 4000);
+					})
+					.catch((error) => {
+						enqueueSnackbar("Unable to copy to clipboard!", {
+							variant: "error",
+							preventDuplicate: true,
+						});
+					});
+			} else {
+				// Copy the entire block content
+				handleButtonClick(textToBeCopied);
+			}
 		};
+
 		if (copyEventListenerActive) {
 			document.addEventListener("copy", handleCopy);
 		} else {
@@ -50,7 +72,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 		return () => {
 			document.removeEventListener("copy", handleCopy);
 		};
-	}, [copyEventListenerActive]);
+	}, [copyEventListenerActive, props.data.code, props.data.multiline]);
 
 	return (
 		<Box
