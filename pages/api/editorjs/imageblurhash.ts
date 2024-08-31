@@ -1,20 +1,10 @@
-import { blurhashFromURL } from "blurhash-from-url";
+import { getImageBlurhash } from "@/data/middleware/imageBlurhash/actions";
+import { validateAuthAPIToken, validateImagedetailsAPIToken } from "@/utils/validateAuthTokenPagesRouter";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { validateAuthAPIToken } from "..";
-
-async function getBlurhash(url: string) {
-	// Default 32x32 size
-	// const output = await blurhashFromURL(url);
-	// Set size
-	const output = await blurhashFromURL(url, {
-		size: 64,
-	});
-	return output;
-}
 
 function isImgUrl(url) {
 	return fetch(url, { method: "HEAD" }).then((res) => {
-		return res.headers.get("Content-Type").startsWith("image");
+		return res.headers.get("Content-Type")!.startsWith("image");
 	});
 }
 
@@ -58,11 +48,11 @@ function isImgUrl(url) {
  *       '501':
  *         description: Method not supported.
  */
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = validateAuthAPIToken(req);
-	if (!authValidation.isValid) {
+	const imagestoreValidation = validateImagedetailsAPIToken(req);
+	if (!authValidation.isValid && !imagestoreValidation.isValid) {
 		return res.status(authValidation.code).json({ code: authValidation.code, reason: authValidation.reason });
 	}
 
@@ -76,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			let isImage = await isImgUrl(req.query.url as string);
 			if (isImage) {
 				// Get blurhash
-				await getBlurhash(req.query.url as string).then((output) => {
+				await getImageBlurhash(req.query.url as string).then((output) => {
 					return res.status(200).json(output);
 				});
 			} else {

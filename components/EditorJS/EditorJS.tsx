@@ -1,17 +1,12 @@
-//./components/Editor
-import EditorJS, { OutputData } from "@editorjs/editorjs";
+"use client";
+import { EDITOR_JS_TOOLS } from "@/components/EditorJS/tools";
+import { EditorBlockProps } from "@/types";
+import EditorJS from "@editorjs/editorjs";
 import DragDrop from "editorjs-drag-drop";
 import Undo from "editorjs-undo";
 import { memo, useEffect, useRef } from "react";
-import { EDITOR_JS_TOOLS } from "./tools";
 
-// props
-type Props = {
-	data?: OutputData;
-	onChange(val: OutputData): void;
-	holder: string;
-};
-const EditorBlock = ({ data, onChange, holder }: Props) => {
+const EditorBlock = ({ data, onChange, holder }: EditorBlockProps) => {
 	//add a reference to editor
 	const ref = useRef<EditorJS>();
 
@@ -26,8 +21,10 @@ const EditorBlock = ({ data, onChange, holder }: Props) => {
 				// @ts-ignore
 				logLevel: "ERROR",
 				onReady: () => {
-					new Undo({ editor });
-					new DragDrop(editor);
+					if (editor) {
+						new Undo({ editor });
+						new DragDrop(editor);
+					}
 				},
 				async onChange(api, event) {
 					const data = await api.saver.save();

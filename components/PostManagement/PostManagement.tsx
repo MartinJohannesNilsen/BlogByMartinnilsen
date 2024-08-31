@@ -1,5 +1,22 @@
+import { renderers } from "@/app/posts/[postId]/clientPage";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import { BpRadio } from "@/components/DesignLibrary/Buttons/RadioButton";
+import OptionMenu from "@/components/DesignLibrary/Menus/OptionMenu";
+import EditableTypography from "@/components/DesignLibrary/Text/EditableTypography";
+import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
+import { revalidatePost, revalidatePostsOverview, revalidateTags } from "@/data/actions";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
+import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "@/data/middleware/overview/actions";
+import { addPost, deletePost, updatePost } from "@/data/middleware/posts/actions";
+import { addTag, getTags } from "@/data/middleware/tags/actions";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { FullPost, ManagePostPageProps } from "@/types";
+import { copyToClipboardV2 } from "@/utils/copyToClipboard";
+import { getTimeZoneUTCFormatString } from "@/utils/timeZoneUTCFormatString";
 import { OutputData } from "@editorjs/editorjs";
-import { Clear, Close, Delete, Home, Launch, MoreVert, Save, Update } from "@mui/icons-material";
+import { Clear, Close, Delete, Home, Launch, MoreVert, Save, Update, UploadFile } from "@mui/icons-material";
 import {
 	Autocomplete,
 	Box,
@@ -20,33 +37,16 @@ import {
 import Output from "editorjs-react-renderer";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { closeSnackbar, useSnackbar } from "notistack";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
 import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
-import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "../../database/overview";
-import { addPost, deletePost, updatePost } from "../../database/posts";
-import { addTag, getTags } from "../../database/tags";
-import { renderers } from "../../pages/posts/[postId]";
-import { useTheme } from "../../styles/themes/ThemeProvider";
-import { ThemeEnum } from "../../styles/themes/themeMap";
-import { FullPost, ManageArticleViewProps } from "../../types";
-import { copyToClipboardV2 } from "../../utils/copyToClipboard";
-import { getTimeZoneUTCFormatString } from "../../utils/timeZoneUTCFormatString";
-import { NavbarButton } from "../Buttons/NavbarButton";
-import { imageDetailsApiFetcher } from "../EditorJS/BlockTools/ImageBlock/ImageBlock";
-import OptionMenu from "../Menus/OptionMenu";
-import { DATA_DEFAULTS } from "../SEO/SEO";
-import EditableTypography from "../StyledMUI/EditableTypography";
-import { BpRadio } from "../StyledMUI/RadioButton";
-import { StyledTextField } from "../StyledMUI/TextInput";
 let EditorBlock;
 if (typeof window !== "undefined") {
-	EditorBlock = dynamic(() => import("../EditorJS/EditorJS"));
+	EditorBlock = dynamic(() => import("@/components/EditorJS/EditorJS"));
 }
 
 const OGDEFAULTS = {
@@ -55,42 +55,6 @@ const OGDEFAULTS = {
 	descriptionOptimal: 55,
 	descriptionWarning: 60,
 	descriptionMax: 160,
-};
-
-const revalidatePages = async (pages: string[]) => {
-	try {
-		const responses = await Promise.all(
-			pages.map((page) => {
-				return fetch("/api/revalidate?path=" + page, {
-					headers: {
-						accept: "application/json",
-						apikey: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
-					},
-				});
-			})
-		);
-		const res: {
-			status: number;
-			requests: {
-				status: number;
-				path: string;
-				revalidated: boolean;
-			}[];
-		} = { status: 200, requests: [] };
-		responses.map((response) => {
-			if (response.status !== 200) {
-				res.status = response.status;
-			}
-			res.requests.push({
-				status: response.status,
-				path: new URL(response.url).searchParams.get("path"),
-				revalidated: response.status === 200,
-			});
-		});
-		return res;
-	} catch (error) {
-		console.log(error);
-	}
 };
 
 export function isvalidHTTPUrl(string: string) {
@@ -103,82 +67,14 @@ export function isvalidHTTPUrl(string: string) {
 	return url.protocol === "http:" || url.protocol === "https:";
 }
 
-export const uploadImage = async (file, postId, name) => {
-	// Prepare FormData
-	const formData = new FormData();
-	formData.append("file", file); // 'file' is the name expected by the server for the file
-
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
-
-	// Options for the fetch request
-	const fetchOptions = {
-		method: "POST",
-		body: formData, // Attach the FormData object
-		headers: headers,
-		// Don't set Content-Type header manually, so the browser can set the boundary parameter automatically
-	};
-
-	try {
-		// Make the HTTP request
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?directory=${postId}${name ? "&name=" + name : ""}`,
-			fetchOptions
-		);
-
-		if (!response.ok) {
-			return { code: response.status, reason: response.statusText };
-		}
-
-		// Process the response (assuming JSON response)
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		return { error: error };
-	}
-};
-
-export const deleteImage = async (fileRef) => {
-	// Add apikey header
-	const headers = new Headers();
-	headers.append("apikey", process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN);
-
-	// Options for the fetch request
-	const fetchOptions = {
-		method: "DELETE",
-		headers: headers,
-		// Don't set Content-Type header manually, so the browser can set the boundary parameter automatically
-	};
-
-	try {
-		// Make the HTTP request
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_SERVER_URL}/editorjs/imagestore?fileRef=${fileRef}`,
-			fetchOptions
-		);
-
-		if (!response.ok) {
-			return { code: response.status, reason: response.statusText };
-		}
-
-		// Process the response (assuming JSON response)
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		return { error: error };
-	}
-};
-
-const CreatePost: FC<ManageArticleViewProps> = (props) => {
+const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	const { theme, setTheme } = useTheme();
 	const [isSaved, setIsSaved] = useState<boolean>(false);
 	const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const router = useRouter();
-	const [postId, setPostId] = useState<string>(props.post ? (router.query.postId[0] as string) : "");
+	const [postId, setPostId] = useState(id);
 	const [tagOptions, setTagOptions] = useState<{ value: string; label: string }[]>([]);
-	const [editorJSContent, setEditorJSContent] = useState<OutputData>(props.post ? props.post.data : { blocks: [] });
+	const [editorJSContent, setEditorJSContent] = useState<OutputData>(post ? post.data : { blocks: [] });
 	const [data, setData] = useState<FullPost>({
 		published: false,
 		type: "",
@@ -188,31 +84,31 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		description: "",
 		ogImage: {
 			src: "https://blog.mjntech.dev/assets/icons/ogimage.png",
-			blurhash: null,
-			height: null,
-			width: null,
-			fileRef: null,
-			fileSize: null,
+			// blurhash: null,
+			// height: null,
+			// width: null,
+			// // fileRef: null,
+			// fileSize: null,
 		},
 		data: { blocks: [] },
 		author: "Martin Johannes Nilsen",
 		createdAt: Date.now(),
-		updatedAt: null,
+		// updatedAt: null,
 		readTime: "",
 	});
 	const handleNavigate = (path: string) => {
 		window.location.href = path;
 	};
 	const { enqueueSnackbar } = useSnackbar();
-	const [openTab, setOpenTab] = useState(postId ? 1 : 0);
-	const [toggleOpen, setToggleOpen] = useState(postId ? false : true);
-	// const [openTab, setOpenTab] = useState(1); // TODO remove before push
 	const [createdAtEditable, setCreatedAtEditable] = useState(false);
 	const [updatedAtEditable, setUpdatedAtEditable] = useState(false);
 	const [automaticallySetUpdatedAt, setAutomaticallySetUpdatedAt] = useState(true);
 
 	useEffect(() => {
-		setTheme(ThemeEnum.Light);
+		if (post) {
+			setData(post);
+			setEditorJSContent(post.data);
+		}
 		getTags()
 			.then((val) => {
 				const array: { value: string; label: string }[] = val.map((item) => ({
@@ -224,14 +120,6 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 			.catch((error) => {
 				console.log(error);
 			});
-	}, []);
-
-	useEffect(() => {
-		if (props.post) {
-			setData(props.post);
-			setEditorJSContent(props.post.data);
-			setIsLoading(false);
-		}
 		setIsLoading(false);
 		return () => {};
 	}, []);
@@ -281,26 +169,24 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 				// Fetch blurhash if null
 				if (!data.ogImage.blurhash) {
 					// Get image details
-					const details = await imageDetailsApiFetcher(
-						process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/imageblurhash?url=" + encodeURIComponent(data.ogImage.src)
-					);
-					if (details.hasOwnProperty("code") && details.code !== 200) {
-						enqueueSnackbar(`Open Graph Image: ${details.reason}`, {
-							variant: "error",
-							preventDuplicate: true,
-						});
-					} else {
+					const details = await getImageDetails(data.ogImage.src);
+					if (details) {
 						newObject = {
 							...newObject,
 							ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
 						};
+					} else {
+						enqueueSnackbar(`Open Graph Image: Could not fetch image details`, {
+							variant: "error",
+							preventDuplicate: true,
+						});
 					}
 				}
 
 				// If post exists, then update, or add new
-				if (postId !== "") {
+				if (postId) {
 					// Update field 'updatedAt' only when not localhost and not adjusted already
-					// if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && props.post.updatedAt === newObject.updatedAt) {
+					// if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && post.updatedAt === newObject.updatedAt) {
 					if (process.env.NEXT_PUBLIC_LOCALHOST === "false" && automaticallySetUpdatedAt) {
 						newObject.updatedAt = Date.now();
 						setData({ ...data, updatedAt: newObject.updatedAt });
@@ -338,8 +224,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								variant: "default",
 								preventDuplicate: true,
 							});
+							// Remove data before pushing to posts overview
+							const { data, ...newPost } = newObject;
+							// Push to posts overview
 							addPostsOverview({
-								...newObject,
+								...newPost,
 								id: postId,
 							}).then((overviewWasAdded) => {
 								if (overviewWasAdded) {
@@ -380,31 +269,40 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 			variant: "default",
 			preventDuplicate: true,
 		});
-		deletePost(postId).then((postWasDeleted) => {
-			if (postWasDeleted) {
-				deletePostsOverview(postId).then((overviewWasUpdated) => {
-					if (overviewWasUpdated) {
-						enqueueSnackbar("Successfully deleted post!", {
-							variant: "success",
-							preventDuplicate: true,
-						});
-						revalidatePages(["/", "/tags", "/posts/" + postId]).then(() => {
-							handleNavigate("/");
-						});
-					} else {
-						enqueueSnackbar("An error occured ...", {
-							variant: "error",
-							preventDuplicate: true,
-						});
-					}
-				});
-			} else {
-				enqueueSnackbar("An error occured ...", {
-					variant: "error",
-					preventDuplicate: true,
-				});
-			}
-		});
+		if (postId) {
+			deletePost(postId).then((postWasDeleted) => {
+				if (postWasDeleted) {
+					deletePostsOverview(postId).then((overviewWasUpdated) => {
+						if (overviewWasUpdated) {
+							enqueueSnackbar("Successfully deleted post!", {
+								variant: "success",
+								preventDuplicate: true,
+							});
+							Promise.all([revalidatePost(postId), revalidatePostsOverview(), revalidateTags()])
+								.then(() => {
+									handleNavigate("/");
+								})
+								.catch((error) =>
+									enqueueSnackbar("Error during cache revalidation!", {
+										variant: "error",
+										preventDuplicate: true,
+									})
+								);
+						} else {
+							enqueueSnackbar("An error occured ...", {
+								variant: "error",
+								preventDuplicate: true,
+							});
+						}
+					});
+				} else {
+					enqueueSnackbar("An error occured ...", {
+						variant: "error",
+						preventDuplicate: true,
+					});
+				}
+			});
+		}
 	};
 
 	const handleCreateTagOption = (inputValue: string) => {
@@ -435,25 +333,25 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 		</>
 	);
 	const handleRevalidate = (postId) => {
-		enqueueSnackbar("Revalidating pages ...", {
+		enqueueSnackbar("Revalidating cache ...", {
 			variant: "default",
 			preventDuplicate: true,
 		});
-		revalidatePages(["/", "/tags", "/posts/" + postId]).then((res) => {
-			if (res.status === 200) {
-				enqueueSnackbar("Revalidated pages!", {
+		Promise.all([revalidatePost(postId), revalidatePostsOverview(), revalidateTags()])
+			.then(() => {
+				enqueueSnackbar("Revalidated cache!", {
 					action: (id) => revalidateAction(id, postId),
 					variant: "success",
 					preventDuplicate: true,
 				});
 				setIsRevalidated(true);
-			} else {
-				enqueueSnackbar("Error during revalidation!", {
+			})
+			.catch((error) =>
+				enqueueSnackbar("Error during cache revalidation!", {
 					variant: "error",
 					preventDuplicate: true,
-				});
-			}
-		});
+				})
+			);
 	};
 
 	useHotkeys(["Control+s", "Meta+s"], (event) => {
@@ -471,6 +369,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 					sx={{
 						minWidth: "100vw",
 						minHeight: "100vh",
+						height: "100%",
 						backgroundColor: theme.palette.primary.main,
 					}}
 				>
@@ -533,7 +432,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 								)}
 								<Box flexGrow={1} />
 								{/* Delete */}
-								{props.post && (
+								{post && (
 									<>
 										<NavbarButton
 											variant="outline"
@@ -620,7 +519,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 							sx={{
 								my: 1,
 								width: width,
-								opacity: data.title.trim() == "" && 0.3,
+								opacity: data.title.trim() == "" ? 0.3 : 1,
 								color:
 									data.title.length > OGDEFAULTS.titleOptimal
 										? data.title.length > OGDEFAULTS.titleMax
@@ -642,7 +541,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 							</Typography>
 							<Grid container alignItems="center" justifyContent="flex-start" rowGap={1}>
 								{/* Date and time */}
-								{props.post && (
+								{post && (
 									<>
 										<Grid item xs={3} md={2}>
 											<Typography sx={{ fontWeight: 600 }}>Created at</Typography>
@@ -651,28 +550,31 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 											{/* Created At */}
 											<Box display="flex" gap={0.5} alignItems="center">
 												{/* {xs && <Box flexGrow={1} />} */}
-												<input
-													style={{
-														border:
-															"1px solid " +
-															(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-														borderRadius: 5,
-														padding: 5,
-														fontFamily: theme.typography.fontFamily,
-														fontWeight: 600,
-														fontSize: isMobile ? 18 : 15,
-													}}
-													disabled={!createdAtEditable}
-													type="datetime-local"
-													name="createdAt"
-													// onKeyDown={(e) => {
-													// 	if (e.key === "Delete") e.preventDefault();
-													// }}
-													value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
-													onChange={(e) => {
-														setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
-													}}
-												/>
+												<Box sx={{ width: "180px" }}>
+													<input
+														style={{
+															border:
+																"1px solid " +
+																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+															borderRadius: 5,
+															padding: 5,
+															fontFamily: theme.typography.fontFamily,
+															fontWeight: 600,
+															fontSize: isMobile ? 18 : 15,
+															width: "100%",
+														}}
+														disabled={!createdAtEditable}
+														type="datetime-local"
+														name="createdAt"
+														// onKeyDown={(e) => {
+														// 	if (e.key === "Delete") e.preventDefault();
+														// }}
+														value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
+														onChange={(e) => {
+															setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
+														}}
+													/>
+												</Box>
 												<OptionMenu
 													icon={MoreVert}
 													menuItems={[
@@ -683,10 +585,10 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 															},
 														},
 														{
-															text: "Revert",
-															disabled: !props.post,
+															text: "Set to initial",
+															disabled: !post,
 															onClick: () => {
-																setData({ ...data, createdAt: props.post.createdAt });
+																setData({ ...data, createdAt: post!.createdAt });
 																setCreatedAtEditable(false);
 															},
 														},
@@ -707,68 +609,70 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 											{/* Updated At */}
 											<Box display="flex" gap={0.5} alignItems="center" justifyContent="flex-start">
 												{/* {xs && <Box flexGrow={1} />} */}
-												{automaticallySetUpdatedAt ? (
-													<input
-														style={{
-															border:
-																"1px solid " +
-																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-															borderRadius: 5,
-															padding: "7px 7px",
-															marginRight: -1,
-															fontFamily: theme.typography.fontFamily,
-															fontWeight: 600,
-															fontSize: isMobile ? 18 : 15,
-															color: theme.palette.grey[400],
-															width: 155.5,
-														}}
-														disabled
-														name="updatedAt"
-														value="Automatic on save"
-														onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
-													/>
-												) : data.updatedAt ? (
-													<input
-														style={{
-															border:
-																"1px solid " +
-																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-															borderRadius: 5,
-															padding: "5px 5px",
-															fontFamily: theme.typography.fontFamily,
-															fontWeight: 600,
-															fontSize: isMobile ? 18 : 15,
-														}}
-														disabled={!updatedAtEditable}
-														type="datetime-local"
-														name="updatedAt"
-														value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
-														onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
-													/>
-												) : (
-													<input
-														style={{
-															border:
-																"1px solid " +
-																(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
-															borderRadius: 5,
-															padding: "7px 7px",
-															fontFamily: theme.typography.fontFamily,
-															fontWeight: 600,
-															fontSize: isMobile ? 18 : 15,
-															color: theme.palette.grey[400],
-															width: 155.5,
-															marginRight: -1,
-														}}
-														disabled
-														name="updatedAt"
-														value={props.post.updatedAt ? "Will be removed" : "Not yet updated"}
-														onChange={(e) => {
-															setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
-														}}
-													/>
-												)}
-
+												<Box sx={{ width: "180px" }}>
+													{automaticallySetUpdatedAt ? (
+														<input
+															style={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: 5,
+																padding: "7px 7px",
+																marginRight: -1,
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																color: theme.palette.grey[400],
+																width: "100%",
+															}}
+															disabled
+															name="updatedAt"
+															value="Automatic on save"
+															onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+														/>
+													) : data.updatedAt ? (
+														<input
+															style={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: 5,
+																padding: "5px 5px",
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																width: "100%",
+															}}
+															disabled={!updatedAtEditable}
+															type="datetime-local"
+															name="updatedAt"
+															value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
+															onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+														/>
+													) : (
+														<input
+															style={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: 5,
+																padding: "7px 7px",
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																color: theme.palette.grey[400],
+																width: "100%",
+																marginRight: -1,
+															}}
+															disabled
+															name="updatedAt"
+															value={post.updatedAt ? "Will be removed" : "Not yet updated"}
+															onChange={(e) => {
+																setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
+															}}
+														/>
+													)}
+												</Box>
 												<OptionMenu
 													icon={MoreVert}
 													menuItems={[
@@ -776,16 +680,16 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 															text: "Set editable",
 															disabled: updatedAtEditable,
 															onClick: () => {
-																setData({ ...data, updatedAt: props.post.updatedAt || data.createdAt });
+																setData({ ...data, updatedAt: post!.updatedAt || data.createdAt });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(true);
 															},
 														},
 														{
-															text: "Revert",
-															disabled: !props.post,
+															text: "Set to initial",
+															disabled: !post,
 															onClick: () => {
-																setData({ ...data, updatedAt: props.post.updatedAt });
+																setData({ ...data, updatedAt: post!.updatedAt });
 																setAutomaticallySetUpdatedAt(false);
 																setUpdatedAtEditable(false);
 															},
@@ -799,7 +703,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 														},
 														{
 															text: "Remove",
-															disabled: !props.post?.updatedAt,
+															disabled: !post?.updatedAt,
 															onClick: () => {
 																setData({ ...data, updatedAt: null });
 																setAutomaticallySetUpdatedAt(false);
@@ -811,7 +715,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												{/* <NavbarButton
 													variant="outline"
 													onClick={() => {
-														setData({ ...data, updatedAt: props.post.updatedAt || data.createdAt });
+														setData({ ...data, updatedAt: post.updatedAt || data.createdAt });
 														setAutomaticallySetUpdatedAt(false);
 														setUpdatedAtEditable(true);
 													}}
@@ -833,11 +737,11 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 												<NavbarButton
 													variant="outline"
 													onClick={() => {
-														setData({ ...data, updatedAt: props.post.updatedAt });
+														setData({ ...data, updatedAt: post.updatedAt });
 														setAutomaticallySetUpdatedAt(false);
 														setUpdatedAtEditable(false);
 													}}
-													disabled={!props.post}
+													disabled={!post}
 													icon={Restore}
 													tooltip="Revert"
 													sxButton={{
@@ -948,22 +852,23 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 																},
 															},
 															{
-																text: `Size: ${(data.ogImage.fileSize / 1024).toFixed(2)}kb`,
+																text: `Size: ${(data.ogImage.fileSize! / 1024).toFixed(2)}kb`,
 																disabled: true,
 																onClick: () => {},
 															},
 															{
 																text: "Delete",
 																onClick: async () => {
+																	if (!data.ogImage.fileRef) return;
 																	const response = await deleteImage(data.ogImage.fileRef);
 																	if (response.code === 200) {
 																		setData({
 																			...data,
 																			ogImage: {
 																				...data.ogImage,
-																				src: DATA_DEFAULTS.ogImage,
-																				fileRef: null,
-																				fileSize: null,
+																				src: DATA_DEFAULTS.images.openGraph,
+																				fileRef: undefined,
+																				fileSize: undefined,
 																			},
 																		});
 																		enqueueSnackbar(`Open Graph Image successfully deleted`, {
@@ -982,44 +887,100 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 													/>
 												</Box>
 											) : (
-												<input
-													type="file"
-													id="fileInput"
-													// accept="image/*,video/*"
-													accept="image/*"
-													onChange={async (e) => {
-														const file = e.target.files[0];
-														const uploadResponse = await uploadImage(file, postId, "ogImage");
-														if (uploadResponse.hasOwnProperty("data")) {
-															const details = await imageDetailsApiFetcher(
-																process.env.NEXT_PUBLIC_SERVER_URL +
-																	"/editorjs/imageblurhash?url=" +
-																	encodeURIComponent(uploadResponse.data.url)
-															);
-															setData({
-																...data,
-																ogImage: {
-																	...data.ogImage,
-																	src: uploadResponse.data.url,
-																	height: details.height,
-																	width: details.width,
-																	blurhash: details.encoded,
-																	fileRef: uploadResponse.data.fileRef,
-																	fileSize: file.size,
-																},
-															});
-															enqueueSnackbar(`Open Graph Image uploaded (${(file.size / 1024).toFixed(2)}kb)`, {
-																variant: "success",
-																preventDuplicate: true,
-															});
-														} else {
-															enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
-																variant: "error",
-																preventDuplicate: true,
-															});
-														}
-													}}
-												/>
+												// Old version
+												<>
+													<input
+														type="file"
+														id="fileInput"
+														accept="image/*"
+														onChange={async (e) => {
+															const file = e.target.files && e.target.files[0];
+															if (!file) return;
+															const uploadResponse = await uploadImage(file, postId, "ogImage");
+															if (uploadResponse.data) {
+																const details = await getImageDetails(uploadResponse.data.url);
+																setData({
+																	...data,
+																	ogImage: {
+																		...data.ogImage,
+																		src: uploadResponse.data.url,
+																		height: details.height,
+																		width: details.width,
+																		blurhash: details.encoded,
+																		fileRef: uploadResponse.data.fileRef,
+																		fileSize: file!.size,
+																	},
+																});
+																enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
+																	variant: "success",
+																	preventDuplicate: true,
+																});
+															} else {
+																enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+																	variant: "error",
+																	preventDuplicate: true,
+																});
+															}
+														}}
+														style={{ display: "none" }}
+													/>
+													<label htmlFor="fileInput">
+														<Button
+															component="span"
+															sx={{
+																border:
+																	"1px solid " +
+																	(theme.palette.mode === "dark" ? theme.palette.grey[700] : theme.palette.grey[400]),
+																borderRadius: "5px",
+																padding: "5px 5px",
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: 600,
+																fontSize: isMobile ? 18 : 15,
+																color: theme.palette.grey[400],
+																width: "180px",
+																textTransform: "none",
+															}}
+														>
+															<UploadFile sx={{ mr: "2px", fontSize: isMobile ? 18 : 15 }} />
+															Select File
+														</Button>
+													</label>
+												</>
+
+												// New version
+												// <FileInputSelector
+												// 	type="file"
+												// 	id="fileInput"
+												// 	accept="image/*"
+												// 	onChange={async (e) => {
+												// 		const file = e.target.files && e.target.files[0];
+												// 		const uploadResponse = await uploadImage(file, postId, "ogImage");
+												// 		if (uploadResponse.hasOwnProperty("data")) {
+												// 			const details = await getImageDetails(uploadResponse.data.url);
+												// 			setData({
+												// 				...data,
+												// 				ogImage: {
+												// 					...data.ogImage,
+												// 					src: uploadResponse.data.url,
+												// 					height: details.height,
+												// 					width: details.width,
+												// 					blurhash: details.encoded,
+												// 					fileRef: uploadResponse.data.fileRef,
+												// 					fileSize: file!.size,
+												// 				},
+												// 			});
+												// 			enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
+												// 				variant: "success",
+												// 				preventDuplicate: true,
+												// 			});
+												// 		} else {
+												// 			enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+												// 				variant: "error",
+												// 				preventDuplicate: true,
+												// 			});
+												// 		}
+												// 	}}
+												// />
 											)}
 										</Grid>
 									</>
@@ -1152,7 +1113,7 @@ const CreatePost: FC<ManageArticleViewProps> = (props) => {
 										sx={{ backgroundColor: theme.palette.primary.main }}
 										onKeyPress={(e) => {
 											if (e.key === "Enter") {
-												event.preventDefault();
+												event!.preventDefault();
 											}
 										}}
 										inputProps={{

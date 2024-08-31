@@ -1,3 +1,6 @@
+"use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 import { Box } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -7,10 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
 import DOMPurify from "isomorphic-dompurify";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -37,16 +37,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const CustomTable = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
 	const newDesign = true;
-
-	const useStyles = makeStyles(() => ({
-		verticalLine: {
-			// borderWidth: 0,
-			borderRightWidth: 1,
-			borderRightColor: theme.palette.grey[700],
-			borderRightStyle: "solid",
-		},
-	}));
-	const style = useStyles();
 	const content: [[string]] = JSON.parse(props.data.content!);
 	const heading = props.data.withHeadings ? content.shift() : [];
 
@@ -73,22 +63,29 @@ const CustomTable = (props: EditorjsRendererProps) => {
 										},
 									}}
 								>
-									{heading.map((cell, j) => (
-										<TableCell
-											key={cell}
-											// className={j !== heading.length - 1 ? style.verticalLine : ""}
-											sx={{
-												[`&.${tableCellClasses.head}`]: {
-													// fontWeight: 800,
-													// fontSize: 18,
-												},
-											}}
-											align="center"
-											dangerouslySetInnerHTML={{
-												__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
-											}}
-										/>
-									))}
+									{heading &&
+										heading.map((cell, j) => (
+											<TableCell
+												key={cell}
+												sx={
+													j !== heading.length - 1
+														? {
+																// Vertical line
+																// borderRightWidth: 1,
+																// borderRightColor: theme.palette.grey[700],
+																// borderRightStyle: "solid",
+																[`&.${tableCellClasses.head}`]: {},
+														  }
+														: {
+																[`&.${tableCellClasses.head}`]: {},
+														  }
+												}
+												align="center"
+												dangerouslySetInnerHTML={{
+													__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
+												}}
+											/>
+										))}
 								</TableRow>
 							</TableHead>
 						)}
@@ -108,7 +105,15 @@ const CustomTable = (props: EditorjsRendererProps) => {
 									{row.map((cell, j) => (
 										<TableCell
 											key={cell}
-											// className={j !== row.length - 1 ? style.verticalLine : ""}
+											// sx={
+											// 	j !== row.length - 1
+											// 		? {
+											// 				borderRightWidth: 1,
+											// 				borderRightColor: theme.palette.grey[700],
+											// 				borderRightStyle: "solid",
+											// 		  }
+											// 		: {}
+											// }
 											component="th"
 											scope="row"
 											align="center"
@@ -128,16 +133,25 @@ const CustomTable = (props: EditorjsRendererProps) => {
 						{props.data.withHeadings && (
 							<TableHead>
 								<TableRow>
-									{heading.map((cell, j) => (
-										<StyledTableCell
-											key={cell}
-											className={j !== heading.length - 1 ? style.verticalLine : ""}
-											align="center"
-											dangerouslySetInnerHTML={{
-												__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
-											}}
-										/>
-									))}
+									{heading &&
+										heading.map((cell, j) => (
+											<StyledTableCell
+												key={cell}
+												sx={
+													j !== heading.length - 1
+														? {
+																borderRightWidth: 1,
+																borderRightColor: theme.palette.grey[700],
+																borderRightStyle: "solid",
+														  }
+														: {}
+												}
+												align="center"
+												dangerouslySetInnerHTML={{
+													__html: DOMPurify.sanitize(cell.replace(" ", "&nbsp;")),
+												}}
+											/>
+										))}
 								</TableRow>
 							</TableHead>
 						)}
@@ -147,7 +161,15 @@ const CustomTable = (props: EditorjsRendererProps) => {
 									{row.map((cell, j) => (
 										<StyledTableCell
 											key={cell}
-											className={j !== row.length - 1 ? style.verticalLine : ""}
+											sx={
+												j !== row.length - 1
+													? {
+															borderRightWidth: 1,
+															borderRightColor: theme.palette.grey[700],
+															borderRightStyle: "solid",
+													  }
+													: {}
+											}
 											component="th"
 											scope="row"
 											align="center"

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import Callout from "@/components/EditorJS/BlockTools/Callout/Callout";
+import React from "react";
 import ReactDOM from 'react-dom';
-import Callout from "./Callout";
 
 const dataDefaults = {
   type: "message",

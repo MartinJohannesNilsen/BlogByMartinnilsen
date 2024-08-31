@@ -1,9 +1,10 @@
+"use client";
+import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
+import { isvalidHTTPUrl } from "@/components/PostManagement/PostManagement";
+import { useTheme } from "@/styles/themes/ThemeProvider";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { Fragment, useRef, useState } from "react";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
-import CustomVideo from "../../Renderers/CustomVideo";
-import { isvalidHTTPUrl } from "../../../PostManagement/PostManagement";
 import NextLink from "next/link";
+import { Fragment, useRef, useState } from "react";
 
 export const InlineVideo = (props: { data: { url: "" }; onDataChange: (arg0: any) => void; readOnly: boolean }) => {
 	const { theme } = useTheme();

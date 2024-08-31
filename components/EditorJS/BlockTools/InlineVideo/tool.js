@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import InlineVideo from '@/components/EditorJS/BlockTools/InlineVideo/InlineVideo';
+import React from "react";
 import ReactDOM from 'react-dom';
-import InlineVideo from './InlineVideo';
-import { createRoot } from "react-dom/client";
 
 export default class Tool extends React.Component{
   constructor({ data, config, api, readOnly }) {

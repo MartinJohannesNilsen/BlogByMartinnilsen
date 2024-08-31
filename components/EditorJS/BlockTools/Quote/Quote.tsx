@@ -1,23 +1,12 @@
-import React, { useRef } from "react";
-import { Box, Card, IconButton, InputBase, MenuItem, Modal, Select, Typography, useMediaQuery } from "@mui/material";
-import EmojiPicker, { EmojiClickData, SkinTonePickerLocation } from "emoji-picker-react";
-import { Fragment, useEffect, useState } from "react";
-import { useTheme } from "../../../../styles/themes/ThemeProvider";
+"use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { BlockToolQuoteProps } from "@/types";
+import { Box, InputBase, useMediaQuery } from "@mui/material";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { BiSolidQuoteRight } from "react-icons/bi";
 
-// Types
-type QuoteDataProps = {
-	text: string;
-	caption: string;
-};
-type QuoteProps = {
-	data: QuoteDataProps;
-	onDataChange: (arg0: any) => void;
-	readOnly: boolean;
-};
-
 // Component
-export const Quote = (props: QuoteProps) => {
+export const Quote = (props: BlockToolQuoteProps) => {
 	const { theme } = useTheme();
 	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
@@ -32,7 +21,7 @@ export const Quote = (props: QuoteProps) => {
 
 	// Function to check and apply the placeholder style
 	const checkAndApplyPlaceholder = () => {
-		const currentDiv = quoteTextRef.current;
+		const currentDiv: any = quoteTextRef.current;
 		if (currentDiv) {
 			if (!currentDiv.textContent.trim()) {
 				currentDiv.classList.add("contentEditablePlaceholder");
@@ -44,8 +33,9 @@ export const Quote = (props: QuoteProps) => {
 
 	// Initial check for the placeholder when the component mounts
 	useEffect(() => {
+		const currentQuoteText: any = quoteTextRef.current;
 		if (props.data.text && props.data.text.trim() !== "") {
-			quoteTextRef.current.innerHTML = props.data.text;
+			currentQuoteText.innerHTML = props.data.text;
 		} else {
 			checkAndApplyPlaceholder();
 		}
@@ -91,7 +81,7 @@ export const Quote = (props: QuoteProps) => {
 							// 	}
 							// }}
 							onInputCapture={(e) => {
-								const currentDiv = quoteTextRef.current;
+								const currentDiv: any = quoteTextRef.current;
 								if (currentDiv) {
 									currentDiv.style.height = "auto";
 									currentDiv.style.height = `${currentDiv.scrollHeight}px`;

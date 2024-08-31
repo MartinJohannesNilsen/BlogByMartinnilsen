@@ -1,8 +1,9 @@
+"use client";
+import { useTheme } from "@/styles/themes/ThemeProvider";
+import { EditorjsRendererProps } from "@/types";
 import { CheckCircle, RadioButtonUnchecked } from "@mui/icons-material";
 import { Box, Checkbox, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
-import { useTheme } from "../../../styles/themes/ThemeProvider";
-import { EditorjsRendererProps } from "../../../types";
 
 const CustomChecklist = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
