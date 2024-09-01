@@ -1,6 +1,4 @@
 // General
-// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-// import { cloudStorage } from "@/lib/firebaseConfig";
 import {
 	CalloutIcon,
 	ChecklistIcon,
@@ -18,24 +16,24 @@ import Embed from "@editorjs/embed";
 import Header from "@editorjs/header";
 import InlineCode from "@editorjs/inline-code";
 import LinkTool from "@editorjs/link";
-import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
 import Paragraph from "@editorjs/paragraph";
 import Underline from "@editorjs/underline";
 import ToggleBlock from "editorjs-toggle-block";
+import NestedList from "@editorjs/nested-list";
 // @ts-ignore
 import Table from "@martinjohannesnilsen/editorjs-table";
 const EJLaTeX = require("editorjs-latex"); // Math
 const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
 
 // Custom tools
-import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import Callout from "@/components/EditorJS/BlockTools/Callout/tool";
+import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import CodeBlock from "@/components/EditorJS/BlockTools/CodeBlock/tool";
 import Divider from "@/components/EditorJS/BlockTools/Divider/tool";
+import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
 import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
 import Quote from "@/components/EditorJS/BlockTools/Quote/tool";
-import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
 
 export const EDITOR_JS_TOOLS: any = {
 	underline: { class: Underline, shortcut: "CMD+U" },
@@ -62,7 +60,7 @@ export const EDITOR_JS_TOOLS: any = {
 		},
 	},
 	list: {
-		class: List,
+		class: NestedList,
 		inlineToolbar: true,
 		config: {
 			defaultStyle: "unordered",

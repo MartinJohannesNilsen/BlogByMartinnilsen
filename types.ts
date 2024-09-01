@@ -7,6 +7,11 @@ import { IconType } from "react-icons/lib";
 
 // Object types
 
+export type ListItem = {
+	content: string;
+	items: ListItem[];
+};
+
 export type EditorjsRendererProps = {
 	data: {
 		text?: string;
@@ -45,8 +50,9 @@ export type EditorjsRendererProps = {
 		photo?: string;
 		// Checklist
 		items?: [
-			| string
+			| ListItem // Nested list
 			| {
+					// Checklist
 					text?: string;
 					checked?: boolean;
 			  }
