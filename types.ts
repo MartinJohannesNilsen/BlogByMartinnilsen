@@ -173,6 +173,20 @@ export type BlockToolQuoteProps = {
 	readOnly: boolean;
 };
 
+export type BlockToolFileDataProps = {
+	type: string; // url, upload
+	url: string;
+	description: string;
+	icon: string;
+	fileRef?: string;
+	fileSize?: number;
+};
+export type BlockToolFileProps = {
+	data: BlockToolFileDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
 export type BlockToolImageDataProps = {
 	type: string; // url, upload, unsplash, paste?
 	url: string;

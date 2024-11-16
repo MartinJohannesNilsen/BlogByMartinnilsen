@@ -1117,7 +1117,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 											}
 										}}
 										inputProps={{
-											maxlength: OGDEFAULTS.descriptionMax,
+											maxLength: OGDEFAULTS.descriptionMax,
 											style: { padding: 0 },
 										}}
 										InputProps={{

@@ -6,9 +6,15 @@ import ButtonBar from "@/components/Navigation/ButtonBar";
 import Footer from "@/components/Navigation/LinkFooter";
 import PostNavbar from "@/components/Navigation/PostNavbar";
 import PostViews from "@/components/PostViews/PostViews";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { getViewCount, incrementViewCount } from "@/data/middleware/views/actions";
+import colors from "@/styles/colors";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { ButtonBarButtonProps, FullPost, ReadPostPageProps, StoredPost } from "@/types";
+import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
 import { IDiscussionData, IMetadataMessage } from "@/utils/giscus";
+import { handleSharing } from "@/utils/handleSharing";
+import useStickyState from "@/utils/useStickyState";
 import Giscus from "@giscus/react";
 import { useGSAP } from "@gsap/react";
 import {
@@ -49,6 +55,7 @@ import CustomCallout from "@/components/EditorJS/Renderers/CustomCallout";
 import CustomChecklist from "@/components/EditorJS/Renderers/CustomChecklist";
 import CustomCode from "@/components/EditorJS/Renderers/CustomCode";
 import CustomDivider from "@/components/EditorJS/Renderers/CustomDivider";
+import CustomFile from "@/components/EditorJS/Renderers/CustomFile";
 import CustomHeader from "@/components/EditorJS/Renderers/CustomHeader";
 import CustomIframe from "@/components/EditorJS/Renderers/CustomIframe";
 import CustomImage from "@/components/EditorJS/Renderers/CustomImage";
@@ -60,12 +67,6 @@ import CustomQuote from "@/components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "@/components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "@/components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
-import { DATA_DEFAULTS } from "@/data/metadata";
-import { getViewCount, incrementViewCount } from "@/data/middleware/views/actions";
-import colors from "@/styles/colors";
-import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
-import { handleSharing } from "@/utils/handleSharing";
-import useStickyState from "@/utils/useStickyState";
 
 // Pass your custom renderers to Output
 export const renderers = {
@@ -84,6 +85,7 @@ export const renderers = {
 	iframe: CustomIframe,
 	toggle: CustomToggle,
 	callout: CustomCallout,
+	file: CustomFile,
 };
 
 export function processJsonToggleBlocks(inputJson) {

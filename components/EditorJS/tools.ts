@@ -32,6 +32,7 @@ import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case"
 import CodeBlock from "@/components/EditorJS/BlockTools/CodeBlock/tool";
 import Divider from "@/components/EditorJS/BlockTools/Divider/tool";
 import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
+import File from "@/components/EditorJS/BlockTools/FileBlock/tool";
 import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
 import Quote from "@/components/EditorJS/BlockTools/Quote/tool";
 
@@ -142,6 +143,9 @@ export const EDITOR_JS_TOOLS: any = {
 	},
 	image: {
 		class: Image,
+	},
+	file: {
+		class: File,
 	},
 };
 export default EDITOR_JS_TOOLS;

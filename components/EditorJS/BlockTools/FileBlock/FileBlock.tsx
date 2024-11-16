@@ -1,12 +1,12 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
-import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
-import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+import { deleteFile, uploadFile } from "@/data/middleware/fileStore/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
-import { BlockToolImageProps } from "@/types";
-import { AddPhotoAlternateOutlined, Delete, NorthEast } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
+import { BlockToolFileProps } from "@/types";
+import { Delete, FileUploadOutlined, NorthEast } from "@mui/icons-material";
+import { Box, Button, IconButton, Modal, Tooltip, Typography } from "@mui/material";
+import EmojiPicker, { EmojiClickData, SkinTonePickerLocation } from "emoji-picker-react";
 import { enqueueSnackbar } from "notistack";
 import { CSSProperties, Fragment, useEffect, useRef, useState } from "react";
 
@@ -15,24 +15,38 @@ export const EditorjsTextBlock = ({
 	setValue,
 	reference,
 	style,
+	dataPlaceholder,
 }: {
 	value: string;
 	setValue: (html: any) => void;
 	reference: any;
 	style?: CSSProperties;
+	dataPlaceholder?: string;
 }) => {
 	const { theme } = useTheme();
 
 	useEffect(() => {
 		const currentMessage: any = reference.current;
-		currentMessage.innerHTML = value;
-	}, [reference]);
+		if (value && value.trim() !== "") {
+			currentMessage.innerHTML = value;
+		} else {
+			if (currentMessage) {
+				if (!currentMessage.textContent.trim()) {
+					currentMessage.classList.add("contentEditablePlaceholder");
+				} else {
+					currentMessage.classList.remove("contentEditablePlaceholder");
+				}
+			}
+		}
+	}, [, reference]);
 
 	return (
 		<div
 			contentEditable="true"
+			className="cdx-input"
+			data-placeholder={dataPlaceholder}
 			onKeyDown={(event) => {
-				if (event.key === "Enter") {
+				if (event.key === "Enter" || (value.trim() == "" && (event.key === "Delete" || event.key === "Backspace"))) {
 					event.preventDefault();
 					event.stopPropagation();
 				}
@@ -45,6 +59,7 @@ export const EditorjsTextBlock = ({
 				...style,
 			}}
 			onInputCapture={(e) => {
+				e.preventDefault();
 				const currentDiv: any = reference.current;
 				if (currentDiv) {
 					currentDiv.style.height = "auto";
@@ -57,26 +72,26 @@ export const EditorjsTextBlock = ({
 };
 
 // Component
-export const ImageBlock = (props: BlockToolImageProps) => {
+export const FileBlock = (props: BlockToolFileProps) => {
 	const { theme } = useTheme();
 	const [stateData, setStateData] = useState(
 		props.data || {
 			type: "upload", // url, upload // Could include "drop" for drag and drop
 			url: "",
-			caption: "",
-			blurhash: null,
-			height: null,
-			width: null,
+			description: "",
+			icon: "📎",
 			fileRef: null,
 			fileSize: null,
 			// unsplash: null,
 		}
 	);
 	const [postId, setPostId] = useState<string>();
-	const [urlfieldInputValue, setUrlfieldInputValue] = useState("");
+	const [urlfieldLinkInputValue, setUrlfieldLinkInputValue] = useState("");
+	const [urlfieldSizeInputValue, setUrlfieldSizeInputValue] = useState("");
 	const [uploadfieldInputValue, setUploadfieldInputValue] = useState<any>();
 	const [deleteButtonVisible, setDeleteButtonVisible] = useState(false);
-	const imageCaptionRef = useRef(null);
+	const [emojiPickerModalOpen, setEmojiPickerModalOpen] = useState<boolean>(false);
+	const fileDescriptionRef = useRef(null);
 
 	useEffect(() => {
 		const pathSegments = window.location.pathname.split("/").filter(Boolean); // Split by '/' and remove any empty segments
@@ -110,108 +125,154 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 					flexDirection: "column",
 				}}
 			>
-				{/* Image if url is set, else input block */}
+				{/* Display block if url is set, else input block */}
 				{stateData.url ? (
 					<Box
 						display="flex"
-						flexDirection="column"
+						flexDirection="row"
+						justifyContent="space-between"
+						alignItems="center"
 						gap={1}
 						sx={{ position: "relative" }}
+						onMouseEnter={() => setDeleteButtonVisible(true)}
 						onMouseLeave={() => setDeleteButtonVisible(false)}
-						mb={1}
+						p={1}
 					>
-						{stateData.fileRef && deleteButtonVisible && (
-							<Box display="flex" alignItems="center" sx={{ position: "absolute", top: 5, right: 5 }}>
-								<Typography
-									fontFamily={theme.typography.fontFamily}
-									fontSize={14}
-									fontWeight={600}
-									sx={{
-										mr: 0.5,
-										color: "white",
-										border: "1px solid" + theme.palette.grey[900],
-										borderRadius: "5px",
-										backgroundColor: "black",
-										padding: "3px 6px",
+						{/* Icon modal */}
+						<Modal open={emojiPickerModalOpen} onClose={() => setEmojiPickerModalOpen(false)}>
+							<Box
+								sx={{
+									position: "absolute" as "absolute",
+									top: "50%",
+									left: "50%",
+									transform: "translate(-50%, -50%)",
+									bgcolor: "background.paper",
+									boxShadow: 24,
+									borderRadius: 4,
+								}}
+							>
+								<EmojiPicker
+									skinTonePickerLocation={SkinTonePickerLocation.SEARCH}
+									previewConfig={{
+										// defaultEmoji: "1f60a", // defaults to: "1f60a"
+										// defaultCaption: "Speech Balloon", // defaults to: "What's your mood?"
+										showPreview: false, // defaults to: true
 									}}
-								>
-									{`${(stateData.fileSize! / 1024).toFixed(2)}kb`}
-								</Typography>
-								<NavbarButton
-									variant="outline"
-									onClick={async () => {
-										if (!stateData.fileRef) return;
-										const response = await deleteImage(stateData.fileRef);
-										if (response.code === 200) {
-											setStateData({
-												...stateData,
-												url: "",
-												fileRef: undefined,
-												fileSize: undefined,
-											});
-										} else {
-											enqueueSnackbar(`(${response.code}) ${response.reason}`, {
-												variant: "error",
-												preventDuplicate: true,
-											});
-										}
-									}}
-									icon={Delete}
-									tooltip="Delete image from storage"
-									sxButton={{
-										minWidth: "30px",
-										minHeight: "30px",
-										height: "30px",
-										width: "30px",
-										index: 2,
-										backgroundColor: "black",
-										color: "white",
-										"&:focus-visible": {
-											backgroundColor: theme.palette.grey[800],
-										},
-										"&:hover": {
-											border: "1px solid rgba(255,0,0,0.8)",
-											color: "rgba(255,0,0,0.8)",
-											backgroundColor: theme.palette.grey[800],
-										},
-									}}
-									sxIcon={{
-										height: "20px",
-										width: "20px",
-										color: "inherit",
+									onEmojiClick={(emojiData: EmojiClickData, _) => {
+										setStateData({ ...stateData, icon: emojiData.emoji });
+										setEmojiPickerModalOpen(false);
 									}}
 								/>
 							</Box>
+						</Modal>
+
+						{/* Icon (tooltip if filesize is set) */}
+						{stateData.fileSize ? (
+							<Tooltip
+								enterDelay={2000}
+								title={
+									stateData.fileSize > 1073741824
+										? `${(stateData.fileSize / 1073741824).toFixed(2)}gb`
+										: stateData.fileSize > 1048576
+										? `${(stateData.fileSize / 1048576).toFixed(2)}mb`
+										: `${(stateData.fileSize / 1024).toFixed(2)}kb`
+								}
+							>
+								<IconButton
+									onClick={() => setEmojiPickerModalOpen(true)}
+									disableRipple
+									sx={{
+										width: "50px",
+										height: "50px",
+										p: 1.5,
+									}}
+								>
+									<Typography fontSize={20}>{stateData.icon}</Typography>
+								</IconButton>
+							</Tooltip>
+						) : (
+							<IconButton
+								onClick={() => setEmojiPickerModalOpen(true)}
+								disableRipple
+								sx={{
+									width: "50px",
+									height: "50px",
+									p: 1.5,
+								}}
+							>
+								<Typography fontSize={30}>{stateData.icon}</Typography>
+							</IconButton>
 						)}
-						<img
-							style={{
-								width: "100%",
-								borderRadius: "0px",
-								objectFit: "contain",
-							}}
-							onMouseEnter={() => setDeleteButtonVisible(true)}
-							src={stateData.url}
-						/>
+
+						{/* Description */}
 						<EditorjsTextBlock
-							reference={imageCaptionRef}
-							value={stateData.caption}
+							value={stateData.description}
 							setValue={(html: any) => {
 								setStateData({
 									...stateData,
-									caption: html,
+									description: html,
 								});
 							}}
-							style={{ textAlign: "center" }}
+							reference={fileDescriptionRef}
+							dataPlaceholder={["", "<br>"].includes(stateData.description.trim()) ? "Description" : ""}
 						/>
+
+						{/* Delete button if fileref, else open arrow */}
+						{stateData.fileRef && deleteButtonVisible ? (
+							<NavbarButton
+								variant="base"
+								icon={Delete}
+								sxButton={{ p: 0.5, "&:focus": { borderRadius: 50 } }}
+								sxIcon={{ strokeWidth: 0.5, fontSize: "0.5rem" }}
+								onClick={() => {
+									// Delete file
+									deleteFile(stateData.fileRef!)
+										.then((deleteResponse) => {
+											// Check if response was ok and we got data, else error snackbar
+											if (deleteResponse.response) {
+												// If delete was successful, set stateData
+												setStateData({
+													...stateData,
+													type: "upload",
+													url: "",
+													description: "",
+													fileRef: undefined,
+													fileSize: undefined,
+												});
+											} else {
+												enqueueSnackbar(`(${deleteResponse.code}) ${deleteResponse.reason}`, {
+													variant: "error",
+													preventDuplicate: true,
+												});
+											}
+										})
+										.catch((error) => {
+											// Handle error from deleteFile
+											console.error("Error deleting file:", error);
+										});
+								}}
+							/>
+						) : (
+							<NavbarButton
+								variant="base"
+								icon={NorthEast}
+								sxButton={{ p: 0.5, "&:focus": { borderRadius: 50 } }}
+								sxIcon={{ strokeWidth: 0.5, fontSize: "0.5rem" }}
+								onClick={() => {
+									open(stateData.url);
+								}}
+							/>
+						)}
 					</Box>
 				) : (
+					// Input block
 					<Box display="flex" flexDirection={"column"} gap={1}>
 						{/* Header */}
 						<Typography
 							variant="body2"
 							sx={{ color: theme.palette.text.primary, opacity: 0.2, right: 15, position: "absolute", fontWeight: 600 }}
 						>
-							Image
+							File
 						</Typography>
 						{/* Button row */}
 						<Box sx={{ display: "flex", gap: 1 }}>
@@ -219,10 +280,10 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 								variant="outline"
 								onClick={() => {
 									setStateData({ ...stateData, type: "url" });
-									setUrlfieldInputValue("");
+									setUrlfieldLinkInputValue("");
 								}}
 								disabled={!postId} // Can only have url if no postId present
-								tooltip="Link to image"
+								tooltip="Link to file"
 								sxButton={{
 									backgroundColor:
 										stateData.type == "url"
@@ -251,10 +312,10 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 								variant="outline"
 								onClick={() => {
 									setStateData({ ...stateData, type: "upload" });
-									setUrlfieldInputValue("");
+									setUrlfieldLinkInputValue("");
 								}}
-								disabled={!postId} // Can only have url if no postId present
-								tooltip="Upload your image"
+								disabled={!postId} // Can only upload if postId present
+								tooltip="Upload your file"
 								sxButton={{
 									backgroundColor:
 										stateData.type == "upload"
@@ -284,6 +345,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 						{/* Content */}
 						<Box display="flex" flexDirection="row" gap={1} sx={{}}>
 							{stateData.type === "upload" ? (
+								// Upload field
 								<Button
 									component="label"
 									role={undefined}
@@ -307,7 +369,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 										},
 									}}
 								>
-									<AddPhotoAlternateOutlined
+									<FileUploadOutlined
 										sx={{
 											height: "14px",
 											width: "14px",
@@ -317,7 +379,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 									/>
 									<Typography variant="body2" sx={{ color: "#808080", textTransform: "none" }}>
 										{!uploadfieldInputValue || !(uploadfieldInputValue instanceof File)
-											? "Upload Image"
+											? "Upload File"
 											: `${uploadfieldInputValue.name} (${
 													uploadfieldInputValue.size > 1048576
 														? (uploadfieldInputValue.size / 1048576).toFixed(2) + "mb"
@@ -327,7 +389,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 									<input
 										type="file"
 										id="fileInput"
-										accept="image/*,video/*"
+										// accept="image/*,video/*"
 										// accept="image/*"
 										style={{
 											clip: "rect(0 0 0 0)",
@@ -346,73 +408,67 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 									/>
 								</Button>
 							) : (
-								<StyledTextField
-									InputLabelProps={{ shrink: false }}
-									placeholder="URL"
-									name="url"
-									fullWidth
-									multiline
-									size="small"
-									onKeyPress={(e) => {
-										if (e.key === "Enter") {
-											e.preventDefault();
-										}
-									}}
-									inputProps={{
-										style: { padding: "0px" },
-									}}
-									value={urlfieldInputValue}
-									onChange={(e: { target: { name: any; value: any } }) => {
-										const { name, value } = e.target;
-										setUrlfieldInputValue(value);
-									}}
-								/>
+								<Box display="flex" width="100%" gap={1}>
+									<StyledTextField
+										InputLabelProps={{ shrink: false }}
+										placeholder="URL"
+										name="url"
+										fullWidth
+										size="small"
+										onKeyPress={(e) => {
+											if (e.key === "Enter") {
+												e.preventDefault();
+											}
+										}}
+										inputProps={{
+											style: { padding: "0px" },
+										}}
+										value={urlfieldLinkInputValue}
+										onChange={(e: { target: { name: any; value: any } }) => {
+											const { name, value } = e.target;
+											setUrlfieldLinkInputValue(value);
+										}}
+									/>
+									<StyledTextField
+										InputLabelProps={{ shrink: false }}
+										placeholder="Size (bytes)"
+										name="filesize"
+										size="small"
+										onKeyPress={(e) => {
+											if (e.key === "Enter") {
+												e.preventDefault();
+											}
+										}}
+										inputProps={{
+											style: { padding: "0px" },
+										}}
+										value={urlfieldSizeInputValue}
+										onChange={(e: { target: { name: any; value: any } }) => {
+											const { name, value } = e.target;
+											setUrlfieldSizeInputValue(value);
+										}}
+									/>
+								</Box>
 							)}
 
-							{/* Store image if upload and fetch image details */}
+							{/* Store image if upload */}
 							<NavbarButton
 								variant="outline"
 								onClick={() => {
 									if (stateData.type === "upload") {
-										// Upload image or video
-										uploadImage(uploadfieldInputValue, postId, null)
+										// Upload file
+										uploadFile(uploadfieldInputValue, postId, null)
 											.then((uploadResponse) => {
 												// Check if response was ok and we got data, else error snackbar
 												if (uploadResponse.data) {
-													// Check if image, then fetch details and blurhash
-													if (uploadfieldInputValue!.type.startsWith("image/")) {
-														getImageDetails(uploadResponse.data.url)
-															.then((details) => {
-																if (details) {
-																	setStateData({
-																		...stateData,
-																		type: "upload",
-																		url: uploadResponse.data.url,
-																		fileRef: uploadResponse.data.fileRef,
-																		fileSize: uploadfieldInputValue!.size,
-																		blurhash: details.encoded,
-																		height: details.height,
-																		width: details.width,
-																	});
-																} else {
-																	enqueueSnackbar("Could not fetch image details", {
-																		variant: "error",
-																		preventDuplicate: true,
-																	});
-																}
-															})
-															.catch((error) => {
-																console.error("Error fetching image details:", error);
-															});
-													} else if (uploadfieldInputValue!.type.startsWith("video/")) {
-														setStateData({
-															...stateData,
-															type: "upload",
-															url: uploadResponse.data.url,
-															fileRef: uploadResponse.data.fileRef,
-															fileSize: uploadfieldInputValue!.size,
-														});
-													}
+													// If upload was successful, set stateData
+													setStateData({
+														...stateData,
+														type: "upload",
+														url: uploadResponse.data.url,
+														fileRef: uploadResponse.data.fileRef,
+														fileSize: uploadfieldInputValue!.size,
+													});
 												} else {
 													enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
 														variant: "error",
@@ -422,31 +478,16 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 											})
 											.catch((error) => {
 												// Handle error from uploadImage
-												console.error("Error uploading image:", error);
+												console.error("Error uploading file:", error);
 											});
 									} else {
-										// Fetch image details
-										getImageDetails(urlfieldInputValue)
-											.then((details) => {
-												if (details) {
-													setStateData({
-														...stateData,
-														type: "url",
-														url: urlfieldInputValue,
-														blurhash: details.encoded,
-														height: details.height,
-														width: details.width,
-													});
-												} else {
-													enqueueSnackbar("Could not fetch image details", {
-														variant: "error",
-														preventDuplicate: true,
-													});
-												}
-											})
-											.catch((error) => {
-												console.error("Error fetching image details:", error);
-											});
+										// Set download link as url
+										setStateData({
+											...stateData,
+											type: "url",
+											url: urlfieldLinkInputValue,
+											fileSize: urlfieldSizeInputValue ? parseInt(urlfieldSizeInputValue) : undefined,
+										});
 									}
 								}}
 								icon={NorthEast}
@@ -478,4 +519,4 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 		</Fragment>
 	);
 };
-export default ImageBlock;
+export default FileBlock;

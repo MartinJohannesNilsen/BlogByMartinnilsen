@@ -58,7 +58,6 @@ export const Quote = (props: BlockToolQuoteProps) => {
 						<div
 							contentEditable
 							data-placeholder="Insert quote ..."
-							// data-placeholder=""
 							onKeyDown={(event) => {
 								if (event.key === "Enter" && !event.shiftKey) {
 									event.preventDefault();
