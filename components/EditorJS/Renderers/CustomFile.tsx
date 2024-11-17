@@ -3,7 +3,7 @@ import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "@/types";
 import { NorthEast } from "@mui/icons-material";
-import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 
 const CustomFile = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
@@ -50,8 +50,6 @@ const CustomFile = (props: EditorjsRendererProps) => {
 				{/* File size if set */}
 				{props.data.fileSize && (
 					<Typography
-						// variant="caption"
-						// sx={{ color: theme.palette.text.secondary }}
 						variant="body2"
 						sx={{ color: theme.palette.text.primary, opacity: 0.2, right: 15, fontWeight: 600 }}
 					>

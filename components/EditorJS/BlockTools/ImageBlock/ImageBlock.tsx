@@ -8,53 +8,8 @@ import { BlockToolImageProps } from "@/types";
 import { AddPhotoAlternateOutlined, Delete, NorthEast } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import { CSSProperties, Fragment, useEffect, useRef, useState } from "react";
-
-export const EditorjsTextBlock = ({
-	value,
-	setValue,
-	reference,
-	style,
-}: {
-	value: string;
-	setValue: (html: any) => void;
-	reference: any;
-	style?: CSSProperties;
-}) => {
-	const { theme } = useTheme();
-
-	useEffect(() => {
-		const currentMessage: any = reference.current;
-		currentMessage.innerHTML = value;
-	}, [reference]);
-
-	return (
-		<div
-			contentEditable="true"
-			onKeyDown={(event) => {
-				if (event.key === "Enter") {
-					event.preventDefault();
-					event.stopPropagation();
-				}
-			}}
-			ref={reference}
-			style={{
-				...theme.typography.subtitle2,
-				fontFamily: theme.typography.fontFamily,
-				outline: "none",
-				...style,
-			}}
-			onInputCapture={(e) => {
-				const currentDiv: any = reference.current;
-				if (currentDiv) {
-					currentDiv.style.height = "auto";
-					currentDiv.style.height = `${currentDiv.scrollHeight}px`;
-				}
-				setValue(e.currentTarget.innerHTML);
-			}}
-		/>
-	);
-};
+import { Fragment, useEffect, useRef, useState } from "react";
+import { EditorjsTextBlock } from "../../SharedComponents";
 
 // Component
 export const ImageBlock = (props: BlockToolImageProps) => {
