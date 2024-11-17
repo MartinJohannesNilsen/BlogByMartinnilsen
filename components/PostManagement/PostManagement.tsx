@@ -104,6 +104,11 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	const [updatedAtEditable, setUpdatedAtEditable] = useState(false);
 	const [automaticallySetUpdatedAt, setAutomaticallySetUpdatedAt] = useState(true);
 
+	const resetSavedAndRevalidated = () => {
+		setIsSaved(false);
+		setIsRevalidated(false);
+	};
+
 	useEffect(() => {
 		if (post) {
 			setData(post);
@@ -125,8 +130,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	}, []);
 
 	useEffect(() => {
-		setIsSaved(false);
-		setIsRevalidated(false);
+		resetSavedAndRevalidated();
 		return () => {};
 	}, [editorJSContent]);
 
@@ -136,12 +140,12 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	const width = mdDown ? "90vw" : "750px";
 
 	const handleInputChange = (e: { target: { name: any; value: any } }) => {
-		setIsSaved(false);
 		const { name, value } = e.target;
 		setData({
 			...data,
 			[name]: value,
 		});
+		resetSavedAndRevalidated();
 	};
 
 	function extractTextContent(html: string) {
@@ -318,8 +322,8 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	};
 
 	const handlePublishedRadioChange = (event: { target: { value: any } }) => {
-		setIsSaved(false);
 		setData({ ...data, published: event.target.value === "true" });
+		resetSavedAndRevalidated();
 	};
 
 	const revalidateAction = (snackbarId, postId) => (
@@ -527,7 +531,10 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 											: "#cfa602"
 										: theme.palette.text.primary,
 							}}
-							onChange={(e) => setData({ ...data, title: e })}
+							onChange={(e) => {
+								setData({ ...data, title: e });
+								resetSavedAndRevalidated();
+							}}
 							placeholder="Untitled"
 						>
 							{data.title}
@@ -572,6 +579,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 														value={getTimeZoneUTCFormatString(new Date(data.createdAt), "Europe/Oslo")}
 														onChange={(e) => {
 															setData({ ...data, createdAt: new Date(e.target.value).valueOf() });
+															resetSavedAndRevalidated();
 														}}
 													/>
 												</Box>
@@ -628,7 +636,9 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															disabled
 															name="updatedAt"
 															value="Automatic on save"
-															onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+															onChange={(e) => {
+																setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
+															}}
 														/>
 													) : data.updatedAt ? (
 														<input
@@ -647,7 +657,10 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															type="datetime-local"
 															name="updatedAt"
 															value={getTimeZoneUTCFormatString(new Date(data.updatedAt), "Europe/Oslo")}
-															onChange={(e) => setData({ ...data, updatedAt: new Date(e.target.value).valueOf() })}
+															onChange={(e) => {
+																setData({ ...data, updatedAt: new Date(e.target.value).valueOf() });
+																resetSavedAndRevalidated();
+															}}
 														/>
 													) : (
 														<input
@@ -712,94 +725,6 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 														},
 													]}
 												/>
-												{/* <NavbarButton
-													variant="outline"
-													onClick={() => {
-														setData({ ...data, updatedAt: post.updatedAt || data.createdAt });
-														setAutomaticallySetUpdatedAt(false);
-														setUpdatedAtEditable(true);
-													}}
-													icon={Edit}
-													tooltip="Edit"
-													disabled={updatedAtEditable}
-													sxButton={{
-														minWidth: "36px",
-														minHeight: "36px",
-														height: "36px",
-														width: "36px",
-													}}
-													sxIcon={{
-														height: "18px",
-														width: "18px",
-														color: "inherit",
-													}}
-												/>
-												<NavbarButton
-													variant="outline"
-													onClick={() => {
-														setData({ ...data, updatedAt: post.updatedAt });
-														setAutomaticallySetUpdatedAt(false);
-														setUpdatedAtEditable(false);
-													}}
-													disabled={!post}
-													icon={Restore}
-													tooltip="Revert"
-													sxButton={{
-														minWidth: "36px",
-														minHeight: "36px",
-														height: "36px",
-														width: "36px",
-													}}
-													sxIcon={{
-														height: "18px",
-														width: "18px",
-														color: "inherit",
-													}}
-												/>
-												<Typography
-													// onClick={() => setData({ ...data, updatedAt: Date.now() })}
-													onClick={() => {
-														setUpdatedAtEditable(false);
-														setAutomaticallySetUpdatedAt(true);
-													}}
-													ml={1}
-													sx={{
-														fontFamily: theme.typography.fontFamily,
-														fontSize: 14,
-														fontWeight: 600,
-														color: theme.palette.grey[500],
-														display: "inline-block", // Allows the underline to fit the text
-														cursor: "pointer", // Changes the cursor to indicate it's clickable
-														textDecoration: "none", // Ensures text is not underlined by default
-														"&:hover": {
-															textDecoration: "underline", // Underlines text on hover
-														},
-													}}
-												>
-													Default
-												</Typography>
-												<Typography
-													onClick={() => {
-														setData({ ...data, updatedAt: null });
-														setAutomaticallySetUpdatedAt(false);
-														setUpdatedAtEditable(false);
-													}}
-													ml={1}
-													sx={{
-														fontFamily: theme.typography.fontFamily,
-														fontSize: 14,
-														fontWeight: 600,
-														color: theme.palette.grey[500],
-														display: "inline-block", // Allows the underline to fit the text
-														cursor: "pointer", // Changes the cursor to indicate it's clickable
-														textDecoration: "none", // Ensures text is not underlined by default
-														"&:hover": {
-															textDecoration: "underline", // Underlines text on hover
-														},
-													}}
-												>
-													Remove
-												</Typography> */}
 											</Box>
 										</Grid>
 									</>
@@ -812,6 +737,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 										</Grid>
 										<Grid item xs={9} md={10}>
 											{data.ogImage.hasOwnProperty("fileRef") && data.ogImage.fileRef ? (
+												// Image exists
 												<Box display="flex" alignItems="center" gap={0.5}>
 													<StyledTextField
 														disabled
@@ -881,13 +807,14 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 																			preventDuplicate: true,
 																		});
 																	}
+																	resetSavedAndRevalidated();
 																},
 															},
 														]}
 													/>
 												</Box>
 											) : (
-												// Old version
+												// Upload image
 												<>
 													<input
 														type="file"
@@ -921,6 +848,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 																	preventDuplicate: true,
 																});
 															}
+															resetSavedAndRevalidated();
 														}}
 														style={{ display: "none" }}
 													/>
@@ -946,41 +874,6 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 														</Button>
 													</label>
 												</>
-
-												// New version
-												// <FileInputSelector
-												// 	type="file"
-												// 	id="fileInput"
-												// 	accept="image/*"
-												// 	onChange={async (e) => {
-												// 		const file = e.target.files && e.target.files[0];
-												// 		const uploadResponse = await uploadImage(file, postId, "ogImage");
-												// 		if (uploadResponse.hasOwnProperty("data")) {
-												// 			const details = await getImageDetails(uploadResponse.data.url);
-												// 			setData({
-												// 				...data,
-												// 				ogImage: {
-												// 					...data.ogImage,
-												// 					src: uploadResponse.data.url,
-												// 					height: details.height,
-												// 					width: details.width,
-												// 					blurhash: details.encoded,
-												// 					fileRef: uploadResponse.data.fileRef,
-												// 					fileSize: file!.size,
-												// 				},
-												// 			});
-												// 			enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
-												// 				variant: "success",
-												// 				preventDuplicate: true,
-												// 			});
-												// 		} else {
-												// 			enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
-												// 				variant: "error",
-												// 				preventDuplicate: true,
-												// 			});
-												// 		}
-												// 	}}
-												// />
 											)}
 										</Grid>
 									</>
@@ -999,6 +892,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 											value={data.tags.map((tag) => ({ value: tag, label: tag }))}
 											onChange={(array) => {
 												setData({ ...data, tags: array.map((item) => item.value) });
+												resetSavedAndRevalidated();
 											}}
 											onCreateOption={handleCreateTagOption}
 											options={tagOptions}
@@ -1018,6 +912,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 										value={data.keywords}
 										onChange={(event, newValue) => {
 											setData({ ...data, keywords: newValue });
+											resetSavedAndRevalidated();
 										}}
 										renderInput={(params) => (
 											<StyledTextField
