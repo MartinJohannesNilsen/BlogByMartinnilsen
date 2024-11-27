@@ -338,7 +338,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 													if (uploadfieldInputValue!.type.startsWith("image/")) {
 														getImageDetails(uploadResponse.data.url)
 															.then((details) => {
-																if (details) {
+																if (details && !details.code) {
 																	setStateData({
 																		...stateData,
 																		type: "upload",

@@ -55,6 +55,9 @@ export type EditorjsRendererProps = {
 					// Checklist
 					text?: string;
 					checked?: boolean;
+					// ImageCarousel
+					url?: string;
+					caption?: string;
 			  }
 		];
 		// Video
@@ -191,15 +194,20 @@ export type BlockToolImageDataProps = {
 	type: string; // url, upload, unsplash, paste?
 	url: string;
 	caption: string;
-	blurhash: string;
-	height: number;
-	width: number;
+	blurhash?: string;
+	height?: number;
+	width?: number;
 	fileRef?: string;
 	fileSize?: number;
 	// unsplash?: { author: string; profileLink: string };
 };
 export type BlockToolImageProps = {
 	data: BlockToolImageDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+export type BlockToolImageCarouselProps = {
+	data: { items: BlockToolImageDataProps[] };
 	onDataChange: (arg0: any) => void;
 	readOnly: boolean;
 };

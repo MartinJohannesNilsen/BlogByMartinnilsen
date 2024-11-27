@@ -59,6 +59,7 @@ import CustomFile from "@/components/EditorJS/Renderers/CustomFile";
 import CustomHeader from "@/components/EditorJS/Renderers/CustomHeader";
 import CustomIframe from "@/components/EditorJS/Renderers/CustomIframe";
 import CustomImage from "@/components/EditorJS/Renderers/CustomImage";
+import CustomImageCarousel from "@/components/EditorJS/Renderers/CustomImageCarousel";
 import CustomLinkTool from "@/components/EditorJS/Renderers/CustomLinkTool";
 import CustomList from "@/components/EditorJS/Renderers/CustomList";
 import CustomMath from "@/components/EditorJS/Renderers/CustomMath";
@@ -75,6 +76,7 @@ export const renderers = {
 	code: CustomCode,
 	divider: CustomDivider,
 	image: CustomImage,
+	imagecarousel: CustomImageCarousel,
 	linktool: CustomLinkTool,
 	quote: CustomQuote,
 	video: CustomVideo,

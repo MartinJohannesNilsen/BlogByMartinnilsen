@@ -4,6 +4,7 @@ import {
 	ChecklistIcon,
 	CodeIcon,
 	DividerIcon,
+	ImageIcon,
 	MathIcon,
 	TableIcon,
 	ToggleIcon,
@@ -17,10 +18,10 @@ import Header from "@editorjs/header";
 import InlineCode from "@editorjs/inline-code";
 import LinkTool from "@editorjs/link";
 import Marker from "@editorjs/marker";
+import NestedList from "@editorjs/nested-list";
 import Paragraph from "@editorjs/paragraph";
 import Underline from "@editorjs/underline";
 import ToggleBlock from "editorjs-toggle-block";
-import NestedList from "@editorjs/nested-list";
 // @ts-ignore
 import Table from "@martinjohannesnilsen/editorjs-table";
 const EJLaTeX = require("editorjs-latex"); // Math
@@ -31,8 +32,9 @@ import Callout from "@/components/EditorJS/BlockTools/Callout/tool";
 import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import CodeBlock from "@/components/EditorJS/BlockTools/CodeBlock/tool";
 import Divider from "@/components/EditorJS/BlockTools/Divider/tool";
-import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
 import File from "@/components/EditorJS/BlockTools/FileBlock/tool";
+import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
+import ImageCarousel from "@/components/EditorJS/BlockTools/ImageCarouselBlock/tool";
 import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
 import Quote from "@/components/EditorJS/BlockTools/Quote/tool";
 
@@ -143,6 +145,17 @@ export const EDITOR_JS_TOOLS: any = {
 	},
 	image: {
 		class: Image,
+		toolbox: {
+			title: "Image (single)",
+			icon: ImageIcon,
+		},
+	},
+	imageCarousel: {
+		class: ImageCarousel,
+		toolbox: {
+			title: "Image (carousel)",
+			icon: ImageIcon,
+		},
 	},
 	file: {
 		class: File,
