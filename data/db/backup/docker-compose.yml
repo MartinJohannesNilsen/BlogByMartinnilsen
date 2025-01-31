@@ -1,0 +1,26 @@
+services:
+  blog-backup:
+    container_name: service-blog-backup
+    restart: unless-stopped
+    image: mjn/docker-chron-midnight
+    network_mode: host
+    build:
+      context: .
+      dockerfile: cron.dockerfile
+      args:
+        MINUTE: "0" # Run at midnight
+        HOUR: "0" # Run at midnight
+        DAY_OF_MONTH: "*" # Run every day
+        MONTH: "*" # Run every month
+        DAY_OF_WEEK: "*" # Run every day of the week
+        COMMAND: "sh /root/run.sh" # Run the backup script
+    working_dir: /root
+    environment:
+      - MONGOEXPRESS_LOGIN_USERNAME=${MONGOEXPRESS_LOGIN_USERNAME}
+      - MONGOEXPRESS_LOGIN_PASSWORD=${MONGOEXPRESS_LOGIN_PASSWORD}
+    volumes:
+      # Mount the output backup data directory to the host
+      - ./data:/root/data
+      # Mount the backup script to the container
+      - ./backup_hosted_production.sh:/root/run.sh
+      # - ./backup_local_staging.sh:/root/run.sh
