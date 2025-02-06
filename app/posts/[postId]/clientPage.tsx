@@ -297,6 +297,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 				const metadataMessage: IMetadataMessage = giscusData;
 				setDiscussionData(metadataMessage.discussion);
 			}
+			// If discussion does not exist, this message does create a 404 error
+			// Then, a console warning is logged about the generation of a new discussion entry if a comment is made
 		};
 
 		// Configure and clean up event listener
@@ -812,7 +814,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 											id="comments"
 											category="Comments"
 											mapping="specific"
-											term={`Post: ${postId}`}
+											term={`post: ${postId}`}
 											strict="1"
 											reactionsEnabled="1"
 											emitMetadata="1"
