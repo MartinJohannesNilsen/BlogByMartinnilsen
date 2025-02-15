@@ -4,6 +4,7 @@ import { ArrowBackIosSharp, ArrowForwardIosSharp } from "@mui/icons-material";
 import { Box, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from "@mui/material";
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
+const { convert } = require("html-to-text");
 
 type CarouselItem = {
 	url: string;
@@ -164,7 +165,7 @@ export const ImageCarousel = ({ items }: { items: CarouselItem[] }) => {
 							}}
 						/>
 						<Typography variant="body2" sx={{ mt: 1, color: theme.palette.text.primary }}>
-							{item.caption}
+							{convert(item.caption).trimEnd()}
 						</Typography>
 					</Box>
 				))}

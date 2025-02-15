@@ -8,7 +8,7 @@ import { BlockToolImageProps } from "@/types";
 import { AddPhotoAlternateOutlined, Delete, NorthEast } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditorjsTextBlock } from "../../SharedComponents";
 
 // Component
@@ -52,7 +52,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 	}, [stateData]);
 
 	return (
-		<Fragment>
+		<>
 			<Box
 				my={2}
 				sx={{
@@ -430,7 +430,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 					</Box>
 				)}
 			</Box>
-		</Fragment>
+		</>
 	);
 };
 export default ImageBlock;

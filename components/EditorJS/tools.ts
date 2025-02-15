@@ -36,7 +36,6 @@ import File from "@/components/EditorJS/BlockTools/FileBlock/tool";
 import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
 import ImageCarousel from "@/components/EditorJS/BlockTools/ImageCarouselBlock/tool";
 import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
-import Quote from "@/components/EditorJS/BlockTools/Quote/tool";
 
 export const EDITOR_JS_TOOLS: any = {
 	underline: { class: Underline, shortcut: "CMD+U" },
@@ -77,7 +76,6 @@ export const EDITOR_JS_TOOLS: any = {
 			title: "Callout",
 		},
 	},
-	quote: Quote,
 	checklist: {
 		class: CheckList,
 		toolbox: {

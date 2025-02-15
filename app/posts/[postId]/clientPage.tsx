@@ -64,7 +64,6 @@ import CustomLinkTool from "@/components/EditorJS/Renderers/CustomLinkTool";
 import CustomList from "@/components/EditorJS/Renderers/CustomList";
 import CustomMath from "@/components/EditorJS/Renderers/CustomMath";
 import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
-import CustomQuote from "@/components/EditorJS/Renderers/CustomQuote";
 import CustomTable from "@/components/EditorJS/Renderers/CustomTable";
 import CustomToggle from "@/components/EditorJS/Renderers/CustomToggle";
 import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
@@ -78,7 +77,6 @@ export const renderers = {
 	image: CustomImage,
 	imagecarousel: CustomImageCarousel,
 	linktool: CustomLinkTool,
-	quote: CustomQuote,
 	video: CustomVideo,
 	checklist: CustomChecklist,
 	table: CustomTable,

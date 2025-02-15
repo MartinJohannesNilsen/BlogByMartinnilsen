@@ -51,7 +51,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
 				...props.style?.box,
 			}}
 		>
-			{props.data.text === "" ? (
+			{!props.data.text || props.data.text === "" ? (
 				<br />
 			) : (
 				<Typography
@@ -61,8 +61,8 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
 					fontFamily={theme.typography.fontFamily}
 					dangerouslySetInnerHTML={{
 						__html: DOMPurify.sanitize(
-							props.data
-								.text!.replace(/<code .*?>/gm, code)
+							props.data.text
+								.replace(/<code .*?>/gm, code)
 								.replace(/<mark .*?>/gm, mark)
 								// // .replace(/<u .*?>/gm, underline)
 								.replace(/<a href=/gm, link)

@@ -38,8 +38,6 @@ export type EditorjsRendererProps = {
 			description?: string;
 			image?: string;
 		};
-		// Quote
-		alignment?: string;
 		// Table
 		withHeadings?: boolean;
 		content?: string;
@@ -83,10 +81,9 @@ export type EditorjsRendererProps = {
 		render?: boolean;
 		highlightLines?: number[];
 		// Callout
-		icon?: string;
 		type?: string;
-		title?: string;
-		message?: string;
+		icon?: string;
+		label?: string;
 		// Image
 		height?: number;
 		width?: number;
@@ -231,8 +228,8 @@ export type BlockToolCodeBlockProps = {
 
 export type BlockToolCalloutDataProps = {
 	type: string;
-	message: string;
-	title?: string;
+	content: string;
+	label?: string;
 	icon?: string;
 };
 export type BlockToolCalloutProps = {
