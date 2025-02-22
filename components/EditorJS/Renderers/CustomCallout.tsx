@@ -66,6 +66,7 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 								box: { my: 0 },
 								typography: {
 									...theme.typography.subtitle2,
+									fontFamily: theme.typography.fontFamily,
 									pt: 0,
 									pb: props.data.content && 0.6,
 									overflow: "hidden",
@@ -121,6 +122,7 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 									box: { my: 0 },
 									typography: {
 										...theme.typography.subtitle2,
+										fontFamily: theme.typography.fontFamily,
 										pt: 0,
 										// pb: 1,
 										overflow: "hidden",
