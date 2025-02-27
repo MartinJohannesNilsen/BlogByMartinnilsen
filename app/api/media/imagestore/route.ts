@@ -1,5 +1,5 @@
-// "@/app/api/editorjs/imagestore/route.ts"
-import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+// "@/app/api/media/imagestore/route.ts"
+import { deleteImage, uploadImage } from "@/data/middleware/media/imageStore/actions";
 import { validateAuthAPIToken, validateImagedetailsAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
@@ -7,12 +7,12 @@ export const dynamic = "force-dynamic";
 
 /**
  * @swagger
- * /api/editorjs/imagestore:
+ * /api/media/imagestore:
  *   post:
  *     summary: Upload image
  *     description: Upload image to storage solution.
  *     tags:
- *       - EditorJS
+ *       - Media
  *     parameters:
  *       - in: query
  *         name: directory
@@ -122,12 +122,12 @@ export async function POST(request: NextRequest) {
 
 /**
  * @swagger
- * /api/editorjs/imagestore:
+ * /api/media/imagestore:
  *   delete:
  *     summary: Delete image
  *     description: Delete image from storage solution.
  *     tags:
- *       - EditorJS
+ *       - Media
  *     parameters:
  *       - in: query
  *         name: fileRef

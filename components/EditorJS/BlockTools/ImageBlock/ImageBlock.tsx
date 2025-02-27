@@ -1,8 +1,8 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
-import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
-import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+import { getImageBlurhash } from "@/data/middleware/media/imageBlurhash/actions";
+import { deleteImage, uploadImage } from "@/data/middleware/media/imageStore/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { BlockToolImageProps } from "@/types";
 import { AddPhotoAlternateOutlined, Delete, NorthEast } from "@mui/icons-material";
@@ -336,18 +336,18 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 												if (uploadResponse.data) {
 													// Check if image, then fetch details and blurhash
 													if (uploadfieldInputValue!.type.startsWith("image/")) {
-														getImageDetails(uploadResponse.data.url)
+														getImageBlurhash(uploadResponse.data.url)
 															.then((details) => {
-																if (details && !details.code) {
+																if (details && details.data) {
 																	setStateData({
 																		...stateData,
 																		type: "upload",
 																		url: uploadResponse.data.url,
 																		fileRef: uploadResponse.data.fileRef,
 																		fileSize: uploadfieldInputValue!.size,
-																		blurhash: details.encoded,
-																		height: details.height,
-																		width: details.width,
+																		blurhash: details.data.encoded,
+																		height: details.data.height,
+																		width: details.data.width,
 																	});
 																} else {
 																	enqueueSnackbar("Could not fetch image details", {
@@ -381,16 +381,16 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 											});
 									} else {
 										// Fetch image details
-										getImageDetails(urlfieldInputValue)
+										getImageBlurhash(urlfieldInputValue)
 											.then((details) => {
-												if (details) {
+												if (details && details.data) {
 													setStateData({
 														...stateData,
 														type: "url",
 														url: urlfieldInputValue,
-														blurhash: details.encoded,
-														height: details.height,
-														width: details.width,
+														blurhash: details.data.encoded,
+														height: details.data.height,
+														width: details.data.width,
 													});
 												} else {
 													enqueueSnackbar("Could not fetch image details", {

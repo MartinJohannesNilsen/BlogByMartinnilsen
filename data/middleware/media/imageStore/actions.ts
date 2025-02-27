@@ -1,3 +1,4 @@
+// TODO - Should add image compression if filetype supported. Maybe flag and add it to API as optional as well?
 import { cloudStorage } from "@/lib/firebaseConfig";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
@@ -33,9 +34,9 @@ const supportedMimeTypes = {
 };
 
 // Convert a file to buffer
-const srcToBuffer = async (file: File) => {
-	return Buffer.from(await file.arrayBuffer());
-};
+// const srcToBuffer = async (file: File) => {
+// 	return Buffer.from(await file.arrayBuffer());
+// };
 
 export async function uploadImage(file: File, postId?: string, name?: string | null) {
 	// Get extension from file name
@@ -58,7 +59,7 @@ export async function uploadImage(file: File, postId?: string, name?: string | n
 		const metadata = {
 			contentType: file.type,
 		};
-		const fileBuffer = await srcToBuffer(file);
+		const fileBuffer = await file.arrayBuffer();
 		const uploadTask = await uploadBytes(cloudStorageFileRef, fileBuffer, metadata);
 		const downloadURL = await getDownloadURL(uploadTask.ref);
 

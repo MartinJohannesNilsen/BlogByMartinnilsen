@@ -1,7 +1,7 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
-import { deleteFile, uploadFile } from "@/data/middleware/fileStore/actions";
+import { deleteFile, uploadFile } from "@/data/middleware/media/fileStore/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { BlockToolFileProps } from "@/types";
 import { Delete, FileUploadOutlined, NorthEast } from "@mui/icons-material";
@@ -422,7 +422,7 @@ export const FileBlock = (props: BlockToolFileProps) => {
 											}
 										})
 										.catch((error) => {
-											// Handle error from uploadImage
+											// Handle error from uploadFile
 											console.error("Error uploading file:", error);
 										});
 								} else {

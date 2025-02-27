@@ -1,8 +1,8 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
-import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
-import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+import { getImageBlurhash } from "@/data/middleware/media/imageBlurhash/actions";
+import { deleteImage, uploadImage } from "@/data/middleware/media/imageStore/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { BlockToolImageCarouselProps } from "@/types";
 import {
@@ -381,9 +381,9 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 												if (uploadResponse.data) {
 													// Check if image, then fetch details and blurhash
 													if (uploadfieldInputValue!.type.startsWith("image/")) {
-														getImageDetails(uploadResponse.data.url)
+														getImageBlurhash(uploadResponse.data.url)
 															.then((details) => {
-																if (details) {
+																if (details && details.data) {
 																	setStateData({
 																		...stateData,
 																		items: [
@@ -395,9 +395,9 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 																				url: uploadResponse.data.url,
 																				fileRef: uploadResponse.data.fileRef,
 																				fileSize: uploadfieldInputValue!.size,
-																				blurhash: details.encoded,
-																				height: details.height,
-																				width: details.width,
+																				blurhash: details.data.encoded,
+																				height: details.data.height,
+																				width: details.data.width,
 																			},
 																		],
 																	});
@@ -454,9 +454,9 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 											});
 									} else {
 										// Fetch image details
-										getImageDetails(urlfieldInputValue)
+										getImageBlurhash(urlfieldInputValue)
 											.then((details) => {
-												if (details && !details.code) {
+												if (details && details.data) {
 													setStateData({
 														...stateData,
 														items: [
@@ -466,9 +466,9 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 																type: "url",
 																url: urlfieldInputValue,
 																caption: "",
-																blurhash: details.encoded,
-																height: details.height,
-																width: details.width,
+																blurhash: details.data.encoded,
+																height: details.data.height,
+																width: details.data.width,
 															},
 														],
 													});

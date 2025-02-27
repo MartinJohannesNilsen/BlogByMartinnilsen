@@ -37,8 +37,8 @@ export const createdApiDocSpec = createSwaggerSpec({
 				description: "Default endpoints",
 			},
 			{
-				name: "EditorJS",
-				description: "Endpoints related to EditorJS components",
+				name: "Media",
+				description: "Endpoints related to media management",
 			},
 			{
 				name: "Notifications",

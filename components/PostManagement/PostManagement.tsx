@@ -6,8 +6,8 @@ import EditableTypography from "@/components/DesignLibrary/Text/EditableTypograp
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
 import { revalidatePost, revalidatePostsOverview, revalidateTags } from "@/data/actions";
 import { DATA_DEFAULTS } from "@/data/metadata";
-import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
-import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+import { getImageBlurhash } from "@/data/middleware/media/imageBlurhash/actions";
+import { deleteImage, uploadImage } from "@/data/middleware/media/imageStore/actions";
 import { addPostsOverview, deletePostsOverview, updatePostsOverview } from "@/data/middleware/overview/actions";
 import { addPost, deletePost, updatePost } from "@/data/middleware/posts/actions";
 import { addTag, getTags } from "@/data/middleware/tags/actions";
@@ -173,11 +173,16 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 				// Fetch blurhash if null
 				if (!data.ogImage.blurhash) {
 					// Get image details
-					const details = await getImageDetails(data.ogImage.src);
-					if (details) {
+					const details = await getImageBlurhash(data.ogImage.src);
+					if (details && details.data) {
 						newObject = {
 							...newObject,
-							ogImage: { ...data.ogImage, blurhash: details.encoded, height: details.height, width: details.width },
+							ogImage: {
+								...data.ogImage,
+								blurhash: details.data.encoded,
+								height: details.data.height,
+								width: details.data.width,
+							},
 						};
 					} else {
 						enqueueSnackbar(`Open Graph Image: Could not fetch image details`, {
@@ -825,23 +830,30 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															if (!file) return;
 															const uploadResponse = await uploadImage(file, postId, "ogImage");
 															if (uploadResponse.data) {
-																const details = await getImageDetails(uploadResponse.data.url);
-																setData({
-																	...data,
-																	ogImage: {
-																		...data.ogImage,
-																		src: uploadResponse.data.url,
-																		height: details.height,
-																		width: details.width,
-																		blurhash: details.encoded,
-																		fileRef: uploadResponse.data.fileRef,
-																		fileSize: file!.size,
-																	},
-																});
-																enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
-																	variant: "success",
-																	preventDuplicate: true,
-																});
+																const details = await getImageBlurhash(uploadResponse.data.url);
+																if (details && details.data) {
+																	setData({
+																		...data,
+																		ogImage: {
+																			...data.ogImage,
+																			src: uploadResponse.data.url,
+																			height: details.data.height,
+																			width: details.data.width,
+																			blurhash: details.data.encoded,
+																			fileRef: uploadResponse.data.fileRef,
+																			fileSize: file!.size,
+																		},
+																	});
+																	enqueueSnackbar(`Open Graph Image uploaded (${(file!.size / 1024).toFixed(2)}kb)`, {
+																		variant: "success",
+																		preventDuplicate: true,
+																	});
+																} else {
+																	enqueueSnackbar(`Open Graph Image: Could not fetch image details`, {
+																		variant: "error",
+																		preventDuplicate: true,
+																	});
+																}
 															} else {
 																enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
 																	variant: "error",

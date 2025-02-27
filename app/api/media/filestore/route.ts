@@ -1,4 +1,4 @@
-import { deleteFile, uploadFile } from "@/data/middleware/fileStore/actions";
+import { deleteFile, uploadFile } from "@/data/middleware/media/fileStore/actions";
 import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
@@ -6,12 +6,12 @@ export const dynamic = "force-dynamic";
 
 /**
  * @swagger
- * /api/editorjs/filestore:
+ * /api/media/filestore:
  *   post:
  *     summary: Upload file
  *     description: Upload file to storage.
  *     tags:
- *       - EditorJS
+ *       - Media
  *     parameters:
  *       - in: query
  *         name: directory
@@ -113,12 +113,12 @@ export async function POST(request: NextRequest) {
 
 /**
  * @swagger
- * /api/editorjs/filestore:
+ * /api/media/filestore:
  *   delete:
  *     summary: Delete file
  *     description: Delete file from storage.
  *     tags:
- *       - EditorJS
+ *       - Media
  *     parameters:
  *       - in: query
  *         name: fileRef

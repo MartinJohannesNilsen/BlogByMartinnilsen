@@ -4,12 +4,12 @@ export const dynamic = "force-dynamic";
 
 /**
  * @swagger
- * /api/editorjs/linkpreview:
+ * /api/media/linkpreview:
  *   get:
  *     summary: Fetch link preview attributes
  *     description: Fetches link preview attributes for a given URL.
  *     tags:
- *       - EditorJS
+ *       - Media
  *     parameters:
  *       - in: query
  *         name: url
