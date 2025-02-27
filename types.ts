@@ -2,7 +2,7 @@ import { ThemeEnum } from "@/styles/themes/themeMap";
 import { OutputData } from "@editorjs/editorjs";
 import { SvgIconTypeMap, SxProps, Theme } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { CSSProperties, MutableRefObject, ReactNode } from "react";
+import { CSSProperties, JSX, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
 
 // Object types

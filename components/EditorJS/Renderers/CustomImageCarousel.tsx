@@ -26,7 +26,6 @@ export const ImageCarousel = ({ items }: { items: CarouselItem[] }) => {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const carouselRef = useRef<HTMLDivElement | null>(null);
 	const slidesRef = useRef<(HTMLDivElement | null)[]>([]);
-	const paginationRef = useRef<(HTMLDivElement | null)[]>([]);
 
 	useEffect(() => {
 		gsap.to(slidesRef.current, {

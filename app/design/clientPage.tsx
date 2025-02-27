@@ -43,7 +43,7 @@ const DesignPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProp
 		}
 	}, []);
 	// Animations with GSAP
-	const containerRef = useRef();
+	const containerRef = useRef(null);
 	useGSAP(
 		() => {
 			// Animations

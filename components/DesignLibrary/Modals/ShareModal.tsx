@@ -41,8 +41,8 @@ export const ShareModal = (props: ShareModalProps) => {
 	};
 
 	return (
-		<Box>
-			<Modal
+        <Box>
+            <Modal
 				open={props.open}
 				onClose={() => {
 					props.handleModalClose();
@@ -81,30 +81,32 @@ export const ShareModal = (props: ShareModalProps) => {
 					<Box display="flex" mt={2} columnGap={1.5}>
 						<ClickAwayListener onClickAway={() => setOpenCopiedLinkTooltip(false)}>
 							<Tooltip
-								placement="top"
-								PopperProps={{
-									disablePortal: true,
-									modifiers: [
-										{
-											name: "offset",
-											options: {
-												offset: [0, -12],
-											},
-										},
-									],
-								}}
-								TransitionProps={{ timeout: 200 }}
-								onClose={() => setOpenCopiedLinkTooltip(false)}
-								open={openCopiedLinkTooltip}
-								disableFocusListener
-								// disableHoverListener
-								disableTouchListener
-								title={
+                                placement="top"
+                                onClose={() => setOpenCopiedLinkTooltip(false)}
+                                open={openCopiedLinkTooltip}
+                                disableFocusListener
+                                // disableHoverListener
+                                disableTouchListener
+                                title={
 									<Typography fontFamily={theme.typography.fontFamily} fontSize="10px">
 										Copied link
 									</Typography>
 								}
-							>
+                                slotProps={{
+                                    popper: {
+                                        disablePortal: true,
+                                        modifiers: [
+                                            {
+                                                name: "offset",
+                                                options: {
+                                                    offset: [0, -12],
+                                                },
+                                            },
+                                        ],
+                                    },
+
+                                    transition: { timeout: 200 }
+                                }}>
 								<IconButton
 									onClick={() => {
 										setOpenCopiedLinkTooltip(true);
@@ -217,7 +219,7 @@ export const ShareModal = (props: ShareModalProps) => {
 					</Box>
 				</Box>
 			</Modal>
-		</Box>
-	);
+        </Box>
+    );
 };
 export default ShareModal;

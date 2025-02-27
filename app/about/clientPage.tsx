@@ -49,7 +49,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 		}
 	}, []);
 	// Animations with GSAP
-	const containerRef = useRef();
+	const containerRef = useRef(null);
 	useGSAP(
 		() => {
 			// Animations

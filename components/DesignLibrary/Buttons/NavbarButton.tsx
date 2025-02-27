@@ -8,7 +8,7 @@ export const NavbarButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
 	const button = (
 		// @ts-ignore
-		<ButtonBase
+		(<ButtonBase
 			LinkComponent={NextLink}
 			tabIndex={0}
 			aria-label={props.tooltip}
@@ -18,7 +18,7 @@ export const NavbarButton = (props: ButtonProps) => {
 			sx={{ ...props.sxButton }}
 			disableFocusRipple
 		>
-			{props.icon && (
+            {props.icon && (
 				<props.icon
 					sx={{
 						color: theme.palette.text.primary,
@@ -34,11 +34,11 @@ export const NavbarButton = (props: ButtonProps) => {
 					}}
 				/>
 			)}
-		</ButtonBase>
+        </ButtonBase>)
 	);
 	const outlineButton = (
 		// @ts-ignore
-		<ButtonBase
+		(<ButtonBase
 			LinkComponent={NextLink}
 			tabIndex={0}
 			aria-label={props.tooltip}
@@ -68,7 +68,7 @@ export const NavbarButton = (props: ButtonProps) => {
 			aria-expanded={props.ariaExpanded || undefined}
 			type={props.type || undefined}
 		>
-			{props.text && (
+            {props.text && (
 				<Typography
 					variant="body2"
 					sx={{
@@ -81,7 +81,7 @@ export const NavbarButton = (props: ButtonProps) => {
 					{props.text}
 				</Typography>
 			)}
-			{props.icon && (
+            {props.icon && (
 				<props.icon
 					sx={{
 						height: "22px",
@@ -92,7 +92,7 @@ export const NavbarButton = (props: ButtonProps) => {
 					style={props.styleIcon}
 				/>
 			)}
-		</ButtonBase>
+        </ButtonBase>)
 	);
 
 	return props.tooltip ? (

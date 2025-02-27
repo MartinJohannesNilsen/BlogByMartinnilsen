@@ -489,62 +489,10 @@ export const SearchModal = ({
 									autoComplete="off"
 									value={textFieldValue}
 									inputRef={textFieldRef}
-									InputProps={{
-										disableUnderline: true,
-										endAdornment: (
-											<InputAdornment position="end">
-												<ButtonBase
-													LinkComponent={NextLink}
-													disabled={!isMobile}
-													sx={{
-														color: theme.palette.grey[800],
-														backgroundColor:
-															theme.palette.secondary.main + (theme.palette.mode === "dark" ? "95" : "65"),
-														p: "2px 8px",
-														borderRadius: 1,
-														boxShadow: "0 4px 10px 4px " + theme.palette.secondary.main + "37",
-														backdropFilter: "blur(20px)",
-														WebkitBackdropFilter: "blur( 20px )",
-														border: "1px solid rgba( 255, 255, 255, 0.18 )",
-													}}
-													onClick={() => {
-														const currentTextField: any = textFieldRef.current;
-														if (currentTextField) {
-															currentTextField.focus();
-														}
-														if (!isPulsating) {
-															handlePulsate();
-															setIsActions(!isActions);
-															setTextFieldValue("");
-														}
-													}}
-												>
-													<Typography
-														sx={{
-															fontWeight: 600,
-															fontSize: xs ? 12 : defaultTheme.typography.body1,
-															fontFamily: theme.typography.fontFamily,
-														}}
-													>
-														{!isMobile && "⇥"} {isActions ? "Posts" : "Actions"}
-													</Typography>
-												</ButtonBase>
-											</InputAdornment>
-										),
-									}}
-									inputProps={{
-										style: {
-											fontFamily: theme.typography.fontFamily,
-											fontSize: xs ? 20 : 26,
-											fontWeight: 400,
-											padding: "4px 12px",
-										},
-									}}
 									sx={{
 										paddingBottom: 0,
 										borderColor: "transparent",
 									}}
-									InputLabelProps={{ style: { fontSize: xs ? 20 : 26 } }}
 									onKeyDown={(e) => {
 										if ((e.metaKey && e.key === "k") || (e.ctrlKey && e.key === "k")) {
 											e.preventDefault();
@@ -578,6 +526,62 @@ export const SearchModal = ({
 									}}
 									onChange={(e) => {
 										setTextFieldValue(e.target.value);
+									}}
+									slotProps={{
+										input: {
+											disableUnderline: true,
+											endAdornment: (
+												<InputAdornment position="end">
+													<ButtonBase
+														LinkComponent={NextLink}
+														disabled={!isMobile}
+														sx={{
+															color: theme.palette.grey[800],
+															backgroundColor:
+																theme.palette.secondary.main + (theme.palette.mode === "dark" ? "95" : "65"),
+															p: "2px 8px",
+															borderRadius: 1,
+															boxShadow: "0 4px 10px 4px " + theme.palette.secondary.main + "37",
+															backdropFilter: "blur(20px)",
+															WebkitBackdropFilter: "blur( 20px )",
+															border: "1px solid rgba( 255, 255, 255, 0.18 )",
+														}}
+														onClick={() => {
+															const currentTextField: any = textFieldRef.current;
+															if (currentTextField) {
+																currentTextField.focus();
+															}
+															if (!isPulsating) {
+																handlePulsate();
+																setIsActions(!isActions);
+																setTextFieldValue("");
+															}
+														}}
+													>
+														<Typography
+															sx={{
+																fontWeight: 600,
+																fontSize: xs ? 12 : defaultTheme.typography.body1,
+																fontFamily: theme.typography.fontFamily!,
+															}}
+														>
+															{!isMobile && "⇥"} {isActions ? "Posts" : "Actions"}
+														</Typography>
+													</ButtonBase>
+												</InputAdornment>
+											),
+										},
+
+										htmlInput: {
+											style: {
+												fontFamily: theme.typography.fontFamily,
+												fontSize: xs ? 20 : 26,
+												fontWeight: 400,
+												padding: "4px 12px",
+											},
+										},
+
+										inputLabel: { style: { fontSize: xs ? 20 : 26 } },
 									}}
 								/>
 							</Box>
@@ -653,17 +657,19 @@ export const SearchModal = ({
 												</ListItemAvatar>
 												<ListItemText
 													primary={action.title}
-													primaryTypographyProps={{
-														color: theme.palette.text.primary,
-														fontFamily: theme.typography.fontFamily,
-														fontWeight: "600",
-														whiteSpace: "nowrap",
-														textOverflow: "ellipsis",
-														overflow: "hidden",
-													}}
 													sx={{
 														width: "100%",
 														marginRight: isMobile ? 0 : 5,
+													}}
+													slotProps={{
+														primary: {
+															color: theme.palette.text.primary,
+															fontFamily: theme.typography.fontFamily,
+															fontWeight: "600",
+															whiteSpace: "nowrap",
+															textOverflow: "ellipsis",
+															overflow: "hidden",
+														},
 													}}
 												/>
 												{!isMobile && (
@@ -769,27 +775,30 @@ export const SearchModal = ({
 													</ListItemAvatar>
 													<ListItemText
 														primary={post.title}
-														primaryTypographyProps={{
-															color: theme.palette.text.primary,
-															fontFamily: theme.typography.fontFamily,
-															fontWeight: "600",
-															fontSize: defaultTheme.typography.body1.fontSize,
-															whiteSpace: "nowrap",
-															textOverflow: "ellipsis",
-															overflow: "hidden",
-														}}
 														secondary={post.description}
-														secondaryTypographyProps={{
-															color: theme.palette.text.primary,
-															fontFamily: theme.typography.fontFamily,
-															fontSize: defaultTheme.typography.body2.fontSize,
-															whiteSpace: "nowrap",
-															textOverflow: "ellipsis",
-															overflow: "hidden",
-														}}
 														sx={{
 															width: "100%",
 															marginRight: isMobile ? 0 : 5,
+														}}
+														slotProps={{
+															primary: {
+																color: theme.palette.text.primary,
+																fontFamily: theme.typography.fontFamily,
+																fontWeight: "600",
+																fontSize: defaultTheme.typography.body1.fontSize,
+																whiteSpace: "nowrap",
+																textOverflow: "ellipsis",
+																overflow: "hidden",
+															},
+
+															secondary: {
+																color: theme.palette.text.primary,
+																fontFamily: theme.typography.fontFamily,
+																fontSize: defaultTheme.typography.body2.fontSize,
+																whiteSpace: "nowrap",
+																textOverflow: "ellipsis",
+																overflow: "hidden",
+															},
 														}}
 													/>
 													{!isMobile && (

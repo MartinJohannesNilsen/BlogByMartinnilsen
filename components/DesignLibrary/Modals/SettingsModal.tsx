@@ -12,11 +12,11 @@ import {
 import { ThemeEnum } from "@/styles/themes/themeMap";
 import { SettingsModalProps } from "@/types";
 import { Close, Gradient, Square } from "@mui/icons-material";
-import { Box, Button, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { Box, Button, IconButton, Modal, styled, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
 import { BiMinus, BiPlus } from "react-icons/bi";
+import { TooltipProps } from "@mui/material/Tooltip";
 
 const defaultFonts = [
 	{
@@ -42,11 +42,11 @@ const defaultFonts = [
 	{ title: "Zodiak", font: "--font-zodiak" },
 ];
 
-const TransparentTooltip = withStyles({
-	tooltip: {
-		backgroundColor: "transparent",
-	},
-})(Tooltip);
+const TransparentTooltip = styled(({ className, ...props }: TooltipProps & { className?: string }) => (
+	<Tooltip {...props} classes={{ tooltip: className }} />
+))({
+	backgroundColor: "transparent",
+});
 
 export const SettingsModal = (props: SettingsModalProps) => {
 	const {

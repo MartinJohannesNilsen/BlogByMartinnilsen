@@ -75,7 +75,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 	}, [copyEventListenerActive, props.data.code, props.data.multiline]);
 
 	return (
-		<Box
+        <Box
 			onMouseEnter={() => {
 				setCopyEventListenerActive(true);
 			}}
@@ -100,11 +100,11 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 			my={2}
 			mx="-2px"
 		>
-			{props.data.multiline ? (
+            {props.data.multiline ? (
 				// Multiline codeblock
-				<Box>
-					{/* Header row */}
-					<Box
+				(<Box>
+                    {/* Header row */}
+                    <Box
 						sx={{
 							userSelect: "none",
 							backgroundColor: "#363642",
@@ -165,8 +165,8 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							</Button>
 						</Box>
 					</Box>
-					{/* Editor */}
-					<Box
+                    {/* Editor */}
+                    <Box
 						sx={{
 							"& pre": {
 								"&::-webkit-scrollbar": {
@@ -220,10 +220,10 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							{props.data.code!}
 						</SyntaxHighlighter>
 					</Box>
-				</Box>
+                </Box>)
 			) : (
 				// Singleline codeblock
-				<Box
+				(<Box
 					onMouseEnter={() => {
 						setCopyButtonVisible(true);
 					}}
@@ -249,7 +249,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 						},
 					}}
 				>
-					{isCopyButtonVisible && (
+                    {isCopyButtonVisible && (
 						<Box
 							sx={{
 								position: "absolute",
@@ -301,7 +301,7 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 							)}
 						</Box>
 					)}
-					<SyntaxHighlighter
+                    <SyntaxHighlighter
 						language={props.data.language && props.data.language !== "" ? props.data.language : "plaintext"}
 						style={EDITORTHEME}
 						customStyle={{
@@ -324,9 +324,9 @@ const CustomCodebox = (props: EditorjsRendererProps) => {
 					>
 						{props.data.multiline ? props.data.code! : props.data.code!.replace(/(\r\n|\n|\r)/gm, "")}
 					</SyntaxHighlighter>
-				</Box>
+                </Box>)
 			)}
-		</Box>
-	);
+        </Box>
+    );
 };
 export default CustomCodebox;

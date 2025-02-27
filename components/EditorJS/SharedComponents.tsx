@@ -1,5 +1,5 @@
 import { useTheme } from "@/styles/themes/ThemeProvider";
-import { CSSProperties } from "@mui/styles";
+import { CSSProperties } from "react";
 import { useEffect } from "react";
 
 export const EditorjsTextBlock = ({

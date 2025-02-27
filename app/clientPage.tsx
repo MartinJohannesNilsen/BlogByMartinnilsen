@@ -24,7 +24,7 @@ import {
 import {
 	Box,
 	ButtonGroup,
-	Unstable_Grid2 as Grid,
+	Grid2 as Grid,
 	IconButton,
 	ToggleButton,
 	ToggleButtonGroup,
@@ -513,11 +513,13 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								return (
 									<Grid
 										key={index}
-										xs={12}
-										md={6}
-										lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4} // Lg and up to have 2 at top and 3 at bottom
-										// lg={6}
-										// xl={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
+										size={{
+											xs: 12,
+											md: 6,
+											lg: index % 5 === 0 || index % 5 === 1 ? 6 : 4, // Lg and up to have 2 at top and 3 at bottom
+											// lg: 6,
+											// xl: index % 5 === 0 || index % 5 === 1 ? 6
+										}}
 									>
 										<LandingPageGridCard
 											views={views}
@@ -560,8 +562,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 							{posts.map((data, index) => {
 								return (
 									<>
-										<Grid key={index} md={2} lg={3} />
-										<Grid key={index} xs={12} sm={12} md={8} lg={6}>
+										<Grid key={index} size={{ md: 2, lg: 3 }} />
+										<Grid key={index} size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
 											<LandingPageListCard
 												views={views}
 												author={data.author}
@@ -578,7 +580,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												published={data.published}
 											/>
 										</Grid>
-										<Grid key={index} md={2} lg={3} />
+										<Grid key={index} size={{ md: 2, lg: 3 }} />
 									</>
 								);
 							})}
@@ -599,8 +601,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 							{posts.map((data, index) => {
 								return (
 									<>
-										<Grid key={index} md={1} lg={2} />
-										<Grid key={index} xs={12} sm={12} md={8} lg={6}>
+										<Grid key={index} size={{ md: 1, lg: 2 }} />
+										<Grid key={index} size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
 											<LandingPagePlainCard
 												views={views}
 												author={data.author}
@@ -617,7 +619,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												published={data.published}
 											/>
 										</Grid>
-										<Grid key={index} md={3} lg={4} />
+										<Grid key={index} size={{ md: 3, lg: 4 }} />
 									</>
 								);
 							})}

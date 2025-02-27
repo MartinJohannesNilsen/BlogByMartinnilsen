@@ -2,6 +2,7 @@
 import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "@/types";
+import { JSX } from "react";
 
 interface ListItem {
 	content: string;

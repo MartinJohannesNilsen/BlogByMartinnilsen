@@ -9,7 +9,7 @@ export const ButtonBar = (props: ButtonBarProps) => {
 	const { theme } = useTheme();
 
 	return (
-		<ToggleButtonGroup
+        <ToggleButtonGroup
 			className={props.className}
 			ref={props.ref}
 			sx={{
@@ -25,9 +25,9 @@ export const ButtonBar = (props: ButtonBarProps) => {
 				...props.sx,
 			}}
 		>
-			{props.buttons.map((button) => (
+            {props.buttons.map((button) => (
 				// @ts-ignore
-				<ToggleButton
+				(<ToggleButton
 					disableFocusRipple
 					sx={{
 						display: "flex",
@@ -47,7 +47,7 @@ export const ButtonBar = (props: ButtonBarProps) => {
 					onClick={button.onClick}
 					href={button.href}
 				>
-					{button.icon && (
+                    {button.icon && (
 						<button.icon
 							sx={{
 								color: theme.palette.text.primary + "bb",
@@ -58,7 +58,7 @@ export const ButtonBar = (props: ButtonBarProps) => {
 							}}
 						/>
 					)}
-					{!button.fetched && button.fetched === false ? (
+                    {!button.fetched && button.fetched === false ? (
 						<></>
 					) : (
 						button.text && (
@@ -77,9 +77,9 @@ export const ButtonBar = (props: ButtonBarProps) => {
 							</Typography>
 						)
 					)}
-				</ToggleButton>
+                </ToggleButton>)
 			))}
-		</ToggleButtonGroup>
-	);
+        </ToggleButtonGroup>
+    );
 };
 export default ButtonBar;

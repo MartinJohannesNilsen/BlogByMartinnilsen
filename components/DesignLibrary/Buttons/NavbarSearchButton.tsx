@@ -10,8 +10,8 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
 	const button = (
 		// @ts-ignore
-		<ButtonBase LinkComponent={NextLink} aria-label={props.tooltip} onClick={props.onClick} href={props.href}>
-			{props.icon && (
+		(<ButtonBase LinkComponent={NextLink} aria-label={props.tooltip} onClick={props.onClick} href={props.href}>
+            {props.icon && (
 				<props.icon
 					sx={{
 						color: theme.palette.text.primary,
@@ -27,11 +27,11 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 					}}
 				/>
 			)}
-		</ButtonBase>
+        </ButtonBase>)
 	);
 	const outlineButton = (
 		// @ts-ignore
-		<ButtonBase
+		(<ButtonBase
 			LinkComponent={NextLink}
 			aria-label={props.tooltip}
 			onClick={props.onClick}
@@ -59,7 +59,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 			aria-haspopup={props.ariaHasPopup || "false"}
 			aria-expanded={props.ariaExpanded || undefined}
 		>
-			<Search
+            <Search
 				sx={{
 					height: "22px",
 					width: "22px",
@@ -68,7 +68,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 					...props.sxIcon,
 				}}
 			/>
-			<Typography
+            <Typography
 				fontSize={12}
 				fontWeight={400}
 				sx={{
@@ -79,7 +79,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 			>
 				Search...
 			</Typography>
-			<ButtonBase
+            <ButtonBase
 				disabled
 				sx={{
 					ml: 1.5,
@@ -97,7 +97,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 					{`${typeof navigator !== "undefined" && navigator.userAgent.indexOf("Mac OS X") != -1 ? "⌘K" : "CTRL+K"}`}
 				</Typography>
 			</ButtonBase>
-		</ButtonBase>
+        </ButtonBase>)
 	);
 
 	return props.tooltip ? (

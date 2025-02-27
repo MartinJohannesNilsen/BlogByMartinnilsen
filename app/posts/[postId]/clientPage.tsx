@@ -375,7 +375,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 	}
 
 	// Animations with GSAP
-	const containerRef = useRef();
+	const containerRef = useRef(null);
 	useEffect(() => {
 		ScrollTrigger.refresh();
 

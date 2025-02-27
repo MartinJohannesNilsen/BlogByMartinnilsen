@@ -36,10 +36,6 @@ export const maxDuration = 60; // Set maximum execution time to 60 seconds
  *                 type: string
  *                 description: Optional custom filename for the output file (without extension)
  *                 example: ""
- *               preserveMetadata:
- *                 type: boolean
- *                 description: Whether to preserve image metadata (EXIF, etc.)
- *                 example: false
  *     responses:
  *       '200':
  *         description: Compressed image
@@ -112,9 +108,6 @@ export async function POST(request: NextRequest) {
 
 		// Get custom filename if provided
 		const customFilename = formData.get("filename") as string | null;
-
-		// Get metadata preservation preference
-		const preserveMetadata = formData.get("preserveMetadata") === "true";
 
 		// Read the file as ArrayBuffer
 		const arrayBuffer = await imageFile.arrayBuffer();

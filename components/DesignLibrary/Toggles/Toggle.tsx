@@ -7,7 +7,7 @@ import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { SxProps, styled } from "@mui/material/styles";
-import { MutableRefObject } from "react";
+import { JSX, MutableRefObject } from "react";
 
 // Accordion styled
 export const Accordion = styled((props: AccordionProps) => (

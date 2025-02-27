@@ -89,8 +89,8 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 	};
 
 	return (
-		<Fragment>
-			<Box
+        <Fragment>
+            <Box
 				my={2}
 				sx={{
 					userSelect: "none",
@@ -532,8 +532,8 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 					</Typography>
 				) : viewMode === "thumbnail" ? (
 					// Display thumbnail images
-					<Box sx={{ mt: 1, overflowX: "auto" }}>
-						<DragDropContext onDragEnd={onDragEnd}>
+					(<Box sx={{ mt: 1, overflowX: "auto" }}>
+                        <DragDropContext onDragEnd={onDragEnd}>
 							<Droppable droppableId="droppable" direction="horizontal">
 								{(provided) => (
 									<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ display: "flex" }}>
@@ -658,11 +658,11 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 								)}
 							</Droppable>
 						</DragDropContext>
-					</Box>
+                    </Box>)
 				) : viewMode === "list" ? (
 					// List display of images
-					<Box sx={{ mt: 1 }}>
-						<DragDropContext onDragEnd={onDragEnd}>
+					(<Box sx={{ mt: 1 }}>
+                        <DragDropContext onDragEnd={onDragEnd}>
 							<Droppable droppableId="droppable" direction="vertical">
 								{(provided) => (
 									<Box
@@ -793,12 +793,12 @@ export const ImageCarouselBlock = (props: BlockToolImageCarouselProps) => {
 								)}
 							</Droppable>
 						</DragDropContext>
-					</Box>
+                    </Box>)
 				) : viewMode === "preview" ? (
 					<ImageCarousel items={stateData.items} />
 				) : null}
 			</Box>
-		</Fragment>
-	);
+        </Fragment>
+    );
 };
 export default ImageCarouselBlock;

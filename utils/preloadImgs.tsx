@@ -1,4 +1,7 @@
 "use client";
+
+import { JSX } from "react";
+
 const preloadImgs = (imgPaths: string[]) => {
 	let links: JSX.Element[] = [];
 	imgPaths.map((path) => {

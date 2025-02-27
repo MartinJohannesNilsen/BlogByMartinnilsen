@@ -1,6 +1,6 @@
 import { createSwaggerSpec } from "next-swagger-doc";
 
-export const createdApiDocSpec = createSwaggerSpec({
+export const apiDocSpec = createSwaggerSpec({
 	apiFolder: "app/api",
 	definition: {
 		openapi: "3.0.0",
