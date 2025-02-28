@@ -150,7 +150,7 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 				>
 					{/* Icon */}
 					<Box ml={xs ? 2 : 4} mt={0.1}>
-						<BiSolidQuoteRight style={{ color: "black", opacity: 0.4 }} />
+						<BiSolidQuoteRight style={{ color: "inherit", opacity: 0.4 }} />
 					</Box>
 
 					{/* Content */}
