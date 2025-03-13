@@ -1,4 +1,4 @@
-import { renderers } from "@/app/posts/[postId]/clientPage";
+import { renderers } from "@/components/EditorJS/Renderers";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { BpRadio } from "@/components/DesignLibrary/Buttons/RadioButton";
 import OptionMenu from "@/components/DesignLibrary/Menus/OptionMenu";
@@ -369,8 +369,8 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 	});
 
 	return (
-        <>
-            {!isLoading && (
+		<>
+			{!isLoading && (
 				<Box
 					display="flex"
 					flexDirection="column"
@@ -743,8 +743,8 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 										<Grid item xs={9} md={10}>
 											{data.ogImage.hasOwnProperty("fileRef") && data.ogImage.fileRef ? (
 												// Image exists
-												(<Box display="flex" alignItems="center" gap={0.5}>
-                                                    <StyledTextField
+												<Box display="flex" alignItems="center" gap={0.5}>
+													<StyledTextField
 														disabled
 														InputLabelProps={{ shrink: false }}
 														placeholder="Open Graph Image"
@@ -755,7 +755,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 														// fullWidth
 														value={data.ogImage.src}
 													/>
-                                                    <OptionMenu
+													<OptionMenu
 														icon={MoreVert}
 														menuItems={[
 															{
@@ -817,11 +817,11 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															},
 														]}
 													/>
-                                                </Box>)
+												</Box>
 											) : (
 												// Upload image
-												(<>
-                                                    <input
+												<>
+													<input
 														type="file"
 														id="fileInput"
 														accept="image/*"
@@ -864,7 +864,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 														}}
 														style={{ display: "none" }}
 													/>
-                                                    <label htmlFor="fileInput">
+													<label htmlFor="fileInput">
 														<Button
 															component="span"
 															sx={{
@@ -885,7 +885,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 															Select File
 														</Button>
 													</label>
-                                                </>)
+												</>
 											)}
 										</Grid>
 									</>
@@ -1146,7 +1146,7 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 					</form>
 				</Box>
 			)}
-        </>
-    );
+		</>
+	);
 };
 export default CreatePost;

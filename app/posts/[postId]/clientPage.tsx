@@ -1,6 +1,8 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import PostRecommendationCard from "@/components/DesignLibrary/Cards/PostRecommendationCard";
 import Toggle from "@/components/DesignLibrary/Toggles/Toggle";
+import { renderers } from "@/components/EditorJS/Renderers";
 import { style } from "@/components/EditorJS/style";
 import ButtonBar from "@/components/Navigation/ButtonBar";
 import Footer from "@/components/Navigation/LinkFooter";
@@ -15,7 +17,6 @@ import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOr
 import { IDiscussionData, IMetadataMessage } from "@/utils/giscus";
 import { handleSharing } from "@/utils/handleSharing";
 import useStickyState from "@/utils/useStickyState";
-import Giscus from "@giscus/react";
 import { useGSAP } from "@gsap/react";
 import {
 	AccessTime,
@@ -28,65 +29,20 @@ import {
 	Visibility,
 } from "@mui/icons-material";
 import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import Output from "editorjs-react-renderer";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import DOMPurify from "isomorphic-dompurify";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import ConfettiExplosion from "react-confetti-explosion";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { useEventListener } from "usehooks-ts";
-// gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-// Editorjs render
-import Output from "editorjs-react-renderer";
-// Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
-// import dynamic from "next/dynamic";
-// const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
-// const Output = dynamic(async () => (await import("editorjs-react-renderer")).default, { ssr: false });
-
-// EditorJS renderers
-import PostRecommendationCard from "@/components/DesignLibrary/Cards/PostRecommendationCard";
-import CustomCallout from "@/components/EditorJS/Renderers/CustomCallout";
-import CustomChecklist from "@/components/EditorJS/Renderers/CustomChecklist";
-import CustomCode from "@/components/EditorJS/Renderers/CustomCode";
-import CustomDivider from "@/components/EditorJS/Renderers/CustomDivider";
-import CustomFile from "@/components/EditorJS/Renderers/CustomFile";
-import CustomHeader from "@/components/EditorJS/Renderers/CustomHeader";
-import CustomIframe from "@/components/EditorJS/Renderers/CustomIframe";
-import CustomImage from "@/components/EditorJS/Renderers/CustomImage";
-import CustomImageCarousel from "@/components/EditorJS/Renderers/CustomImageCarousel";
-import CustomLinkTool from "@/components/EditorJS/Renderers/CustomLinkTool";
-import CustomList from "@/components/EditorJS/Renderers/CustomList";
-import CustomMath from "@/components/EditorJS/Renderers/CustomMath";
-import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
-import CustomTable from "@/components/EditorJS/Renderers/CustomTable";
-import CustomToggle from "@/components/EditorJS/Renderers/CustomToggle";
-import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
-
-// Pass your custom renderers to Output
-export const renderers = {
-	paragraph: CustomParagraph,
-	header: CustomHeader,
-	code: CustomCode,
-	divider: CustomDivider,
-	image: CustomImage,
-	imagecarousel: CustomImageCarousel,
-	linktool: CustomLinkTool,
-	video: CustomVideo,
-	checklist: CustomChecklist,
-	table: CustomTable,
-	math: CustomMath,
-	list: CustomList,
-	iframe: CustomIframe,
-	toggle: CustomToggle,
-	callout: CustomCallout,
-	file: CustomFile,
-};
+const LazyGiscus = lazy(() => import("@giscus/react"));
+const LazyConfettiExplosion = lazy(() => import("react-confetti-explosion"));
 
 export function processJsonToggleBlocks(inputJson) {
 	// Deep copy the input JSON object
@@ -805,34 +761,36 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												: { height: "100%" }
 										}
 									>
-										<Giscus
-											repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
-											repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID!}
-											categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
-											id="comments"
-											category="Comments"
-											mapping="specific"
-											term={`post: ${postId}`}
-											strict="1"
-											reactionsEnabled="1"
-											emitMetadata="1"
-											inputPosition="top"
-											theme={theme.palette.mode === "light" ? "light" : "dark"}
-											lang="en"
-											// loading="lazy"
-										/>
-										{discussionData.locked === true && (
-											<Typography
-												my={1}
-												textAlign="center"
-												fontFamily={theme.typography.fontFamily}
-												variant="body1"
-												fontWeight="600"
-												sx={{ color: theme.palette.text.disabled, position: "absolute", bottom: 2 }}
-											>
-												The comment section has been deactivated for this post.
-											</Typography>
-										)}
+										<Suspense fallback={<></>}>
+											<LazyGiscus
+												repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
+												repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID!}
+												categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
+												id="comments"
+												category="Comments"
+												mapping="specific"
+												term={`post: ${postId}`}
+												strict="1"
+												reactionsEnabled="1"
+												emitMetadata="1"
+												inputPosition="top"
+												theme={theme.palette.mode === "light" ? "light" : "dark"}
+												lang="en"
+												// loading="lazy"
+											/>
+											{discussionData.locked === true && (
+												<Typography
+													my={1}
+													textAlign="center"
+													fontFamily={theme.typography.fontFamily}
+													variant="body1"
+													fontWeight="600"
+													sx={{ color: theme.palette.text.disabled, position: "absolute", bottom: 2 }}
+												>
+													The comment section has been deactivated for this post.
+												</Typography>
+											)}
+										</Suspense>
 									</Box>
 								</Toggle>
 							</Box>
@@ -902,15 +860,17 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 							display: "inline-block",
 						}}
 					>
-						<ConfettiExplosion
-							force={isMobile ? 0.8 : 0.6}
-							duration={4000}
-							particleCount={250}
-							height={height - 100}
-							width={xs ? width + 200 : width - 100}
-							// height={1000}
-							// width={1000}
-						/>
+						<Suspense fallback={<></>}>
+							<LazyConfettiExplosion
+								force={isMobile ? 0.8 : 0.6}
+								duration={4000}
+								particleCount={250}
+								height={height - 100}
+								width={xs ? width + 200 : width - 100}
+								// height={1000}
+								// width={1000}
+							/>
+						</Suspense>
 					</Box>
 				)}
 				{/* Render buttonBar */}
