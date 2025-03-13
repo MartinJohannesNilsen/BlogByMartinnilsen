@@ -42,8 +42,8 @@ export const CodeBlock = (props: BlockToolCodeBlockProps) => {
 	}, [stateData]);
 
 	return (
-        <Fragment>
-            <Box sx={{ position: "relative", borderRadius: "50px" }} my={2}>
+		<Fragment>
+			<Box sx={{ position: "relative", borderRadius: "50px" }} my={2}>
 				<Box>
 					{/* Header row */}
 					<Box
@@ -194,9 +194,14 @@ export const CodeBlock = (props: BlockToolCodeBlockProps) => {
 								}}
 								size="small"
 								renderInput={(params) => (
-									<TextField {...params} label="Language" variant="outlined" slotProps={{
-                                        inputLabel: undefined
-                                    }} />
+									<TextField
+										{...params}
+										label="Language"
+										variant="outlined"
+										slotProps={{
+											inputLabel: undefined,
+										}}
+									/>
 								)}
 								value={{
 									language: stateData.language,
@@ -345,7 +350,7 @@ export const CodeBlock = (props: BlockToolCodeBlockProps) => {
 					</Box>
 				</Box>
 			</Box>
-        </Fragment>
-    );
+		</Fragment>
+	);
 };
 export default CodeBlock;

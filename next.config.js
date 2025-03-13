@@ -1,8 +1,5 @@
-module.exports = {
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -15,4 +12,13 @@ module.exports = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: ["notistack", "react-syntax-highlighter"],
+  },
 }
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.NEXT_PUBLIC_ANALYZE === 'true',
+})
+
+module.exports = withBundleAnalyzer(nextConfig)
