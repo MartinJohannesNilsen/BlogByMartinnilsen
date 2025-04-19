@@ -99,13 +99,13 @@ export const PostTable = ({ postsOverview }: { postsOverview: StoredPost[] }) =>
 				// >
 				// 	<OpenInNewRounded />
 				// </Link>
-				(<NavbarButton
+				<NavbarButton
 					variant="base"
 					icon={OpenInNewRounded}
 					sxIcon={{ color: theme.palette.text.primary, width: 24, height: 24 }}
 					// href={/posts/" + row.id}
 					onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${row.id}`)}
-				/>)
+				/>
 			),
 		},
 		{
@@ -123,13 +123,13 @@ export const PostTable = ({ postsOverview }: { postsOverview: StoredPost[] }) =>
 				// >
 				// 	<Edit />
 				// </Link>
-				(<NavbarButton
+				<NavbarButton
 					variant="base"
 					icon={Edit}
 					sxIcon={{ color: theme.palette.text.primary, width: 24, height: 24 }}
 					href={`/create/${row.id}`}
 					// onClick={() => (window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/create/${row.id}`)}
-				/>)
+				/>
 			),
 		},
 	];

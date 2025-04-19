@@ -19,9 +19,10 @@ export const defaultFontFamilyVariable = "--font-inter";
 export const defaultFontScale = "1";
 
 // Create base theme
-export const defaultTheme = createTheme();
+export const defaultTheme = createTheme({ cssVariables: true });
 // Find default values here: https://mui.com/material-ui/customization/default-theme/
 export const baseTheme = createTheme({
+	cssVariables: true,
 	typography: {
 		fontFamily:
 			(typeof window !== "undefined" && localStorage.getItem("fontFamily")) || undefined

@@ -28,21 +28,24 @@ import {
 	ThumbUpAlt,
 	Visibility,
 } from "@mui/icons-material";
-import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Box, GridLegacy as Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import Output from "editorjs-react-renderer";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import DOMPurify from "isomorphic-dompurify";
 import { useSearchParams } from "next/navigation";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { useEventListener } from "usehooks-ts";
-const LazyGiscus = lazy(() => import("@giscus/react"));
-const LazyConfettiExplosion = lazy(() => import("react-confetti-explosion"));
+// import dynamic from "next/dynamic";
+// const LazyGiscus = dynamic(() => import("@giscus/react"), { ssr: false });
+// const LazyConfettiExplosion = dynamic(() => import("react-confetti-explosion"), { ssr: false });
+import Giscus from "@giscus/react";
+import ConfettiExplosion from "react-confetti-explosion";
 
 export function processJsonToggleBlocks(inputJson) {
 	// Deep copy the input JSON object
@@ -762,7 +765,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 										}
 									>
 										<Suspense fallback={<></>}>
-											<LazyGiscus
+											<Giscus
 												repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
 												repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID!}
 												categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
@@ -809,7 +812,11 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 								<Box mb={3}>
 									<Typography
 										variant="h6"
-										sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary, opacity: 0.8 }}
+										sx={{
+											fontFamily: theme.typography.fontFamily,
+											color: theme.palette.text.primary,
+											opacity: 0.8,
+										}}
 										mb={1.5}
 									>
 										You might also like
@@ -861,7 +868,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 						}}
 					>
 						<Suspense fallback={<></>}>
-							<LazyConfettiExplosion
+							<ConfettiExplosion
 								force={isMobile ? 0.8 : 0.6}
 								duration={4000}
 								particleCount={250}

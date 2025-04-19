@@ -3,6 +3,7 @@ import { baseTheme, defaultAccentColorDark } from "@/styles/themes/themeDefaults
 import { createTheme } from "@mui/material";
 
 export const dark = createTheme({
+	cssVariables: true,
 	palette: {
 		...baseTheme.palette,
 		mode: "dark",

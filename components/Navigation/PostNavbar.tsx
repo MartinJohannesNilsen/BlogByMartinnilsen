@@ -123,11 +123,11 @@ export const PostNavbar = ({
 	];
 
 	return (
-        <>
-            {/* Navbar based on mobile device or not */}
-            {isMobile ? (
+		<>
+			{/* Navbar based on mobile device or not */}
+			{isMobile ? (
 				// Mobile
-				(<Box
+				<Box
 					className={className}
 					ref={ref}
 					width={"100%"}
@@ -150,7 +150,7 @@ export const PostNavbar = ({
 						WebkitTransform: "translateZ(0)",
 					}}
 				>
-                    <Box
+					<Box
 						display="flex"
 						alignItems="end"
 						sx={{
@@ -269,10 +269,10 @@ export const PostNavbar = ({
 							</Box>
 						</Box>
 					</Box>
-                </Box>)
+				</Box>
 			) : (
 				// Not mobile
-				(<Box
+				<Box
 					className={className}
 					ref={ref}
 					id="computer-navbar"
@@ -298,8 +298,8 @@ export const PostNavbar = ({
 						WebkitBackdropFilter: "blur(10px)",
 					}}
 				>
-                    {/* Home button */}
-                    <ButtonBase
+					{/* Home button */}
+					<ButtonBase
 						LinkComponent={NextLink}
 						onClick={() => handleNavigate("/")}
 						disableRipple
@@ -344,9 +344,9 @@ export const PostNavbar = ({
 							Blog
 						</Typography>
 					</ButtonBase>
-                    <Box flexGrow={100} />
-                    {/* Right section */}
-                    <Box display="flex" alignItems="end" height="34px">
+					<Box flexGrow={100} />
+					{/* Right section */}
+					<Box display="flex" alignItems="end" height="34px">
 						{/* Edit */}
 						{isAuthorized && (
 							<NavbarButton
@@ -483,11 +483,11 @@ export const PostNavbar = ({
 							/>
 						</Box>
 					</Box>
-                </Box>)
+				</Box>
 			)}
-            {/* Modals */}
-            {/* Search */}
-            {postsOverview && (
+			{/* Modals */}
+			{/* Search */}
+			{postsOverview && (
 				<SearchModal
 					open={openSearchModal}
 					handleModalOpen={handleSearchModalOpen}
@@ -508,28 +508,28 @@ export const PostNavbar = ({
 					sessionUser={sessionUser}
 				/>
 			)}
-            {/* Notifications */}
-            <NotificationsModal
+			{/* Notifications */}
+			<NotificationsModal
 				open={openNotificationsModal}
 				handleModalOpen={handleNotificationsModalOpen}
 				handleModalClose={handleNotificationsModalClose}
 				setVisibleBadgeNotifications={setVisibleBadgeNotifications}
 			/>
-            {/* Settings */}
-            <SettingsModal
+			{/* Settings */}
+			<SettingsModal
 				open={openSettingsModal}
 				handleModalOpen={() => setOpenSettingsModal(true)}
 				handleModalClose={() => setOpenSettingsModal(false)}
 				handleThemeChange={handleThemeChange}
 			/>
-            {/* Simple Text */}
-            <SimpleTextModal
+			{/* Simple Text */}
+			<SimpleTextModal
 				open={simpleTextModal.open}
 				handleModalOpen={() => simpleTextModal.setOpen(true)}
 				handleModalClose={() => simpleTextModal.setOpen(false)}
 			/>
-            {/* TOC */}
-            {toc.content && (
+			{/* TOC */}
+			{toc.content && (
 				<TOCModal
 					open={tocModal.open}
 					handleModalOpen={() => tocModal.setOpen(true)}
@@ -539,8 +539,8 @@ export const PostNavbar = ({
 					postTitle={post.title}
 				/>
 			)}
-            {/* Share */}
-            <ShareModal
+			{/* Share */}
+			<ShareModal
 				open={shareModal.open}
 				handleModalOpen={() => shareModal.setOpen(true)}
 				handleModalClose={() => shareModal.setOpen(false)}
@@ -561,7 +561,7 @@ export const PostNavbar = ({
 					width: xs ? 400 : 500,
 				}}
 			/>
-        </>
-    );
+		</>
+	);
 };
 export default PostNavbar;

@@ -52,9 +52,9 @@ export const FileBlock = (props: BlockToolFileProps) => {
 	}, [stateData]);
 
 	return (
-        <Fragment>
-            {/* Display block if url is set, else input block */}
-            {stateData.url ? (
+		<Fragment>
+			{/* Display block if url is set, else input block */}
+			{stateData.url ? (
 				<Box
 					sx={{
 						my: 2,
@@ -198,7 +198,7 @@ export const FileBlock = (props: BlockToolFileProps) => {
 				</Box>
 			) : (
 				// Input block
-				(<Box
+				<Box
 					sx={{
 						my: 2,
 						display: "flex",
@@ -212,15 +212,21 @@ export const FileBlock = (props: BlockToolFileProps) => {
 						border: "2px solid " + (theme.palette.mode == "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
 					}}
 				>
-                    {/* Header */}
-                    <Typography
+					{/* Header */}
+					<Typography
 						variant="body2"
-						sx={{ color: theme.palette.text.primary, opacity: 0.2, right: 15, position: "absolute", fontWeight: 600 }}
+						sx={{
+							color: theme.palette.text.primary,
+							opacity: 0.2,
+							right: 15,
+							position: "absolute",
+							fontWeight: 600,
+						}}
 					>
 						File
 					</Typography>
-                    {/* Button row */}
-                    <Box sx={{ display: "flex", gap: 1 }}>
+					{/* Button row */}
+					<Box sx={{ display: "flex", gap: 1 }}>
 						<NavbarButton
 							variant="outline"
 							onClick={() => {
@@ -286,11 +292,11 @@ export const FileBlock = (props: BlockToolFileProps) => {
 							text="Upload"
 						/>
 					</Box>
-                    {/* Content */}
-                    <Box display="flex" flexDirection="row" gap={1} sx={{}}>
+					{/* Content */}
+					<Box display="flex" flexDirection="row" gap={1} sx={{}}>
 						{stateData.type === "upload" ? (
 							// Upload field
-							(<Button
+							<Button
 								component="label"
 								role={undefined}
 								variant="contained"
@@ -313,7 +319,7 @@ export const FileBlock = (props: BlockToolFileProps) => {
 									},
 								}}
 							>
-                                <FileUploadOutlined
+								<FileUploadOutlined
 									sx={{
 										height: "14px",
 										width: "14px",
@@ -321,7 +327,7 @@ export const FileBlock = (props: BlockToolFileProps) => {
 										mr: 0.5,
 									}}
 								/>
-                                <Typography variant="body2" sx={{ color: "#808080", textTransform: "none" }}>
+								<Typography variant="body2" sx={{ color: "#808080", textTransform: "none" }}>
 									{!uploadfieldInputValue || !(uploadfieldInputValue instanceof File)
 										? "Upload File"
 										: `${uploadfieldInputValue.name} (${
@@ -330,7 +336,7 @@ export const FileBlock = (props: BlockToolFileProps) => {
 													: (uploadfieldInputValue.size / 1024).toFixed(2) + "kb"
 										  })`}
 								</Typography>
-                                <input
+								<input
 									type="file"
 									id="fileInput"
 									// accept="image/*,video/*"
@@ -350,7 +356,7 @@ export const FileBlock = (props: BlockToolFileProps) => {
 										setUploadfieldInputValue(e.target.files![0]);
 									}}
 								/>
-                            </Button>)
+							</Button>
 						) : (
 							<Box display="flex" width="100%" gap={1}>
 								<StyledTextField
@@ -457,9 +463,9 @@ export const FileBlock = (props: BlockToolFileProps) => {
 							}}
 						/>
 					</Box>
-                </Box>)
+				</Box>
 			)}
-        </Fragment>
-    );
+		</Fragment>
+	);
 };
 export default FileBlock;

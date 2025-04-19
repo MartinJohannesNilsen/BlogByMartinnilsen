@@ -24,7 +24,7 @@ import {
 import {
 	Box,
 	ButtonGroup,
-	Grid2 as Grid,
+	Grid,
 	IconButton,
 	ToggleButton,
 	ToggleButtonGroup,

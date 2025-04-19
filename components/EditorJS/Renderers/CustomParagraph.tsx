@@ -41,7 +41,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
 	const link = `<a class="link" href=`;
 
 	return (
-        <Box
+		<Box
 			sx={{
 				userSelect: "text",
 				my: 1,
@@ -51,7 +51,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
 				...props.style?.box,
 			}}
 		>
-            {!props.data.text || props.data.text === "" ? (
+			{!props.data.text || props.data.text === "" ? (
 				<br />
 			) : (
 				<Typography
@@ -70,7 +70,7 @@ const CustomParagraph = (props: EditorjsRendererProps) => {
 					}}
 				/>
 			)}
-        </Box>
-    );
+		</Box>
+	);
 };
 export default CustomParagraph;

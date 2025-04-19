@@ -164,7 +164,13 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 						{/* Header */}
 						<Typography
 							variant="body2"
-							sx={{ color: theme.palette.text.primary, opacity: 0.2, right: 15, position: "absolute", fontWeight: 600 }}
+							sx={{
+								color: theme.palette.text.primary,
+								opacity: 0.2,
+								right: 15,
+								position: "absolute",
+								fontWeight: 600,
+							}}
 						>
 							Image
 						</Typography>

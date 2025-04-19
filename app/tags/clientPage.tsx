@@ -8,7 +8,7 @@ import { StoredPost, TagsPageProps } from "@/types";
 import colorLumincance from "@/utils/colorLuminance";
 import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
 import useStickyState from "@/utils/useStickyState";
-import { Box, Button, Grid, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, GridLegacy as Grid, Typography, useMediaQuery } from "@mui/material";
 import ErrorPage from "next/error";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
