@@ -1,5 +1,5 @@
 import { getImageBlurhash, isImageUrl } from "@/data/middleware/media/imageBlurhash/actions";
-import { validateAuthAPIToken, validateImagedetailsAPIToken } from "@/data/middleware/tokenValidationAPI";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -54,8 +54,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
-	const imagestoreValidation = await validateImagedetailsAPIToken(request);
-	if (!authValidation.isValid && !imagestoreValidation.isValid) {
+	if (!authValidation.isValid) {
 		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 

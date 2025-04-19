@@ -1,6 +1,6 @@
 // "@/app/api/media/imagestore/route.ts"
 import { deleteImage, uploadImage } from "@/data/middleware/media/imageStore/actions";
-import { validateAuthAPIToken, validateImagedetailsAPIToken } from "@/data/middleware/tokenValidationAPI";
+import { validateAuthAPIToken } from "@/data/middleware/tokenValidationAPI";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -93,8 +93,7 @@ export const dynamic = "force-dynamic";
  */
 export async function POST(request: NextRequest) {
 	const authValidation = await validateAuthAPIToken(request);
-	const imagestoreValidation = await validateImagedetailsAPIToken(request);
-	if (!authValidation.isValid && !imagestoreValidation.isValid) {
+	if (!authValidation.isValid) {
 		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
@@ -160,8 +159,7 @@ export async function POST(request: NextRequest) {
  */
 export async function DELETE(request: NextRequest) {
 	const authValidation = await validateAuthAPIToken(request);
-	const imagestoreValidation = await validateImagedetailsAPIToken(request);
-	if (!authValidation.isValid && !imagestoreValidation.isValid) {
+	if (!authValidation.isValid) {
 		return Response.json({ code: authValidation.code, reason: authValidation.reason }, { status: authValidation.code });
 	}
 
