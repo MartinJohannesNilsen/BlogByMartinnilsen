@@ -90,7 +90,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 			enableBodyScroll(boxRef);
 		}
 		return () => {
-			disableBodyScroll(boxRef);
+			enableBodyScroll(boxRef);
 		};
 	}, [, cardLayout]);
 
@@ -561,9 +561,9 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 						>
 							{posts.map((data, index) => {
 								return (
-									<>
-										<Grid key={index} size={{ md: 2, lg: 3 }} />
-										<Grid key={index} size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
+									<Fragment key={index}>
+										<Grid size={{ md: 2, lg: 3 }} />
+										<Grid size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
 											<LandingPageListCard
 												views={views}
 												author={data.author}
@@ -580,8 +580,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												published={data.published}
 											/>
 										</Grid>
-										<Grid key={index} size={{ md: 2, lg: 3 }} />
-									</>
+										<Grid size={{ md: 2, lg: 3 }} />
+									</Fragment>
 								);
 							})}
 						</Grid>
