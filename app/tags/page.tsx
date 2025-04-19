@@ -11,7 +11,7 @@ import { Metadata } from "next";
 import { Session } from "next-auth";
 import { WebPageJsonLd } from "next-seo";
 
-export async function generateMetadata({ params }: { params: { tag: string } }) {
+export async function generateMetadata() {
 	const metadata: Metadata = {
 		title: "Tags",
 		description: "Navigate the full collection of posts, filtering based on their associated tag(s).",

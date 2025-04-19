@@ -8,7 +8,7 @@ import { memo, useEffect, useRef } from "react";
 
 const EditorBlock = ({ data, onChange, holder }: EditorBlockProps) => {
 	//add a reference to editor
-	const ref = useRef<EditorJS>();
+	const ref = useRef<EditorJS>(null);
 
 	//initialize editorjs
 	useEffect(() => {

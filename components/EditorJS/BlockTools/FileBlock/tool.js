@@ -1,7 +1,7 @@
 import FileBlock from "@/components/EditorJS/BlockTools/FileBlock/FileBlock";
 import { FileIcon } from "@/components/EditorJS/Icons";
 import React from "react";
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
 
 const dataDefaults = {
   type: "upload", // url, upload
@@ -63,12 +63,11 @@ export default class Tool extends React.Component{
       this.data = newData;
     }
 
-    ReactDOM.render(
-      (
-        <FileBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />
-      ),
-    rootNode);
-    
+    // Render React component
+    const root = createRoot(rootNode); 
+    root.render(<FileBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
+
+    // Append to the holder
     return this.nodes.holder;
   }
 }

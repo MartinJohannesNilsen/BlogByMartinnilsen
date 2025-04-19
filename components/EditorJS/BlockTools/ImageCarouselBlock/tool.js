@@ -1,7 +1,7 @@
 import ImageCarouselBlock from "@/components/EditorJS/BlockTools/ImageCarouselBlock/ImageCarouselBlock";
 import { ImageIcon } from "@/components/EditorJS/Icons";
 import React from "react";
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
 
 const dataDefaults = {
   items: []
@@ -53,12 +53,11 @@ export default class Tool extends React.Component{
       this.data = newData;
     }
 
-    ReactDOM.render(
-      (
-        <ImageCarouselBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />
-      ),
-    rootNode);
-    
+    // Render React component
+    const root = createRoot(rootNode); 
+    root.render(<ImageCarouselBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
+
+    // Append to the holder
     return this.nodes.holder;
   }
 }

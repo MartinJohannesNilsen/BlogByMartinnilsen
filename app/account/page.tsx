@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata() {
 	const metadata: Metadata = {
 		title: "Account",
 	};

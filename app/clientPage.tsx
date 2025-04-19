@@ -35,7 +35,7 @@ import {
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 
 const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPageProps) => {
@@ -90,7 +90,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 			enableBodyScroll(boxRef);
 		}
 		return () => {
-			disableBodyScroll();
+			disableBodyScroll(boxRef);
 		};
 	}, [, cardLayout]);
 
@@ -600,9 +600,9 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 						>
 							{posts.map((data, index) => {
 								return (
-									<>
-										<Grid key={index} size={{ md: 1, lg: 2 }} />
-										<Grid key={index} size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
+									<Fragment key={index}>
+										<Grid size={{ md: 1, lg: 2 }} />
+										<Grid size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
 											<LandingPagePlainCard
 												views={views}
 												author={data.author}
@@ -619,8 +619,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												published={data.published}
 											/>
 										</Grid>
-										<Grid key={index} size={{ md: 3, lg: 4 }} />
-									</>
+										<Grid size={{ md: 3, lg: 4 }} />
+									</Fragment>
 								);
 							})}
 						</Grid>

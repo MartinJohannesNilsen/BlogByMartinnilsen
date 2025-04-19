@@ -43,7 +43,7 @@ export const dynamic = "force-dynamic";
  *       '501':
  *         description: Method not supported.
  */
-export async function GET(request: NextRequest, { params }: { params: { notificationId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ notificationId: string }> }) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest, { params }: { params: { notifica
 	}
 
 	// Check if id is provided
-	const notificationId = params.notificationId;
+	const { notificationId } = await params;
 	if (
 		!notificationId ||
 		notificationId == "{notificationId}" ||
@@ -137,7 +137,7 @@ export async function GET(request: NextRequest, { params }: { params: { notifica
  *       '501':
  *         description: Method not supported.
  */
-export async function PUT(request: NextRequest, { params }: { params: { notificationId: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ notificationId: string }> }) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
@@ -145,7 +145,7 @@ export async function PUT(request: NextRequest, { params }: { params: { notifica
 	}
 
 	// Check if id is provided
-	const notificationId = params.notificationId;
+	const { notificationId } = await params;
 	if (
 		!notificationId ||
 		notificationId == "{notificationId}" ||
@@ -199,7 +199,7 @@ export async function PUT(request: NextRequest, { params }: { params: { notifica
  *       '501':
  *         description: Method not supported.
  */
-export async function DELETE(request: NextRequest, { params }: { params: { notificationId: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ notificationId: string }> }) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
@@ -207,7 +207,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { notif
 	}
 
 	// Check if id is provided
-	const notificationId = params.notificationId;
+	const { notificationId } = await params;
 	if (
 		!notificationId ||
 		notificationId == "{notificationId}" ||

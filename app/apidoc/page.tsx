@@ -5,7 +5,7 @@ import { apiDocSpec } from "@/lib/swagger";
 import { Metadata } from "next";
 import { Session } from "next-auth";
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata() {
 	const metadata: Metadata = {
 		title: "APIDoc",
 	};

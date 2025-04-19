@@ -3,11 +3,20 @@ import { getFontFamilyFromVariable } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { ButtonProps } from "@/types";
 import { Search } from "@mui/icons-material";
-import { ButtonBase, Tooltip, Typography } from "@mui/material";
+import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
 import NextLink from "next/link";
+import { useEffect, useState } from "react";
 
 export const NavbarSearchButton = (props: ButtonProps) => {
 	const { theme } = useTheme();
+	const [shortcutLabel, setShortcutLabel] = useState("CTRL+K");
+
+	useEffect(() => {
+		if (navigator.userAgent.includes("Mac OS X")) {
+			setShortcutLabel("⌘K");
+		}
+	}, []);
+
 	const button = (
 		// @ts-ignore
 		<ButtonBase LinkComponent={NextLink} aria-label={props.tooltip} onClick={props.onClick} href={props.href}>
@@ -79,8 +88,7 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 			>
 				Search...
 			</Typography>
-			<ButtonBase
-				disabled
+			<Box
 				sx={{
 					ml: 1.5,
 					borderRadius: "5px",
@@ -94,9 +102,9 @@ export const NavbarSearchButton = (props: ButtonProps) => {
 					fontWeight={600}
 					sx={{ color: "#999" }}
 				>
-					{`${typeof navigator !== "undefined" && navigator.userAgent.indexOf("Mac OS X") != -1 ? "⌘K" : "CTRL+K"}`}
+					{shortcutLabel}
 				</Typography>
-			</ButtonBase>
+			</Box>
 		</ButtonBase>
 	);
 

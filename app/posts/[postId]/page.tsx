@@ -12,12 +12,16 @@ import { ArticleJsonLd } from "next-seo";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params }: { params: { postId: string } }) {
+export async function generateMetadata(props: { params: Promise<{ postId: string }> }) {
+	// Get params and postId from props
+	const params = await props.params;
+	const { postId } = params;
+
 	// Get post
 	const getCachedPost = unstable_cache(async (postId: string) => getPost(postId), undefined, {
-		tags: [`post_${params.postId}`],
+		tags: [`post_${postId}`],
 	});
-	const post = await getCachedPost(params.postId);
+	const post = await getCachedPost(postId);
 
 	if (!post) return defaultMetadata;
 	const metadata: Metadata = {
@@ -28,7 +32,7 @@ export async function generateMetadata({ params }: { params: { postId: string } 
 		keywords: post.tags,
 		openGraph: {
 			type: "article",
-			url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${params.postId}`,
+			url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${postId}`,
 			title: post.title,
 			description: post.description,
 			siteName: "Tech Blog",
@@ -47,16 +51,20 @@ export async function generateStaticParams() {
 	return posts.map((post) => ({ postId: post.id }));
 }
 
-export default async function Page({ params }: { params: { postId: string } }) {
+export default async function Page(props: {
+	params: Promise<{ postId: string }>;
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
 	// Check authentication
 	const session: Session | null = process.env.NEXT_PUBLIC_LOCALHOST === "true" ? await getMockSession() : await auth();
 	const isAuthorized = session?.user?.role === "admin";
 
 	// Get post
+	const { postId } = await props.params;
 	const getCachedPost = unstable_cache(async (postId: string) => getPost(postId), undefined, {
-		tags: [`post_${params.postId}`],
+		tags: [`post_${postId}`],
 	});
-	const post = await getCachedPost(params.postId);
+	const post = await getCachedPost(postId);
 
 	// Get postsOverview
 	const postsOverview = isAuthorized
@@ -70,7 +78,7 @@ export default async function Page({ params }: { params: { postId: string } }) {
 			<ArticleJsonLd
 				useAppDir={true}
 				type="BlogPosting"
-				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${params.postId}`}
+				url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${postId}`}
 				images={[post.ogImage.src]}
 				datePublished={new Date(post.createdAt).toISOString()}
 				dateModified={post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined}
@@ -85,7 +93,7 @@ export default async function Page({ params }: { params: { postId: string } }) {
 			/>
 			<ReadArticleView
 				post={post}
-				postId={params.postId}
+				postId={postId}
 				postsOverview={postsOverview}
 				isAuthorized={isAuthorized}
 				sessionUser={session?.user}

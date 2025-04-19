@@ -1,6 +1,6 @@
 import CustomDivider from "@/components/EditorJS/Renderers/CustomDivider";
 import React from "react";
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
 
 export default class Tool extends React.Component{
   constructor({ data, config, api, readOnly }) {
@@ -40,12 +40,11 @@ export default class Tool extends React.Component{
     rootNode.setAttribute('class', this.CSS.wrapper);
     this.nodes.holder = rootNode;
 
-    ReactDOM.render(
-      (
-        <CustomDivider />
-      ),
-    rootNode);
-    
+    // Render React component
+    const root = createRoot(rootNode); 
+    root.render(<CustomDivider />);
+
+    // Append to the holder
     return this.nodes.holder;
   }
 }
