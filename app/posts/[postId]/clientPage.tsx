@@ -825,6 +825,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									<Box display="flex" flexDirection="column" gap="10px" mb={1}>
 										{nextRelevantPosts.slice(0, 3).map((recommendedPost) => (
 											<PostRecommendationCard
+												key={recommendedPost.id}
 												author={recommendedPost.author}
 												createdAt={recommendedPost.createdAt}
 												description={recommendedPost.description}
