@@ -446,6 +446,23 @@ export type SettingsModalProps = ModalProps & {
 	handleThemeChange: (event: any) => void;
 };
 
+export type FilterType = {
+	startDate?: string;
+	endDate?: string;
+	minReadTime?: number;
+	maxReadTime?: number;
+	tags?: string[];
+	sortOrder?: "asc" | "desc";
+};
+
+export type FilterModalProps = ModalProps & {
+	onApplyFilters: (filters: any) => void;
+	initialFilters?: any;
+	tags: string[];
+	setFilterCount: (count: number) => void;
+	handleModalClose: () => void;
+};
+
 export type ShareModalProps = ModalProps & {
 	data: SharePreviewCardProps;
 };
@@ -549,4 +566,5 @@ export type ServerPageProps = {
 	sessionUser?: SessionUser;
 	isAuthorized: boolean;
 	postsOverview?: StoredPost[];
+	tags?: string[];
 };
