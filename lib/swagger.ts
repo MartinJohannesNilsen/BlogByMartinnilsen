@@ -6,7 +6,7 @@ export const apiDocSpec = createSwaggerSpec({
 		openapi: "3.0.0",
 		info: {
 			title: "MJNTech Blog API",
-			version: "1.0",
+			version: "3.1.0",
 			// contact: {
 			//   name: "Martin Johannes Nilsen",
 			//   url: "https://links.martinjohannesnilsen.no/",
