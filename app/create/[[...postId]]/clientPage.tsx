@@ -19,7 +19,7 @@ const ManageArticlePage = ({
 	const { theme, setTheme } = useTheme();
 
 	useEffect(() => {
-		setTheme(ThemeEnum.Light, true);
+		setTheme(ThemeEnum.Light);
 	}, []);
 
 	useEffect(() => {

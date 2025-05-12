@@ -1,6 +1,5 @@
 import { renderers } from "@/components/EditorJS/Renderers";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
-import { BpRadio } from "@/components/DesignLibrary/Buttons/RadioButton";
 import OptionMenu from "@/components/DesignLibrary/Menus/OptionMenu";
 import EditableTypography from "@/components/DesignLibrary/Text/EditableTypography";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
@@ -27,10 +26,8 @@ import {
 	DialogContent,
 	DialogTitle,
 	Divider,
-	FormControlLabel,
 	GridLegacy as Grid,
 	IconButton,
-	RadioGroup,
 	ToggleButton,
 	ToggleButtonGroup,
 	Typography,
@@ -46,6 +43,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { useHotkeys } from "react-hotkeys-hook";
 import CreatableSelect from "react-select/creatable";
 import { readingTime } from "reading-time-estimator";
+import { clear } from "console";
 let EditorBlock;
 if (typeof window !== "undefined") {
 	EditorBlock = dynamic(() => import("@/components/EditorJS/EditorJS"));
@@ -105,6 +103,7 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
 	const [createdAtEditable, setCreatedAtEditable] = useState(false);
 	const [updatedAtEditable, setUpdatedAtEditable] = useState(false);
 	const [automaticallySetUpdatedAt, setAutomaticallySetUpdatedAt] = useState(true);
+	const [isRevalidating, setIsRevalidating] = useState(false);
 
 	const resetSavedAndRevalidated = () => {
 		setIsSaved(false);
@@ -131,9 +130,17 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
 		return () => {};
 	}, []);
 
+	// Commenting out as editorjs now rerenders on clickaway
 	useEffect(() => {
-		resetSavedAndRevalidated();
-		return () => {};
+		if (isSaved && !isRevalidating) {
+			let timeout = setTimeout(() => {
+				resetSavedAndRevalidated();
+			}, 5000);
+
+			return () => {
+				clearTimeout(timeout);
+			};
+		}
 	}, [editorJSContent]);
 
 	// Width
@@ -343,6 +350,7 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
 			variant: "default",
 			preventDuplicate: true,
 		});
+		setIsRevalidating(true);
 		Promise.all([revalidatePost(postId), revalidatePostsOverview(), revalidateTags()])
 			.then(() => {
 				enqueueSnackbar("Revalidated cache!", {
@@ -350,6 +358,7 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
 					variant: "success",
 					preventDuplicate: true,
 				});
+				setIsRevalidating(false);
 				setIsRevalidated(true);
 			})
 			.catch((error) =>
@@ -1134,7 +1143,7 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
 								}}
 							/>
 							{/* Revalidate button */}
-							{isSaved && (
+							{(isSaved || isRevalidated) && (
 								<NavbarButton
 									variant="outline"
 									onClick={() => {
