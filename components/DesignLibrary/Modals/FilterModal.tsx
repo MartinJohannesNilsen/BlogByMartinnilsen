@@ -165,6 +165,16 @@ export const FilterModal = (props: FilterModalProps) => {
 		setMaxReadTime(null);
 	};
 
+	const handleClearTags = () => {
+		setWarning(null);
+		setTags([]);
+	};
+
+	const handleClearSortOrder = () => {
+		setWarning(null);
+		setSortOrder("desc");
+	};
+
 	const handleStartDateChange = (e: any) => {
 		setWarning(null);
 		setStartDate(e.target.value);
@@ -386,38 +396,8 @@ export const FilterModal = (props: FilterModalProps) => {
 					</IconButton>
 				</Box>
 
-				{/* Tags */}
-				<Box display="flex" mt={1}>
-					<Typography
-						fontFamily={theme.typography.fontFamily}
-						variant="body1"
-						fontWeight="600"
-						color={theme.palette.text.primary}
-						fontSize={"1rem"}
-						sx={{ userSelect: "none" }}
-					>
-						Tags:
-					</Typography>
-					<Box flexGrow="1" />
-					<Box width="230px">
-						<Select
-							isMulti
-							isClearable
-							isSearchable
-							placeholder=""
-							value={tags.map((tag) => ({ value: tag, label: tag }))}
-							onChange={(array) => {
-								setTags(array.map((item) => item.value));
-							}}
-							options={props.tags ? props.tags.map((tag) => ({ value: tag, label: tag })) : []}
-							maxMenuHeight={204}
-							styles={selectStyles}
-						/>
-					</Box>
-				</Box>
-
 				{/* Sort Order */}
-				<Box display="flex" gap="10px" alignItems="center" mt={1} mb={1.5}>
+				<Box display="flex" gap="10px" alignItems="center" mt={1}>
 					<Typography
 						fontFamily={theme.typography.fontFamily}
 						variant="body1"
@@ -456,7 +436,41 @@ export const FilterModal = (props: FilterModalProps) => {
 							Oldest
 						</ToggleButton>
 					</ToggleButtonGroup>
+					<IconButton aria-label="clear sort order" size="small" onClick={handleClearSortOrder} sx={{ ml: -0.75 }}>
+						<Close sx={{ fontSize: "1rem", color: theme.palette.text.primary }} />
+					</IconButton>
 				</Box>
+
+				{/* Tags */}
+				<Box display="flex" mt={1} mb={1.5}>
+					<Typography
+						fontFamily={theme.typography.fontFamily}
+						variant="body1"
+						fontWeight="600"
+						color={theme.palette.text.primary}
+						fontSize={"1rem"}
+						sx={{ userSelect: "none" }}
+					>
+						Tags:
+					</Typography>
+					<Box flexGrow="1" />
+					<Box width="230px">
+						<Select
+							isMulti
+							isSearchable
+							isClearable
+							placeholder=""
+							value={tags.map((tag) => ({ value: tag, label: tag }))}
+							onChange={(array) => {
+								setTags(array.map((item) => item.value));
+							}}
+							options={props.tags ? props.tags.map((tag) => ({ value: tag, label: tag })) : []}
+							maxMenuHeight={204}
+							styles={selectStyles}
+						/>
+					</Box>
+				</Box>
+
 				{warning && <Alert severity="warning">{warning}</Alert>}
 				<Box display="flex" justifyContent="flex-end" mb={-1} gap={1}>
 					<NavbarButton
