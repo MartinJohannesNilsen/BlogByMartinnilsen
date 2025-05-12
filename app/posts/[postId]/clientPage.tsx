@@ -7,7 +7,7 @@ import { style } from "@/components/EditorJS/style";
 import ButtonBar from "@/components/Navigation/ButtonBar";
 import Footer from "@/components/Navigation/LinkFooter";
 import PostNavbar from "@/components/Navigation/PostNavbar";
-import PostViews from "@/components/PostViews/PostViews";
+import PostViews from "@/components/Skeletons/PostViews";
 import { DATA_DEFAULTS } from "@/data/metadata";
 import { getViewCount, incrementViewCount } from "@/data/middleware/views/actions";
 import colors from "@/styles/colors";

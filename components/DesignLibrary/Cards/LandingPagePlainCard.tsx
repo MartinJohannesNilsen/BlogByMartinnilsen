@@ -1,5 +1,5 @@
 "use client";
-import PostViews from "@/components/PostViews/PostViews";
+import PostViews from "@/components/Skeletons/PostViews";
 import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { PostCardProps } from "@/types";

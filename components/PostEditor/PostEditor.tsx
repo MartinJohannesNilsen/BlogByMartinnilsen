@@ -31,6 +31,8 @@ import {
 	GridLegacy as Grid,
 	IconButton,
 	RadioGroup,
+	ToggleButton,
+	ToggleButtonGroup,
 	Typography,
 	useMediaQuery,
 } from "@mui/material";
@@ -67,7 +69,7 @@ export function isvalidHTTPUrl(string: string) {
 	return url.protocol === "http:" || url.protocol === "https:";
 }
 
-const CreatePost = ({ post, id }: ManagePostPageProps) => {
+const PostEditor = ({ post, id }: ManagePostPageProps) => {
 	const { theme, setTheme } = useTheme();
 	const [isSaved, setIsSaved] = useState<boolean>(false);
 	const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
@@ -324,11 +326,6 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 				}
 			})
 			.catch((error) => console.log(error));
-	};
-
-	const handlePublishedRadioChange = (event: { target: { value: any } }) => {
-		setData({ ...data, published: event.target.value === "true" });
-		resetSavedAndRevalidated();
 	};
 
 	const revalidateAction = (snackbarId, postId) => (
@@ -1053,19 +1050,41 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 								</Grid>
 								{/* Published */}
 								<Grid item xs={3} md={2}>
-									<Typography sx={{ fontWeight: 600 }}>Published</Typography>
+									<Typography sx={{ fontWeight: 600 }}>Post Status</Typography>
 								</Grid>
-								<Grid item xs={9} md={10}>
-									<RadioGroup
-										sx={{ marginLeft: theme.spacing(0.5) }}
-										row
+								<Grid item xs={9} md={10} mt={1}>
+									<ToggleButtonGroup
 										value={data.published}
-										name="published-radio-buttons-group"
-										onChange={handlePublishedRadioChange}
+										exclusive
+										onChange={(event, newPublished) => {
+											if (newPublished !== null) {
+												setData({ ...data, published: newPublished });
+												resetSavedAndRevalidated();
+											}
+										}}
+										sx={{ height: "30px" }}
 									>
-										<FormControlLabel value={true} control={<BpRadio />} label="Yes" />
-										<FormControlLabel value={false} control={<BpRadio />} label="No" />
-									</RadioGroup>
+										<ToggleButton
+											value={true}
+											sx={{
+												textTransform: "none",
+												color: theme.palette.text.primary,
+												opacity: data.published === true ? 1 : 0.7,
+											}}
+										>
+											Published
+										</ToggleButton>
+										<ToggleButton
+											value={false}
+											sx={{
+												textTransform: "none",
+												color: theme.palette.text.primary,
+												opacity: data.published === false ? 1 : 0.7,
+											}}
+										>
+											Draft
+										</ToggleButton>
+									</ToggleButtonGroup>
 								</Grid>
 							</Grid>
 							<Divider />
@@ -1149,4 +1168,4 @@ const CreatePost = ({ post, id }: ManagePostPageProps) => {
 		</>
 	);
 };
-export default CreatePost;
+export default PostEditor;

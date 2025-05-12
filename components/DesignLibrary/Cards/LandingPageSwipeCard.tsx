@@ -1,6 +1,6 @@
 "use client";
 import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
-import PostViews from "@/components/PostViews/PostViews";
+import PostViews from "@/components/Skeletons/PostViews";
 import { DATA_DEFAULTS } from "@/data/metadata";
 import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";

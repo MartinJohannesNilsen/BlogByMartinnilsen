@@ -1,5 +1,5 @@
 "use client";
-import CreatePost from "@/components/PostManagement/PostManagement";
+import PostEditor from "@/components/PostEditor/PostEditor";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { ThemeEnum } from "@/styles/themes/themeMap";
 import { FullPost } from "@/types";
@@ -19,7 +19,7 @@ const ManageArticlePage = ({
 	const { theme, setTheme } = useTheme();
 
 	useEffect(() => {
-		setTheme(ThemeEnum.Light);
+		setTheme(ThemeEnum.Light, true);
 	}, []);
 
 	useEffect(() => {
@@ -28,6 +28,6 @@ const ManageArticlePage = ({
 
 	if (!isAuthorized) return <ErrorPage statusCode={403} title="You've taken the wrong path! Please return home" />;
 	if (isLoading) return <></>;
-	return !postId ? <CreatePost /> : post ? <CreatePost post={post} id={postId} /> : <></>;
+	return !postId ? <PostEditor /> : post ? <PostEditor post={post} id={postId} /> : <></>;
 };
 export default ManageArticlePage;

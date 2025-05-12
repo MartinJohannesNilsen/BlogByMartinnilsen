@@ -1,6 +1,6 @@
 "use client";
 import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
-import { isvalidHTTPUrl } from "@/components/PostManagement/PostManagement";
+import { isvalidHTTPUrl } from "@/components/PostEditor/PostEditor";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import NextLink from "next/link";
