@@ -27,7 +27,7 @@ export const renderers = {
 	video: CustomVideo,
 	checklist: CustomChecklist,
 	table: CustomTable,
-	math: CustomMath,
+	// math: CustomMath,
 	list: CustomList,
 	iframe: CustomIframe,
 	toggle: CustomToggle,

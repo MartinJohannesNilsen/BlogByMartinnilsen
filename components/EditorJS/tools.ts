@@ -125,15 +125,15 @@ export const EDITOR_JS_TOOLS: any = {
 			icon: TableIcon,
 		},
 	},
-	math: {
-		// @ts-ignore
-		class: EJLaTeX,
-		shortcut: "CMD+SHIFT+E",
-		toolbox: {
-			icon: MathIcon,
-			title: "Math",
-		},
-	},
+	// math: {
+	// 	// @ts-ignore
+	// 	class: EJLaTeX,
+	// 	shortcut: "CMD+SHIFT+E",
+	// 	toolbox: {
+	// 		icon: MathIcon,
+	// 		title: "Math",
+	// 	},
+	// },
 	toggle: {
 		class: ToggleBlock,
 		inlineToolbar: true,
