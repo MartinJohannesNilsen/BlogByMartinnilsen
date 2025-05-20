@@ -19,8 +19,8 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 			sx={{
 				borderRadius: 4,
 				boxShadow: "none",
-				height: xs ? (isMobile ? 490 : 540) : 520,
-				maxHeight: xs ? (isMobile ? 490 : 540) : 520,
+				height: xs ? (isMobile ? 520 : 540) : 520,
+				maxHeight: xs ? (isMobile ? 520 : 540) : 520,
 				width: "100%",
 			}}
 		>
@@ -30,8 +30,8 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 						theme.palette.mode === "dark"
 							? "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"
 							: "rgb(245, 245, 247)",
-					height: xs ? (isMobile ? 490 : 540) : 520,
-					maxHeight: xs ? (isMobile ? 490 : 540) : 520,
+					height: xs ? (isMobile ? 520 : 540) : 520,
+					maxHeight: xs ? (isMobile ? 520 : 540) : 520,
 					width: "100%",
 				}}
 			>
@@ -52,7 +52,7 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 					display="flex"
 					flexDirection="column"
 					sx={{
-						height: xs && isMobile ? "235px" : "285px",
+						height: xs && isMobile ? "265px" : "285px",
 						padding: "10px 15px",
 					}}
 				>
@@ -99,7 +99,7 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 					{/* Information gutter */}
 					<Box>
 						{/* Tags */}
-						<Box display="flex" flexDirection="row" alignItems="center" pt={3} pb={1}>
+						<Box display="flex" flexDirection="row" alignItems="center" pt={1} pb={1}>
 							{props.tags.map((tag, index) => (
 								<Button LinkComponent={NextLink} key={index} disabled variant="contained" sx={{ marginRight: 1 }}>
 									<Typography

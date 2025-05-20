@@ -493,8 +493,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview, tags }: ServerP
 											className="keen-slider__slide"
 											key={index}
 											sx={{
-												minWidth: xs ? "calc(100vw)" : "350px",
-												paddingX: xs ? 4.5 : 0,
+												minWidth: xs ? "calc(100vw)" : "380px",
+												paddingX: xs ? (isMobile ? 3.5 : 6) : 0,
 											}}
 										>
 											{data && (
