@@ -210,7 +210,7 @@ const AboutPage = ({ sessionUser, postsOverview, isAuthorized }: ServerPageProps
 						text: `Some data is stored locally to enhance the user experience
 						       coming back to the page. That is, decisions that are made,
 							   such as the user's preferred layout and theme, are stored in
-							   your browser.
+							   the specific browser.
 							   The stored fields are:`,
 					}}
 					style={{
