@@ -107,7 +107,7 @@ export const EDITOR_JS_TOOLS: any = {
 	linkTool: {
 		class: LinkTool,
 		config: {
-			endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/linkpreview", // Your backend endpoint for url data fetching,
+			endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/media/linkpreview", // Your backend endpoint for url data fetching,
 		},
 		toolbox: {
 			icon: VideoIcon,
