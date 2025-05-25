@@ -29,7 +29,16 @@ const getTags = async (): Promise<string[]> => {
 		// @ts-ignore
 		const tagsDoc = await collection.findOne({ _id: "tags" });
 		if (tagsDoc) {
-			return tagsDoc.values;
+			if (!Array.isArray(tagsDoc.values)) {
+				console.error("Tags values are not an array:", tagsDoc.values);
+				return [];
+			}
+			if (tagsDoc.values.length === 0) {
+				console.warn("No tags found in the database.");
+				return [];
+			}
+			// Return alphabetically sorted tags
+			return tagsDoc.values.sort((a: string, b: string) => a.localeCompare(b));
 		} else {
 			return [];
 		}

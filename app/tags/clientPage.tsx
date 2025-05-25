@@ -9,6 +9,7 @@ import colorLumincance from "@/utils/colorLuminance";
 import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
 import useStickyState from "@/utils/useStickyState";
 import { Box, Button, GridLegacy as Grid, Typography, useMediaQuery } from "@mui/material";
+import { a } from "@react-spring/web";
 import ErrorPage from "next/error";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -205,72 +206,68 @@ const TagsPage = ({ posts, tags, isAuthorized, sessionUser }: TagsPageProps) => 
 									All posts
 								</Typography>
 							</Button>
-							{(isAuthorized ? ["Published", "Unpublished", "Saved"] : ["Saved"])
-								.concat(tags.sort())
-								.map((element, index) => (
-									<Button
-										LinkComponent={NextLink}
-										key={index}
-										size="small"
-										disabled={
-											tag ? tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") : false
-										}
-										disableFocusRipple
-										sx={{
-											width: "fit-content",
-											border: "1px solid " + theme.palette.secondary.main,
+							{(isAuthorized ? ["Published", "Unpublished", "Saved"] : ["Saved"]).concat(tags).map((element, index) => (
+								<Button
+									LinkComponent={NextLink}
+									key={index}
+									size="small"
+									disabled={tag ? tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "") : false}
+									disableFocusRipple
+									sx={{
+										width: "fit-content",
+										border: "1px solid " + theme.palette.secondary.main,
+										backgroundColor:
+											tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+												? theme.palette.secondary.main
+												: "default",
+										"&:hover": {
+											border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
 											backgroundColor:
 												tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
 													? theme.palette.secondary.main
-													: "default",
-											"&:hover": {
-												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
-												backgroundColor:
-													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-														? theme.palette.secondary.main
-														: theme.palette.mode == "dark"
-														? theme.palette.grey[900]
-														: theme.palette.grey[100],
-											},
-											"&:focus": {
-												border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
-												backgroundColor:
-													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-														? theme.palette.secondary.main
-														: theme.palette.mode == "dark"
-														? theme.palette.grey[900]
-														: theme.palette.grey[100],
-											},
-											margin: 0.5,
-											padding: "5px 6px",
-										}}
-										onClick={() => {
-											router.replace("/tags?name=" + element.replace(" ", ""));
-											setTag(element);
-										}}
+													: theme.palette.mode == "dark"
+													? theme.palette.grey[900]
+													: theme.palette.grey[100],
+										},
+										"&:focus": {
+											border: "1px solid " + colorLumincance(theme.palette.secondary.main, 0.1),
+											backgroundColor:
+												tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+													? theme.palette.secondary.main
+													: theme.palette.mode == "dark"
+													? theme.palette.grey[900]
+													: theme.palette.grey[100],
+										},
+										margin: 0.5,
+										padding: "5px 6px",
+									}}
+									onClick={() => {
+										router.replace("/tags?name=" + element.replace(" ", ""));
+										setTag(element);
+									}}
+								>
+									<Typography
+										fontFamily={theme.typography.fontFamily}
+										color={
+											getBackgroundColorLightOrDark(
+												tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
+													? theme.palette.secondary.main
+													: theme.palette.primary.main
+											) === "dark"
+												? colors.white
+												: colors.black
+										}
+										variant="body2"
+										fontSize={xs ? "11px" : "13px"}
+										textTransform="none"
+										fontWeight={600}
 									>
-										<Typography
-											fontFamily={theme.typography.fontFamily}
-											color={
-												getBackgroundColorLightOrDark(
-													tag && tag.toLowerCase().replace(" ", "") === element.toLowerCase().replace(" ", "")
-														? theme.palette.secondary.main
-														: theme.palette.primary.main
-												) === "dark"
-													? colors.white
-													: colors.black
-											}
-											variant="body2"
-											fontSize={xs ? "11px" : "13px"}
-											textTransform="none"
-											fontWeight={600}
-										>
-											{element === "Published" || element === "Unpublished" || element === "Saved"
-												? element
-												: "#" + _getCaseInsensitiveElement(tags, element)!.replace(" ", "")}
-										</Typography>
-									</Button>
-								))}
+										{element === "Published" || element === "Unpublished" || element === "Saved"
+											? element
+											: "#" + _getCaseInsensitiveElement(tags, element)!.replace(" ", "")}
+									</Typography>
+								</Button>
+							))}
 						</Box>
 					</Grid>
 					{/* Separator */}
