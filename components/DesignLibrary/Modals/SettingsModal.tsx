@@ -524,6 +524,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							}}
 							onClick={() => {
 								localStorage.clear();
+								window.location.reload();
 							}}
 						>
 							<Typography
