@@ -340,7 +340,13 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview, tags }: ServerP
 							}}
 						>
 							<Badge badgeContent={filterCount} color="primary">
-								<Tune />
+								<Tune
+									sx={{
+										height: 20,
+										width: 20,
+										color: theme.palette.text.primary,
+									}}
+								/>
 							</Badge>
 						</ToggleButton>
 
