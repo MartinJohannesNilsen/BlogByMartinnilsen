@@ -78,13 +78,15 @@ const CustomFile = (props: EditorjsRendererProps) => {
 					)}
 
 					{/* Northeast arrow */}
-					<NavbarButton
-						variant="base"
-						icon={NorthEast}
-						sxButton={{ p: 0.5 }}
-						sxIcon={{ strokeWidth: 0.2, opacity: 0.7, height: "22px", width: "22px" }}
-						onClick={() => {
-							open(props.data.url);
+					<NorthEast
+						sx={{
+							mx: 0.5,
+							strokeWidth: 0.2,
+							opacity: 0.5,
+							height: "22px",
+							width: "22px",
+							color: "inherit",
+							"&:hover": { color: "inherit" },
 						}}
 					/>
 				</CardActionArea>
