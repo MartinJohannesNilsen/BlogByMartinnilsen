@@ -2,8 +2,10 @@ services:
   blog-backup:
     container_name: service-blog-backup
     restart: unless-stopped
-    image: mjn/docker-chron-midnight
-    network_mode: host
+    image: mjn/midnight-blog-backup:latest
+    ports:
+      - "8081:8081" # Expose the Mongo Express UI on port 8081
+    # network_mode: host
     build:
       context: .
       dockerfile: cron.dockerfile
@@ -13,7 +15,7 @@ services:
         DAY_OF_MONTH: "*" # Run every day
         MONTH: "*" # Run every month
         DAY_OF_WEEK: "*" # Run every day of the week
-        COMMAND: "sh /root/run.sh" # Run the backup script
+        COMMAND: "sh /root/backup.sh" # Run the backup script
     working_dir: /root
     environment:
       - MONGOEXPRESS_LOGIN_USERNAME=${MONGOEXPRESS_LOGIN_USERNAME}
@@ -22,5 +24,5 @@ services:
       # Mount the output backup data directory to the host
       - ./data:/root/data
       # Mount the backup script to the container
-      - ./backup_hosted_production.sh:/root/run.sh
-      # - ./backup_local_staging.sh:/root/run.sh
+      - ./backup_hosted_production.sh:/root/backup.sh
+      # - ./backup_local_staging.sh:/root/backup.sh
