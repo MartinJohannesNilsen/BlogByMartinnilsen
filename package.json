@@ -2,7 +2,13 @@
 	"name": "blogbymartinnilsen",
 	"version": "3.1.0",
 	"private": true,
+	"type": "module",
 	"scripts": {
+		"analyze": "npm run build && next-bundle-analyzer",
+		"format:check": "prettier --check .",
+		"format:fix": "prettier --write .",
+		"lint:check": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
+		"lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
 		"dev": "next dev --turbopack",
 		"build": "next build",
 		"setdevenv": "cp .env.development .env.local",
@@ -99,6 +105,15 @@
 		"typescript": "5.8.3",
 		"usehooks-ts": "3.1.1"
 	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "8.34.0",
+		"@typescript-eslint/parser": "8.34.0",
+		"eslint": "9.28.0",
+		"eslint-config-next": "15.3.1",
+		"eslint-config-prettier": "10.1.5",
+		"eslint-plugin-mui-path-imports": "0.0.15",
+		"eslint-plugin-prettier": "5.4.1"
+	},
 	"browser": {
 		"fs": false,
 		"path": false,
@@ -115,8 +130,5 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
-	},
-	"devDependencies": {
-		"eslint-config-next": "15.3.1"
 	}
 }
