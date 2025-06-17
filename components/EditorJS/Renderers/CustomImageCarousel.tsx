@@ -136,7 +136,7 @@ export const ImageCarousel = ({
     >
       <ToggleButtonGroup
         size="small"
-        sx={{ pb: 2.5 }}
+        sx={{ pb: 1.5 }}
         // sx={{ paddingRight: 1, position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)" }}
       >
         <ToggleButton
