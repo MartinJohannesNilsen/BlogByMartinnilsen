@@ -111,8 +111,8 @@ export const ImageCarousel = ({
   useEffect(() => {
     gsap.to(slidesRef.current, {
       xPercent: -100 * activeIndex,
-      duration: 0.5,
-      ease: "power2.inOut",
+      duration: 0.15,
+      ease: "power3.out",
     });
   }, [activeIndex, items.length]);
 
