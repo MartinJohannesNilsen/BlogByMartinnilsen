@@ -5,7 +5,7 @@ module.exports = {
 		{
 			files: ["**/*.tsx", "**/*.jsx"],
 			options: {
-				printWidth: 120,
+				printWidth: 160,
 				useTabs: true,
 				arrowParens: "always",
 				tabWidth: 2,
@@ -15,7 +15,7 @@ module.exports = {
 		{
 			files: ["**/*.ts", "**/*.js"],
 			options: {
-				printWidth: 120,
+				printWidth: 160,
 				useTabs: true,
 				arrowParens: "always",
 				tabWidth: 2,
@@ -25,7 +25,7 @@ module.exports = {
 		{
 			files: ["**/*.json"],
 			options: {
-				printWidth: 120,
+				printWidth: 160,
 				useTabs: true,
 				tabWidth: 2,
 				trailingComma: "es5",

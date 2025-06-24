@@ -18,7 +18,8 @@ export default [
   },
   js.configs.recommended,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    // files: ['**/*.{js,jsx,ts,tsx}'],
+    files: [],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
