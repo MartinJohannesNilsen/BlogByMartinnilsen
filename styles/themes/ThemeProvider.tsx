@@ -72,6 +72,7 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 		_setTheme(
 			createTheme({
 				...underlayingTheme,
+				cssVariables: true,
 				palette: {
 					...underlayingTheme.palette,
 					secondary: { main: accentColor },
@@ -90,6 +91,7 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 		_setTheme(
 			createTheme({
 				...underlayingTheme,
+				cssVariables: true,
 				palette: {
 					...underlayingTheme.palette,
 					secondary: { main: accentColor },

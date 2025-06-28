@@ -2,10 +2,15 @@ import { ThemeEnum } from "@/styles/themes/themeMap";
 import { OutputData } from "@editorjs/editorjs";
 import { SvgIconTypeMap, SxProps, Theme } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { CSSProperties, MutableRefObject, ReactNode } from "react";
+import { CSSProperties, JSX, MutableRefObject, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
 
 // Object types
+
+export type ListItem = {
+	content: string;
+	items: ListItem[];
+};
 
 export type EditorjsRendererProps = {
 	data: {
@@ -33,8 +38,6 @@ export type EditorjsRendererProps = {
 			description?: string;
 			image?: string;
 		};
-		// Quote
-		alignment?: string;
 		// Table
 		withHeadings?: boolean;
 		content?: string;
@@ -45,10 +48,14 @@ export type EditorjsRendererProps = {
 		photo?: string;
 		// Checklist
 		items?: [
-			| string
+			| ListItem // Nested list
 			| {
+					// Checklist
 					text?: string;
 					checked?: boolean;
+					// ImageCarousel
+					url?: string;
+					caption?: string;
 			  }
 		];
 		// Video
@@ -74,10 +81,9 @@ export type EditorjsRendererProps = {
 		render?: boolean;
 		highlightLines?: number[];
 		// Callout
-		icon?: string;
 		type?: string;
-		title?: string;
-		message?: string;
+		icon?: string;
+		label?: string;
 		// Image
 		height?: number;
 		width?: number;
@@ -167,19 +173,38 @@ export type BlockToolQuoteProps = {
 	readOnly: boolean;
 };
 
+export type BlockToolFileDataProps = {
+	type: string; // url, upload
+	url: string;
+	description: string;
+	icon: string;
+	fileRef?: string;
+	fileSize?: number;
+};
+export type BlockToolFileProps = {
+	data: BlockToolFileDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+
 export type BlockToolImageDataProps = {
 	type: string; // url, upload, unsplash, paste?
 	url: string;
 	caption: string;
-	blurhash: string;
-	height: number;
-	width: number;
+	blurhash?: string;
+	height?: number;
+	width?: number;
 	fileRef?: string;
 	fileSize?: number;
 	// unsplash?: { author: string; profileLink: string };
 };
 export type BlockToolImageProps = {
 	data: BlockToolImageDataProps;
+	onDataChange: (arg0: any) => void;
+	readOnly: boolean;
+};
+export type BlockToolImageCarouselProps = {
+	data: { items: BlockToolImageDataProps[] };
 	onDataChange: (arg0: any) => void;
 	readOnly: boolean;
 };
@@ -203,8 +228,8 @@ export type BlockToolCodeBlockProps = {
 
 export type BlockToolCalloutDataProps = {
 	type: string;
-	message: string;
-	title?: string;
+	content: string;
+	label?: string;
 	icon?: string;
 };
 export type BlockToolCalloutProps = {
@@ -421,6 +446,23 @@ export type SettingsModalProps = ModalProps & {
 	handleThemeChange: (event: any) => void;
 };
 
+export type FilterType = {
+	startDate?: string;
+	endDate?: string;
+	minReadTime?: number;
+	maxReadTime?: number;
+	tags?: string[];
+	sortOrder?: "asc" | "desc";
+};
+
+export type FilterModalProps = ModalProps & {
+	onApplyFilters: (filters: any) => void;
+	initialFilters?: any;
+	tags: string[];
+	setFilterCount: (count: number) => void;
+	handleModalClose: () => void;
+};
+
 export type ShareModalProps = ModalProps & {
 	data: SharePreviewCardProps;
 };
@@ -524,4 +566,5 @@ export type ServerPageProps = {
 	sessionUser?: SessionUser;
 	isAuthorized: boolean;
 	postsOverview?: StoredPost[];
+	tags?: string[];
 };

@@ -1,10 +1,49 @@
-@import 'katex/dist/katex.min.css';
 
-// editorjs-latex
-.math-input-wrapper{display:flex;flex-direction:column;width:100%;padding:5px}.math-preview{min-height:50px;width:100%;padding:10px;border:1px solid #d3d3d3;font-size:20px;text-align:center}.math-preview *{font-family:Katex_Math}.math-input{border:1px solid #d3d3d3;background:0 0;width:100%;padding:10px;margin-top:5px}.errorMessage{color:red}
+/////////////
+// General //
+/////////////
+.contentEditablePlaceholder::before {
+    content: attr(data-placeholder);
+    display: inline-block; /* or inline, depending on your layout */
+    color: #aaa; /* Placeholder text color */
+    /* Additional placeholder styles (e.g., font-style: italic) */
+}
 
+//////////////////////////////
+// editorjs-latex blocktool //
+//////////////////////////////
+//@import 'katex/dist/katex.min.css';
+.math-input-wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 5px;
+}    
+.math-preview{
+    min-height: 50px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+    font-size: 20px;
+    text-align: center;
+}
+.math-preview * {
+    font-family: Katex_Math;
+}
+.math-input{
+    border: 1px solid #d3d3d3;
+    background: 0 0;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+}
+.errorMessage{
+    color:red;
+}
 
-// Change Case
+///////////////////////////
+// change-case blocktool //
+///////////////////////////
 .change-case-action {
     z-index: 90;
     user-select: none;
@@ -39,49 +78,38 @@
     cursor: pointer;
 }
 
-.contentEditablePlaceholder::before {
-    content: attr(data-placeholder);
-    display: inline-block; /* or inline, depending on your layout */
-    color: #aaa; /* Placeholder text color */
-    /* Additional placeholder styles (e.g., font-style: italic) */
-  }
 
-// Editorjs paragraph, user interactable components
-// Regular hover color
-// .link {
-//     color: var(--link-color);
-//     text-decoration: none;
-//     border-bottom: 2px solid var(--link-border-color);
-// }
-// .link:hover {
-//     border-bottom: 2px solid var(--link-border-hover-color);
-// }
-// Progress transition
+////////////////////////
+// Paragraph Renderer //
+////////////////////////
+// (Deprecated) Links rendered with a static underline with on-hover color change
+/* 
+.link {
+    color: var(--link-color);
+    text-decoration: none;
+    border-bottom: 2px solid var(--link-border-color);
+}
+.link:hover {
+    border-bottom: 2px solid var(--link-border-hover-color);
+} 
+*/
+// Links rendered with underline, animates on-hover (multiline support)
+$link-border-thickness: 2px;
 .link {
     position: relative;
     color: var(--link-color);
     text-decoration: none;
+    background-image: linear-gradient(var(--link-border-hover-color), var(--link-border-hover-color));
+    background-size: 0% $link-border-thickness;
+    background-position: 0 calc(100% + #{$link-border-thickness});
+    background-repeat: no-repeat;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    display: inline;
+    border-bottom: $link-border-thickness solid var(--link-border-color);
 }
-.link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px; /* Adjust according to the thickness of the border */
-    width: 100%;
-    height: 2px;
-    background-color: var(--link-border-color);
-    transform: scaleX(1);
-    transform-origin: left;
-}
-.link:hover::after {
-    background-color: var(--link-border-hover-color);
-    animation: expandBorder 0.4s forwards;
-}
-@keyframes expandBorder {
-    from {
-        transform: scaleX(0);
-    }
-    to {
-        transform: scaleX(1);
-    }
+.link:hover {
+    background-size: 100% $link-border-thickness;
+    border-bottom-color: transparent;
+    transition: background-size 0.3s ease-in-out;
 }

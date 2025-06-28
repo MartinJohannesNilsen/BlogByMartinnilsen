@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import DOMPurify from "dompurify";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { JSX, useMemo } from "react";
 
 export function extractHeaders(html: string) {
 	const regex = /<div.*?>(<a.*?id="(.*?)".*?><\/a>.*?<h([1-6]).*?>(.*?)<\/h[1-6]>)<\/div>/g;
@@ -149,6 +149,7 @@ export const TOCModal = (props: TOCModalProps) => {
 					"& p": {
 						py: 0.3,
 					},
+					scrollbarWidth: "none",
 				}}
 			>
 				{elements}

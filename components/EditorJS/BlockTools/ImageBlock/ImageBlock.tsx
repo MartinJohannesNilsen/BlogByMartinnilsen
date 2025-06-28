@@ -1,21 +1,22 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import { StyledTextField } from "@/components/DesignLibrary/Text/TextInput";
-import { getImageDetails } from "@/data/middleware/imageBlurhash/details";
-import { deleteImage, uploadImage } from "@/data/middleware/imageStore/actions";
+import { getImageBlurhash } from "@/data/middleware/media/imageBlurhash/actions";
+import { deleteImage, uploadImage } from "@/data/middleware/media/imageStore/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { BlockToolImageProps } from "@/types";
-import { Add, AddPhotoAlternateOutlined, Delete, Link } from "@mui/icons-material";
-import { Box, Typography } from "@mui/material";
+import { AddPhotoAlternateOutlined, Delete, NorthEast } from "@mui/icons-material";
+import { Box, Button, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { EditorjsTextBlock } from "../../SharedComponents";
 
 // Component
 export const ImageBlock = (props: BlockToolImageProps) => {
 	const { theme } = useTheme();
 	const [stateData, setStateData] = useState(
 		props.data || {
-			type: "upload", // url, upload // Maybe unsplash & paste?
+			type: "upload", // url, upload // Could include "drop" for drag and drop
 			url: "",
 			caption: "",
 			blurhash: null,
@@ -30,6 +31,7 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 	const [urlfieldInputValue, setUrlfieldInputValue] = useState("");
 	const [uploadfieldInputValue, setUploadfieldInputValue] = useState<any>();
 	const [deleteButtonVisible, setDeleteButtonVisible] = useState(false);
+	const imageCaptionRef = useRef(null);
 
 	useEffect(() => {
 		const pathSegments = window.location.pathname.split("/").filter(Boolean); // Split by '/' and remove any empty segments
@@ -50,16 +52,28 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 	}, [stateData]);
 
 	return (
-		<Fragment>
-			<Box my={2} sx={{ userSelect: "none" }}>
+		<>
+			<Box
+				my={2}
+				sx={{
+					userSelect: "none",
+					backgroundColor: theme.palette.mode == "dark" ? theme.palette.grey[800] : theme.palette.grey[100],
+					p: 1,
+					borderRadius: "5px",
+					border: "2px solid " + (theme.palette.mode == "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
+					display: "flex",
+					flexDirection: "column",
+				}}
+			>
+				{/* Image if url is set, else input block */}
 				{stateData.url ? (
-					// Render image, caption and deletebutton (if fileRef)
 					<Box
 						display="flex"
 						flexDirection="column"
 						gap={1}
 						sx={{ position: "relative" }}
 						onMouseLeave={() => setDeleteButtonVisible(false)}
+						mb={1}
 					>
 						{stateData.fileRef && deleteButtonVisible && (
 							<Box display="flex" alignItems="center" sx={{ position: "absolute", top: 5, right: 5 }}>
@@ -133,215 +147,296 @@ export const ImageBlock = (props: BlockToolImageProps) => {
 							onMouseEnter={() => setDeleteButtonVisible(true)}
 							src={stateData.url}
 						/>
-						<StyledTextField
-							InputLabelProps={{ shrink: false }}
-							placeholder="Caption"
-							name="caption"
-							fullWidth
-							multiline
-							size="small"
-							onKeyPress={(e) => {
-								if (e.key === "Enter") {
-									e.preventDefault();
-								}
-							}}
-							inputProps={{
-								style: { padding: "0px" },
-							}}
+						<EditorjsTextBlock
+							reference={imageCaptionRef}
 							value={stateData.caption}
-							onChange={(e: { target: { name: any; value: any } }) => {
-								const { name, value } = e.target;
+							setValue={(html: any) => {
 								setStateData({
 									...stateData,
-									[name]: value,
+									caption: html,
 								});
 							}}
+							style={{ textAlign: "center" }}
 						/>
 					</Box>
 				) : (
-					// Render input box
-					<Box display="flex" gap={1} alignItems="center">
-						{/* Upload image */}
-						<NavbarButton
-							variant="outline"
-							onClick={() => {
-								if (stateData.type === "upload") {
+					<Box display="flex" flexDirection={"column"} gap={1}>
+						{/* Header */}
+						<Typography
+							variant="body2"
+							sx={{
+								color: theme.palette.text.primary,
+								opacity: 0.2,
+								right: 15,
+								position: "absolute",
+								fontWeight: 600,
+							}}
+						>
+							Image
+						</Typography>
+						{/* Button row */}
+						<Box sx={{ display: "flex", gap: 1 }}>
+							<NavbarButton
+								variant="outline"
+								onClick={() => {
 									setStateData({ ...stateData, type: "url" });
 									setUrlfieldInputValue("");
-								} else {
+								}}
+								disabled={!postId} // Can only have url if no postId present
+								tooltip="Link to image"
+								sxButton={{
+									backgroundColor:
+										stateData.type == "url"
+											? theme.palette.mode == "dark"
+												? theme.palette.grey[700]
+												: theme.palette.grey[200]
+											: theme.palette.mode == "dark"
+											? theme.palette.grey[800]
+											: theme.palette.grey[100],
+									borderRadius: "5px",
+									border:
+										"2px solid " + (theme.palette.mode == "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
+									p: "2px 4px",
+									width: "normal",
+									height: "normal",
+									"&:hover": {
+										backgroundColor: stateData.type == "link" ? theme.palette.grey[200] : theme.palette.grey[200],
+										color: theme.palette.secondary.main,
+										width: "normal",
+										height: "normal",
+									},
+								}}
+								text="Link"
+							/>
+							<NavbarButton
+								variant="outline"
+								onClick={() => {
 									setStateData({ ...stateData, type: "upload" });
 									setUrlfieldInputValue("");
-								}
-							}}
-							disabled={!postId} // Can only have url if no postId present
-							icon={stateData.type === "upload" ? Link : AddPhotoAlternateOutlined}
-							tooltip="Switch between upload and url mode"
-							sxButton={{
-								minWidth: "40px",
-								minHeight: "40px",
-								height: "40px",
-								width: "40px",
-								backgroundColor: theme.palette.text.primary,
-								borderColor: theme.palette.grey[400],
-								"&:hover": {
-									backgroundColor: theme.palette.grey[200],
-									borderColor: theme.palette.grey[300],
-								},
-							}}
-							sxIcon={{
-								height: "22px",
-								width: "22px",
-								color: theme.palette.text.secondary,
-								"&:hover": {
-									opacity: 0.8,
-								},
-							}}
-						/>
-						{stateData.type === "upload" ? (
-							<>
-								<input
-									type="file"
-									id="fileInput"
-									accept="image/*,video/*"
-									// accept="image/*"
-									style={{ marginLeft: 10 }}
-									onChange={(e) => {
-										setUploadfieldInputValue(e.target.files![0]);
+								}}
+								disabled={!postId} // Can only have url if no postId present
+								tooltip="Upload your image"
+								sxButton={{
+									backgroundColor:
+										stateData.type == "upload"
+											? theme.palette.mode == "dark"
+												? theme.palette.grey[700]
+												: theme.palette.grey[200]
+											: theme.palette.mode == "dark"
+											? theme.palette.grey[800]
+											: theme.palette.grey[100],
+									borderRadius: "5px",
+									border:
+										"2px solid " + (theme.palette.mode == "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
+									p: "2px 4px",
+									width: "normal",
+									height: "normal",
+									"&:hover": {
+										backgroundColor: stateData.type == "upload" ? theme.palette.grey[200] : theme.palette.grey[200],
+										color: theme.palette.secondary.main,
+										width: "normal",
+										height: "normal",
+									},
+								}}
+								text="Upload"
+							/>
+						</Box>
+
+						{/* Content */}
+						<Box display="flex" flexDirection="row" gap={1} sx={{}}>
+							{stateData.type === "upload" ? (
+								<Button
+									component="label"
+									role={undefined}
+									variant="contained"
+									tabIndex={-1}
+									sx={{
+										backgroundColor: theme.palette.mode == "dark" ? theme.palette.grey[800] : theme.palette.grey[100],
+										borderRadius: "5px",
+										border:
+											"1px solid " + (theme.palette.mode == "dark" ? theme.palette.grey[600] : theme.palette.grey[300]),
+										p: "2px 4px",
+										height: "normal",
+										boxShadow: "none",
+										width: "100%",
+										"&:hover": {
+											backgroundColor: theme.palette.mode == "dark" ? theme.palette.grey[700] : theme.palette.grey[200],
+											color: theme.palette.secondary.main,
+											width: "normal",
+											height: "normal",
+											boxShadow: "none",
+										},
+									}}
+								>
+									<AddPhotoAlternateOutlined
+										sx={{
+											height: "14px",
+											width: "14px",
+											color: "#808080",
+											mr: 0.5,
+										}}
+									/>
+									<Typography variant="body2" sx={{ color: "#808080", textTransform: "none" }}>
+										{!uploadfieldInputValue || !(uploadfieldInputValue instanceof File)
+											? "Upload Image"
+											: `${uploadfieldInputValue.name} (${
+													uploadfieldInputValue.size > 1048576
+														? (uploadfieldInputValue.size / 1048576).toFixed(2) + "mb"
+														: (uploadfieldInputValue.size / 1024).toFixed(2) + "kb"
+											  })`}
+									</Typography>
+									<input
+										type="file"
+										id="fileInput"
+										accept="image/*,video/*"
+										// accept="image/*"
+										style={{
+											clip: "rect(0 0 0 0)",
+											clipPath: "inset(50%)",
+											height: 1,
+											overflow: "hidden",
+											position: "absolute",
+											bottom: 0,
+											left: 0,
+											whiteSpace: "nowrap",
+											width: 1,
+										}}
+										onChange={(e) => {
+											setUploadfieldInputValue(e.target.files![0]);
+										}}
+									/>
+								</Button>
+							) : (
+								<StyledTextField
+									InputLabelProps={{ shrink: false }}
+									placeholder="URL"
+									name="url"
+									fullWidth
+									multiline
+									size="small"
+									onKeyPress={(e) => {
+										if (e.key === "Enter") {
+											e.preventDefault();
+										}
+									}}
+									inputProps={{
+										style: { padding: "0px" },
+									}}
+									value={urlfieldInputValue}
+									onChange={(e: { target: { name: any; value: any } }) => {
+										const { name, value } = e.target;
+										setUrlfieldInputValue(value);
 									}}
 								/>
-								<Box flexGrow={1} />
-							</>
-						) : (
-							<StyledTextField
-								InputLabelProps={{ shrink: false }}
-								placeholder="URL"
-								name="url"
-								fullWidth
-								multiline
-								size="small"
-								onKeyPress={(e) => {
-									if (e.key === "Enter") {
-										e.preventDefault();
-									}
-								}}
-								inputProps={{
-									style: { padding: "0px" },
-								}}
-								value={urlfieldInputValue}
-								onChange={(e: { target: { name: any; value: any } }) => {
-									const { name, value } = e.target;
-									setUrlfieldInputValue(value);
-								}}
-							/>
-						)}
+							)}
 
-						{/* Store image if upload and fetch image details */}
-						<NavbarButton
-							variant="outline"
-							onClick={() => {
-								if (stateData.type === "upload") {
-									// Upload image or video
-									uploadImage(uploadfieldInputValue, postId, null)
-										.then((uploadResponse) => {
-											// Check if response was ok and we got data, else error snackbar
-											if (uploadResponse.data) {
-												// Check if image, then fetch details and blurhash
-												if (uploadfieldInputValue!.type.startsWith("image/")) {
-													getImageDetails(uploadResponse.data.url)
-														.then((details) => {
-															if (details) {
-																setStateData({
-																	...stateData,
-																	type: "upload",
-																	url: uploadResponse.data.url,
-																	fileRef: uploadResponse.data.fileRef,
-																	fileSize: uploadfieldInputValue!.size,
-																	blurhash: details.encoded,
-																	height: details.height,
-																	width: details.width,
-																});
-															} else {
-																enqueueSnackbar("Could not fetch image details", {
-																	variant: "error",
-																	preventDuplicate: true,
-																});
-															}
-														})
-														.catch((error) => {
-															console.error("Error fetching image details:", error);
+							{/* Store image if upload and fetch image details */}
+							<NavbarButton
+								variant="outline"
+								onClick={() => {
+									if (stateData.type === "upload") {
+										// Upload image or video
+										uploadImage(uploadfieldInputValue, postId, null)
+											.then((uploadResponse) => {
+												// Check if response was ok and we got data, else error snackbar
+												if (uploadResponse.data) {
+													// Check if image, then fetch details and blurhash
+													if (uploadfieldInputValue!.type.startsWith("image/")) {
+														getImageBlurhash(uploadResponse.data.url)
+															.then((details) => {
+																if (details && details.data) {
+																	setStateData({
+																		...stateData,
+																		type: "upload",
+																		url: uploadResponse.data.url,
+																		fileRef: uploadResponse.data.fileRef,
+																		fileSize: uploadfieldInputValue!.size,
+																		blurhash: details.data.encoded,
+																		height: details.data.height,
+																		width: details.data.width,
+																	});
+																} else {
+																	enqueueSnackbar("Could not fetch image details", {
+																		variant: "error",
+																		preventDuplicate: true,
+																	});
+																}
+															})
+															.catch((error) => {
+																console.error("Error fetching image details:", error);
+															});
+													} else if (uploadfieldInputValue!.type.startsWith("video/")) {
+														setStateData({
+															...stateData,
+															type: "upload",
+															url: uploadResponse.data.url,
+															fileRef: uploadResponse.data.fileRef,
+															fileSize: uploadfieldInputValue!.size,
 														});
-												} else if (uploadfieldInputValue!.type.startsWith("video/")) {
-													setStateData({
-														...stateData,
-														type: "upload",
-														url: uploadResponse.data.url,
-														fileRef: uploadResponse.data.fileRef,
-														fileSize: uploadfieldInputValue!.size,
+													}
+												} else {
+													enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
+														variant: "error",
+														preventDuplicate: true,
 													});
 												}
-											} else {
-												enqueueSnackbar(`(${uploadResponse.code}) ${uploadResponse.reason}`, {
-													variant: "error",
-													preventDuplicate: true,
-												});
-											}
-										})
-										.catch((error) => {
-											// Handle error from uploadImage
-											console.error("Error uploading image:", error);
-										});
-								} else {
-									// Fetch image details
-									getImageDetails(urlfieldInputValue)
-										.then((details) => {
-											if (details) {
-												setStateData({
-													...stateData,
-													type: "url",
-													url: urlfieldInputValue,
-													blurhash: details.encoded,
-													height: details.height,
-													width: details.width,
-												});
-											} else {
-												enqueueSnackbar("Could not fetch image details", {
-													variant: "error",
-													preventDuplicate: true,
-												});
-											}
-										})
-										.catch((error) => {
-											console.error("Error fetching image details:", error);
-										});
-								}
-							}}
-							icon={Add}
-							tooltip={stateData.type === "upload" ? "Store image and fetch image details" : "Fetch image from url"}
-							sxButton={{
-								minWidth: "40px",
-								minHeight: "40px",
-								height: "40px",
-								width: "40px",
-								backgroundColor: theme.palette.text.primary,
-								borderColor: theme.palette.grey[400],
-								"&:hover": {
-									backgroundColor: theme.palette.grey[200],
-									borderColor: theme.palette.grey[300],
-								},
-							}}
-							sxIcon={{
-								height: "22px",
-								width: "22px",
-								color: theme.palette.text.secondary,
-								"&:hover": {
-									opacity: 0.8,
-								},
-							}}
-						/>
+											})
+											.catch((error) => {
+												// Handle error from uploadImage
+												console.error("Error uploading image:", error);
+											});
+									} else {
+										// Fetch image details
+										getImageBlurhash(urlfieldInputValue)
+											.then((details) => {
+												if (details && details.data) {
+													setStateData({
+														...stateData,
+														type: "url",
+														url: urlfieldInputValue,
+														blurhash: details.data.encoded,
+														height: details.data.height,
+														width: details.data.width,
+													});
+												} else {
+													enqueueSnackbar("Could not fetch image details", {
+														variant: "error",
+														preventDuplicate: true,
+													});
+												}
+											})
+											.catch((error) => {
+												console.error("Error fetching image details:", error);
+											});
+									}
+								}}
+								icon={NorthEast}
+								tooltip={stateData.type === "upload" ? "Store image and fetch image details" : "Fetch image from url"}
+								sxButton={{
+									minWidth: "40px",
+									minHeight: "40px",
+									height: "40px",
+									width: "40px",
+									backgroundColor: theme.palette.mode == "dark" ? theme.palette.grey[800] : theme.palette.grey[100],
+									borderColor: theme.palette.grey[400],
+									"&:hover": {
+										backgroundColor: theme.palette.mode == "dark" ? theme.palette.grey[700] : theme.palette.grey[200],
+									},
+								}}
+								sxIcon={{
+									height: "22px",
+									width: "22px",
+									color: theme.palette.text.primary,
+									"&:hover": {
+										opacity: 0.8,
+									},
+								}}
+							/>
+						</Box>
 					</Box>
 				)}
 			</Box>
-		</Fragment>
+		</>
 	);
 };
 export default ImageBlock;

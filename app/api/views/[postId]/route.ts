@@ -33,7 +33,7 @@ export const dynamic = "force-dynamic";
  *       '501':
  *         description: Method not supported.
  */
-export async function GET(request: NextRequest, { params }: { params: { postId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest, { params }: { params: { postId: 
 	}
 
 	// Check if postId is provided
-	const postId = params.postId;
+	const { postId } = await params;
 	if (!postId || postId == "{postId}" || postId == "," || postId === "" || typeof postId !== "string") {
 		return Response.json({ code: 400, reason: "Missing postId" }, { status: 400 });
 	}
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest, { params }: { params: { postId: 
  *       '501':
  *         description: Method not supported.
  */
-export async function POST(request: NextRequest, { params }: { params: { postId: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest, { params }: { params: { postId:
 	}
 
 	// Check if postId is provided
-	const postId = params.postId;
+	const { postId } = await params;
 	if (!postId || postId == "{postId}" || postId == "," || postId === "" || typeof postId !== "string") {
 		return Response.json({ code: 400, reason: "Missing postId" }, { status: 400 });
 	}
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest, { params }: { params: { postId:
  *       '501':
  *         description: Method not supported.
  */
-export async function PUT(request: NextRequest, { params }: { params: { postId: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
@@ -149,7 +149,7 @@ export async function PUT(request: NextRequest, { params }: { params: { postId: 
 	}
 
 	// Check if postId is provided
-	const postId = params.postId;
+	const { postId } = await params;
 	if (!postId || postId == "{postId}" || postId == "," || postId === "" || typeof postId !== "string") {
 		return Response.json({ code: 400, reason: "Missing postId" }, { status: 400 });
 	}
@@ -193,7 +193,7 @@ export async function PUT(request: NextRequest, { params }: { params: { postId: 
  *       '501':
  *         description: Method not supported.
  */
-export async function DELETE(request: NextRequest, { params }: { params: { postId: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
 	// Validate authorized access based on header field 'apikey'
 	const authValidation = await validateAuthAPIToken(request);
 	if (!authValidation.isValid) {
@@ -201,7 +201,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { postI
 	}
 
 	// Check if postId is provided
-	const postId = params.postId;
+	const { postId } = await params;
 	if (!postId || postId == "{postId}" || postId == "," || postId === "" || typeof postId !== "string") {
 		return Response.json({ code: 400, reason: "Missing postId" }, { status: 400 });
 	}

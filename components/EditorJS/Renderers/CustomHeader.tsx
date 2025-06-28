@@ -4,7 +4,7 @@ import { EditorjsRendererProps } from "@/types";
 import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import parse from "html-react-parser";
 import NextLink from "next/link";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, JSX, useState } from "react";
 import { isMobile } from "react-device-detect";
 
 const defaultStyle: CSSProperties = {
@@ -141,7 +141,7 @@ const HeaderOutput = ({ data, style, classNames, config }: EditorjsRendererProps
 								fontSize:
 									data.level === 1 ? theme.typography.h4 : data.level === 2 ? theme.typography.h5 : theme.typography.h6,
 								color: theme.palette.text.primary,
-								fontFamily: theme.typography.fontFamily,
+								fontFamily: theme.typography.fontFamily!,
 							}}
 						>
 							#

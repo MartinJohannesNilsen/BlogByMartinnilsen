@@ -1,15 +1,22 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
+import PostRecommendationCard from "@/components/DesignLibrary/Cards/PostRecommendationCard";
 import Toggle from "@/components/DesignLibrary/Toggles/Toggle";
+import { renderers } from "@/components/EditorJS/Renderers";
 import { style } from "@/components/EditorJS/style";
 import ButtonBar from "@/components/Navigation/ButtonBar";
 import Footer from "@/components/Navigation/LinkFooter";
 import PostNavbar from "@/components/Navigation/PostNavbar";
-import PostViews from "@/components/PostViews/PostViews";
+import PostViews from "@/components/Skeletons/PostViews";
+import { DATA_DEFAULTS } from "@/data/metadata";
+import { getViewCount, incrementViewCount } from "@/data/middleware/views/actions";
+import colors from "@/styles/colors";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { ButtonBarButtonProps, FullPost, ReadPostPageProps, StoredPost } from "@/types";
+import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
 import { IDiscussionData, IMetadataMessage } from "@/utils/giscus";
-import Giscus from "@giscus/react";
+import { handleSharing } from "@/utils/handleSharing";
+import useStickyState from "@/utils/useStickyState";
 import { useGSAP } from "@gsap/react";
 import {
 	AccessTime,
@@ -21,70 +28,24 @@ import {
 	ThumbUpAlt,
 	Visibility,
 } from "@mui/icons-material";
-import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Box, GridLegacy as Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import Output from "editorjs-react-renderer";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import DOMPurify from "isomorphic-dompurify";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import ConfettiExplosion from "react-confetti-explosion";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { TbConfetti, TbShare2 } from "react-icons/tb";
 import useWindowSize from "react-use/lib/useWindowSize";
 import { useEventListener } from "usehooks-ts";
-// gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-// Editorjs render
-import Output from "editorjs-react-renderer";
-// Got an error when revalidating pages on vercel, the line below fixed it, but removes toc as it does not render that well.
 // import dynamic from "next/dynamic";
-// const Output = dynamic(() => import("editorjs-react-renderer"), { ssr: false });
-// const Output = dynamic(async () => (await import("editorjs-react-renderer")).default, { ssr: false });
-
-// EditorJS renderers
-import PostRecommendationCard from "@/components/DesignLibrary/Cards/PostRecommendationCard";
-import CustomCallout from "@/components/EditorJS/Renderers/CustomCallout";
-import CustomChecklist from "@/components/EditorJS/Renderers/CustomChecklist";
-import CustomCode from "@/components/EditorJS/Renderers/CustomCode";
-import CustomDivider from "@/components/EditorJS/Renderers/CustomDivider";
-import CustomHeader from "@/components/EditorJS/Renderers/CustomHeader";
-import CustomIframe from "@/components/EditorJS/Renderers/CustomIframe";
-import CustomImage from "@/components/EditorJS/Renderers/CustomImage";
-import CustomLinkTool from "@/components/EditorJS/Renderers/CustomLinkTool";
-import CustomList from "@/components/EditorJS/Renderers/CustomList";
-import CustomMath from "@/components/EditorJS/Renderers/CustomMath";
-import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
-import CustomQuote from "@/components/EditorJS/Renderers/CustomQuote";
-import CustomTable from "@/components/EditorJS/Renderers/CustomTable";
-import CustomToggle from "@/components/EditorJS/Renderers/CustomToggle";
-import CustomVideo from "@/components/EditorJS/Renderers/CustomVideo";
-import { DATA_DEFAULTS } from "@/data/metadata";
-import { getViewCount, incrementViewCount } from "@/data/middleware/views/actions";
-import colors from "@/styles/colors";
-import { getBackgroundColorLightOrDark } from "@/utils/getBackgroundColorLightOrDark";
-import { handleSharing } from "@/utils/handleSharing";
-import useStickyState from "@/utils/useStickyState";
-
-// Pass your custom renderers to Output
-export const renderers = {
-	paragraph: CustomParagraph,
-	header: CustomHeader,
-	code: CustomCode,
-	divider: CustomDivider,
-	image: CustomImage,
-	linktool: CustomLinkTool,
-	quote: CustomQuote,
-	video: CustomVideo,
-	checklist: CustomChecklist,
-	table: CustomTable,
-	math: CustomMath,
-	list: CustomList,
-	iframe: CustomIframe,
-	toggle: CustomToggle,
-	callout: CustomCallout,
-};
+// const LazyGiscus = dynamic(() => import("@giscus/react"), { ssr: false });
+// const LazyConfettiExplosion = dynamic(() => import("react-confetti-explosion"), { ssr: false });
+import Giscus from "@giscus/react";
+import ConfettiExplosion from "react-confetti-explosion";
 
 export function processJsonToggleBlocks(inputJson) {
 	// Deep copy the input JSON object
@@ -293,6 +254,8 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 				const metadataMessage: IMetadataMessage = giscusData;
 				setDiscussionData(metadataMessage.discussion);
 			}
+			// If discussion does not exist, this message does create a 404 error
+			// Then, a console warning is logged about the generation of a new discussion entry if a comment is made
 		};
 
 		// Configure and clean up event listener
@@ -371,7 +334,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 	}
 
 	// Animations with GSAP
-	const containerRef = useRef();
+	const containerRef = useRef(null);
 	useEffect(() => {
 		ScrollTrigger.refresh();
 
@@ -801,34 +764,36 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 												: { height: "100%" }
 										}
 									>
-										<Giscus
-											repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
-											repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID!}
-											categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
-											id="comments"
-											category="Comments"
-											mapping="specific"
-											term={`Post: ${postId}`}
-											strict="1"
-											reactionsEnabled="1"
-											emitMetadata="1"
-											inputPosition="top"
-											theme={theme.palette.mode === "light" ? "light" : "dark"}
-											lang="en"
-											// loading="lazy"
-										/>
-										{discussionData.locked === true && (
-											<Typography
-												my={1}
-												textAlign="center"
-												fontFamily={theme.typography.fontFamily}
-												variant="body1"
-												fontWeight="600"
-												sx={{ color: theme.palette.text.disabled, position: "absolute", bottom: 2 }}
-											>
-												The comment section has been deactivated for this post.
-											</Typography>
-										)}
+										<Suspense fallback={<></>}>
+											<Giscus
+												repo={`${process.env.NEXT_PUBLIC_GISCUS_USER}/${process.env.NEXT_PUBLIC_GISCUS_REPO}`}
+												repoId={process.env.NEXT_PUBLIC_GISCUS_REPOID!}
+												categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORYID}
+												id="comments"
+												category="Comments"
+												mapping="specific"
+												term={`post: ${postId}`}
+												strict="1"
+												reactionsEnabled="1"
+												emitMetadata="1"
+												inputPosition="top"
+												theme={theme.palette.mode === "light" ? "light" : "dark"}
+												lang="en"
+												// loading="lazy"
+											/>
+											{discussionData.locked === true && (
+												<Typography
+													my={1}
+													textAlign="center"
+													fontFamily={theme.typography.fontFamily}
+													variant="body1"
+													fontWeight="600"
+													sx={{ color: theme.palette.text.disabled, position: "absolute", bottom: 2 }}
+												>
+													The comment section has been deactivated for this post.
+												</Typography>
+											)}
+										</Suspense>
 									</Box>
 								</Toggle>
 							</Box>
@@ -847,7 +812,11 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 								<Box mb={3}>
 									<Typography
 										variant="h6"
-										sx={{ fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary, opacity: 0.8 }}
+										sx={{
+											fontFamily: theme.typography.fontFamily,
+											color: theme.palette.text.primary,
+											opacity: 0.8,
+										}}
 										mb={1.5}
 									>
 										You might also like
@@ -856,6 +825,7 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 									<Box display="flex" flexDirection="column" gap="10px" mb={1}>
 										{nextRelevantPosts.slice(0, 3).map((recommendedPost) => (
 											<PostRecommendationCard
+												key={recommendedPost.id}
 												author={recommendedPost.author}
 												createdAt={recommendedPost.createdAt}
 												description={recommendedPost.description}
@@ -898,15 +868,17 @@ export const ReadPostPage = ({ post, postId, postsOverview, isAuthorized, sessio
 							display: "inline-block",
 						}}
 					>
-						<ConfettiExplosion
-							force={isMobile ? 0.8 : 0.6}
-							duration={4000}
-							particleCount={250}
-							height={height - 100}
-							width={xs ? width + 200 : width - 100}
-							// height={1000}
-							// width={1000}
-						/>
+						<Suspense fallback={<></>}>
+							<ConfettiExplosion
+								force={isMobile ? 0.8 : 0.6}
+								duration={4000}
+								particleCount={250}
+								height={height - 100}
+								width={xs ? width + 200 : width - 100}
+								// height={1000}
+								// width={1000}
+							/>
+						</Suspense>
 					</Box>
 				)}
 				{/* Render buttonBar */}

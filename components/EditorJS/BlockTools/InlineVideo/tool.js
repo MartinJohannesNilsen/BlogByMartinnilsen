@@ -1,6 +1,6 @@
 import InlineVideo from '@/components/EditorJS/BlockTools/InlineVideo/InlineVideo';
 import React from "react";
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
 
 export default class Tool extends React.Component{
   constructor({ data, config, api, readOnly }) {
@@ -44,17 +44,14 @@ export default class Tool extends React.Component{
     
     const handleDataChange = (newData) => {
       this.data = newData
-    }
-
-    ReactDOM.render(
-      (
-        <InlineVideo onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />
-      ),
-    rootNode);
+    }    
     
+    // Render React component
+    const root = createRoot(rootNode); 
+    root.render(<InlineVideo onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
+
+    // Append to the holder
     return this.nodes.holder;
   }
 }
-
-// createRoot(this.nodes.holder).render(<InlineVideo onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
 

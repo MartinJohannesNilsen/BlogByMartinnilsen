@@ -25,28 +25,3 @@ export async function validateAuthAPIToken(request: NextRequest) {
 		};
 	}
 }
-
-export async function validateImagedetailsAPIToken(request: NextRequest) {
-	// Extract the Authorization header
-	const authorizationHeader = request.headers.get("apikey");
-	// Check
-	if (!authorizationHeader) {
-		return {
-			isValid: false,
-			code: 401,
-			reason: "Unauthorized - Authorization token 'apikey' missing in header",
-		};
-	} else if (authorizationHeader !== process.env.NEXT_PUBLIC_API_IMAGEDETAILS_TOKEN) {
-		return {
-			isValid: false,
-			code: 401,
-			reason: "Unauthorized - Invalid Authorization token",
-		};
-	} else {
-		return {
-			isValid: true,
-			code: 200,
-			reason: "Authorized - Successfully validated Authorization token",
-		};
-	}
-}

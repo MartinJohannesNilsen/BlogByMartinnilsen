@@ -485,7 +485,6 @@ export const PostNavbar = ({
 					</Box>
 				</Box>
 			)}
-
 			{/* Modals */}
 			{/* Search */}
 			{postsOverview && (
@@ -509,7 +508,6 @@ export const PostNavbar = ({
 					sessionUser={sessionUser}
 				/>
 			)}
-
 			{/* Notifications */}
 			<NotificationsModal
 				open={openNotificationsModal}

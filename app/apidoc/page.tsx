@@ -1,11 +1,11 @@
 import ApiDoc from "@/app/apidoc/clientPage";
 import { auth } from "@/auth";
 import getMockSession from "@/components/Auth/MockSession";
-import { createdApiDocSpec } from "@/lib/swagger";
+import { apiDocSpec } from "@/lib/swagger";
 import { Metadata } from "next";
 import { Session } from "next-auth";
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata() {
 	const metadata: Metadata = {
 		title: "APIDoc",
 	};
@@ -18,7 +18,7 @@ export default async function Page() {
 	const isAuthorized = session?.user?.role === "admin";
 
 	// Generate spec
-	const spec: Record<string, any> = createdApiDocSpec;
+	const spec: Record<string, any> = apiDocSpec;
 
 	return <ApiDoc spec={spec} isAuthorized={isAuthorized} />;
 }

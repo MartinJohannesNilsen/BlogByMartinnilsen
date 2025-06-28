@@ -6,7 +6,7 @@ import { useTheme } from "@/styles/themes/ThemeProvider";
 import { ServerPageProps } from "@/types";
 import useStickyState from "@/utils/useStickyState";
 import { Api, Bookmark, Create, Newspaper, Notifications } from "@mui/icons-material";
-import { Grid } from "@mui/material";
+import { GridLegacy as Grid } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 // Modals can be dynamically imported

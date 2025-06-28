@@ -1,5 +1,6 @@
 "use client";
-import { processJsonToggleBlocks, renderers } from "@/app/posts/[postId]/clientPage";
+import { processJsonToggleBlocks } from "@/app/posts/[postId]/clientPage";
+import { renderers } from "@/components/EditorJS/Renderers";
 import Toggle from "@/components/DesignLibrary/Toggles/Toggle";
 import { style } from "@/components/EditorJS/style";
 import { useTheme } from "@/styles/themes/ThemeProvider";

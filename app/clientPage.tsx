@@ -8,7 +8,7 @@ import TinderSwipe from "@/components/TinderSwipe/TinderSwipe";
 import { _filterListOfStoredPostsOnPublished } from "@/data/middleware/overview/actions";
 import { getAllViewCounts } from "@/data/middleware/views/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
-import { ServerPageProps, StoredPost } from "@/types";
+import { FilterType, ServerPageProps, StoredPost } from "@/types";
 import { splitChunks } from "@/utils/postChunking";
 import useStickyState from "@/utils/useStickyState";
 import {
@@ -20,25 +20,28 @@ import {
 	TableRowsSharp,
 	ViewCarousel,
 	ViewWeekSharp,
+	Tune,
 } from "@mui/icons-material";
 import {
 	Box,
 	ButtonGroup,
-	Unstable_Grid2 as Grid,
+	Grid,
 	IconButton,
 	ToggleButton,
 	ToggleButtonGroup,
 	Tooltip,
 	Typography,
 	useMediaQuery,
+	Badge,
 } from "@mui/material";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
+import { FilterModal } from "@/components/DesignLibrary/Modals/FilterModal";
 
-const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPageProps) => {
+const LandingPage = ({ sessionUser, isAuthorized, postsOverview, tags }: ServerPageProps) => {
 	const { theme } = useTheme();
 	const boxRef = useRef(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +51,9 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 	const [chunkedPosts, setChunkedPosts] = useState<StoredPost[][]>();
 	const [posts, setPosts] = useState<StoredPost[]>();
 	const [views, setViews] = useState<any>();
+	const [filters, setFilters] = useState<FilterType>({});
+	const [filterCount, setFilterCount] = useState<number>(0);
+	const [openFilterModal, setOpenFilterModal] = useState(false);
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
 	const sm = useMediaQuery(theme.breakpoints.only("sm"));
 	const md = useMediaQuery(theme.breakpoints.only("md"));
@@ -61,15 +67,51 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 		return () => {};
 	}, []);
 
-	// Chunk posts
+	// Apply filters and chunk posts
 	useEffect(() => {
 		if (postsOverview) {
-			Promise.resolve(_filterListOfStoredPostsOnPublished(postsOverview, "published")).then((data) => {
-				setChunkedPosts(splitChunks(data, Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)));
+			Promise.resolve(_filterListOfStoredPostsOnPublished(postsOverview, "published")).then((allPosts) => {
+				// Apply filters
+				if (filters.startDate) {
+					allPosts = allPosts.filter((post) => new Date(post.createdAt) >= new Date(filters.startDate!));
+				}
+				if (filters.endDate) {
+					allPosts = allPosts.filter((post) => new Date(post.createdAt) <= new Date(filters.endDate!));
+				}
+
+				if (filters.minReadTime) {
+					allPosts = allPosts.filter(
+						(post) => post.readTime !== undefined && parseInt(post.readTime) >= filters.minReadTime!
+					);
+				}
+
+				if (filters.maxReadTime) {
+					allPosts = allPosts.filter(
+						(post) => post.readTime !== undefined && parseInt(post.readTime) <= filters.maxReadTime!
+					);
+				}
+
+				if (filters.tags && filters.tags.length > 0) {
+					allPosts = allPosts.filter((post) => filters.tags!.every((tag) => post.tags.includes(tag)));
+				}
+
+				// Apply sorting
+				if (filters.sortOrder === "asc") {
+					allPosts.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+				} else {
+					allPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+				}
+
+				//setFilteredPosts(allPosts);
+				const newChunkedPosts = splitChunks(
+					allPosts,
+					Number(process.env.NEXT_PUBLIC_LANDING_PAGE_POSTS_PER_PAGE_GRID_LAYOUT)
+				);
+				setChunkedPosts(newChunkedPosts);
 			});
 		}
 		return () => {};
-	}, [postsOverview]);
+	}, [postsOverview, filters]);
 
 	// Set posts
 	useEffect(() => {
@@ -90,7 +132,7 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 			enableBodyScroll(boxRef);
 		}
 		return () => {
-			disableBodyScroll();
+			enableBodyScroll(boxRef);
 		};
 	}, [, cardLayout]);
 
@@ -167,6 +209,15 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 				isAuthorized={isAuthorized}
 				sessionUser={sessionUser}
 				centeredPadding
+			/>
+			<FilterModal
+				open={openFilterModal}
+				handleModalOpen={() => setOpenFilterModal(true)}
+				handleModalClose={() => setOpenFilterModal(false)}
+				onApplyFilters={setFilters}
+				setFilterCount={setFilterCount}
+				initialFilters={filters}
+				tags={tags!}
 			/>
 			<Box
 				display="flex"
@@ -268,6 +319,37 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								</ToggleButton>
 							</ToggleButtonGroup>
 						)}
+
+						{/* Filter button */}
+						<ToggleButton
+							value="check"
+							selected={filterCount > 0}
+							onChange={() => {
+								setOpenFilterModal(!openFilterModal);
+							}}
+							sx={{
+								borderRadius: "10px",
+								mr: 1,
+								width: 34,
+								height: 34,
+								position: "relative",
+								color: theme.palette.text.primary,
+								"&.Mui-selected": {
+									backgroundColor: theme.palette.primary.main + "50",
+								},
+							}}
+						>
+							<Badge badgeContent={filterCount} color="primary">
+								<Tune
+									sx={{
+										height: 20,
+										width: 20,
+										color: theme.palette.text.primary,
+									}}
+								/>
+							</Badge>
+						</ToggleButton>
+
 						{/* Toggle for switching layouts */}
 						<ToggleButtonGroup value={cardLayout} exclusive onChange={handleChangeView} size="small">
 							<ToggleButton
@@ -417,8 +499,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 											className="keen-slider__slide"
 											key={index}
 											sx={{
-												minWidth: xs ? "calc(100vw)" : "350px",
-												paddingX: xs ? 4.5 : 0,
+												minWidth: xs ? "calc(100vw)" : "380px",
+												paddingX: xs ? (isMobile ? 3.5 : 6) : 0,
 											}}
 										>
 											{data && (
@@ -443,38 +525,41 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								})}
 							</Box>
 							<Box flexGrow={1} />
-							<ButtonGroup sx={{ padding: 1, gap: 1 }}>
-								<IconButton
-									sx={{
-										color: "text.primary",
-										"&:disabled": {
-											color: theme.palette.text.primary + "30",
-										},
-									}}
-									onClick={(e) => {
-										e.stopPropagation();
-										instanceRef.current?.prev();
-									}}
-									disabled={currentSlide === 0}
-								>
-									<ArrowBackIosNewSharp color="inherit" />
-								</IconButton>
-								<IconButton
-									sx={{
-										color: "text.primary",
-										"&:disabled": {
-											color: theme.palette.text.primary + "30",
-										},
-									}}
-									onClick={(e) => {
-										e.stopPropagation();
-										instanceRef.current?.next();
-									}}
-									disabled={xs ? currentSlide === posts.length - 1 : currentSlide === posts.length - 1}
-								>
-									<ArrowForwardIosSharp color="inherit" />
-								</IconButton>
-							</ButtonGroup>
+							{/* Navigation buttons */}
+							{posts.length > 1 && (
+								<ButtonGroup sx={{ padding: 1, gap: 1 }}>
+									<IconButton
+										sx={{
+											color: "text.primary",
+											"&:disabled": {
+												color: theme.palette.text.primary + "30",
+											},
+										}}
+										onClick={(e) => {
+											e.stopPropagation();
+											instanceRef.current?.prev();
+										}}
+										disabled={currentSlide === 0}
+									>
+										<ArrowBackIosNewSharp color="inherit" />
+									</IconButton>
+									<IconButton
+										sx={{
+											color: "text.primary",
+											"&:disabled": {
+												color: theme.palette.text.primary + "30",
+											},
+										}}
+										onClick={(e) => {
+											e.stopPropagation();
+											instanceRef.current?.next();
+										}}
+										disabled={xs ? currentSlide === posts.length - 1 : currentSlide === posts.length - 1}
+									>
+										<ArrowForwardIosSharp color="inherit" />
+									</IconButton>
+								</ButtonGroup>
+							)}
 							<Box flexGrow={1} />
 						</Box>
 					) : cardLayout === "swipe" ? (
@@ -513,11 +598,13 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 								return (
 									<Grid
 										key={index}
-										xs={12}
-										md={6}
-										lg={index % 5 === 0 || index % 5 === 1 ? 6 : 4} // Lg and up to have 2 at top and 3 at bottom
-										// lg={6}
-										// xl={index % 5 === 0 || index % 5 === 1 ? 6 : 4}
+										size={{
+											xs: 12,
+											md: 6,
+											lg: index % 5 === 0 || index % 5 === 1 ? 6 : 4, // Lg and up to have 2 at top and 3 at bottom
+											// lg: 6,
+											// xl: index % 5 === 0 || index % 5 === 1 ? 6
+										}}
 									>
 										<LandingPageGridCard
 											views={views}
@@ -559,9 +646,9 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 						>
 							{posts.map((data, index) => {
 								return (
-									<>
-										<Grid key={index} md={2} lg={3} />
-										<Grid key={index} xs={12} sm={12} md={8} lg={6}>
+									<Fragment key={index}>
+										<Grid size={{ md: 2, lg: 3 }} />
+										<Grid size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
 											<LandingPageListCard
 												views={views}
 												author={data.author}
@@ -578,8 +665,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												published={data.published}
 											/>
 										</Grid>
-										<Grid key={index} md={2} lg={3} />
-									</>
+										<Grid size={{ md: 2, lg: 3 }} />
+									</Fragment>
 								);
 							})}
 						</Grid>
@@ -598,9 +685,9 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 						>
 							{posts.map((data, index) => {
 								return (
-									<>
-										<Grid key={index} md={1} lg={2} />
-										<Grid key={index} xs={12} sm={12} md={8} lg={6}>
+									<Fragment key={index}>
+										<Grid size={{ md: 1, lg: 2 }} />
+										<Grid size={{ xs: 12, sm: 12, md: 8, lg: 6 }}>
 											<LandingPagePlainCard
 												views={views}
 												author={data.author}
@@ -617,8 +704,8 @@ const LandingPage = ({ sessionUser, isAuthorized, postsOverview }: ServerPagePro
 												published={data.published}
 											/>
 										</Grid>
-										<Grid key={index} md={3} lg={4} />
-									</>
+										<Grid size={{ md: 3, lg: 4 }} />
+									</Fragment>
 								);
 							})}
 						</Grid>

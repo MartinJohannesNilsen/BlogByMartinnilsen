@@ -22,6 +22,7 @@ export const TileButtonCard = (props: TileButtonCardProps) => {
 	const [state, setState] = useState({
 		raised: false,
 	});
+	const { showBadge, ...cardActionAreaProps } = props;
 
 	// Locked card
 	if (props.disabled)
@@ -72,14 +73,14 @@ export const TileButtonCard = (props: TileButtonCardProps) => {
 			onMouseOut={() => setState({ raised: false })}
 		>
 			<CardActionArea
-				{...props}
+				{...cardActionAreaProps}
 				sx={{
 					height: "100%",
 					width: "100%",
 				}}
 			>
 				<Box display="flex" justifyContent="center" alignItems="center" pt={2}>
-					{props.showBadge ? (
+					{showBadge ? (
 						<Badge
 							color="secondary"
 							variant="dot"

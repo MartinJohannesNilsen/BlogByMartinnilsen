@@ -4,6 +4,7 @@ import { BlockToolCalloutProps } from "@/types";
 import { Box, Card, IconButton, InputBase, MenuItem, Modal, Select, Typography, useMediaQuery } from "@mui/material";
 import EmojiPicker, { EmojiClickData, SkinTonePickerLocation } from "emoji-picker-react";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { BiSolidQuoteRight } from "react-icons/bi";
 
 // Component
 export const Callout = (props: BlockToolCalloutProps) => {
@@ -14,28 +15,28 @@ export const Callout = (props: BlockToolCalloutProps) => {
 	const [stateData, setStateData] = useState(
 		props.data || {
 			type: "message",
-			message: "",
-			title: "",
+			content: "",
+			label: "",
 			icon: "",
 		}
 	);
-	const messageRef = useRef(null);
+	const labelRef = useRef(null);
+	const contentRef = useRef(null);
 
-	// On componentType change
-	// useEffect(() => {
-	//   if (componentType === "note") setStateData({ ...stateData, title: "" });
-	// }, [componentType]);
-
-	// Set message value on render
-	// useEffect(() => {
-	// 	messageRef.current.innerHTML = props.data.message;
-	// 	return () => {};
-	// }, []);
-
-	// Set message value on stateData.type change
+	// Set text field values on stateData.type change
 	useEffect(() => {
-		const currentMessage: any = messageRef.current;
-		currentMessage.innerHTML = stateData.message;
+		// label
+		const currentLabel = labelRef.current;
+		if (currentLabel) {
+			// @ts-ignore
+			currentLabel.innerHTML = stateData.label;
+		}
+		// Content
+		const currentContent = contentRef.current;
+		if (currentContent) {
+			// @ts-ignore
+			currentContent.innerHTML = stateData.content;
+		}
 	}, [stateData.type]);
 
 	// Change Editorjs state on state change
@@ -44,8 +45,22 @@ export const Callout = (props: BlockToolCalloutProps) => {
 	}, [stateData]);
 
 	return (
-		<Fragment>
-			<Box my={2} sx={{ userSelect: "none" }}>
+		<>
+			<Box
+				my={2}
+				sx={{
+					my: 2,
+					display: "flex",
+					flexDirection: "column",
+					textAlign: "left",
+					gap: 1,
+					p: 1,
+					userSelect: "none",
+					backgroundColor: theme.palette.mode == "dark" ? theme.palette.grey[800] : theme.palette.grey[100],
+					borderRadius: "5px",
+					border: "2px solid " + (theme.palette.mode == "dark" ? theme.palette.grey[700] : theme.palette.grey[200]),
+				}}
+			>
 				{/* Option row */}
 				<Box>
 					<Select
@@ -56,6 +71,7 @@ export const Callout = (props: BlockToolCalloutProps) => {
 					>
 						<MenuItem value={"message"}>Message</MenuItem>
 						<MenuItem value={"note"}>Note</MenuItem>
+						<MenuItem value={"quote"}>Quote</MenuItem>
 					</Select>
 				</Box>
 				{/* Component */}
@@ -115,7 +131,7 @@ export const Callout = (props: BlockToolCalloutProps) => {
 										maxWidth: "550px",
 									}}
 								>
-									{/* Title */}
+									{/* Label */}
 									<InputBase
 										fullWidth
 										onKeyDown={(event) => {
@@ -124,8 +140,8 @@ export const Callout = (props: BlockToolCalloutProps) => {
 												event.stopPropagation();
 											}
 										}}
-										placeholder="Insert title here ..."
-										value={stateData.title}
+										placeholder="Title (Optional)"
+										value={stateData.label}
 										sx={{
 											...theme.typography.subtitle1,
 											fontWeight: 800,
@@ -135,11 +151,11 @@ export const Callout = (props: BlockToolCalloutProps) => {
 										onChange={(e) => {
 											setStateData({
 												...stateData,
-												title: e.target.value,
+												label: e.target.value,
 											});
 										}}
 									/>
-									{/* Message */}
+									{/* Content */}
 									<div
 										contentEditable
 										onKeyDown={(event) => {
@@ -148,8 +164,7 @@ export const Callout = (props: BlockToolCalloutProps) => {
 												event.stopPropagation();
 											}
 										}}
-										// placeholder="Insert message here ..."
-										ref={messageRef}
+										ref={contentRef}
 										style={{
 											...theme.typography.subtitle2,
 											fontFamily: theme.typography.fontFamily,
@@ -157,14 +172,14 @@ export const Callout = (props: BlockToolCalloutProps) => {
 											paddingBottom: 6,
 										}}
 										onInputCapture={(e) => {
-											const currentDiv: any = messageRef.current;
+											const currentDiv: any = contentRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;
 											}
 											setStateData({
 												...stateData,
-												message: e.currentTarget.innerHTML,
+												content: e.currentTarget.innerHTML,
 											});
 										}}
 									/>
@@ -181,8 +196,6 @@ export const Callout = (props: BlockToolCalloutProps) => {
 							}}
 						>
 							<Box display="flex" flexDirection="row">
-								{/* <Box sx={{ backgroundColor: "#575757" }} p={0.5} /> */}
-								{/* <Box sx={{ backgroundColor: "#b89002" }} p={0.5} /> */}
 								<Box sx={{ backgroundColor: theme.palette.grey[400] }} p={0.5} />
 								<Box
 									display="flex"
@@ -194,7 +207,7 @@ export const Callout = (props: BlockToolCalloutProps) => {
 										maxWidth: "625px",
 									}}
 								>
-									{/* Title */}
+									{/* Label */}
 									<InputBase
 										fullWidth
 										onKeyDown={(event) => {
@@ -204,7 +217,7 @@ export const Callout = (props: BlockToolCalloutProps) => {
 											}
 										}}
 										placeholder="Note"
-										value={stateData.title}
+										value={stateData.label}
 										sx={{
 											...theme.typography.subtitle1,
 											fontWeight: 800,
@@ -221,11 +234,11 @@ export const Callout = (props: BlockToolCalloutProps) => {
 										onChange={(e) => {
 											setStateData({
 												...stateData,
-												title: e.target.value,
+												label: e.target.value,
 											});
 										}}
 									/>
-									{/* Message */}
+									{/* Content */}
 									<div
 										contentEditable
 										onKeyDown={(event) => {
@@ -234,32 +247,111 @@ export const Callout = (props: BlockToolCalloutProps) => {
 												event.stopPropagation();
 											}
 										}}
-										// placeholder="Insert message here ..."
-										ref={messageRef}
+										ref={contentRef}
 										style={{
 											...theme.typography.subtitle2,
 											fontFamily: theme.typography.fontFamily,
 											outline: "none",
 										}}
 										onInputCapture={(e) => {
-											const currentDiv: any = messageRef.current;
+											const currentDiv: any = contentRef.current;
 											if (currentDiv) {
 												currentDiv.style.height = "auto";
 												currentDiv.style.height = `${currentDiv.scrollHeight}px`;
 											}
 											setStateData({
 												...stateData,
-												message: e.currentTarget.innerHTML,
+												content: e.currentTarget.innerHTML,
 											});
 										}}
 									/>
 								</Box>
 							</Box>
 						</Card>
+					) : stateData.type === "quote" ? (
+						<Box display="flex" flexDirection="row" my={1.5}>
+							{/* Icon */}
+							<Box ml={xs ? 2 : 4} mt={0.1}>
+								<BiSolidQuoteRight style={{ color: "black", opacity: 0.4 }} />
+							</Box>
+
+							{/* Content */}
+							<Box
+								display="flex"
+								flexDirection="column"
+								maxWidth="100vw"
+								ml={1.5}
+								sx={{
+									width: mdDown ? "85vw" : "100vw",
+									maxWidth: "625px",
+								}}
+							>
+								{/* Content */}
+								<div
+									contentEditable
+									onKeyDown={(event) => {
+										if (event.key === "Enter" && !event.shiftKey) {
+											event.preventDefault();
+											event.stopPropagation();
+										}
+									}}
+									ref={contentRef}
+									style={{
+										...theme.typography.body1,
+										fontFamily: theme.typography.fontFamily,
+										fontWeight: 600,
+										outline: "none",
+										paddingBottom: theme.spacing(2),
+										marginBottom: -0.8,
+									}}
+									onInputCapture={(e) => {
+										const currentDiv: any = contentRef.current;
+										if (currentDiv) {
+											currentDiv.style.height = "auto";
+											currentDiv.style.height = `${currentDiv.scrollHeight}px`;
+										}
+										setStateData({
+											...stateData,
+											content: e.currentTarget.innerHTML,
+										});
+									}}
+								/>
+								{/* Label */}
+								<div
+									contentEditable
+									onKeyDown={(event) => {
+										if (event.key === "Enter" && !event.shiftKey) {
+											event.preventDefault();
+											event.stopPropagation();
+										}
+									}}
+									ref={labelRef}
+									style={{
+										...theme.typography.body2,
+										fontWeight: 600,
+										fontFamily: theme.typography.fontFamily,
+										outline: "none",
+										marginBottom: -0.6,
+										opacity: 0.4,
+									}}
+									onInputCapture={(e) => {
+										const currentDiv: any = labelRef.current;
+										if (currentDiv) {
+											currentDiv.style.height = "auto";
+											currentDiv.style.height = `${currentDiv.scrollHeight}px`;
+										}
+										setStateData({
+											...stateData,
+											label: e.currentTarget.innerHTML,
+										});
+									}}
+								/>
+							</Box>
+						</Box>
 					) : null}
 				</Box>
 			</Box>
-		</Fragment>
+		</>
 	);
 };
 export default Callout;

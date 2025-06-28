@@ -1,8 +1,6 @@
-import { nextImageLoaderRegex } from "next/dist/build/webpack-config";
 import {
 	Bricolage_Grotesque,
 	Fira_Code,
-	MedievalSharp,
 	Montserrat,
 	Noto_Sans_Display,
 	Noto_Serif,
@@ -13,7 +11,10 @@ import {
 	Inter,
 	Space_Grotesk,
 	Syne,
-	Krona_One,
+	Fraunces,
+	MedievalSharp,
+	// Krona_One,
+	// Coiny,
 } from "next/font/google";
 import localFont from "next/font/local";
 
@@ -78,14 +79,13 @@ export const syne = Syne({
 	variable: "--font-syne",
 	// display: 'swap',
 });
-
-// Not variable
-export const krona_one = Krona_One({
+export const fraunces = Fraunces({
 	subsets: ["latin"],
-	variable: "--font-syne",
-	weight: "400",
+	variable: "--font-fraunces",
 	// display: 'swap',
 });
+
+// Not variable
 export const medieval_sharp = MedievalSharp({
 	subsets: ["latin"],
 	weight: "400",
@@ -138,5 +138,6 @@ export const availableFontFamilies = {
 	"--font-inter": inter.style.fontFamily,
 	"--font-space-grotesk": space_grotesk.style.fontFamily,
 	"--font-syne": syne.style.fontFamily,
+	"--font-fraunces": fraunces.style.fontFamily,
 };
 export default availableFontFamilies;

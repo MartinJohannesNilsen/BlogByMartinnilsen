@@ -1,11 +1,11 @@
 import Callout from "@/components/EditorJS/BlockTools/Callout/Callout";
 import React from "react";
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
 
 const dataDefaults = {
   type: "message",
-  message: "",
-  title: "",
+  label: "",
+  content: "",
   icon: "💬",
 }
 
@@ -17,8 +17,8 @@ export default class Tool extends React.Component{
     this.dataDefaults = {...dataDefaults, ...config.dataDefaults}
     this.data = {
       type: data.type || this.dataDefaults.type,
-      message: data.message || this.dataDefaults.message,
-      title: data.title || this.dataDefaults.title,
+      label: data.label || this.dataDefaults.label,
+      content: data.content || this.dataDefaults.content,
       icon: data.icon || this.dataDefaults.icon,
       ...config.data
     };
@@ -58,14 +58,12 @@ export default class Tool extends React.Component{
       this.data = newData;
     }
 
-    ReactDOM.render(
-      (
-        <Callout onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />
-      ),
-    rootNode);
-    
+    // Render React component
+    const root = createRoot(rootNode); 
+    root.render(<Callout onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
+
+    // Append to the holder
     return this.nodes.holder;
   }
 }
-
 

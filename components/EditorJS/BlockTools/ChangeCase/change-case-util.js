@@ -27,12 +27,12 @@ export const sentenceCase = (text) => {
 export const titleCase = (text) => {
     return text.replace(/\w\S*/g, (word) => {
         return word.charAt(0).toUpperCase() + word.slice(1, word.length).toLowerCase()
-    })
+    });
 };
 
 export const toggleCase = (text) => {
     return text.replace(/\w\S*/g, (word) => {
         return word.charAt(0).toLowerCase() + word.slice(1, word.length).toUpperCase()
-    })
+    });
 };
 

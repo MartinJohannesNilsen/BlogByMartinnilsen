@@ -1,12 +1,12 @@
 import { createSwaggerSpec } from "next-swagger-doc";
 
-export const createdApiDocSpec = createSwaggerSpec({
+export const apiDocSpec = createSwaggerSpec({
 	apiFolder: "app/api",
 	definition: {
 		openapi: "3.0.0",
 		info: {
 			title: "MJNTech Blog API",
-			version: "1.0",
+			version: "3.1.0",
 			// contact: {
 			//   name: "Martin Johannes Nilsen",
 			//   url: "https://links.martinjohannesnilsen.no/",
@@ -37,8 +37,8 @@ export const createdApiDocSpec = createSwaggerSpec({
 				description: "Default endpoints",
 			},
 			{
-				name: "EditorJS",
-				description: "Endpoints related to EditorJS components",
+				name: "Media",
+				description: "Endpoints related to media management",
 			},
 			{
 				name: "Notifications",

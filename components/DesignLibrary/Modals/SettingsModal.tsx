@@ -11,12 +11,23 @@ import {
 } from "@/styles/themes/themeDefaults";
 import { ThemeEnum } from "@/styles/themes/themeMap";
 import { SettingsModalProps } from "@/types";
-import { Close, Gradient, Square } from "@mui/icons-material";
-import { Box, Button, IconButton, Modal, Tooltip, Typography, useMediaQuery } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { Close, Gradient, Square, LightMode, DarkMode, SettingsBrightness } from "@mui/icons-material";
+import {
+	Box,
+	Button,
+	IconButton,
+	Modal,
+	styled,
+	Tooltip,
+	Typography,
+	useMediaQuery,
+	ToggleButtonGroup,
+	ToggleButton,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { BlockPicker } from "react-color";
 import { BiMinus, BiPlus } from "react-icons/bi";
+import { TooltipProps } from "@mui/material/Tooltip";
 
 const defaultFonts = [
 	{
@@ -26,6 +37,7 @@ const defaultFonts = [
 	{ title: "Bricolage", font: "--font-bricolage-grotesque" },
 	{ title: "Cabinet Grotesk", font: "--font-cabinet-grotesk" },
 	{ title: "Fira Code", font: "--font-fira-code" },
+	{ title: "Fraunces", font: "--font-fraunces" },
 	{ title: "Inter", font: "--font-inter" },
 	{ title: "Medieval Sharp", font: "--font-medieval-sharp" },
 	{ title: "Merriweather", font: "--font-merriweather" },
@@ -41,11 +53,11 @@ const defaultFonts = [
 	{ title: "Zodiak", font: "--font-zodiak" },
 ];
 
-const TransparentTooltip = withStyles({
-	tooltip: {
-		backgroundColor: "transparent",
-	},
-})(Tooltip);
+const TransparentTooltip = styled(({ className, ...props }: TooltipProps & { className?: string }) => (
+	<Tooltip {...props} classes={{ tooltip: className }} />
+))({
+	backgroundColor: "transparent",
+});
 
 export const SettingsModal = (props: SettingsModalProps) => {
 	const {
@@ -152,6 +164,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							Light Mode:
 						</Typography>
 						<Box flexGrow="1" />
+						{/* Switch and reset button layout */}
 						<Box mr={-1} display="flex" justifyContent="center" alignItems="center">
 							<Switch checked={theme.palette.mode === "light"} onChange={props.handleThemeChange} />
 						</Box>
@@ -176,6 +189,51 @@ export const SettingsModal = (props: SettingsModalProps) => {
 								</IconButton>
 							</Tooltip>
 						</Box>
+						{/* Toggle button group layout */}
+						{/* <ToggleButtonGroup exclusive aria-label="theme">
+							<ToggleButton
+								aria-label="light"
+								onClick={() => setTheme(ThemeEnum.Light, true)}
+								selected={themeUserConfigurationExist && theme.palette.mode === "light"}
+								sx={{ padding: "4px" }}
+							>
+								<LightMode
+									sx={{
+										color: theme.palette.text.primary,
+										height: "20px",
+										width: "20px",
+									}}
+								/>
+							</ToggleButton>
+							<ToggleButton
+								aria-label="dark"
+								onClick={() => setTheme(ThemeEnum.Dark, true)}
+								selected={themeUserConfigurationExist && theme.palette.mode === "dark"}
+								sx={{ padding: "4px" }}
+							>
+								<DarkMode
+									sx={{
+										color: theme.palette.text.primary,
+										height: "20px",
+										width: "20px",
+									}}
+								/>
+							</ToggleButton>
+							<ToggleButton
+								aria-label="system"
+								onClick={() => setDefaultTheme()}
+								selected={!themeUserConfigurationExist}
+								sx={{ padding: "4px" }}
+							>
+								<SettingsBrightness
+									sx={{
+										color: theme.palette.text.primary,
+										height: "20px",
+										width: "20px",
+									}}
+								/>
+							</ToggleButton>
+						</ToggleButtonGroup> */}
 					</Box>
 					{/* Font Scale */}
 					<Box display="flex" gap="10px" mt={1} sx={{ height: "28px" }}>
@@ -466,6 +524,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
 							}}
 							onClick={() => {
 								localStorage.clear();
+								window.location.reload();
 							}}
 						>
 							<Typography

@@ -194,7 +194,14 @@ export const CodeBlock = (props: BlockToolCodeBlockProps) => {
 								}}
 								size="small"
 								renderInput={(params) => (
-									<TextField {...params} label="Language" InputLabelProps={undefined} variant="outlined" />
+									<TextField
+										{...params}
+										label="Language"
+										variant="outlined"
+										slotProps={{
+											inputLabel: undefined,
+										}}
+									/>
 								)}
 								value={{
 									language: stateData.language,

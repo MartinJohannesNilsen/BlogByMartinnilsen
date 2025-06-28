@@ -1,5 +1,5 @@
 "use client";
-import PostTable from "@/components/PostManagement/PostTable";
+import PostTable from "@/components/Tables/PostTable";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { PostTableProps } from "@/types";
 import { Box, Modal, useMediaQuery } from "@mui/material";

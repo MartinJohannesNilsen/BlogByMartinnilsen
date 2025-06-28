@@ -82,18 +82,6 @@ export const ShareModal = (props: ShareModalProps) => {
 						<ClickAwayListener onClickAway={() => setOpenCopiedLinkTooltip(false)}>
 							<Tooltip
 								placement="top"
-								PopperProps={{
-									disablePortal: true,
-									modifiers: [
-										{
-											name: "offset",
-											options: {
-												offset: [0, -12],
-											},
-										},
-									],
-								}}
-								TransitionProps={{ timeout: 200 }}
 								onClose={() => setOpenCopiedLinkTooltip(false)}
 								open={openCopiedLinkTooltip}
 								disableFocusListener
@@ -104,6 +92,21 @@ export const ShareModal = (props: ShareModalProps) => {
 										Copied link
 									</Typography>
 								}
+								slotProps={{
+									popper: {
+										disablePortal: true,
+										modifiers: [
+											{
+												name: "offset",
+												options: {
+													offset: [0, -12],
+												},
+											},
+										],
+									},
+
+									transition: { timeout: 200 },
+								}}
 							>
 								<IconButton
 									onClick={() => {

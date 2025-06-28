@@ -1,11 +1,10 @@
 // General
-// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-// import { cloudStorage } from "@/lib/firebaseConfig";
 import {
 	CalloutIcon,
 	ChecklistIcon,
 	CodeIcon,
 	DividerIcon,
+	ImageIcon,
 	MathIcon,
 	TableIcon,
 	ToggleIcon,
@@ -18,8 +17,8 @@ import Embed from "@editorjs/embed";
 import Header from "@editorjs/header";
 import InlineCode from "@editorjs/inline-code";
 import LinkTool from "@editorjs/link";
-import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
+import NestedList from "@editorjs/nested-list";
 import Paragraph from "@editorjs/paragraph";
 import Underline from "@editorjs/underline";
 import ToggleBlock from "editorjs-toggle-block";
@@ -29,13 +28,14 @@ const EJLaTeX = require("editorjs-latex"); // Math
 const Iframe = require("@hammaadhrasheedh/editorjs-iframe");
 
 // Custom tools
-import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import Callout from "@/components/EditorJS/BlockTools/Callout/tool";
+import ChangeCase from "@/components/EditorJS/BlockTools/ChangeCase/change-case";
 import CodeBlock from "@/components/EditorJS/BlockTools/CodeBlock/tool";
 import Divider from "@/components/EditorJS/BlockTools/Divider/tool";
-import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
-import Quote from "@/components/EditorJS/BlockTools/Quote/tool";
+import File from "@/components/EditorJS/BlockTools/FileBlock/tool";
 import Image from "@/components/EditorJS/BlockTools/ImageBlock/tool";
+import ImageCarousel from "@/components/EditorJS/BlockTools/ImageCarouselBlock/tool";
+import InlineVideo from "@/components/EditorJS/BlockTools/InlineVideo/tool";
 
 export const EDITOR_JS_TOOLS: any = {
 	underline: { class: Underline, shortcut: "CMD+U" },
@@ -62,7 +62,7 @@ export const EDITOR_JS_TOOLS: any = {
 		},
 	},
 	list: {
-		class: List,
+		class: NestedList,
 		inlineToolbar: true,
 		config: {
 			defaultStyle: "unordered",
@@ -76,7 +76,6 @@ export const EDITOR_JS_TOOLS: any = {
 			title: "Callout",
 		},
 	},
-	quote: Quote,
 	checklist: {
 		class: CheckList,
 		toolbox: {
@@ -108,7 +107,7 @@ export const EDITOR_JS_TOOLS: any = {
 	linkTool: {
 		class: LinkTool,
 		config: {
-			endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/editorjs/linkpreview", // Your backend endpoint for url data fetching,
+			endpoint: process.env.NEXT_PUBLIC_SERVER_URL + "/media/linkpreview", // Your backend endpoint for url data fetching,
 		},
 		toolbox: {
 			icon: VideoIcon,
@@ -126,15 +125,15 @@ export const EDITOR_JS_TOOLS: any = {
 			icon: TableIcon,
 		},
 	},
-	math: {
-		// @ts-ignore
-		class: EJLaTeX,
-		shortcut: "CMD+SHIFT+E",
-		toolbox: {
-			icon: MathIcon,
-			title: "Math",
-		},
-	},
+	// math: {
+	// 	// @ts-ignore
+	// 	class: EJLaTeX,
+	// 	shortcut: "CMD+SHIFT+E",
+	// 	toolbox: {
+	// 		icon: MathIcon,
+	// 		title: "Math",
+	// 	},
+	// },
 	toggle: {
 		class: ToggleBlock,
 		inlineToolbar: true,
@@ -144,6 +143,20 @@ export const EDITOR_JS_TOOLS: any = {
 	},
 	image: {
 		class: Image,
+		toolbox: {
+			title: "Image (single)",
+			icon: ImageIcon,
+		},
+	},
+	imageCarousel: {
+		class: ImageCarousel,
+		toolbox: {
+			title: "Image (carousel)",
+			icon: ImageIcon,
+		},
+	},
+	file: {
+		class: File,
 	},
 };
 export default EDITOR_JS_TOOLS;

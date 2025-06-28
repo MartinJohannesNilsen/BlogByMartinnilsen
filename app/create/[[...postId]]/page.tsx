@@ -8,13 +8,17 @@ import { Metadata } from "next";
 import { Session } from "next-auth";
 import { unstable_cache } from "next/cache";
 
-export async function generateMetadata({ params }: { params: { postId?: string } }) {
+export async function generateMetadata(props: { params: Promise<{ postId?: string }> }) {
+	// Get params and postId from props
+	const params = await props.params;
+	const { postId } = params;
+
 	// Get postId
-	const id = params.postId && params.postId.length > 0 ? params.postId[0] : undefined;
+	const id = postId && postId.length > 0 ? postId[0] : undefined;
 
 	// Get post
 	const getCachedPost = unstable_cache(async (postId: string) => getPost(postId), undefined, {
-		tags: [`post_${params.postId}`],
+		tags: [`post_${postId}`],
 	});
 	const post = id ? await getCachedPost(id) : undefined;
 
@@ -26,7 +30,7 @@ export async function generateMetadata({ params }: { params: { postId?: string }
 		creator: "MJNTech",
 		openGraph: {
 			type: "article",
-			url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${params.postId}`,
+			url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${postId}`,
 			title: post.title,
 			description: post.description,
 			siteName: "Tech Blog",
@@ -40,13 +44,17 @@ export async function generateMetadata({ params }: { params: { postId?: string }
 	return metadata;
 }
 
-export default async function Page({ params }: { params: { postId?: string[] } }) {
+export default async function Page(props: {
+	params: Promise<{ postId?: string[] }>;
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
 	// Check authentication
 	const session: Session | null = process.env.NEXT_PUBLIC_LOCALHOST === "true" ? await getMockSession() : await auth();
 	const isAuthorized = session?.user?.role === "admin";
 
 	// Get postId
-	const id = params.postId && params.postId.length > 0 ? params.postId[0] : undefined;
+	const { postId } = await props.params;
+	const id = postId && postId.length > 0 ? postId[0] : undefined;
 
 	// Get post
 	const post = id ? await getPost(id) : undefined;

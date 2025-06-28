@@ -1,7 +1,7 @@
 "use client";
 import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
-import PostViews from "@/components/PostViews/PostViews";
+import PostViews from "@/components/Skeletons/PostViews";
 import { DATA_DEFAULTS } from "@/data/metadata";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { PostCardProps } from "@/types";

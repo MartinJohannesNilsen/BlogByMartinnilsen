@@ -24,18 +24,20 @@ export async function _getCollection(): Promise<Collection> {
 	}
 }
 
-const _sortListOfStoredPostsOnTimestamp = (data: StoredPost[], asc?: boolean) => {
+// Convert sorting function to async
+export async function _sortListOfStoredPostsOnTimestamp(data: StoredPost[], asc?: boolean): Promise<StoredPost[]> {
 	if (!data) return [];
 	if (asc) {
 		return data.sort((prev, next) => prev.createdAt - next.createdAt); //Ascending, oldest (smallest createdAt) first
 	}
 	return data.sort((prev, next) => next.createdAt - prev.createdAt); //Descending, latest (largest createdAt) first
-};
+}
 
-export const _filterListOfStoredPostsOnPublished = (
+// Convert filter function to async
+export async function _filterListOfStoredPostsOnPublished(
 	data: StoredPost[],
 	filter: "published" | "unpublished" | "all" | "saved"
-) => {
+): Promise<StoredPost[]> {
 	if (filter === "published") {
 		return data.filter((post) => post.published);
 	} else if (filter === "unpublished") {
@@ -47,9 +49,9 @@ export const _filterListOfStoredPostsOnPublished = (
 		}
 	}
 	return data;
-};
+}
 
-const getAllPostIds = async (filterOnVisibility: boolean): Promise<string[]> => {
+export async function getAllPostIds(filterOnVisibility: boolean): Promise<string[]> {
 	try {
 		// Get collection
 		const collection = await _getCollection();
@@ -59,8 +61,8 @@ const getAllPostIds = async (filterOnVisibility: boolean): Promise<string[]> => 
 
 		if (postsOverviewDoc) {
 			const data: StoredPost[] = postsOverviewDoc.values;
-			const list: { id: string }[] = filterOnVisibility ? _filterListOfStoredPostsOnPublished(data, "published") : data;
-			const res = list.map((val) => val.id);
+			const filteredData = filterOnVisibility ? await _filterListOfStoredPostsOnPublished(data, "published") : data;
+			const res = filteredData.map((val) => val.id);
 			return res;
 		} else {
 			return [];
@@ -69,9 +71,9 @@ const getAllPostIds = async (filterOnVisibility: boolean): Promise<string[]> => 
 		console.error("Error fetching post ids:", error);
 		return [];
 	}
-};
+}
 
-const getPostsOverview = async (sorted?: "asc" | "desc", filterOnPublished?: boolean): Promise<StoredPost[]> => {
+export async function getPostsOverview(sorted?: "asc" | "desc", filterOnPublished?: boolean): Promise<StoredPost[]> {
 	try {
 		// Get collection
 		const collection = await _getCollection();
@@ -83,11 +85,11 @@ const getPostsOverview = async (sorted?: "asc" | "desc", filterOnPublished?: boo
 			let data: StoredPost[] = postsOverviewDoc.values;
 
 			if (sorted) {
-				data = _sortListOfStoredPostsOnTimestamp(data, sorted === "asc");
+				data = await _sortListOfStoredPostsOnTimestamp(data, sorted === "asc");
 			}
 
 			if (filterOnPublished) {
-				data = _filterListOfStoredPostsOnPublished(data, "published");
+				data = await _filterListOfStoredPostsOnPublished(data, "published");
 			}
 
 			return data;
@@ -98,9 +100,9 @@ const getPostsOverview = async (sorted?: "asc" | "desc", filterOnPublished?: boo
 		console.error("Error fetching posts overview:", error);
 		return [];
 	}
-};
+}
 
-const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
+export async function addPostsOverview(newPost: StoredPost): Promise<boolean> {
 	try {
 		// Get collection
 		const collection = await _getCollection();
@@ -131,9 +133,9 @@ const addPostsOverview = async (newPost: StoredPost): Promise<boolean> => {
 		console.error("Error adding post to overview:", error);
 		return false;
 	}
-};
+}
 
-const updatePostsOverview = async (updatedPost: StoredPost): Promise<boolean> => {
+export async function updatePostsOverview(updatedPost: StoredPost): Promise<boolean> {
 	try {
 		// Get collection
 		const collection = await _getCollection();
@@ -168,9 +170,9 @@ const updatePostsOverview = async (updatedPost: StoredPost): Promise<boolean> =>
 		console.error("Error updating posts overview:", error);
 		return false;
 	}
-};
+}
 
-const deletePostsOverview = async (id: string): Promise<boolean> => {
+export async function deletePostsOverview(id: string): Promise<boolean> {
 	try {
 		// Get collection
 		const collection = await _getCollection();
@@ -203,6 +205,4 @@ const deletePostsOverview = async (id: string): Promise<boolean> => {
 		console.error("Error deleting post from overview:", error);
 		return false;
 	}
-};
-
-export { addPostsOverview, deletePostsOverview, getAllPostIds, getPostsOverview, updatePostsOverview };
+}

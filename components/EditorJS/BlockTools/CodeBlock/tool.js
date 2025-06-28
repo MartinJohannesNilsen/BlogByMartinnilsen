@@ -1,7 +1,6 @@
 import CodeBlock from '@/components/EditorJS/BlockTools/CodeBlock/CodeBlock';
 import React from "react";
-import ReactDOM from 'react-dom';
-// import { createRoot } from "react-dom/client";
+import { createRoot } from "react-dom/client";
 
 const dataDefaults = {
   code: "",
@@ -69,15 +68,12 @@ export default class Tool extends React.Component{
       this.data = newData;
     }
 
-    ReactDOM.render(
-      (
-        <CodeBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />
-      ),
-    rootNode);
-    
+    // Render React component
+    const root = createRoot(rootNode); 
+    root.render(<CodeBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
+
+    // Append to the holder
     return this.nodes.holder;
   }
 }
-
-// createRoot(this.nodes.holder).render(<CodeBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
 

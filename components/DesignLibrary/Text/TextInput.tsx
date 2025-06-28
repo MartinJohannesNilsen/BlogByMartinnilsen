@@ -2,37 +2,34 @@
 import { Input as BaseInput, InputProps } from "@mui/base/Input";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import { TextField } from "@mui/material";
-import { withStyles } from "@mui/styles";
 import { styled } from "@mui/system";
 import * as React from "react";
 
 // Textfield
-export const StyledTextField = withStyles((theme) => ({
-	root: {
-		"& label": {
-			color: "#808080",
-		},
-		"& label.Mui-focused": {
-			color: "#2684FF",
-		},
-		"& .MuiOutlinedInput-root": {
-			paddingTop: "8px",
-			paddingBottom: "8px",
-			paddingLeft: "10px",
-			paddingRight: "10px",
+export const StyledTextField = styled(TextField)(({ theme }) => ({
+	"& label": {
+		color: "#808080",
+	},
+	"& label.Mui-focused": {
+		color: "#2684FF",
+	},
+	"& .MuiOutlinedInput-root": {
+		paddingTop: "8px",
+		paddingBottom: "8px",
+		paddingLeft: "10px",
+		paddingRight: "10px",
+		borderColor: "#CCCCCC",
+		"& fieldset": {
 			borderColor: "#CCCCCC",
-			"& fieldset": {
-				borderColor: "#CCCCCC",
-			},
-			"&:hover fieldset": {
-				borderColor: "#B3B3B3",
-			},
-			"&.Mui-focused fieldset": {
-				borderColor: "#2684FF",
-			},
+		},
+		"&:hover fieldset": {
+			borderColor: "#B3B3B3",
+		},
+		"&.Mui-focused fieldset": {
+			borderColor: "#2684FF",
 		},
 	},
-}))(TextField);
+}));
 
 // Textarea
 const TextAreaInput = React.forwardRef(function CustomInput(

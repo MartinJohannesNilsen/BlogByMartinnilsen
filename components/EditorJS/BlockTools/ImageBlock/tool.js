@@ -1,7 +1,7 @@
 import ImageBlock from "@/components/EditorJS/BlockTools/ImageBlock/ImageBlock";
 import { ImageIcon } from "@/components/EditorJS/Icons";
 import React from "react";
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
 
 const dataDefaults = {
   type: "upload", // url, upload, unsplash, paste?
@@ -68,13 +68,12 @@ export default class Tool extends React.Component{
     const handleDataChange = (newData) => {
       this.data = newData;
     }
+      
+    // Render React component
+    const root = createRoot(rootNode); 
+    root.render(<ImageBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />);
 
-    ReactDOM.render(
-      (
-        <ImageBlock onDataChange={handleDataChange} readOnly={this.readOnly} data={this.data} />
-      ),
-    rootNode);
-    
+    // Append to the holder
     return this.nodes.holder;
   }
 }

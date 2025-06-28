@@ -1,13 +1,21 @@
 "use client";
+import { NavbarButton } from "@/components/DesignLibrary/Buttons/NavbarButton";
 import CustomParagraph from "@/components/EditorJS/Renderers/CustomParagraph";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { EditorjsRendererProps } from "@/types";
+import { handleSharing } from "@/utils/handleSharing";
+import { IosShare } from "@mui/icons-material";
 import { Box, Card, IconButton, Typography, useMediaQuery } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
+import { useState } from "react";
+import { BiSolidQuoteRight } from "react-icons/bi";
+const { convert } = require("html-to-text");
 
 const CustomCallout = (props: EditorjsRendererProps) => {
 	const { theme } = useTheme();
+	const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 	const xs = useMediaQuery(theme.breakpoints.only("xs"));
+	const [hover, setHover] = useState(false);
 
 	return (
 		<Box my={1} maxWidth={"100vw"}>
@@ -28,8 +36,8 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 						<Typography fontSize={16}>{props.data.icon || "💬"}</Typography>
 					</IconButton>
 					<Box display="flex" flexDirection="column" maxWidth="100vw">
-						{/* Title */}
-						{props.data.title && (
+						{/* Label */}
+						{props.data.label && (
 							<Typography
 								sx={{
 									...theme.typography.subtitle1,
@@ -46,20 +54,21 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 									WebkitBoxOrient: "vertical",
 								}}
 								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(props.data.title),
+									__html: DOMPurify.sanitize(props.data.label),
 								}}
 							/>
 						)}
-						{/* Message */}
+						{/* Content */}
 						<CustomParagraph
-							// data={{ text: props.data.message.replace(/\n/g, "<br>") }}
-							data={{ text: props.data.message }}
+							// data={{ text: props.data.content.replace(/\n/g, "<br>") }}
+							data={{ text: props.data.content }}
 							style={{
 								box: { my: 0 },
 								typography: {
 									...theme.typography.subtitle2,
+									fontFamily: theme.typography.fontFamily,
 									pt: 0,
-									pb: props.data.title && 0.6,
+									pb: props.data.content && 0.6,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									display: "webkit-flex",
@@ -87,15 +96,12 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 							p={0.5}
 						/>
 						<Box display="flex" flexDirection="column" maxWidth="100vw" p={2}>
-							{/* Title */}
+							{/* Label */}
 							<Typography
 								sx={{
 									...theme.typography.subtitle1,
 									fontWeight: 800,
 									fontFamily: theme.typography.fontFamily,
-									// color: "black",
-									// pt: 0.5,
-									// pb: 0.6,
 									my: 0,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
@@ -105,17 +111,18 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 									WebkitBoxOrient: "vertical",
 								}}
 								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(props.data.title || "Note"),
+									__html: DOMPurify.sanitize(props.data.label || "Note"),
 								}}
 							/>
-							{/* Message */}
+							{/* Content */}
 							<CustomParagraph
-								// data={{ text: props.data.message.replace(/\n/g, "<br>") }}
-								data={{ text: props.data.message }}
+								// data={{ text: props.data.content.replace(/\n/g, "<br>") }}
+								data={{ text: props.data.content }}
 								style={{
 									box: { my: 0 },
 									typography: {
 										...theme.typography.subtitle2,
+										fontFamily: theme.typography.fontFamily,
 										pt: 0,
 										// pb: 1,
 										overflow: "hidden",
@@ -128,6 +135,102 @@ const CustomCallout = (props: EditorjsRendererProps) => {
 						</Box>
 					</Box>
 				</Card>
+			) : props.data.type === "quote" ? (
+				<Box
+					display="flex"
+					my={1}
+					flexDirection="row"
+					onMouseEnter={() => {
+						setHover(true);
+					}}
+					onMouseLeave={() => {
+						setHover(false);
+					}}
+					sx={{ position: "relative" }}
+				>
+					{/* Icon */}
+					<Box ml={xs ? 2 : 4} mt={0.1}>
+						<BiSolidQuoteRight style={{ color: "inherit", opacity: 0.4 }} />
+					</Box>
+
+					{/* Content */}
+					<Box
+						display="flex"
+						flexDirection="column"
+						maxWidth="100vw"
+						ml={1.5}
+						sx={{
+							width: mdDown ? "85vw" : "100vw",
+							maxWidth: "625px",
+						}}
+					>
+						{/* Content */}
+						<CustomParagraph
+							// data={{ text: props.data.content.replace(/\n/g, "<br>") }}
+							data={{ text: props.data.content }}
+							style={{
+								box: { my: 0 },
+								typography: {
+									...theme.typography.body1,
+									fontFamily: theme.typography.fontFamily,
+									fontWeight: 600,
+									outline: "none",
+									paddingBottom: theme.spacing(2),
+									marginBottom: -0.8,
+								},
+							}}
+						/>
+
+						{/* Label */}
+						<CustomParagraph
+							data={{ text: props.data.label }}
+							style={{
+								box: { my: 0 },
+								typography: {
+									...theme.typography.body2,
+									fontWeight: 600,
+									fontFamily: theme.typography.fontFamily,
+									outline: "none",
+									marginBottom: -0.6,
+									opacity: 0.4,
+								},
+							}}
+						/>
+
+						{hover && (
+							<NavbarButton
+								variant="outline"
+								onClick={() => {
+									handleSharing({
+										text:
+											'"' +
+											convert(props.data.content).trimEnd() +
+											'"' +
+											(props.data.label && " ~ " + convert(props.data.label).trimEnd()) +
+											"\n\nA quote from the post available at " +
+											window.location.href,
+									});
+								}}
+								icon={IosShare}
+								tooltip="Share quote"
+								sxButton={{
+									position: "absolute",
+									right: xs ? 12 : 20,
+									bottom: 2,
+									minWidth: "30px",
+									minHeight: "30px",
+									height: "30px",
+									width: "30px",
+								}}
+								sxIcon={{
+									height: "16px",
+									width: "18px",
+									color: "inherit",
+								}}
+							/>
+						)}
+					</Box>
+				</Box>
 			) : null}
 		</Box>
 	);

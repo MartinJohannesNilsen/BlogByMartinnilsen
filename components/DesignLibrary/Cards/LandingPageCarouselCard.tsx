@@ -1,6 +1,6 @@
 "use client";
 import BlurHashHTMLImage from "@/components/DesignLibrary/Image/BlurHashHTMLImage";
-import PostViews from "@/components/PostViews/PostViews";
+import PostViews from "@/components/Skeletons/PostViews";
 import { DATA_DEFAULTS } from "@/data/metadata";
 import { defaultTheme } from "@/styles/themes/themeDefaults";
 import { useTheme } from "@/styles/themes/ThemeProvider";
@@ -35,8 +35,8 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 				// disableTouchRipple
 				href={`/posts/${props.id}`}
 				sx={{
-					height: xs ? (isMobile ? 490 : 540) : 520,
-					maxHeight: xs ? (isMobile ? 490 : 540) : 520,
+					height: xs ? (isMobile ? 520 : 540) : 520,
+					maxHeight: xs ? (isMobile ? 520 : 540) : 520,
 					width: "100%",
 				}}
 			>
@@ -57,7 +57,7 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 					display="flex"
 					flexDirection="column"
 					sx={{
-						height: xs && isMobile ? "235px" : "285px",
+						height: xs && isMobile ? "265px" : "285px",
 						padding: "10px 15px",
 					}}
 				>
@@ -104,7 +104,7 @@ export const LandingPageCarouselCard = (props: PostCardProps) => {
 					{/* Information gutter */}
 					<Box>
 						{/* Tags */}
-						<Box display="flex" flexDirection="row" alignItems="center" pt={3} pb={1}>
+						<Box display="flex" flexDirection="row" alignItems="center" pt={1} pb={1}>
 							{props.tags.map((tag, index) => (
 								<Button LinkComponent={NextLink} key={index} disabled variant="contained" sx={{ marginRight: 1 }}>
 									<Typography

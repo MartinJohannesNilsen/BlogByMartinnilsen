@@ -1,8 +1,11 @@
-module.exports = {
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.NEXT_PUBLIC_ANALYZE === 'true',
+})
+
+const nextConfig = {
+  turbopack: {},
   images: {
     remotePatterns: [
       {
@@ -15,4 +18,9 @@ module.exports = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: ["notistack", "react-syntax-highlighter"],
+  },
 }
+
+export default bundleAnalyzer(nextConfig);
