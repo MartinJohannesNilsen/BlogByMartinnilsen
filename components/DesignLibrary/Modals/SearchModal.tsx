@@ -18,6 +18,7 @@ import {
   LightMode,
   Login,
   Logout,
+  Newspaper,
   Notifications,
   Person,
   PostAdd,
@@ -154,6 +155,15 @@ export const SearchModal = ({
         return isAuthorized
           ? !window.location.pathname.includes("/cms/create")
           : false;
+      },
+    },
+    {
+      title: "Go to CMS dashboard",
+      href: "/cms",
+      keywords: ["content", "management", "system", "edit", "posts"],
+      iconElement: <Newspaper sx={{ color: theme.palette.text.primary }} />,
+      requirement: () => {
+        return isAuthorized ? true : false;
       },
     },
     {
