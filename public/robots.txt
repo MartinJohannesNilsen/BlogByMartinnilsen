@@ -1,7 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow: /create
-Disallow: /create/
+Disallow: /cms
+Disallow: /cms/
 Disallow: /apidoc
 Disallow: /api
 Disallow: /api/
