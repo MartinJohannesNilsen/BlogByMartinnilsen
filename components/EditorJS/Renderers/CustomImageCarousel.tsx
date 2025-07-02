@@ -147,8 +147,10 @@ export const ImageCarousel = ({
             height: 34,
             borderRadius: "10px",
             color: theme.palette.text.primary,
+            borderColor: theme.palette.text.primary + "20",
             "&:disabled": {
               color: theme.palette.text.primary + "50",
+              borderColor: theme.palette.text.primary + "20",
             },
             "&:focus-visible": {
               backgroundColor:
@@ -183,6 +185,10 @@ export const ImageCarousel = ({
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
+            "&:disabled": {
+              color: theme.palette.text.primary + "50",
+              borderColor: theme.palette.text.primary + "20",
+            },
           }}
           disabled
         >
@@ -202,8 +208,10 @@ export const ImageCarousel = ({
             height: 34,
             borderRadius: "10px",
             color: theme.palette.text.primary,
+            borderColor: theme.palette.text.primary + "20",
             "&:disabled": {
               color: theme.palette.text.primary + "50",
+              borderColor: theme.palette.text.primary + "20",
             },
             "&:focus-visible": {
               backgroundColor:
