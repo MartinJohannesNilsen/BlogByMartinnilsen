@@ -4,6 +4,7 @@ import { getAllViewCounts } from "@/data/middleware/views/actions";
 import { useTheme } from "@/styles/themes/ThemeProvider";
 import { StoredPost, TablePost } from "@/types";
 import { Check, Close, Edit, OpenInNewRounded } from "@mui/icons-material";
+import { Box } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -73,20 +74,31 @@ export const PostTable = ({
       field: "published",
       headerName: "Published",
       width: 110,
-      align: "center",
       renderCell: (params) => {
-        return params.value ? (
-          <Check
-            style={{
-              color: theme.palette.success.light,
-            }}
-          />
-        ) : (
-          <Close
-            style={{
-              color: theme.palette.grey[500],
-            }}
-          />
+        return (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+            height="100%"
+          >
+            {params.value ? (
+              <Check
+                style={{
+                  color: theme.palette.success.light,
+                  fontSize: "1.5rem",
+                }}
+              />
+            ) : (
+              <Close
+                style={{
+                  color: theme.palette.grey[500],
+                  fontSize: "1.5rem",
+                }}
+              />
+            )}
+          </Box>
         );
       },
     },
