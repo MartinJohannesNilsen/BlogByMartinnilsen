@@ -94,7 +94,6 @@ export function isvalidHTTPUrl(string: string) {
 
 const PostEditor = ({ post, id }: ManagePostPageProps) => {
   const { theme, setTheme } = useTheme();
-  const router = useRouter();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isRevalidated, setIsRevalidated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -1281,10 +1280,11 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
                   />
                 </Grid>
                 {/* Published */}
+                <Grid item xs={12} mt={1} />
                 <Grid item xs={3} md={2}>
                   <Typography sx={{ fontWeight: 600 }}>Post Status</Typography>
                 </Grid>
-                <Grid item xs={9} md={10} mt={1}>
+                <Grid item xs={9} md={10}>
                   <ToggleButtonGroup
                     value={data.published}
                     exclusive
@@ -1302,7 +1302,11 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
                         textTransform: "none",
                         color: theme.palette.text.primary,
                         opacity: data.published === true ? 1 : 0.7,
+                        "&:focus": {
+                          backgroundColor: theme.palette.text.primary + "10",
+                        },
                       }}
+                      disableRipple
                     >
                       Published
                     </ToggleButton>
@@ -1312,7 +1316,11 @@ const PostEditor = ({ post, id }: ManagePostPageProps) => {
                         textTransform: "none",
                         color: theme.palette.text.primary,
                         opacity: data.published === false ? 1 : 0.7,
+                        "&:focus": {
+                          backgroundColor: theme.palette.text.primary + "10",
+                        },
                       }}
+                      disableRipple
                     >
                       Draft
                     </ToggleButton>
